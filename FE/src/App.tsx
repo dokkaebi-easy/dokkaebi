@@ -1,8 +1,15 @@
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import HomeLayout from 'Components/Layouts/HomeLayout/HomeLayout';
+
 function App() {
   return (
-    <div>
-      <h1>도깨비 프로젝트 시작!</h1>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/">
+          <HomeLayout />
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
 
