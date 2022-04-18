@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  server:
+    container_name: dockerby_server
+    build: ./BE
+    ports: 
+      - "8480:8080"
+    networks:
+      - dockerby_bridge
+  browser:
+    container_name: dockerby_browser
+    build: ./FE
+    ports: 
+      - "8482:3000"
+    networks:
+      - dockerby_bridge
+networks:
+  dockerby_bridge:
+  
