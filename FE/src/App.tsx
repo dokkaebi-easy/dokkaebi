@@ -1,15 +1,17 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import HomeLayout from 'Components/Layouts/HomeLayout/HomeLayout';
+import BasicLayout from 'Components/Layouts/BasicLayout/BasicLayout';
+import CssBaseline from '@mui/material/CssBaseline';
 
 function App() {
   return (
-    <BrowserRouter>
+    <>
+      <CssBaseline />
       <Switch>
         <Route path="/">
-          <HomeLayout />
+          <BasicLayout />
         </Route>
       </Switch>
-    </BrowserRouter>
+    </>
   );
 }
 
