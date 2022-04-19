@@ -10,13 +10,6 @@ import Divider from '@mui/material/Divider';
 import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 
-const hr = {
-  // color: '#fff',
-  backgroundColor: '#fff',
-  // background-image:
-  //   'linear-gradient(to right, rgba(0, 117, 255, 0), rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))',
-};
-
 export default function SideNavibar() {
   return (
     <Paper
