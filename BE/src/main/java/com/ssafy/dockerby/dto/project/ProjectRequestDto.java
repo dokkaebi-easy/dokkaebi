@@ -16,17 +16,9 @@ public class ProjectRequestDto {
   private Long id;
 
   @NotNull
-  private Long userId;
-
-  @NotNull
   private String projectName;
 
-  @NotNull
-  private String teamName;
-
-
-  private String detail;
-
+  private String description;
 
   private String settingJson;
 }

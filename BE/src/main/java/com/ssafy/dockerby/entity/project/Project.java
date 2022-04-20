@@ -21,9 +21,7 @@ public class Project {
 
   private String projectName;
 
-  private String teamName;
-
-  private String detail;
+  private String description;
 
   @Builder.Default
   private String state = "fail";
@@ -46,8 +44,7 @@ public class Project {
     return Project.builder()
       .id(projectRequestDto.getId())
       .projectName(projectRequestDto.getProjectName())
-      .teamName(projectRequestDto.getTeamName())
-      .detail(projectRequestDto.getDetail())
+      .description(projectRequestDto.getDescription())
       .configLocation(configLocation)
       .build();
   }

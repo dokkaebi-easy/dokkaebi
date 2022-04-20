@@ -21,8 +21,6 @@ public class ProjectResponseDto {
   @NotNull
   private String projectName;
 
-  private String teamName;
-
   private String configLocation;
 
   private String state;
