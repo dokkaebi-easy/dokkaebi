@@ -3,24 +3,20 @@ package com.ssafy.dockerby.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.dockerby.common.Constants.ExceptionClass;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 
 
 @Slf4j
-public class FileMannager {
+public class FileManager {
 
     //Json 파일 저장
     public static <T> void saveJsonFile(String filePath, String fileName, T file)

@@ -5,7 +5,6 @@ import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.UserDto;
 import com.ssafy.dockerby.entity.User;
 import com.ssafy.dockerby.repository.UserRepository;
-import com.ssafy.dockerby.util.FileMannager;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

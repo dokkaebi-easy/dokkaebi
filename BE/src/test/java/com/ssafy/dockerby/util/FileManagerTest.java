@@ -12,7 +12,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 @WebAppConfiguration
 @SpringBootTest
-class FileMannagerTest {
+class FileManagerTest {
 
     @Test
     public void str파일저장하고_읽어오기()
@@ -23,9 +23,9 @@ class FileMannagerTest {
         String str = "title\ngood\nmylife";
         // when
         // 파일 저장
-        FileMannager.saveFile(filePath, fileName, str);
+        FileManager.saveFile(filePath, fileName, str);
         // 파일 읽어오기
-        String result = FileMannager.loadFile(filePath, fileName);
+        String result = FileManager.loadFile(filePath, fileName);
         // then
         Assertions.assertThat(result.equals(str));
     }
@@ -44,9 +44,9 @@ class FileMannagerTest {
         str.add("ee");
         // when
         //파일 저장
-        FileMannager.saveFile(filePath, fileName, str);
+        FileManager.saveFile(filePath, fileName, str);
         //파일 읽어오기
-        String result = FileMannager.loadFile(filePath, fileName);
+        String result = FileManager.loadFile(filePath, fileName);
         // then
         Assertions.assertThat(result.equals(str));
     }
@@ -65,9 +65,9 @@ class FileMannagerTest {
             .build();
         // when
         //파일 저장
-        FileMannager.saveJsonFile(filePath, fileName, userDto);
+        FileManager.saveJsonFile(filePath, fileName, userDto);
         //파일 읽어오기
-        UserDto resultDto = FileMannager.loadJsonFile(filePath, fileName, UserDto.class);
+        UserDto resultDto = FileManager.loadJsonFile(filePath, fileName, UserDto.class);
         // then
         Assertions.assertThat(userDto.equals(resultDto));
     }
