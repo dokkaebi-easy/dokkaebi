@@ -54,7 +54,6 @@ public class ProjectController {
   @GetMapping("/frameworkVersion")
   public ResponseEntity<List<FrameworkVersionResponseDto>> GetFrameworkVersion(Long typeId) throws ChangeSetPersister.NotFoundException {
     //version 요청 로그 출력
-    System.out.println("typeId = " + typeId);
     log.info("frameworkVersion API received typeId: {}",typeId);
 
     //version list 입력
