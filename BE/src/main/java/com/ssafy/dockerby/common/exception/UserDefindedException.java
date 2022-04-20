@@ -3,14 +3,14 @@ package com.ssafy.dockerby.common.exception;
 import com.ssafy.dockerby.common.Constants;
 import org.springframework.http.HttpStatus;
 
-public class AroundHubException extends Exception {
+public class UserDefindedException extends Exception {
 
     private static final long serialVersionUID = 4663380430591151694L;
 
     private Constants.ExceptionClass exceptionClass;
     private HttpStatus httpStatus;
 
-    public AroundHubException(Constants.ExceptionClass exceptionClass, HttpStatus httpStatus,
+    public UserDefindedException(Constants.ExceptionClass exceptionClass, HttpStatus httpStatus,
         String message) {
         super(exceptionClass.toString() + message);
         this.exceptionClass = exceptionClass;

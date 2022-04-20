@@ -3,7 +3,7 @@ package com.ssafy.dockerby.common;
 public class Constants {
 
     public enum ExceptionClass {
-
+        //ExceptionClass 설정
         USER("User"), PROJECT("Project"),FILE("File");
 
         private String exceptionClass;

@@ -2,26 +2,24 @@ package com.ssafy.dockerby.common.exception;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+//controller에서 사용되는 핸들러
 @RestControllerAdvice
-public class AroundHubExceptionHandler {
-
-    private final Logger LOGGER = LoggerFactory.getLogger(AroundHubExceptionHandler.class);
+@Slf4j
+public class UserDefindedExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<Map<String, String>> ExceptionHandler(Exception e) {
         HttpHeaders responseHeaders = new HttpHeaders();
-        //responseHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
-        LOGGER.error("Advice 내 ExceptionHandler 호출, {}, {}", e.getCause(), e.getMessage());
+        log.error("Advice 내 ExceptionHandler 호출, {}, {}", e.getCause(), e.getMessage());
 
         Map<String, String> map = new HashMap<>();
         map.put("error type", httpStatus.getReasonPhrase());
@@ -31,8 +29,8 @@ public class AroundHubExceptionHandler {
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
 
-    @ExceptionHandler(value = AroundHubException.class)
-    public ResponseEntity<Map<String, String>> ExceptionHandler(AroundHubException e) {
+    @ExceptionHandler(value = UserDefindedException.class)
+    public ResponseEntity<Map<String, String>> ExceptionHandler(UserDefindedException e) {
         HttpHeaders responseHeaders = new HttpHeaders();
 
         Map<String, String> map = new HashMap<>();
