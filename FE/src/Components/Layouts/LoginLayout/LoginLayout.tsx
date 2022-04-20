@@ -1,22 +1,24 @@
-import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from 'Components/Pages/Home/Home';
-import SideNavibar from 'Components/UI/Organisms/SideNavibar/SideNavibar';
 import Box from '@mui/material/Box';
+import SignUp from 'Components/Pages/SignUp/SignUp';
+import styled from '@emotion/styled';
+import { Grid } from '@mui/material/';
+import Login from '../../Pages/Login/Login';
 
-export default function HomeLayout() {
+export default function LoginLayout() {
   return (
-    <>
-      <SideNavibar />
+    <div>
       <Box sx={{ paddingLeft: 35 }}>
         <BrowserRouter>
           <Switch>
-            <Route path="/HomeLayout">
-              <Home />
+            <Route path="/">
+              <Login />
+              <SignUp />
             </Route>
           </Switch>
         </BrowserRouter>
       </Box>
-    </>
+    </div>
   );
 }
