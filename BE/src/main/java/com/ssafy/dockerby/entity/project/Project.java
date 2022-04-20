@@ -16,9 +16,12 @@ import java.util.List;
 @AllArgsConstructor
 public class Project {
 
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "project_id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(length = 60 , unique = true)
   private String projectName;
 
   private String description;
@@ -42,7 +45,6 @@ public class Project {
   public static Project of(ProjectRequestDto projectRequestDto,String configLocation) {
 
     return Project.builder()
-      .id(projectRequestDto.getId())
       .projectName(projectRequestDto.getProjectName())
       .description(projectRequestDto.getDescription())
       .configLocation(configLocation)

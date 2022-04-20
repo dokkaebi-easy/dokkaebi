@@ -22,7 +22,14 @@ public class ProjectController {
 
   @PostMapping
   public ResponseEntity<ProjectResponseDto> CreateProject(@RequestBody ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException {
-    log.info("프로젝트 생성 요청 들어옴");
-    return ResponseEntity.ok(projectService.createProject(projectRequestDto));
+    //요청 로그출력
+    log.info("project create request received");
+
+    //프로젝트 저장 & response 반환
+    ProjectResponseDto projectResponseDto = projectService.createProject(projectRequestDto);
+
+    //TODO : Response 확인
+    log.info("project create Success {} ",projectResponseDto.toString());
+    return ResponseEntity.ok(projectResponseDto);
   }
 }

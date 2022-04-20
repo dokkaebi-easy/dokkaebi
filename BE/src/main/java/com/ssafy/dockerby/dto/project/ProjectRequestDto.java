@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 public class ProjectRequestDto {
 
   @NotNull
-  private Long id;
-
-  @NotNull
   private String projectName;
 
   private String description;

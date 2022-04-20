@@ -27,13 +27,27 @@ public class ProjectService {
 
     //프로젝트 입력
     Project project = Project.of(projectRequestDto,configLocation);
-    projectRepository.save(project);
 
-    project.updateState("Progressing");
-    log.info("project save 완료");
+    try {
+      //프로젝트 저장
+      projectRepository.save(project);
+
+      // 프로젝트 빌드 state 진행중으로 변경
+      project.updateState("Progressing");
+
+      // 저장완료 로그출력
+      log.info("project save completed");
+    }
+    catch (Exception e){
+      // 저장실패 로그출력
+      log.error("project save failed",e.getCause(),e.getMessage());
+
+      //TODO : 예외처리 - 저장실패
+      throw new IOException();
+    }
 
     return ProjectResponseDto.builder()
-      .userId(project.getId())
+      .projectId(project.getId())
       .projectName(project.getProjectName())
       .state(project.getState())
       .configLocation(configLocation)

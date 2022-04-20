@@ -13,10 +13,7 @@ import lombok.NoArgsConstructor;
 public class ProjectResponseDto {
 
   @NotNull
-  private Long id;
-
-  @NotNull
-  private Long userId;
+  private Long projectId;
 
   @NotNull
   private String projectName;
@@ -24,4 +21,14 @@ public class ProjectResponseDto {
   private String configLocation;
 
   private String state;
+
+  @Override
+  public String toString() {
+    return "ProjectResponseDto{" +
+      "projectId=" + projectId +
+      ", projectName='" + projectName + '\'' +
+      ", configLocation='" + configLocation + '\'' +
+      ", state='" + state + '\'' +
+      '}';
+  }
 }
