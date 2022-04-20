@@ -19,12 +19,12 @@ public class UserDefindedExceptionHandler {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
-        log.error("Advice 내 ExceptionHandler 호출, {}, {}", e.getCause(), e.getMessage());
+        log.error("controller Error Occurred, {}, {}", e.getCause(), e.getMessage());
 
         Map<String, String> map = new HashMap<>();
         map.put("error type", httpStatus.getReasonPhrase());
         map.put("code", "400");
-        map.put("message", "에러 발생");
+        map.put("message", "controller Error Occurred : " + e.getCause() + e.getMessage());
 
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
