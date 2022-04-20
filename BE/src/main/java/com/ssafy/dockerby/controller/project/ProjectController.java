@@ -25,5 +25,4 @@ public class ProjectController {
     log.info("프로젝트 생성 요청 들어옴");
     return ResponseEntity.ok(projectService.createProject(projectRequestDto));
   }
-
 }
