@@ -11,6 +11,7 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { Link } from 'react-router-dom';
 
 const linestyle = {
   height: '1px',
@@ -35,12 +36,14 @@ export default function SideNavibar() {
       <Box sx={{ color: 'white', textAlign: 'center' }}>
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary="Dockerby" />
-            </ListItemButton>
+            <Link to="/">
+              <ListItemButton>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Dockerby" />
+              </ListItemButton>
+            </Link>
           </ListItem>
         </List>
         <Divider light sx={linestyle} />
@@ -62,12 +65,14 @@ export default function SideNavibar() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Setting" />
-            </ListItemButton>
+            <Link to="/setting">
+              <ListItemButton>
+                <ListItemIcon>
+                  <SettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Setting" />
+              </ListItemButton>
+            </Link>
           </ListItem>
         </List>
       </Box>
