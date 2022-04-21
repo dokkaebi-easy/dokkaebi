@@ -19,6 +19,6 @@ else
     echo "Install docker"
     # command
 fi
-# Docker compose build
-sudo docker build -t dockerby:latest .
-sudo docker run -d --name dockerby -p 8482:8080 dockerby:latest
+
+# Docker build
+/bin/bash ./dockerBuilder.sh
