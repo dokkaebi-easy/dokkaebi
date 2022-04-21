@@ -1,17 +1,17 @@
 package com.ssafy.dockerby.util;
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
-import com.ssafy.dockerby.dto.UserDto;
+import com.ssafy.dockerby.dto.User.UserDto;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+
 import org.springframework.test.context.web.WebAppConfiguration;
 
+
 @WebAppConfiguration
-@SpringBootTest
 class FileManagerTest {
 
     @Test
@@ -50,6 +50,7 @@ class FileManagerTest {
         // then
         Assertions.assertThat(result.equals(str));
     }
+
 
     @Test
     public void Json파일저장및읽어오기()
