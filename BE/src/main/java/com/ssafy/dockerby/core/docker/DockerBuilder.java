@@ -41,6 +41,19 @@ public class DockerBuilder {
     return dockerCommandMaker.bridge();
   }
 
+  private String removeContainer(ContainerConfig config) {
+    return dockerCommandMaker.removeContainer(config);
+  }
+
+  public List<String> execRun(List<ContainerConfig> configs) {
+    List<String> commands = new ArrayList<>();
+    commands.add(network());
+
+    configs.forEach(config -> commands.add(run(config)));
+
+    return commands;
+  }
+
   public List<String> execBuildAndRun(List<ContainerConfig> configs) {
     List<String> commands = new ArrayList<>();
     commands.add(network());
