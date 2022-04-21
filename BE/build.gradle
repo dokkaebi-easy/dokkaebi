@@ -29,6 +29,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+
+	// Java에서 외부 명령어 실행 라이브러리
+	implementation 'org.apache.commons:commons-exec:1.3'
+
 }
 
 tasks.named('test') {
