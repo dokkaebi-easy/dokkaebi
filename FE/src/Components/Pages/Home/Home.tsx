@@ -1,11 +1,11 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import MDTable from 'Components/UI/Molecules/MDTable/MDTable';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import CreateIcon from '@mui/icons-material/Create';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
@@ -15,10 +15,11 @@ export default function Home() {
         <Button variant="outlined" startIcon={<DeleteIcon />}>
           Delete
         </Button>
-
-        <Button variant="contained" endIcon={<CreateIcon />}>
-          Create
-        </Button>
+        <Link to="/setting">
+          <Button variant="contained" endIcon={<CreateIcon />}>
+            Create
+          </Button>
+        </Link>
       </Stack>
     </Box>
   );
