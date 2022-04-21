@@ -1,15 +1,12 @@
 package com.ssafy.dockerby.dto.project;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProjectRequestDto {
 
   @NotNull
@@ -18,4 +15,13 @@ public class ProjectRequestDto {
   private String description;
 
   private String settingJson;
+
+  @Override
+  public String toString() {
+    return "ProjectRequestDto{" +
+      "projectName='" + projectName + '\'' +
+      ", description='" + description + '\'' +
+      ", settingJson='" + settingJson + '\'' +
+      '}';
+  }
 }

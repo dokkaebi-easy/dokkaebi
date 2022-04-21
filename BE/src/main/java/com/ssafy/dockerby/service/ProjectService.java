@@ -38,12 +38,11 @@ public class ProjectService {
       // 저장완료 로그출력
       log.info("project save completed");
     }
-    catch (Exception e){
+    catch (Exception error){
       // 저장실패 로그출력
-      log.error("project save failed",e.getCause(),e.getMessage());
+      log.error("project save failed",error.getCause(),error.getMessage());
 
-      //TODO : 예외처리 - 저장실패
-      throw new IOException();
+      throw error;
     }
 
     return ProjectResponseDto.builder()

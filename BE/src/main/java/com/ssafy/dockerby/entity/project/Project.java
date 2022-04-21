@@ -1,10 +1,7 @@
 package com.ssafy.dockerby.entity.project;
 
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,8 +9,8 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@RequiredArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project {
 
   @Id

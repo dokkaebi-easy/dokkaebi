@@ -23,7 +23,7 @@ public class ProjectController {
   @PostMapping
   public ResponseEntity<ProjectResponseDto> CreateProject(@RequestBody ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException {
     //요청 로그출력
-    log.info("project create request received");
+    log.info("project create request received {} ",projectRequestDto.toString());
 
     //프로젝트 저장 & response 반환
     ProjectResponseDto projectResponseDto = projectService.createProject(projectRequestDto);
