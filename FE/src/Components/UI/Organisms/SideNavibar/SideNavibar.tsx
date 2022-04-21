@@ -8,7 +8,16 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import InboxIcon from '@mui/icons-material/Inbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { Link } from 'react-router-dom';
+
+const linestyle = {
+  height: '1px',
+  backgroundImage:
+    'linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff, rgba(255, 255, 255, 0))',
+};
 
 export default function SideNavibar() {
   return (
@@ -27,56 +36,45 @@ export default function SideNavibar() {
       <Box sx={{ color: 'white', textAlign: 'center' }}>
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary="Dockerby" />
-            </ListItemButton>
+            <Link to="/">
+              <ListItemButton>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Dockerby" />
+              </ListItemButton>
+            </Link>
           </ListItem>
         </List>
-        <Divider light />
-        <nav aria-label="main mailbox folders">
-          <List>
-            <ListItem disablePadding>
+        <Divider light sx={linestyle} />
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Inbox" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <DashboardCustomizeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Drafts" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <Link to="/setting">
               <ListItemButton>
                 <ListItemIcon>
-                  <InboxIcon />
+                  <SettingsIcon />
                 </ListItemIcon>
-                <ListItemText primary="Inbox" />
+                <ListItemText primary="Setting" />
               </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <DraftsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Drafts" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </nav>
-        <Divider light />
-        <nav aria-label="main mailbox folders">
-          <List>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Inbox" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <DraftsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Drafts" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </nav>
+            </Link>
+          </ListItem>
+        </List>
       </Box>
     </Paper>
   );
