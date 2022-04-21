@@ -64,6 +64,27 @@ public class DockerfileMaker {
     saveDockerFile(path.toString(),sb.toString());
   }
 
+  private void makeReactWithNginxDockerFile(ContainerConfig config) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
+    sb.append("COPY ").append(rootDir).append(config.getProjectDirectory()).append(" .").append('\n');
+
+    sb.append("RUN ").append("npm install").append('\n');
+    sb.append("RUN ").append("npm run build").append('\n');
+
+    sb.append("FROM ").append("nginx:1.18.0").append('\n');
+    sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf");
+    sb.append("COPY --from=builder ");
+    sb.append((config.getBuildPath() == null) ? "/build" : config.getBuildPath())
+        .append("/usr/share/nginx/html");
+    sb.append("EXPOSE ").append("3000");
+    sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
+
+    StringBuilder path = new StringBuilder();
+    sb.append(rootDir).append(config.getProjectDirectory()).append('/');
+    saveDockerFile(path.toString(),sb.toString());
+  }
+
   private void saveDockerFile(String pjtDir, String sb) throws IOException {
       FileManager.saveFile(pjtDir, "dockerfile", sb);
   }
