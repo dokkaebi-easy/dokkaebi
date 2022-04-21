@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         duplicatePrincipalCheck(userDto.getPrincipal());
         //인증키 확인
         if (!userDto.getAuthKey().equals(authKey)) {
-            log.error("Authentication key mismatch {}", userDto.getAuthKey());
+            log.error("Authentication key mismatch");
             throw new UserDefindedException(ExceptionClass.USER, HttpStatus.BAD_REQUEST,
                 "This is not a valid SecretKey");
         }
