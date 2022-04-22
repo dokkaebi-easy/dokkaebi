@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import BasicLayout from 'Components/Layouts/BasicLayout/BasicLayout';
 import CssBaseline from '@mui/material/CssBaseline';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import MDTable from 'Components/UI/Molecules/MDTable/MDTable';
+import MDTable from 'Components/UI/Atoms/MDTable/MDTable';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
