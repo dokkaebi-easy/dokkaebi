@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.repository;
+package com.ssafy.dockerby.repository.project;
 
 import com.ssafy.dockerby.entity.project.states.DockerBuild;
 import com.ssafy.dockerby.entity.project.states.GitPull;

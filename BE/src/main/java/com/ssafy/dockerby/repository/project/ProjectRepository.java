@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.repository;
+package com.ssafy.dockerby.repository.project;
 
 import com.ssafy.dockerby.entity.project.Project;
 import org.springframework.data.jpa.repository.JpaRepository;

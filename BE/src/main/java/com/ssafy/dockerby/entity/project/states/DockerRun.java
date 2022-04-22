@@ -23,7 +23,7 @@ public class DockerRun extends BaseEntity  {
   @Enumerated(value = EnumType.STRING)
   private StateType stateType;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "project_state_id")
   private ProjectState projectState;
 

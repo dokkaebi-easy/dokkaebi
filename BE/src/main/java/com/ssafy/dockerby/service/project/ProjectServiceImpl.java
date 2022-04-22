@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.service;
+package com.ssafy.dockerby.service.project;
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.project.*;
@@ -7,8 +7,8 @@ import com.ssafy.dockerby.entity.project.enums.StateType;
 import com.ssafy.dockerby.entity.project.states.DockerBuild;
 import com.ssafy.dockerby.entity.project.states.DockerRun;
 import com.ssafy.dockerby.entity.project.states.GitPull;
-import com.ssafy.dockerby.repository.ProjectRepository;
-import com.ssafy.dockerby.repository.ProjectStateRepository;
+import com.ssafy.dockerby.repository.project.ProjectRepository;
+import com.ssafy.dockerby.repository.project.ProjectStateRepository;
 import com.ssafy.dockerby.util.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +22,11 @@ import java.io.IOException;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class ProjectService {
+public class ProjectServiceImpl implements ProjectService {
   private final ProjectRepository projectRepository;
   private final ProjectStateRepository projectStateRepository;
 
+  @Override
   public ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) throws IOException, UserDefindedException {
     //json 형태로 저장후 상대위치 반환
     String configLocation = "./jsonData/";
@@ -59,6 +60,7 @@ public class ProjectService {
       .build();
   }
 
+  @Override
   public ProjectState buildAndGetState(ProjectRequestDto projectRequestDto) throws ChangeSetPersister.NotFoundException {
 
     boolean successFlag=true;
@@ -169,12 +171,34 @@ public class ProjectService {
     return projectState;
   }
 
-  public StateResponseDto checkState(StateRequestDto stateRequestDto){
+  @Override
+  public StateResponseDto checkState(StateRequestDto stateRequestDto) throws ChangeSetPersister.NotFoundException {
+    //TODO /ProjectSercice : checkState Test 작성
+
+    //StateRequest 에서 받은 projectId로 DB 탐색
+    ProjectState projectState = projectStateRepository.findByProjectId(stateRequestDto.getProjectId()).orElseThrow(() -> new ChangeSetPersister.NotFoundException());    
+    //state initialize
     String state="";
 
+    //buildType 에 따라서 각각의 state 입력
+    if("GitPull".equals(stateRequestDto.getBuildType().toString())){
+      state= projectState.getGitPull().getStateType().toString();
+    }
+    else if("DockerBuild".equals(stateRequestDto.getBuildType().toString())){
+      state= projectState.getDockerBuild().getStateType().toString();
+    }
+    else if("DockerRun".equals(stateRequestDto.getBuildType().toString())){
+      state= projectState.getDockerRun().getStateType().toString();
+    }
+
+    //성공 로그 출력
+    log.info("ProjectService checkState success state : {}",state);
+
+
+    //state 를 넣은 response 반환환
     return StateResponseDto.builder()
       .projectId(stateRequestDto.getProjectId())
-      .buildType(stateRequestDto.getStateType())
+      .buildType(stateRequestDto.getBuildType())
       .stateType(StateType.valueOf(state))
       .build();
   }

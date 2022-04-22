@@ -4,8 +4,8 @@ import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.dto.project.ProjectResponseDto;
 import com.ssafy.dockerby.entity.project.ProjectState;
-import com.ssafy.dockerby.repository.ProjectRepository;
-import com.ssafy.dockerby.service.ProjectService;
+import com.ssafy.dockerby.repository.project.ProjectRepository;
+import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ public class ProjectServiceTest {
   @Mock
   private ProjectRepository projectRepository;
   @InjectMocks
-  private  ProjectService projectService;
+  private ProjectServiceImpl projectService;
   ProjectRequestDto projectRequestDto = ProjectRequestDto.builder()
       .projectName("dockerby")
       .description("손쉬운 배포 프로젝트")

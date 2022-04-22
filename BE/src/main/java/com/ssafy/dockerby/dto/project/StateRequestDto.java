@@ -1,6 +1,7 @@
 package com.ssafy.dockerby.dto.project;
 
 import com.ssafy.dockerby.entity.project.enums.BuildType;
+import com.ssafy.dockerby.entity.project.enums.StateType;
 import lombok.*;
 
 import javax.persistence.EnumType;
@@ -17,13 +18,13 @@ public class StateRequestDto {
   private Long projectId;
 
   @Enumerated(value = EnumType.STRING)
-  private BuildType stateType;
+  private BuildType buildType;
 
   @Override
   public String toString() {
     return "StateRequestDto{" +
       "projectId=" + projectId +
-      ", stateType=" + stateType +
+      ", buildType=" + buildType +
       '}';
   }
 }

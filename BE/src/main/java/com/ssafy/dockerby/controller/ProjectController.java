@@ -3,7 +3,7 @@ package com.ssafy.dockerby.controller;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.project.*;
 import com.ssafy.dockerby.entity.project.ProjectState;
-import com.ssafy.dockerby.service.ProjectService;
+import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class ProjectController {
-  private final ProjectService projectService;
+  private final ProjectServiceImpl projectService;
 
   @PostMapping
   public ResponseEntity<ProjectResponseDto> createProject(ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException, ChangeSetPersister.NotFoundException {
@@ -38,7 +38,7 @@ public class ProjectController {
   }
 
   @GetMapping("/buildDetail")
-  public ResponseEntity<StateResponseDto> projectState(StateRequestDto stateRequestDto ) {
+  public ResponseEntity<StateResponseDto> projectState(StateRequestDto stateRequestDto ) throws ChangeSetPersister.NotFoundException {
     //요청 로그 출력
     log.info("buildDetail request received {}",stateRequestDto.toString());
 
