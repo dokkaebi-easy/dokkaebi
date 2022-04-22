@@ -13,10 +13,10 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class GitPull extends BaseEntity  {
+public class Run extends BaseEntity  {
 
   @Id
-  @Column(name = "git_pull_id")
+  @Column(name = "docker_run_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

@@ -13,7 +13,7 @@ import java.io.IOException;
 public interface ProjectService {
   ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) throws IOException, UserDefindedException;
 
-  ProjectState buildAndGetState(ProjectRequestDto projectRequestDto) throws ChangeSetPersister.NotFoundException;
+  ProjectState build(ProjectRequestDto projectRequestDto) throws ChangeSetPersister.NotFoundException;
 
   StateResponseDto checkState(StateRequestDto stateRequestDto) throws ChangeSetPersister.NotFoundException;
 }

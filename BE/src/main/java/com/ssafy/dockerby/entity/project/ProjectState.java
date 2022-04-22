@@ -1,9 +1,9 @@
 package com.ssafy.dockerby.entity.project;
 
 import com.ssafy.dockerby.entity.BaseEntity;
-import com.ssafy.dockerby.entity.project.states.DockerBuild;
-import com.ssafy.dockerby.entity.project.states.DockerRun;
-import com.ssafy.dockerby.entity.project.states.GitPull;
+import com.ssafy.dockerby.entity.project.states.Build;
+import com.ssafy.dockerby.entity.project.states.Run;
+import com.ssafy.dockerby.entity.project.states.Pull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,12 +25,12 @@ public class ProjectState extends BaseEntity {
   private Project project;
 
   @OneToOne(mappedBy = "projectState" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private GitPull gitPull;
+  private Pull pull;
 
   @OneToOne(mappedBy = "projectState" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private DockerBuild dockerBuild;
+  private Build build;
 
   @OneToOne(mappedBy = "projectState" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private DockerRun dockerRun;
+  private Run run;
 
 }

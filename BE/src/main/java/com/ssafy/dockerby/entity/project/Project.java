@@ -41,6 +41,7 @@ public class Project extends BaseEntity {
   // History 매핑
 //  private List<String> history;
   @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL)
+  @Builder.Default
   private List<ProjectState> projectStates = new ArrayList<>();
 
 

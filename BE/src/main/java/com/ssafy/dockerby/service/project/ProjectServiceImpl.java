@@ -4,9 +4,9 @@ import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.project.*;
 import com.ssafy.dockerby.entity.project.*;
 import com.ssafy.dockerby.entity.project.enums.StateType;
-import com.ssafy.dockerby.entity.project.states.DockerBuild;
-import com.ssafy.dockerby.entity.project.states.DockerRun;
-import com.ssafy.dockerby.entity.project.states.GitPull;
+import com.ssafy.dockerby.entity.project.states.Build;
+import com.ssafy.dockerby.entity.project.states.Run;
+import com.ssafy.dockerby.entity.project.states.Pull;
 import com.ssafy.dockerby.repository.project.ProjectRepository;
 import com.ssafy.dockerby.repository.project.ProjectStateRepository;
 import com.ssafy.dockerby.util.FileManager;
@@ -61,28 +61,28 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public ProjectState buildAndGetState(ProjectRequestDto projectRequestDto) throws ChangeSetPersister.NotFoundException {
+  public ProjectState build(ProjectRequestDto projectRequestDto) throws ChangeSetPersister.NotFoundException {
 
     boolean successFlag=true;
 
-    //GitPull start
-    GitPull gitPull;
-    try { // gitPull 트라이
+    //Pull start
+    Pull pull;
+    try { // pull 트라이
       //TODO / ProjectService : GitPull 트라이
 
       // state Done 넣기
-      gitPull = GitPull.builder()
+      pull = Pull.builder()
         .stateType(StateType.valueOf("Done"))
         .build();
       //성공 로그 출력
-      log.info(" Done : {}",gitPull.toString());
+      log.info(" Done : {}",pull.toString());
     }
     catch (Exception e){ // state failed 넣기
       //에러 로그 출력
-      log.error("GitPull failed {} {}",e.getCause(),e.getMessage());
+      log.error("Pull failed {} {}",e.getCause(),e.getMessage());
 
-      //gitPullState failed 입력
-      gitPull = GitPull.builder()
+      //pullState failed 입력
+      pull = Pull.builder()
         .stateType(StateType.valueOf("Failed"))
         .build();
 
@@ -91,22 +91,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
 
-    //DockerBuild start
-    DockerBuild dockerBuild;
-    try { // dockerBuild 트라이
-      //TODO / ProjectService : DockerBuild 트라이
+    //Build start
+    Build build;
+    try { // Build 트라이
+      //TODO / ProjectService : Build 트라이
 
       // state Done 넣기
-      dockerBuild = DockerBuild.builder()
+      build = Build.builder()
         .stateType(StateType.valueOf("Done"))
         .build();
     }
     catch (Exception e){ // state failed 넣기
       //에러 로그 출력
-      log.error("DockerBuild failed {} {}",e.getCause(),e.getMessage());
+      log.error("Build failed {} {}",e.getCause(),e.getMessage());
 
-      //dockerBuildState failed 입력
-      dockerBuild = DockerBuild.builder()
+      //buildState failed 입력
+      build = Build.builder()
         .stateType(StateType.valueOf("Failed"))
         .build();
 
@@ -114,22 +114,22 @@ public class ProjectServiceImpl implements ProjectService {
       successFlag=false;
     }
 
-    //DockerRun start
-    DockerRun dockerRun;
-    try { // dockerRun 트라이
+    //Run start
+    Run run;
+    try { // run 트라이
       //TODO / ProjectService : DockerRun 트라이
 
       // state Done 넣기
-      dockerRun = DockerRun.builder()
+      run = Run.builder()
         .stateType(StateType.valueOf("Done"))
         .build();
     }
     catch (Exception e){ // state failed 넣기
       //에러 로그 출력
-      log.error("DockerRun failed {} {}",e.getCause(),e.getMessage());
+      log.error("Run failed {} {}",e.getCause(),e.getMessage());
 
       //dockerRunState failed 입력
-      dockerRun = DockerRun.builder()
+      run = Run.builder()
         .stateType(StateType.valueOf("Failed"))
         .build();
 
@@ -156,15 +156,15 @@ public class ProjectServiceImpl implements ProjectService {
     //projectState , 각 빌드상태 save  : cascade
     ProjectState projectState = ProjectState.builder()
       .project(project)
-      .gitPull(gitPull)
-      .dockerBuild(dockerBuild)
-      .dockerRun(dockerRun)
+      .pull(pull)
+      .build(build)
+      .run(run)
       .build();
 
     //build - state binding
-    gitPull.updateProjectState(projectState);
-    dockerBuild.updateProjectState(projectState);
-    dockerRun.updateProjectState(projectState);
+    pull.updateProjectState(projectState);
+    build.updateProjectState(projectState);
+    run.updateProjectState(projectState);
 
     projectStateRepository.save(projectState);
 
@@ -181,14 +181,14 @@ public class ProjectServiceImpl implements ProjectService {
     String state="";
 
     //buildType 에 따라서 각각의 state 입력
-    if("GitPull".equals(stateRequestDto.getBuildType().toString())){
-      state= projectState.getGitPull().getStateType().toString();
+    if("Pull".equals(stateRequestDto.getBuildType().toString())){
+      state= projectState.getPull().getStateType().toString();
     }
-    else if("DockerBuild".equals(stateRequestDto.getBuildType().toString())){
-      state= projectState.getDockerBuild().getStateType().toString();
+    else if("Build".equals(stateRequestDto.getBuildType().toString())){
+      state= projectState.getBuild().getStateType().toString();
     }
-    else if("DockerRun".equals(stateRequestDto.getBuildType().toString())){
-      state= projectState.getDockerRun().getStateType().toString();
+    else if("Run".equals(stateRequestDto.getBuildType().toString())){
+      state= projectState.getRun().getStateType().toString();
     }
 
     //성공 로그 출력

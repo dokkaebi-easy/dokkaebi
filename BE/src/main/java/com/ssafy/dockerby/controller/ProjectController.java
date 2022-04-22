@@ -30,7 +30,7 @@ public class ProjectController {
     ProjectResponseDto projectResponseDto = projectService.createProject(projectRequestDto);
 
     //프로젝트 buildStart
-    ProjectState projectState = projectService.buildAndGetState(projectRequestDto);
+    ProjectState projectState = projectService.build(projectRequestDto);
 
     //TODO : Response 확인
     log.info("project create Success {} ",projectResponseDto.toString());

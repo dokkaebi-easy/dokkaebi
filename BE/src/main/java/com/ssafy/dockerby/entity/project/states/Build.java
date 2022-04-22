@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class DockerBuild extends BaseEntity  {
+public class Build extends BaseEntity  {
 
   @Id
   @Column(name = "docker_build_id")

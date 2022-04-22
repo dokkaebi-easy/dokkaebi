@@ -42,10 +42,10 @@ public class ProjectServiceTest {
   public void 프로젝트_타입별_상태변경_test() throws UserDefindedException, IOException, ChangeSetPersister.NotFoundException {
 
     projectService.createProject(projectRequestDto);
-    ProjectState projectState = projectService.buildAndGetState(projectRequestDto);
+    ProjectState projectState = projectService.build(projectRequestDto);
     Assertions.assertEquals(projectState.getProject().getProjectName(),"dockerby");
-    Assertions.assertEquals(projectState.getGitPull().getStateType(),"Done");
-    Assertions.assertEquals(projectState.getDockerBuild().getStateType(),"Done");
-    Assertions.assertEquals(projectState.getDockerRun().getStateType(),"Done");
+    Assertions.assertEquals(projectState.getPull().getStateType(),"Done");
+    Assertions.assertEquals(projectState.getBuild().getStateType(),"Done");
+    Assertions.assertEquals(projectState.getRun().getStateType(),"Done");
   }
 }
