@@ -16,7 +16,7 @@ sudo docker run -d \
 -p 8483:3306 \
 -e MYSQL_ROOT_PASSWORD=$AuthKey \
 -e MYSQL_DATABASE=dockerby \
--v $SHELL_PATH/DB:/docker-entrypoint-initdb.d/ \
+-v "$SHELL_PATH/DB":/docker-entrypoint-initdb.d/ \
 mysql:8.0.28
 
 DATAURL="jdbc:mysql://dockerby_db:8483/dockerby?useSSL=false&serverTimezone=UTC&autoReconnect=true"
