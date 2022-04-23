@@ -45,19 +45,18 @@ public class UserServiceImpl implements UserService {
         return (userResponseDto);
     }
 
-
+    //아이디 중복 검증
     @Override
     public Boolean duplicatePrincipalCheck(String principal) throws UserDefindedException {
-        //아이디 중복 검증
         if (userRepository.findOneByPrincipal(principal).isPresent()) {
             return false;
         }
         return true;
     }
 
+    //이름 중복 검증
     @Override
     public Boolean duplicateNameCheck(String name) throws UserDefindedException {
-        //아이디 중복 검증
         if (userRepository.findOneByName(name).isPresent()) {
             return false;
         }
