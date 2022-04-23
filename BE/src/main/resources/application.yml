@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/dockerby
     username: root
-    password: mysql
+    password: ssafy
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   sql:
