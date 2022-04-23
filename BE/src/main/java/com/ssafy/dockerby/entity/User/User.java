@@ -1,10 +1,12 @@
 package com.ssafy.dockerby.entity.User;
 
-import com.ssafy.dockerby.dto.User.UserDto;
+import com.ssafy.dockerby.dto.User.SignupDto;
 import com.ssafy.dockerby.entity.BaseEntity;
 import com.sun.istack.NotNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,20 +37,23 @@ public class User extends BaseEntity {
     private String credential;
 
     @NotNull
-    @Column(length = 60, unique = true)
+    @Column(length = 60)
     private String name;
-    //생성 매서드
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    //생성 매서드
     public void encodePassword(PasswordEncoder passwordEncoder) {
         this.credential = passwordEncoder.encode(this.credential);
     }
 
-    public static User of(UserDto userDto, String encodePassword) {
+    public static User of(SignupDto signupDto, String encodePassword, UserRole userRole) {
         return User.builder()
-            .id(userDto.getId())
             .credential(encodePassword)
-            .name(userDto.getName())
-            .principal(userDto.getPrincipal())
+            .name(signupDto.getName())
+            .role(userRole)
+            .principal(signupDto.getPrincipal())
             .build();
     }
 }
