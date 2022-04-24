@@ -31,4 +31,8 @@ public class Pull extends BaseEntity  {
     this.projectState = projectState;
   }
 
+  public void updateStateType (String stateType){
+    this.stateType= StateType.valueOf(stateType);
+  }
+
 }

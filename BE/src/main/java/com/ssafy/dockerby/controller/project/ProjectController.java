@@ -37,7 +37,7 @@ public class ProjectController {
     ProjectState projectState = projectService.build(projectRequestDto);
 
     //TODO : Response 확인
-    log.info("project create Success {} ",projectResponseDto.toString());
+    log.info("project create Success {} {}", projectResponseDto.toString(), projectState.toString());
     return ResponseEntity.ok(projectResponseDto);
   }
 

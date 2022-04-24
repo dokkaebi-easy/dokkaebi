@@ -41,7 +41,7 @@ public class Project extends BaseEntity {
 
   // History 매핑
 //  private List<String> history;
-  @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
   @Builder.Default
   private List<ProjectState> projectStates = new ArrayList<>();
 
@@ -59,5 +59,8 @@ public class Project extends BaseEntity {
   public Project updateState(String state){
     this.stateType = StateType.valueOf(state);
     return this;
+  }
+  public void addProjectState(ProjectState projectState){
+    this.projectStates.add(projectState);
   }
 }
