@@ -28,7 +28,7 @@ public class Project extends BaseEntity {
 
   @Enumerated(value = EnumType.STRING)
   @Builder.Default
-  private StateType stateType = StateType.valueOf("Processing");
+  private StateType stateType = StateType.valueOf("Waiting");
 
   private String configLocation;
 
