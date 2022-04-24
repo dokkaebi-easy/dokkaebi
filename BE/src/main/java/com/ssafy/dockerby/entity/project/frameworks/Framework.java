@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.entity.project.enums.frameworks;
+package com.ssafy.dockerby.entity.project.frameworks;
 
 import lombok.*;
 

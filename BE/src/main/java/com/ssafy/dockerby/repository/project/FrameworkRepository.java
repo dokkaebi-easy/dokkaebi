@@ -1,7 +1,6 @@
 package com.ssafy.dockerby.repository.project;
 
-import com.ssafy.dockerby.entity.project.enums.frameworks.Framework;
-import com.ssafy.dockerby.entity.project.enums.frameworks.FrameworkType;
+import com.ssafy.dockerby.entity.project.frameworks.Framework;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

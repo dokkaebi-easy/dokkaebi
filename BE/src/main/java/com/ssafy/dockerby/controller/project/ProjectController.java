@@ -30,6 +30,7 @@ public class ProjectController {
     //프로젝트 저장 & response 반환
     ProjectResponseDto projectResponseDto = projectService.createProject(projectRequestDto);
 
+    log.info("project build start / waiting -> processing");
     //프로젝트 buildStart
     ProjectState projectState = projectService.build(projectRequestDto);
 
@@ -51,9 +52,10 @@ public class ProjectController {
   }
 
   @GetMapping("/frameworkVersion")
-  public ResponseEntity<List<FrameworkVersionResponseDto>> GetFrameworkVersion(@PathVariable Long typeId) throws ChangeSetPersister.NotFoundException {
+  public ResponseEntity<List<FrameworkVersionResponseDto>> GetFrameworkVersion(Long typeId) throws ChangeSetPersister.NotFoundException {
     //version 요청 로그 출력
-    log.info("frameworkVersion API received");
+    System.out.println("typeId = " + typeId);
+    log.info("frameworkVersion API received typeId: {}",typeId);
 
     //version list 입력
     List<FrameworkVersionResponseDto> frameworkVersionResponses = projectService.getFrameworkVersion(typeId);

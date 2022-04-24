@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.entity.project.enums.states;
+package com.ssafy.dockerby.entity.project.states;
 
 
 import com.ssafy.dockerby.entity.BaseEntity;
@@ -13,10 +13,10 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class Run extends BaseEntity  {
+public class Pull extends BaseEntity  {
 
   @Id
-  @Column(name = "docker_run_id")
+  @Column(name = "git_pull_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
