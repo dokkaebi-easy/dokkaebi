@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.controller;
+package com.ssafy.dockerby.controller.project;
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.project.*;

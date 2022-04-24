@@ -1,8 +1,17 @@
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import BasicLayout from 'Components/Layouts/BasicLayout/BasicLayout';
+import CssBaseline from '@mui/material/CssBaseline';
+
 function App() {
   return (
-    <div>
-      <h1>도깨비 프로젝트 시작!</h1>
-    </div>
+    <>
+      <CssBaseline />
+      <Switch>
+        <Route path="/">
+          <BasicLayout />
+        </Route>
+      </Switch>
+    </>
   );
 }
 
