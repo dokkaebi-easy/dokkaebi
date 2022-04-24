@@ -24,7 +24,8 @@ const schema = yup.object().shape({
     .string()
     .required('아이디는 필수 입니다.')
     .min(2, '2자 이상 입력하세요.')
-    .max(25, '25자 이하로 입력하세요.'),
+    .max(25, '25자 이하로 입력하세요.')
+    .matches(/^[a-zA-Z0-9]*$/, '영문과 숫자만 입력 가능합니다.'),
   name: yup
     .string()
     .required('이름은 필수 입니다.')
@@ -34,7 +35,11 @@ const schema = yup.object().shape({
     .string()
     .required('비밀번호는 필수 입니다.')
     .min(8, '8자 이상 입력하세요.')
-    .max(30, '30자 이하로 입력하세요.'),
+    .max(30, '30자 이하로 입력하세요.')
+    .matches(
+      /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W))(?=.*[!@#$%^*+=-]).{8,16}$/,
+      '비밀번호는 반드시 8~16자이며, 영문, 숫자, 특수문자를 포함해야 합니다.',
+    ),
   passwordConfirm: yup
     .string()
     .oneOf([yup.ref('password'), null], '비밀번호가 일치하지 않습니다.'),
@@ -161,6 +166,6 @@ function SignUp() {
 export default SignUp;
 
 const ContainerDiv = styled.div`
-  width: 600px;
+  width: 400px;
   margin-top: 32px;
 `;

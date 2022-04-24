@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LoginIcon from '@mui/icons-material/Login';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -40,6 +40,12 @@ function Login() {
     // setLoginData(data.id);
   };
 
+  const LinkToMain = () => {
+    const data = false;
+    // handleState(data);
+    window.location.replace('/Homelayout');
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -52,11 +58,11 @@ function Login() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+          <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+            <LoginIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            로그인
+          <Typography component="h1" variant="h3">
+            Dockerby
           </Typography>
           <Box
             component="form"
@@ -95,6 +101,7 @@ function Login() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={LinkToMain}
             >
               로그인
             </Button>
@@ -104,8 +111,10 @@ function Login() {
                   Forgot password?
                 </Link>
               </Grid> */}
-              <Grid item>
-                <Link to="/SignUp">가입하기</Link>
+              <Grid item direction="row-reverse">
+                <Link to="/SignUp" style={{ textDecoration: 'none' }}>
+                  <span>가입하기</span>
+                </Link>
               </Grid>
             </Grid>
           </Box>
