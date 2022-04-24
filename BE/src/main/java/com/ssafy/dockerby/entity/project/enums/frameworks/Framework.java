@@ -22,5 +22,4 @@ public class Framework {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name ="framework_type_id")
   private FrameworkType frameworkType;
-
 }
