@@ -65,8 +65,31 @@ public class ProjectServiceImpl implements ProjectService {
 
     boolean successFlag=true;
 
+    //프로젝트 상태 수정
+    Project  project = projectRepository.findOneByProjectName(projectRequestDto.getProjectName())
+      .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+
+    Pull pull= Pull.builder()
+      .stateType(StateType.valueOf("Processing"))
+      .build();
+    Build build = Build.builder()
+      .stateType(StateType.valueOf("Waiting"))
+      .build();
+    Run run = Run.builder()
+      .stateType(StateType.valueOf("Waiting"))
+      .build();
+
+    ProjectState projectState = ProjectState.builder()
+      .project(project)
+      .pull(pull)
+      .build(build)
+      .run(run)
+      .build();
+
+    //프로젝트 스테이트 저장
+    saveProjectState(projectState,project,pull,build,run);
+
     //Pull start
-    Pull pull;
     try { // pull 트라이
       //TODO / ProjectService : GitPull 트라이
 
@@ -74,25 +97,33 @@ public class ProjectServiceImpl implements ProjectService {
       pull = Pull.builder()
         .stateType(StateType.valueOf("Done"))
         .build();
+
+      //프로젝트 스테이트 저장
+      saveProjectState(projectState,project,pull,build,run);
+
       //성공 로그 출력
-      log.info(" Done : {}",pull.toString());
+      log.info(" Pull Done : {}",pull.toString());
     }
     catch (Exception e){ // state failed 넣기
-      //에러 로그 출력
-      log.error("Pull failed {} {}",e.getCause(),e.getMessage());
-
       //pullState failed 입력
       pull = Pull.builder()
         .stateType(StateType.valueOf("Failed"))
         .build();
 
+      //프로젝트 스테이트 저장
+      saveProjectState(projectState,project,pull,build,run);
+
       //성공 플래그 false 로 변경
       successFlag=false;
+
+      //에러 로그 출력
+      log.error("Pull failed {} {}",e.getCause(),e.getMessage());
+
+      throw e;
     }
 
 
     //Build start
-    Build build;
     try { // Build 트라이
       //TODO / ProjectService : Build 트라이
 
@@ -100,22 +131,32 @@ public class ProjectServiceImpl implements ProjectService {
       build = Build.builder()
         .stateType(StateType.valueOf("Done"))
         .build();
+
+      //프로젝트 스테이트 저장
+      saveProjectState(projectState,project,pull,build,run);
+
+      //성공 로그 출력
+      log.info("Build Done : {}",build.toString());
     }
     catch (Exception e){ // state failed 넣기
-      //에러 로그 출력
-      log.error("Build failed {} {}",e.getCause(),e.getMessage());
-
       //buildState failed 입력
       build = Build.builder()
         .stateType(StateType.valueOf("Failed"))
         .build();
 
+      //프로젝트 스테이트 저장
+      saveProjectState(projectState,project,pull,build,run);
+
       //성공 플래그 false 로 변경
       successFlag=false;
+
+      //에러 로그 출력
+      log.error("Build failed {} {}",e.getCause(),e.getMessage());
+
+      throw e;
     }
 
     //Run start
-    Run run;
     try { // run 트라이
       //TODO / ProjectService : DockerRun 트라이
 
@@ -123,24 +164,33 @@ public class ProjectServiceImpl implements ProjectService {
       run = Run.builder()
         .stateType(StateType.valueOf("Done"))
         .build();
+
+      //프로젝트 스테이트 저장
+      saveProjectState(projectState,project,pull,build,run);
+
+      //성공 로그 출력
+      log.info("Run Done : {}",run.toString());
     }
     catch (Exception e){ // state failed 넣기
-      //에러 로그 출력
-      log.error("Run failed {} {}",e.getCause(),e.getMessage());
-
       //dockerRunState failed 입력
       run = Run.builder()
         .stateType(StateType.valueOf("Failed"))
         .build();
 
+      //프로젝트 스테이트 저장
+      saveProjectState(projectState,project,pull,build,run);
+
       //성공 플래그 false 로 변경
       successFlag=false;
+
+      //에러 로그 출력
+      log.error("Run failed {} {}",e.getCause(),e.getMessage());
+
+      throw e;
     }
 
 
-    //프로젝트 상태 수정
-    Project  project = projectRepository.findOneByProjectName(projectRequestDto.getProjectName())
-      .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+
 
     //모든 빌드 성공시 Done
     if(successFlag) {
@@ -153,20 +203,13 @@ public class ProjectServiceImpl implements ProjectService {
       log.info("update state to Failed");
     }
 
-    //projectState , 각 빌드상태 save  : cascade
-    ProjectState projectState = ProjectState.builder()
-      .project(project)
-      .pull(pull)
-      .build(build)
-      .run(run)
-      .build();
-
     //build - state binding
     pull.updateProjectState(projectState);
     build.updateProjectState(projectState);
     run.updateProjectState(projectState);
 
-    projectStateRepository.save(projectState);
+    //프로젝트 스테이트 저장
+    saveProjectState(projectState,project,pull,build,run);
 
     return projectState;
   }
@@ -201,5 +244,17 @@ public class ProjectServiceImpl implements ProjectService {
       .buildType(stateRequestDto.getBuildType())
       .stateType(StateType.valueOf(state))
       .build();
+  }
+
+  private void saveProjectState(ProjectState projectState,Project project,Pull pull,Build build,Run run){
+
+    projectState = ProjectState.builder()
+      .project(project)
+      .pull(pull)
+      .build(build)
+      .run(run)
+      .build();
+
+    projectStateRepository.save(projectState);
   }
 }
