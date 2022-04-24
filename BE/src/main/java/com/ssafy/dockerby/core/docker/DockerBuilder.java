@@ -1,23 +1,21 @@
 package com.ssafy.dockerby.core.docker;
 
 import com.ssafy.dockerby.core.docker.dto.ContainerConfig;
-import com.ssafy.dockerby.core.docker.dto.ContainerConfig.FrameworkType;
-import com.ssafy.dockerby.core.util.CommandInterpreter;
-import com.ssafy.dockerby.util.FileManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Builder {
+public class DockerBuilder {
 
   private final String rootDir;
   private final DockerfileMaker dockerfileMaker;
   private final DockerCommandMaker dockerCommandMaker;
 
-  public Builder(String projectName, ContainerConfig config) {
+  public DockerBuilder(String projectName, ContainerConfig config) {
     StringBuilder sb = new StringBuilder();
     sb.append("/home/").append(projectName).append("/");
     this.rootDir = sb.toString();

@@ -5,7 +5,7 @@ import com.ssafy.dockerby.core.docker.dto.ContainerConfig.FrameworkType;
 
 class BuilderTest {
 
-  private Builder builder;
+  private DockerBuilder builder;
 
   public BuilderTest() {
     ContainerConfig config = ContainerConfig.builder()
@@ -17,7 +17,7 @@ class BuilderTest {
         .properties("volume","/var/dongho : /var/dockerby")
         .properties("env","MYSQL_ROOT_PASSWORD=ssafy1")
         .build();
-    this.builder = new Builder("Test",config);
+    this.builder = new DockerBuilder("Test",config);
   }
 
 }
