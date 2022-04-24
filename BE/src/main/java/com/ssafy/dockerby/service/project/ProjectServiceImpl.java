@@ -104,22 +104,25 @@ public class ProjectServiceImpl implements ProjectService {
 
     boolean successFlag=true;
 
-    //프로젝트 상태 수정
+    //프로젝트 와 state 들 영속 부여
     Project  project = projectRepository.findOneByProjectName(projectRequestDto.getProjectName())
         .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
 
-    ProjectState projectState = projectStateRepository.findByProjectId(project.getId()).orElseThrow();
-    Pull pull= pullRepository.findByProjectStateId(projectState.getId()).orElseThrow();
-    Build build = buildRepository.findByProjectStateId(projectState.getId()).orElseThrow();
-    Run run = runRepository.findByProjectStateId(projectState.getId()).orElseThrow();
+    ProjectState projectState = projectStateRepository.findByProjectId(project.getId())
+      .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
 
-    //프로젝트 스테이트 저장
+    Pull pull= pullRepository.findByProjectStateId(projectState.getId())
+      .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
 
+    Build build = buildRepository.findByProjectStateId(projectState.getId())
+      .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+
+    Run run = runRepository.findByProjectStateId(projectState.getId())
+      .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
 
     //Pull start
     try { // pull 트라이
       //TODO / ProjectService : GitPull 트라이
-
 
       // pull 완료 build 진행중 update
       pull.updateStateType("Done");
@@ -149,7 +152,6 @@ public class ProjectServiceImpl implements ProjectService {
 
       throw e;
     }
-
 
     //Build start
     try { // Build 트라이
