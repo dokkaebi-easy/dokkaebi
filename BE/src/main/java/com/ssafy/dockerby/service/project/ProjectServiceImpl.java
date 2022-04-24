@@ -226,7 +226,7 @@ public class ProjectServiceImpl implements ProjectService {
       //각각 frameworkTypes 에 add 하기
       for(FrameworkType types : frameworks){
         FrameworkTypeResponseDto frameworkResponseDto = FrameworkTypeResponseDto.builder()
-          .frameworkId(types.getId())
+          .frameworkTypeId(types.getId())
           .frameworkName(types.getFrameworkName())
           .build();
         frameworkTypes.add(frameworkResponseDto);

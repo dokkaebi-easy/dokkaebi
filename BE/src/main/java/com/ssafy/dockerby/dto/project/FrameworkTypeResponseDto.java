@@ -11,7 +11,7 @@ import lombok.*;
 public class FrameworkTypeResponseDto {
 
   @NotNull
-  private Long frameworkId;
+  private Long frameworkTypeId;
 
   @NotNull
   private String frameworkName;
