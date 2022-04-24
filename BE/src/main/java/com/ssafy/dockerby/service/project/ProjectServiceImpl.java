@@ -4,11 +4,11 @@ import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.project.*;
 import com.ssafy.dockerby.entity.project.*;
 import com.ssafy.dockerby.entity.project.enums.StateType;
-import com.ssafy.dockerby.entity.project.enums.frameworks.Framework;
-import com.ssafy.dockerby.entity.project.enums.frameworks.FrameworkType;
-import com.ssafy.dockerby.entity.project.enums.states.Build;
-import com.ssafy.dockerby.entity.project.enums.states.Run;
-import com.ssafy.dockerby.entity.project.enums.states.Pull;
+import com.ssafy.dockerby.entity.project.frameworks.Framework;
+import com.ssafy.dockerby.entity.project.frameworks.FrameworkType;
+import com.ssafy.dockerby.entity.project.states.Build;
+import com.ssafy.dockerby.entity.project.states.Run;
+import com.ssafy.dockerby.entity.project.states.Pull;
 import com.ssafy.dockerby.repository.project.FrameworkRepository;
 import com.ssafy.dockerby.repository.project.FrameworkTypeRepository;
 import com.ssafy.dockerby.repository.project.ProjectRepository;
@@ -45,11 +45,11 @@ public class ProjectServiceImpl implements ProjectService {
     Project project = Project.of(projectRequestDto,configLocation);
 
     try {
-      //프로젝트 저장
-      projectRepository.save(project);
-
       // 프로젝트 빌드 state 진행중으로 변경
       project.updateState("Processing");
+
+      //프로젝트 저장
+      projectRepository.save(project);
 
       // 저장완료 로그출력
       log.info("project save completed");
@@ -300,7 +300,7 @@ public class ProjectServiceImpl implements ProjectService {
       //frameworkTypeId 로 framework 가져오기
       List<Framework> frameworks = frameworkRepository.findAllByFrameworkTypeId(typeId).orElseThrow(() -> new ChangeSetPersister.NotFoundException());
 
-      for(Framework framework:frameworks) {
+      for (Framework framework : frameworks) {
         FrameworkVersionResponseDto responseDto = FrameworkVersionResponseDto.builder()
           .frameworkBuildType(framework.getBuildType())
           .frameworkVersion(framework.getVersion())
@@ -309,14 +309,14 @@ public class ProjectServiceImpl implements ProjectService {
       }
       //성공 로그 출력
       log.info("getFrameworkVersion request success");
-    }
-    catch (Exception error){
+    } catch (Exception error) {
       //실패 로그 출력
-      log.error("getFrameworkVersion request failed {} {}",error.getCause(), error.getMessage());
+      log.error("getFrameworkVersion request failed {} {}", error.getCause(), error.getMessage());
       throw error;
     }
-    log.info("getFrameworkVersion request completed VersionSize : {}",frameworkVersions.size());
+    log.info("getFrameworkVersion request completed VersionSize : {}", frameworkVersions.size());
     return frameworkVersions;
+  }
 
   private void saveProjectState(ProjectState projectState,Project project,Pull pull,Build build,Run run){
 

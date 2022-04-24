@@ -30,6 +30,7 @@ public class ProjectController {
     //프로젝트 저장 & response 반환
     ProjectResponseDto projectResponseDto = projectService.createProject(projectRequestDto);
 
+    log.info("project build start / waiting -> processing");
     //프로젝트 buildStart
     ProjectState projectState = projectService.build(projectRequestDto);
 

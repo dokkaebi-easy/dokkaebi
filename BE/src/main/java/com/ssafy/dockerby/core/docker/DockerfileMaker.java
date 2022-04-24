@@ -78,7 +78,7 @@ public class DockerfileMaker {
     sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf");
     sb.append("COPY --from=builder ");
     sb.append((config.getBuildPath() == null) ? "/build" : config.getBuildPath())
-        .append("/usr/share/nginx/html");
+      .append("/usr/share/nginx/html");
     sb.append("EXPOSE ").append("3000");
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
@@ -99,7 +99,7 @@ public class DockerfileMaker {
     sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf");
     sb.append("COPY --from=builder ");
     sb.append((config.getBuildPath() == null) ? "/app/dist" : config.getBuildPath())
-        .append("/usr/share/nginx/html");
+      .append("/usr/share/nginx/html");
     sb.append("EXPOSE ").append("3000");
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
