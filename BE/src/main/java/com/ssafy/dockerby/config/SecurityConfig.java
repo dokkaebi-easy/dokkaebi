@@ -53,16 +53,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 customAuthenticationFailureHandler) // 로그인 실패시 customAuthenticationFailureHandler 사용
         ;
         //자동 로그인 기능
-        http.rememberMe()
-            .rememberMeParameter("remember")      // 기본 파라미터명은 remember-me
-            .tokenValiditySeconds(3600)           // Default 는 14일
-            .alwaysRemember(true)                // 리멤버 미 기능이 활성화되지 않아도 항상 실행
-        ;
+//        http.rememberMe()
+//            .rememberMeParameter("remember")      // 기본 파라미터명은 remember-me
+//            .tokenValiditySeconds(3600)           // Default 는 14일
+//            .alwaysRemember(true)                // 리멤버 미 기능이 활성화되지 않아도 항상 실행
+//        ;
         // 로그아웃 처리
         http.logout()
             .logoutUrl("/api/user/auth/signout") // 로그아웃 처리 URL
             .logoutSuccessUrl("/api/user/auth/signin")
-            .deleteCookies("JSESSIONID", "remember-me") // 로그아웃 후 해당 쿠키 삭제
+            .deleteCookies("JSESSIONID"
+//              , "remember-me"
+            ) // 로그아웃 후 해당 쿠키 삭제
             .addLogoutHandler(customLogoutHandler) // 로그아웃 처리 핸들러
             .logoutSuccessHandler(customLogoutSuccessHandler) // 로그아웃 성공시 핸들러
         ;
