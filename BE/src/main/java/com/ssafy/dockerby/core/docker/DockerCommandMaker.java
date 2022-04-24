@@ -45,4 +45,10 @@ public class DockerCommandMaker {
       this.networkBridge = projectName + "_bridge";
     return "docker network create " + this.networkBridge;
   }
+
+  public String removeContainer(ContainerConfig config) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("docker rm -f ").append(projectName).append('-').append(config.getName());
+    return sb.toString();
+  }
 }
