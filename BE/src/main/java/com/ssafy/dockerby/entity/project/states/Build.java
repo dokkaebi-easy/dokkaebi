@@ -23,7 +23,7 @@ public class Build extends BaseEntity  {
   @Enumerated(value = EnumType.STRING)
   private StateType stateType;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
   @JoinColumn(name = "project_state_id")
   private ProjectState projectState;
 
