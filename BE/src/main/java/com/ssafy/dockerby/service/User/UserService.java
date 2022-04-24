@@ -1,9 +1,8 @@
-package com.ssafy.dockerby.service;
+package com.ssafy.dockerby.service.User;
 
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
-import com.ssafy.dockerby.dto.User.SigninRequestDto;
-import com.ssafy.dockerby.dto.User.UserDto;
+import com.ssafy.dockerby.dto.User.SignupDto;
 import com.ssafy.dockerby.dto.User.UserResponseDto;
 import java.io.IOException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,12 +14,10 @@ public interface UserService extends UserDetailsService {
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
-    void duplicatePrincipalCheck(String principal) throws UserDefindedException;
+    Boolean duplicatePrincipalCheck(String principal) throws UserDefindedException;
+    Boolean duplicateNameCheck(String name) throws UserDefindedException;
 
-    UserResponseDto signup(UserDto userDto) throws IOException, UserDefindedException;
-
-    UserResponseDto signin(SigninRequestDto userRequestDto)
-        throws IOException, UserDefindedException;
+    UserResponseDto signup(SignupDto signupDto) throws IOException, UserDefindedException;
 
 }
 
