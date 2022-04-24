@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Api(tags = {"Project"})
 @RestController
@@ -35,6 +36,30 @@ public class ProjectController {
     //TODO : Response 확인
     log.info("project create Success {} ",projectResponseDto.toString());
     return ResponseEntity.ok(projectResponseDto);
+  }
+
+  @GetMapping("/frameworkType")
+  public ResponseEntity<List<FrameworkTypeResponseDto>> getFrameworkType(){
+    //type 요청 로그 출력
+    log.info("frameworkType API received");
+
+    //type list 입력
+    List<FrameworkTypeResponseDto> frameworkTypes = projectService.getFrameworkType();
+
+    //type list 반환
+    return ResponseEntity.ok(frameworkTypes);
+  }
+
+  @GetMapping("/frameworkVersion")
+  public ResponseEntity<List<FrameworkVersionResponseDto>> GetFrameworkVersion(@PathVariable Long typeId) throws ChangeSetPersister.NotFoundException {
+    //version 요청 로그 출력
+    log.info("frameworkVersion API received");
+
+    //version list 입력
+    List<FrameworkVersionResponseDto> frameworkVersionResponses = projectService.getFrameworkVersion(typeId);
+
+    //version list 반환
+    return ResponseEntity.ok(frameworkVersionResponses);
   }
 
   @GetMapping("/buildDetail")

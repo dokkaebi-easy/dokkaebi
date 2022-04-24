@@ -4,9 +4,13 @@ import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.project.*;
 import com.ssafy.dockerby.entity.project.*;
 import com.ssafy.dockerby.entity.project.enums.StateType;
-import com.ssafy.dockerby.entity.project.states.Build;
-import com.ssafy.dockerby.entity.project.states.Run;
-import com.ssafy.dockerby.entity.project.states.Pull;
+import com.ssafy.dockerby.entity.project.enums.frameworks.Framework;
+import com.ssafy.dockerby.entity.project.enums.frameworks.FrameworkType;
+import com.ssafy.dockerby.entity.project.enums.states.Build;
+import com.ssafy.dockerby.entity.project.enums.states.Run;
+import com.ssafy.dockerby.entity.project.enums.states.Pull;
+import com.ssafy.dockerby.repository.project.FrameworkRepository;
+import com.ssafy.dockerby.repository.project.FrameworkTypeRepository;
 import com.ssafy.dockerby.repository.project.ProjectRepository;
 import com.ssafy.dockerby.repository.project.ProjectStateRepository;
 import com.ssafy.dockerby.util.FileManager;
@@ -17,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -25,6 +31,9 @@ import java.io.IOException;
 public class ProjectServiceImpl implements ProjectService {
   private final ProjectRepository projectRepository;
   private final ProjectStateRepository projectStateRepository;
+
+  private final FrameworkRepository frameworkRepository;
+  private final FrameworkTypeRepository frameworkTypeRepository;
 
   @Override
   public ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) throws IOException, UserDefindedException {
@@ -201,5 +210,68 @@ public class ProjectServiceImpl implements ProjectService {
       .buildType(stateRequestDto.getBuildType())
       .stateType(StateType.valueOf(state))
       .build();
+  }
+
+  @Override
+  public List<FrameworkTypeResponseDto> getFrameworkType() {
+    log.info("getFrameworkType request received");
+
+    //frameworkTypes initialized
+    List<FrameworkTypeResponseDto> frameworkTypes = new ArrayList<>();
+
+    try { //framework 타입 가져오기 시작
+      //모든 framework 가져오기
+      List<FrameworkType> frameworks = frameworkTypeRepository.findAll();
+
+      //각각 frameworkTypes 에 add 하기
+      for(FrameworkType types : frameworks){
+        FrameworkTypeResponseDto frameworkResponseDto = FrameworkTypeResponseDto.builder()
+          .frameworkId(types.getId())
+          .frameworkName(types.getFrameworkName())
+          .build();
+        frameworkTypes.add(frameworkResponseDto);
+      }
+
+      //성공 로그 출력
+      log.info("getFrameworkType request success");
+    }
+    catch (Exception error){
+      //실패 로그 출력
+      log.error("getFrameworkType request failed {} {}",error.getCause(),error.getMessage());
+
+      throw error;
+    }
+
+
+    log.info("getFrameworkType request completed typeSize : {}",frameworkTypes.size());
+    return frameworkTypes;
+  }
+
+  @Override
+  public List<FrameworkVersionResponseDto> getFrameworkVersion(Long typeId) throws ChangeSetPersister.NotFoundException {
+    //frameworkVersions initialized
+    List<FrameworkVersionResponseDto> frameworkVersions = new ArrayList<>();
+
+    try { //framework 가져오기
+      //frameworkTypeId 로 framework 가져오기
+      List<Framework> frameworks = frameworkRepository.findAllByFrameworkTypeId(typeId).orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+
+      for(Framework framework:frameworks) {
+        FrameworkVersionResponseDto responseDto = FrameworkVersionResponseDto.builder()
+          .frameworkBuildType(framework.getBuildType())
+          .frameworkVersion(framework.getVersion())
+          .build();
+        frameworkVersions.add(responseDto);
+      }
+      //성공 로그 출력
+      log.info("getFrameworkVersion request success");
+    }
+    catch (Exception error){
+      //실패 로그 출력
+      log.error("getFrameworkVersion request failed {} {}",error.getCause(), error.getMessage());
+      throw error;
+    }
+    log.info("getFrameworkVersion request completed VersionSize : {}",frameworkVersions.size());
+    return frameworkVersions;
   }
 }

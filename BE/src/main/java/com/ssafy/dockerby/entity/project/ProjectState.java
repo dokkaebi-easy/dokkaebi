@@ -1,9 +1,9 @@
 package com.ssafy.dockerby.entity.project;
 
 import com.ssafy.dockerby.entity.BaseEntity;
-import com.ssafy.dockerby.entity.project.states.Build;
-import com.ssafy.dockerby.entity.project.states.Run;
-import com.ssafy.dockerby.entity.project.states.Pull;
+import com.ssafy.dockerby.entity.project.enums.states.Build;
+import com.ssafy.dockerby.entity.project.enums.states.Run;
+import com.ssafy.dockerby.entity.project.enums.states.Pull;
 import lombok.*;
 
 import javax.persistence.*;
