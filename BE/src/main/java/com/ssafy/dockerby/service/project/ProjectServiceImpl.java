@@ -30,19 +30,14 @@ import java.util.List;
 @Slf4j
 public class ProjectServiceImpl implements ProjectService {
 
-  private final EntityManager em;
   private final ProjectRepository projectRepository;
   private final ProjectStateRepository projectStateRepository;
-
   private final PullRepository pullRepository;
-
   private final BuildRepository buildRepository;
-
   private final RunRepository runRepository;
 
   private final FrameworkRepository frameworkRepository;
   private final FrameworkTypeRepository frameworkTypeRepository;
-  private static boolean flag = true;
 
   @Override
   public ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) throws IOException, UserDefindedException {
