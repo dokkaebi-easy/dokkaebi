@@ -14,6 +14,9 @@ import com.ssafy.dockerby.repository.project.FrameworkTypeRepository;
 import com.ssafy.dockerby.repository.project.ProjectRepository;
 import com.ssafy.dockerby.repository.project.ProjectStateRepository;
 import com.ssafy.dockerby.util.FileManager;
+import java.util.HashMap;
+import java.util.Map;
+import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -29,11 +32,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ProjectServiceImpl implements ProjectService {
+
+  private final EntityManager em;
   private final ProjectRepository projectRepository;
   private final ProjectStateRepository projectStateRepository;
 
   private final FrameworkRepository frameworkRepository;
   private final FrameworkTypeRepository frameworkTypeRepository;
+  private static boolean flag = true;
 
   @Override
   public ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) throws IOException, UserDefindedException {
@@ -62,11 +68,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     return ProjectResponseDto.builder()
-      .projectId(project.getId())
-      .projectName(project.getProjectName())
-      .state(String.valueOf(project.getStateType()))
-      .configLocation(configLocation)
-      .build();
+        .projectId(project.getId())
+        .projectName(project.getProjectName())
+        .state(String.valueOf(project.getStateType()))
+        .configLocation(configLocation)
+        .build();
   }
 
   @Override
@@ -76,24 +82,28 @@ public class ProjectServiceImpl implements ProjectService {
 
     //프로젝트 상태 수정
     Project  project = projectRepository.findOneByProjectName(projectRequestDto.getProjectName())
-      .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+        .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
 
     Pull pull= Pull.builder()
-      .stateType(StateType.valueOf("Processing"))
-      .build();
+        .stateType(StateType.valueOf("Processing"))
+        .build();
     Build build = Build.builder()
-      .stateType(StateType.valueOf("Waiting"))
-      .build();
+        .stateType(StateType.valueOf("Waiting"))
+        .build();
     Run run = Run.builder()
-      .stateType(StateType.valueOf("Waiting"))
-      .build();
+        .stateType(StateType.valueOf("Waiting"))
+        .build();
 
     ProjectState projectState = ProjectState.builder()
-      .project(project)
-      .pull(pull)
-      .build(build)
-      .run(run)
-      .build();
+        .project(project)
+        .pull(pull)
+        .build(build)
+        .run(run)
+        .build();
+
+    pull.updateProjectState(projectState);
+    build.updateProjectState(projectState);
+    run.updateProjectState(projectState);
 
     //프로젝트 스테이트 저장
     saveProjectState(projectState,project,pull,build,run);
@@ -102,10 +112,12 @@ public class ProjectServiceImpl implements ProjectService {
     try { // pull 트라이
       //TODO / ProjectService : GitPull 트라이
 
+
       // state Done 넣기
       pull = Pull.builder()
-        .stateType(StateType.valueOf("Done"))
-        .build();
+          .stateType(StateType.valueOf("Done"))
+          .projectState(projectState)
+          .build();
 
       //프로젝트 스테이트 저장
       saveProjectState(projectState,project,pull,build,run);
@@ -116,8 +128,9 @@ public class ProjectServiceImpl implements ProjectService {
     catch (Exception e){ // state failed 넣기
       //pullState failed 입력
       pull = Pull.builder()
-        .stateType(StateType.valueOf("Failed"))
-        .build();
+          .stateType(StateType.valueOf("Failed"))
+          .projectState(projectState)
+          .build();
 
       //프로젝트 스테이트 저장
       saveProjectState(projectState,project,pull,build,run);
@@ -138,8 +151,9 @@ public class ProjectServiceImpl implements ProjectService {
 
       // state Done 넣기
       build = Build.builder()
-        .stateType(StateType.valueOf("Done"))
-        .build();
+          .stateType(StateType.valueOf("Done"))
+          .projectState(projectState)
+          .build();
 
       //프로젝트 스테이트 저장
       saveProjectState(projectState,project,pull,build,run);
@@ -150,8 +164,9 @@ public class ProjectServiceImpl implements ProjectService {
     catch (Exception e){ // state failed 넣기
       //buildState failed 입력
       build = Build.builder()
-        .stateType(StateType.valueOf("Failed"))
-        .build();
+          .stateType(StateType.valueOf("Failed"))
+          .projectState(projectState)
+          .build();
 
       //프로젝트 스테이트 저장
       saveProjectState(projectState,project,pull,build,run);
@@ -171,8 +186,9 @@ public class ProjectServiceImpl implements ProjectService {
 
       // state Done 넣기
       run = Run.builder()
-        .stateType(StateType.valueOf("Done"))
-        .build();
+          .stateType(StateType.valueOf("Done"))
+          .projectState(projectState)
+          .build();
 
       //프로젝트 스테이트 저장
       saveProjectState(projectState,project,pull,build,run);
@@ -183,8 +199,9 @@ public class ProjectServiceImpl implements ProjectService {
     catch (Exception e){ // state failed 넣기
       //dockerRunState failed 입력
       run = Run.builder()
-        .stateType(StateType.valueOf("Failed"))
-        .build();
+          .stateType(StateType.valueOf("Failed"))
+          .projectState(projectState)
+          .build();
 
       //프로젝트 스테이트 저장
       saveProjectState(projectState,project,pull,build,run);
@@ -212,11 +229,6 @@ public class ProjectServiceImpl implements ProjectService {
       log.info("update state to Failed");
     }
 
-    //build - state binding
-    pull.updateProjectState(projectState);
-    build.updateProjectState(projectState);
-    run.updateProjectState(projectState);
-
     //프로젝트 스테이트 저장
     saveProjectState(projectState,project,pull,build,run);
 
@@ -228,7 +240,7 @@ public class ProjectServiceImpl implements ProjectService {
     //TODO /ProjectSercice : checkState Test 작성
 
     //StateRequest 에서 받은 projectId로 DB 탐색
-    ProjectState projectState = projectStateRepository.findByProjectId(stateRequestDto.getProjectId()).orElseThrow(() -> new ChangeSetPersister.NotFoundException());    
+    ProjectState projectState = projectStateRepository.findByProjectId(stateRequestDto.getProjectId()).orElseThrow(() -> new ChangeSetPersister.NotFoundException());
     //state initialize
     String state="";
 
@@ -249,10 +261,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     //state 를 넣은 response 반환환
     return StateResponseDto.builder()
-      .projectId(stateRequestDto.getProjectId())
-      .buildType(stateRequestDto.getBuildType())
-      .stateType(StateType.valueOf(state))
-      .build();
+        .projectId(stateRequestDto.getProjectId())
+        .buildType(stateRequestDto.getBuildType())
+        .stateType(StateType.valueOf(state))
+        .build();
   }
 
 
@@ -270,9 +282,9 @@ public class ProjectServiceImpl implements ProjectService {
       //각각 frameworkTypes 에 add 하기
       for(FrameworkType types : frameworks){
         FrameworkTypeResponseDto frameworkResponseDto = FrameworkTypeResponseDto.builder()
-          .frameworkTypeId(types.getId())
-          .frameworkName(types.getFrameworkName())
-          .build();
+            .frameworkTypeId(types.getId())
+            .frameworkName(types.getFrameworkName())
+            .build();
         frameworkTypes.add(frameworkResponseDto);
       }
 
@@ -302,9 +314,9 @@ public class ProjectServiceImpl implements ProjectService {
 
       for (Framework framework : frameworks) {
         FrameworkVersionResponseDto responseDto = FrameworkVersionResponseDto.builder()
-          .frameworkBuildType(framework.getBuildType())
-          .frameworkVersion(framework.getVersion())
-          .build();
+            .frameworkBuildType(framework.getBuildType())
+            .frameworkVersion(framework.getVersion())
+            .build();
         frameworkVersions.add(responseDto);
       }
       //성공 로그 출력
@@ -321,13 +333,40 @@ public class ProjectServiceImpl implements ProjectService {
   private void saveProjectState(ProjectState projectState,Project project,Pull pull,Build build,Run run){
 
     projectState = ProjectState.builder()
-      .project(project)
-      .pull(pull)
-      .build(build)
-      .run(run)
-      .build();
+        .project(project)
+        .pull(pull)
+        .build(build)
+        .run(run)
+        .build();
 
-    projectStateRepository.save(projectState);
+    log.info("state request save");
 
+    em.persist(projectState);
+    em.flush();
+    log.info("state save Done");
+  }
+
+  @Override
+  public ProjectListDto projectList()
+      throws UserDefindedException {
+    log.info("Project List");
+    List<Project> projectList = projectRepository.findAll();
+
+    List<Map> resultList = new ArrayList<>();
+
+    for(Project project : projectList){
+      Map<String, Object> map = new HashMap<>();
+      map.put("projectId",project.getId());
+      map.put("projectName",project.getProjectName());
+      map.put("state",project.getStateType());
+      resultList.add(map);
+    }
+
+    ProjectListDto projectListDto = ProjectListDto.builder()
+        .projects(resultList)
+        .build();
+
+    log.info("project count {}",projectListDto.getProjects().size());
+    return projectListDto;
   }
 }

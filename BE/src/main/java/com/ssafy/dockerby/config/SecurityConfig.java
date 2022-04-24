@@ -39,7 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-resources/**", "/v2/api-docs", "/webjars/**",
                 "/webjars/springfox-swagger-ui/*.{js,css}").permitAll()
             //그외 USER 권한만 허용
-            .anyRequest().hasAnyRole("USER");
+//            .anyRequest().hasAnyRole("USER");
+            // TODO: 2022-04-24  권한수정
+            // 개발 편의를 위해 모두허용
+            .anyRequest().permitAll();
 
         //로그인 form
         http
