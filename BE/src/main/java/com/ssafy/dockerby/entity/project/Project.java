@@ -26,13 +26,13 @@ public class Project extends BaseEntity {
   @Column(length = 60 , unique = true)
   private String projectName;
 
-  private String description;
-
   @Enumerated(value = EnumType.STRING)
   @Builder.Default
   private StateType stateType = StateType.valueOf("Waiting");
 
-  private String configLocation;
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+  @Builder.Default
+  private List<ProjectConfig> configs = new ArrayList<>();
 
   //연관관계 매핑
 
@@ -47,24 +47,27 @@ public class Project extends BaseEntity {
   @Builder.Default
   private List<ConfigHistory> histories = new ArrayList<>();
 //  private List<String> history;
+
   @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
   @Builder.Default
   private List<ProjectState> projectStates = new ArrayList<>();
 
 
-    //비지니스 로직
-  public static Project of(ProjectRequestDto projectRequestDto,String configLocation) {
-
+//비지니스 로직
+  public static Project from(ProjectRequestDto projectRequestDto) {
     return Project.builder()
       .projectName(projectRequestDto.getProjectName())
-      .description(projectRequestDto.getDescription())
-      .configLocation(configLocation)
       .build();
   }
 
-  public Project updateState(String state){
-    this.stateType = StateType.valueOf(state);
+  public Project updateState(StateType state){
+    this.stateType = state;
     return this;
+  }
+
+  public void addConfig(List<ProjectConfig> configs) {
+    this.configs = configs;
+    configs.forEach(config -> config.setProject(this));
   }
   public void addProjectState(ProjectState projectState){
     this.projectStates.add(projectState);

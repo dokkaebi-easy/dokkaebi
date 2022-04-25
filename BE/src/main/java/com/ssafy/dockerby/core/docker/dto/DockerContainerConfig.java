@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ContainerConfig {
+public class DockerContainerConfig {
 
   // 프레임워크 혹은 라이브러리
   // Ex) SpringBoot, Vue, React, Django, MySQL...
   private FrameworkType framework;
-  
+
   // 프레임워크/라이브러리 프로젝트 이름 or 해당 프로세스 별칭
   private String name;
 
@@ -45,20 +45,6 @@ public class ContainerConfig {
     SpringBoot, Vue, React, Django, MySQL
   }
 
-  public static class ContainerConfigBuilder {
-    public ContainerConfigBuilder properties(String key, String values) {
-      if(this.properties == null)
-        this.properties = new LinkedHashMap<>();
-      if(!this.properties.containsKey(key)) {
-        ArrayList<String> strings = new ArrayList<>();
-        this.properties.put(key,strings);
-      }
-      List<String> list = this.properties.get(key);
-      list.add(values);
-      return this;
-    }
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -67,9 +53,10 @@ public class ContainerConfig {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ContainerConfig that = (ContainerConfig) o;
+    DockerContainerConfig that = (DockerContainerConfig) o;
     return framework == that.framework && version.equals(that.version) && Objects.equals(
-        type, that.type) && Objects.equals(properties, that.properties) && projectDirectory.equals(that.projectDirectory);
+        type, that.type) && Objects.equals(properties, that.properties) && projectDirectory.equals(
+        that.projectDirectory);
   }
 
   @Override

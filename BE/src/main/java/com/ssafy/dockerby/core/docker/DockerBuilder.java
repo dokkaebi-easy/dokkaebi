@@ -1,6 +1,6 @@
 package com.ssafy.dockerby.core.docker;
 
-import com.ssafy.dockerby.core.docker.dto.ContainerConfig;
+import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class DockerBuilder {
   private final DockerfileMaker dockerfileMaker;
   private final DockerCommandMaker dockerCommandMaker;
 
-  public DockerBuilder(String projectName, ContainerConfig config) {
+  public DockerBuilder(String projectName) {
     StringBuilder sb = new StringBuilder();
     sb.append("/home/").append(projectName).append("/");
     this.rootDir = sb.toString();
@@ -23,15 +23,20 @@ public class DockerBuilder {
     this.dockerCommandMaker = new DockerCommandMaker(projectName, this.rootDir);
   }
 
-  public void execDockerfile(ContainerConfig config) throws IOException {
+  public void saveDockerfile(DockerContainerConfig config) throws IOException {
     dockerfileMaker.make(config);
   }
 
-  private String build(ContainerConfig config) {
+  public void saveDockerfiles(List<DockerContainerConfig> configs) throws IOException{
+    for(DockerContainerConfig config : configs)
+      dockerfileMaker.make(config);
+  }
+
+  private String build(DockerContainerConfig config) {
     return dockerCommandMaker.build(config);
   }
 
-  private String run(ContainerConfig config) {
+  private String run(DockerContainerConfig config) {
     return dockerCommandMaker.run(config);
   }
 
@@ -39,11 +44,20 @@ public class DockerBuilder {
     return dockerCommandMaker.bridge();
   }
 
-  private String removeContainer(ContainerConfig config) {
+  private String removeContainer(DockerContainerConfig config) {
     return dockerCommandMaker.removeContainer(config);
   }
 
-  public List<String> execRun(List<ContainerConfig> configs) {
+  public List<String> getBuildCommands(List<DockerContainerConfig> configs) {
+    List<String> commands = new ArrayList<>();
+    commands.add(network());
+
+    configs.forEach(config -> commands.add(build(config)));
+
+    return commands;
+  }
+
+  public List<String> getRunCommands(List<DockerContainerConfig> configs) {
     List<String> commands = new ArrayList<>();
     commands.add(network());
 
@@ -52,7 +66,7 @@ public class DockerBuilder {
     return commands;
   }
 
-  public List<String> execBuildAndRun(List<ContainerConfig> configs) {
+  public List<String> getBuildAndRun(List<DockerContainerConfig> configs) {
     List<String> commands = new ArrayList<>();
     commands.add(network());
 
