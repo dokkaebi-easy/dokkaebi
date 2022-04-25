@@ -1,13 +1,13 @@
 package com.ssafy.dockerby.core.docker.etcMaker;
 
-import com.ssafy.dockerby.core.docker.dto.NginxConfig;
-import com.ssafy.dockerby.core.docker.dto.NginxConfig.HttpsOption;
-import com.ssafy.dockerby.core.docker.dto.NginxConfig.ProxyLocation;
+import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig;
+import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig.HttpsOption;
+import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig.ProxyLocation;
 import java.util.List;
 
 public class NginxConfigMaker {
 
-  public String defaultConfig(NginxConfig config) {
+  public String defaultConfig(DockerNginxConfig config) {
     StringBuilder sb = new StringBuilder();
     sb.append(serverTagStart())
         .append(http())
@@ -22,7 +22,7 @@ public class NginxConfigMaker {
     return sb.toString();
   }
 
-  public String httpsConfig(NginxConfig config) {
+  public String httpsConfig(DockerNginxConfig config) {
     StringBuilder sb = new StringBuilder();
     sb.append(serverTagStart())
         .append(https(config.getHttpsOption()))
