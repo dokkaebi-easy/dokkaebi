@@ -10,6 +10,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import styled from '@emotion/styled';
+import { unset } from 'lodash';
 
 interface IFormInput {
   id: string;
@@ -56,6 +57,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function linkToMain() {
+  window.location.href = '/';
+}
+
 function SignUp() {
   const {
     register,
@@ -70,6 +75,7 @@ function SignUp() {
   const [json, setJson] = useState<string>();
 
   const onSubmit = (data: IFormInput) => {
+    unset(data, 'passwordConfirm');
     setJson(JSON.stringify(data));
   };
 
@@ -148,6 +154,7 @@ function SignUp() {
             variant="contained"
             color="primary"
             className={submitButton}
+            // onClick={linkToMain}
           >
             가입하기
           </Button>
@@ -168,4 +175,5 @@ export default SignUp;
 const ContainerDiv = styled.div`
   width: 400px;
   margin-top: 32px;
+  margin-bottom: 32px;
 `;

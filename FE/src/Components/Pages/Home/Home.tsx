@@ -1,17 +1,4 @@
 import Box from '@mui/material/Box';
-<<<<<<< HEAD
-import Grid from '@mui/material/Grid';
-import BuildList from '../BuildList/BuildList';
-
-export default function Home() {
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={1}>
-        <Grid item xs />
-        <BuildList />
-        <Grid item xs={8} />
-      </Grid>
-=======
 import MDTable from 'Components/UI/Molecules/MDTable/MDTable';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -33,7 +20,6 @@ export default function Home() {
           </Button>
         </Link>
       </Stack>
->>>>>>> 7cbcd051e1d0cf3ea302f46741e0cb974e7187ba
     </Box>
   );
 }

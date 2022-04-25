@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import styled from '@emotion/styled';
 
 function Copyright(props: any) {
   return (
@@ -41,9 +42,7 @@ function Login() {
   };
 
   const LinkToMain = () => {
-    const data = false;
-    // handleState(data);
-    window.location.replace('/Homelayout');
+    window.location.href = '/HomeLayout';
   };
 
   return (
@@ -105,14 +104,14 @@ function Login() {
             >
               로그인
             </Button>
-            <Grid container>
+            <Grid container justifyContent="flex-end">
               {/* <Grid item xs>
                 <Link href="#!" variant="body2">
                   Forgot password?
                 </Link>
               </Grid> */}
               <Grid item direction="row-reverse">
-                <Link to="/SignUp" style={{ textDecoration: 'none' }}>
+                <Link to="/signup" style={{ textDecoration: 'none' }}>
                   <span>가입하기</span>
                 </Link>
               </Grid>

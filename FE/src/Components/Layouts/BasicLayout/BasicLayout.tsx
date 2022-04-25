@@ -14,14 +14,10 @@ export default function BasicLayout() {
         sx={{ paddingLeft: 1, paddingTop: 3, paddingRight: 10, marginLeft: 35 }}
       >
         <Navbar />
-        <Switch>
-          <Route path="/setting">
-            <Setting />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
+
+        <Setting />
+
+        <Home />
       </Box>
     </>
   );
