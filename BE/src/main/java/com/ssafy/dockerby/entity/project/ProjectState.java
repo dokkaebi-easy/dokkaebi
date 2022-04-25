@@ -32,5 +32,14 @@ public class ProjectState extends BaseEntity {
 
   @OneToOne(mappedBy = "projectState" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Run run;
-
+  @Override
+  public String toString() {
+    return "ProjectState{" +
+      "id=" + id +
+      ", project=" + project +
+      ", pull=" + pull +
+      ", build=" + build +
+      ", run=" + run +
+      '}';
+  }
 }
