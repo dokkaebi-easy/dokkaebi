@@ -53,7 +53,7 @@ export default function SideNavibar() {
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
-              <ListItemText primary="Inbox" />
+              <ListItemText primary="Menu1" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -61,7 +61,7 @@ export default function SideNavibar() {
               <ListItemIcon>
                 <DashboardCustomizeIcon />
               </ListItemIcon>
-              <ListItemText primary="Drafts" />
+              <ListItemText primary="Menu2" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -70,7 +70,7 @@ export default function SideNavibar() {
                 <ListItemIcon>
                   <SettingsIcon />
                 </ListItemIcon>
-                <ListItemText primary="Setting" />
+                <ListItemText primary="Menu3" />
               </ListItemButton>
             </Link>
           </ListItem>
