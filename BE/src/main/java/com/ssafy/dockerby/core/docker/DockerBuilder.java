@@ -1,13 +1,11 @@
 package com.ssafy.dockerby.core.docker;
 
 import com.ssafy.dockerby.core.docker.dto.ContainerConfig;
-import com.ssafy.dockerby.core.docker.dto.ContainerConfig.FrameworkType;
-import com.ssafy.dockerby.core.util.CommandInterpreter;
-import com.ssafy.dockerby.util.FileManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -39,6 +37,19 @@ public class DockerBuilder {
 
   private String network() {
     return dockerCommandMaker.bridge();
+  }
+
+  private String removeContainer(ContainerConfig config) {
+    return dockerCommandMaker.removeContainer(config);
+  }
+
+  public List<String> execRun(List<ContainerConfig> configs) {
+    List<String> commands = new ArrayList<>();
+    commands.add(network());
+
+    configs.forEach(config -> commands.add(run(config)));
+
+    return commands;
   }
 
   public List<String> execBuildAndRun(List<ContainerConfig> configs) {

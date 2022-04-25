@@ -1,6 +1,6 @@
 //package com.ssafy.dockerby.controller;
 //
-//import com.ssafy.dockerby.dto.User.SigninRequestDto;
+//import com.ssafy.dockerby.dto.User.SigninDto;
 //import com.ssafy.dockerby.dto.User.UserDto;
 //import com.ssafy.dockerby.dto.User.UserResponseDto;
 //import java.io.FileNotFoundException;
@@ -26,7 +26,6 @@
 //        throws Exception, ExecutionException, InterruptedException, FileNotFoundException {
 //        // given
 //        UserDto userDto = UserDto.builder()
-//            .id(0L)
 //            .principal("아이디")
 //            .credential("비밀번호")
 //            .name("김민현")
@@ -45,7 +44,6 @@
 //        throws Exception, ExecutionException, InterruptedException, FileNotFoundException {
 //        // given
 //        UserDto userDto = UserDto.builder()
-//            .id(0L)
 //            .principal("아이디")
 //            .credential("비밀번호")
 //            .name("김민현")
@@ -53,18 +51,18 @@
 //            .build();
 //        ResponseEntity<UserResponseDto> result1 = userController.signup(userDto);
 //
-//        SigninRequestDto signinRequestDto = SigninRequestDto
+//        SigninDto signinRequestDto = SigninDto
 //            .builder()
 //            .principal(userDto.getPrincipal())
 //            .credential(userDto.getCredential())
 //            .build();
 //        // when
-//        ResponseEntity<UserResponseDto> result2 = userController.signin(signinRequestDto);
-//
-//        // then
-//        Assertions.assertThat(result1.getBody().getPrincipal())
-//            .isEqualTo(result2.getBody().getPrincipal());
-//        Assertions.assertThat(result1.getBody().getName()).isEqualTo(result2.getBody().getName());
+////        ResponseEntity<UserResponseDto> result2 = userController.signin(signinRequestDto);
+////
+////        // then
+////        Assertions.assertThat(result1.getBody().getPrincipal())
+////            .isEqualTo(result2.getBody().getPrincipal());
+////        Assertions.assertThat(result1.getBody().getName()).isEqualTo(result2.getBody().getName());
 //
 //    }
 //

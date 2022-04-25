@@ -4,9 +4,10 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 @Getter
+@Setter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectRequestDto {
 
   @NotNull

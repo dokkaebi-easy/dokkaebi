@@ -1,6 +1,7 @@
-package com.ssafy.dockerby.dto.User;
+package com.ssafy.dockerby.dto.user;
 
-import com.ssafy.dockerby.entity.User.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssafy.dockerby.entity.user.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,14 +13,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserResponseDto {
-
-    private Long id;
+    @JsonProperty(value="id")
     private String principal;
     private String name;
+    private String state;
 
+    public void SuccessState() {
+        state = "Success";
+    }
+
+    public void FailState() {
+        state = "Fail";
+    }
     public static UserResponseDto of(User user) {
         return UserResponseDto.builder()
-            .id(user.getId())
             .name(user.getName())
             .principal(user.getPrincipal())
             .build();

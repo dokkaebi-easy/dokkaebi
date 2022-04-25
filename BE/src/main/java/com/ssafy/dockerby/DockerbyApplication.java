@@ -9,5 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class DockerbyApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DockerbyApplication.class, args);
+
 	}
 }

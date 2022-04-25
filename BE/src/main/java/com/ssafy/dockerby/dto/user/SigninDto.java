@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.dto.User;
+package com.ssafy.dockerby.dto.user;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SigninRequestDto {
+public class SigninDto {
 
     private String principal;
     private String credential;
