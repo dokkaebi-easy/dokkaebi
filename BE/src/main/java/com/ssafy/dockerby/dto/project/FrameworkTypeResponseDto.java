@@ -4,7 +4,6 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -3,7 +3,6 @@ package com.ssafy.dockerby.dto.project;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
