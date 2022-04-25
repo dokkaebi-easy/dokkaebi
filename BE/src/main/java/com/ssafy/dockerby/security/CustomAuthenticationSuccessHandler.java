@@ -19,7 +19,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         HttpSession session = request.getSession();
-        session.setMaxInactiveInterval(60);//session 최대 유효시간(초) 설정.
+        session.setMaxInactiveInterval(36000);//session 최대 유효시간(초) 설정.
         response.sendRedirect("/api/user/signin/success"); //리다이렉트 응답 경로
     }
 
