@@ -21,11 +21,16 @@ public class Run extends BaseEntity  {
   private Long id;
 
   @Enumerated(value = EnumType.STRING)
-  private StateType stateType;
+  @Builder.Default
+  private StateType stateType = StateType.Waiting;
 
   @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
   @JoinColumn(name = "project_state_id")
   private ProjectState projectState;
+
+  public static Run from() {
+    return Run.builder().build();
+  }
 
   public void updateProjectState(ProjectState projectState){
     this.projectState = projectState;

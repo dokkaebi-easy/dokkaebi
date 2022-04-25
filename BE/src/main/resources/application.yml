@@ -10,15 +10,12 @@ spring:
     username: root
     password: ssafy
     driver-class-name: com.mysql.cj.jdbc.Driver
-    initialization-mode: always
 
   sql:
     init:
-      mode: always
+      mode: never
 
   jpa:
-    hibernate:
-      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -31,3 +28,7 @@ logging.level:
 
 uploadPath:
   path: "./fileData/"
+
+dockerby:
+  configRootPath: "./jsonData"
+  logPath : "./log"
