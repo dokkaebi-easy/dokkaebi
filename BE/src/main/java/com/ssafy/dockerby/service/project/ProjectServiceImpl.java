@@ -2,6 +2,7 @@ package com.ssafy.dockerby.service.project;
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.project.*;
+import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.project.*;
 import com.ssafy.dockerby.entity.project.enums.StateType;
 import com.ssafy.dockerby.entity.project.frameworks.Framework;
@@ -9,18 +10,27 @@ import com.ssafy.dockerby.entity.project.frameworks.FrameworkType;
 import com.ssafy.dockerby.entity.project.states.Build;
 import com.ssafy.dockerby.entity.project.states.Run;
 import com.ssafy.dockerby.entity.project.states.Pull;
-import com.ssafy.dockerby.repository.project.*;
+import com.ssafy.dockerby.entity.user.User;
+import com.ssafy.dockerby.repository.user.UserRepository;
+import com.ssafy.dockerby.repository.project.BuildRepository;
+import com.ssafy.dockerby.repository.project.FrameworkRepository;
+import com.ssafy.dockerby.repository.project.FrameworkTypeRepository;
+import com.ssafy.dockerby.repository.project.ProjectRepository;
+import com.ssafy.dockerby.repository.project.ProjectStateRepository;
+import com.ssafy.dockerby.repository.project.PullRepository;
+import com.ssafy.dockerby.repository.project.RunRepository;
+import com.ssafy.dockerby.repository.User.ConfigHistoryRepository;
+
 import com.ssafy.dockerby.util.FileManager;
-import java.util.HashMap;
-import java.util.Map;
-import javax.persistence.EntityManager;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +50,12 @@ public class ProjectServiceImpl implements ProjectService {
   private final FrameworkRepository frameworkRepository;
   private final FrameworkTypeRepository frameworkTypeRepository;
 
+  private final ConfigHistoryRepository configHistoryRepository;
+  private final UserRepository userRepository;
+
   @Override
-  public ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) throws IOException, UserDefindedException {
+  public ProjectResponseDto createProject(Principal principal,ProjectRequestDto projectRequestDto)
+      throws IOException, UserDefindedException, NotFoundException {
     //json 형태로 저장후 상대위치 반환
     String configLocation = "./jsonData/";
     FileManager.saveJsonFile(configLocation,projectRequestDto.getProjectName(),projectRequestDto.getSettingJson());
@@ -86,7 +100,10 @@ public class ProjectServiceImpl implements ProjectService {
 
       throw error;
     }
+    User user = userRepository.findByPrincipal(principal.getName())
+        .orElseThrow(() -> new ChangeSetPersister.NotFoundException());;
 
+    createHistory(user,project,"Create Project");
     return ProjectResponseDto.builder()
         .projectId(project.getId())
         .projectName(project.getProjectName())
@@ -326,31 +343,51 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public ProjectListDto projectList()
-      throws UserDefindedException {
+  public List<ProjectListResponseDto> projectList(){
     log.info("Project List");
     List<Project> projectList = projectRepository.findAll();
 
-    List<Map> resultList = new ArrayList<>();
+    List<ProjectListResponseDto> resultList = new ArrayList<>();
 
     for(Project project : projectList){
-      Map<String, Object> map = new HashMap<>();
-      map.put("projectId",project.getId());
-      map.put("projectName",project.getProjectName());
-      map.put("state",project.getStateType());
-      resultList.add(map);
+      ProjectListResponseDto projectListDto = ProjectListResponseDto.from(project);
+      resultList.add(projectListDto);
     }
 
-    ProjectListDto projectListDto = ProjectListDto.builder()
-        .projects(resultList)
-        .build();
 
-    log.info("project count {}",projectListDto.getProjects().size());
-    return projectListDto;
+    log.info("project list size {}",resultList.size());
+    return resultList;
   }
 
+  //history 저장
+  private void createHistory(User user, Project project,String detail){
+    ConfigHistory history = ConfigHistory.builder()
+        .user(user)
+        .project(project)
+        .msg(detail)
+        .build();
+    configHistoryRepository.save(history);
+    log.info("history save {} to {} detail-{}",history.getUser().getName(),history.getProject().getProjectName(),history.getMsg());
+  }
+
+  public List<ConfigHistoryListResponseDto>  historyList(){
+    List<ConfigHistory> configHistories = configHistoryRepository.findAll(
+        Sort.by(Sort.Direction.DESC, "registDate"));
+    List<ConfigHistoryListResponseDto> resultList = new ArrayList<>();
+
+    for(ConfigHistory configHistory : configHistories){
+      ConfigHistoryListResponseDto configHistoryListDto = ConfigHistoryListResponseDto.from(configHistory);
+      resultList.add(configHistoryListDto);
+    }
+
+
+    log.info("ConfigHistory list size {}",resultList.size());
+    return resultList;
+  }
+
+
   @Override
-  public List<BuildTotalResponseDto> buildTotal(Long projectId) {
+  public List<BuildTotalResponseDto> buildTotal(Long projectId) throws NotFoundException {
     //responseDtos initialized
     List<BuildTotalResponseDto> responseDtos = new ArrayList<>();
 
