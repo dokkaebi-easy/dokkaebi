@@ -31,22 +31,24 @@ public class UserController {
 
     private final UserService userService;
 
-    @ApiOperation(value = "회원가입" ,notes = "회원가입을 한다")
+    @ApiOperation(value = "회원가입", notes = "회원가입을 한다")
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signup(@RequestBody SignupDto signupDto)
         throws IOException, UserDefindedException {
+        log.info("signup API received ID: {}",signupDto.getPrincipal());
+
         UserResponseDto userResponseDto = userService.signup(signupDto);
         return ResponseEntity.ok(userResponseDto);
     }
 
     // swagger API 생성용 // Security에서 로그인 처리함
-    @ApiOperation(value = "로그인" ,notes = "데이터 형식 : form-data")
+    @ApiOperation(value = "로그인", notes = "데이터 형식 : form-data")
     @PostMapping("/auth/signin")
     public void signin(SigninDto signinDto) {
     }
 
     //swagger API 생성용// Security에서 로그아웃 처리함
-    @ApiOperation(value = "로그아웃" ,notes = "로그아웃을 한다")
+    @ApiOperation(value = "로그아웃", notes = "로그아웃을 한다")
     @PostMapping("/auth/signout")
     public void signout() {
     }
@@ -84,20 +86,27 @@ public class UserController {
         return new ResponseEntity(map, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "아이디 중복체크" ,notes = "사용 가능한 아이디는 true, 중복된 아이디는 false를 반환")
+    @ApiOperation(value = "아이디 중복체크", notes = "사용 가능한 아이디는 true, 중복된 아이디는 false를 반환")
     @PostMapping("/duplicate/id")
     public ResponseEntity duplicatepPrincipal(@RequestParam String id)
         throws UserDefindedException {
+        log.info("duplicatepPrincipal API received ID: {}",id);
         Map<String, Object> map = new HashMap<>();
-        map.put("status", userService.duplicatePrincipalCheck(id));
+        String state = userService.duplicatePrincipalCheck(id) ? "Success" : "Fail";
+
+        map.put("state", state);
         return new ResponseEntity(map, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "이름 중복체크" ,notes = "사용 가능한 이름은 true, 중복된 이름은 false를 반환")
+    @ApiOperation(value = "이름 중복체크", notes = "사용 가능한 이름은 true, 중복된 이름은 false를 반환")
     @PostMapping("/duplicate/name")
     public ResponseEntity duplicateName(@RequestParam String name) throws UserDefindedException {
+        log.info("duplicatepPrincipal API received name: {}",name);
+
         Map<String, Object> map = new HashMap<>();
-        map.put("status", userService.duplicateNameCheck(name));
+        String state = userService.duplicateNameCheck(name) ? "Success" : "Fail";
+
+        map.put("state", state);
         return new ResponseEntity(map, HttpStatus.OK);
     }
 }

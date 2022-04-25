@@ -5,9 +5,11 @@ import com.ssafy.dockerby.dto.project.*;
 import com.ssafy.dockerby.entity.project.ProjectState;
 import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +37,7 @@ public class ProjectController {
     ProjectState projectState = projectService.build(projectRequestDto);
 
     //TODO : Response 확인
-    log.info("project create Success {} ",projectResponseDto.toString());
+    log.info("project create Success {} {}", projectResponseDto.toString(), projectState.toString());
     return ResponseEntity.ok(projectResponseDto);
   }
 
@@ -72,6 +74,16 @@ public class ProjectController {
     StateResponseDto stateResponseDto = projectService.checkState(stateRequestDto);
 
     return ResponseEntity.ok(stateResponseDto);
+  }
+
+  @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다")
+  @GetMapping("/all")
+  public ResponseEntity<ProjectListDto> projects()
+      throws UserDefindedException, NotFoundException {
+    log.info("Project all API received");
+
+    ProjectListDto projectListDto = projectService.projectList();
+    return ResponseEntity.ok(projectListDto);
   }
 
 }
