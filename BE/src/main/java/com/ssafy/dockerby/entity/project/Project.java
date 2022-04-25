@@ -46,7 +46,6 @@ public class Project extends BaseEntity {
   @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
   @Builder.Default
   private List<ConfigHistory> histories = new ArrayList<>();
-//  private List<String> history;
 
   @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
   @Builder.Default

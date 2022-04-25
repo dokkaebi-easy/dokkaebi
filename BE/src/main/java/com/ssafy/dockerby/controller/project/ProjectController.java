@@ -5,13 +5,14 @@ import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.ssafy.dockerby.dto.project.*;
 import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import io.swagger.annotations.ApiOperation;
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class ProjectController {
   private final ProjectServiceImpl projectService;
 
   @PostMapping
-  public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException, ChangeSetPersister.NotFoundException {
+  public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto ) throws ChangeSetPersister.NotFoundException {
     //요청 로그출력
     log.info("project create request received {} , {} ",projectRequestDto.toString(), principal.getName());
 
