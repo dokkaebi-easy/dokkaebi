@@ -2,7 +2,7 @@ package com.ssafy.dockerby.service.project;
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.project.*;
-import com.ssafy.dockerby.dto.project.ProjectListDto;
+import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.dto.project.ProjectResponseDto;
 import com.ssafy.dockerby.dto.project.StateRequestDto;
@@ -27,7 +27,7 @@ public interface ProjectService {
 
   List<FrameworkVersionResponseDto> getFrameworkVersion(Long typeId) throws ChangeSetPersister.NotFoundException;
 
-  List<ProjectListDto> projectList() throws ChangeSetPersister.NotFoundException, UserDefindedException;
+  List<ProjectListResponseDto> projectList() throws ChangeSetPersister.NotFoundException, UserDefindedException;
 
   List<BuildTotalResponseDto> buildTotal(Long projectId) throws NotFoundException;
 }

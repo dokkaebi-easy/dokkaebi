@@ -343,14 +343,14 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public List<ProjectListDto> projectList(){
+  public List<ProjectListResponseDto> projectList(){
     log.info("Project List");
     List<Project> projectList = projectRepository.findAll();
 
-    List<ProjectListDto> resultList = new ArrayList<>();
+    List<ProjectListResponseDto> resultList = new ArrayList<>();
 
     for(Project project : projectList){
-      ProjectListDto projectListDto = ProjectListDto.from(project);
+      ProjectListResponseDto projectListDto = ProjectListResponseDto.from(project);
       resultList.add(projectListDto);
     }
 
@@ -370,13 +370,13 @@ public class ProjectServiceImpl implements ProjectService {
     log.info("history save {} to {} detail-{}",history.getUser().getName(),history.getProject().getProjectName(),history.getMsg());
   }
 
-  public List<ConfigHistoryListDto>  historyList(){
+  public List<ConfigHistoryListResponseDto>  historyList(){
     List<ConfigHistory> configHistories = configHistoryRepository.findAll(
         Sort.by(Sort.Direction.DESC, "registDate"));
-    List<ConfigHistoryListDto> resultList = new ArrayList<>();
+    List<ConfigHistoryListResponseDto> resultList = new ArrayList<>();
 
     for(ConfigHistory configHistory : configHistories){
-      ConfigHistoryListDto configHistoryListDto = ConfigHistoryListDto.from(configHistory);
+      ConfigHistoryListResponseDto configHistoryListDto = ConfigHistoryListResponseDto.from(configHistory);
       resultList.add(configHistoryListDto);
     }
 

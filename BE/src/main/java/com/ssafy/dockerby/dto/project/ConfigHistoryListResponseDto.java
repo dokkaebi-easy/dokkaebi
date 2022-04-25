@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ConfigHistoryListDto {
+public class ConfigHistoryListResponseDto {
 
     private String projectName;
     private String userName;
@@ -23,11 +23,11 @@ public class ConfigHistoryListDto {
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime registDate;
 
-    public static ConfigHistoryListDto from(ConfigHistory configHistory) {
+    public static ConfigHistoryListResponseDto from(ConfigHistory configHistory) {
         if (configHistory == null) {
             return null;
         }
-        return ConfigHistoryListDto.builder()
+        return ConfigHistoryListResponseDto.builder()
             .projectName(configHistory.getProject().getProjectName())
             .userName(configHistory.getUser().getName())
             .msg(configHistory.getMsg())

@@ -87,19 +87,19 @@ public class ProjectController {
 
   @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다")
   @GetMapping("/all")
-  public ResponseEntity<List<ProjectListDto>> projects(){
+  public ResponseEntity<List<ProjectListResponseDto>> projects(){
     log.info("Project all API received");
 
-    List<ProjectListDto> projectList = projectService.projectList();
+    List<ProjectListResponseDto> projectList = projectService.projectList();
     return ResponseEntity.ok(projectList);
   }
 
   @ApiOperation(value = "ConfigHistory 리스트", notes = "ConfigHistory 목록을 가져온다")
   @GetMapping("/confighistory")
-  public ResponseEntity<List<ConfigHistoryListDto>> confighistory() {
+  public ResponseEntity<List<ConfigHistoryListResponseDto>> confighistory() {
     log.info("confighistory API received");
 
-    List<ConfigHistoryListDto> configHistoryList = projectService.historyList();
+    List<ConfigHistoryListResponseDto> configHistoryList = projectService.historyList();
     return ResponseEntity.ok(configHistoryList);
   }
 
