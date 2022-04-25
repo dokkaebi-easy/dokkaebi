@@ -20,6 +20,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -346,5 +347,45 @@ public class ProjectServiceImpl implements ProjectService {
 
     log.info("project count {}",projectListDto.getProjects().size());
     return projectListDto;
+  }
+
+  @Override
+  public List<BuildTotalResponseDto> buildTotal(Long projectId) {
+    //responseDtos initialized
+    List<BuildTotalResponseDto> responseDtos = new ArrayList<>();
+
+    //해당 projectId의 projectState List로 받음
+    List<ProjectState> projectStates = projectStateRepository.findAllByProjectId(projectId);
+
+    //입력 시작 로그 출력
+    log.info("projectState insert start  projectStateSize : {}",projectStates.size());
+
+    //각각의 projectState에 대해 추출후 입력
+    for(ProjectState projectState : projectStates){
+      //각 state 들을 찾아옴
+      Pull pull = pullRepository.findByProjectStateId(projectState.getId()).orElseThrow(() -> new NotFoundException());
+      Build build = buildRepository.findByProjectStateId(projectState.getId()).orElseThrow(() -> new NotFoundException());
+      Run run = runRepository.findByProjectStateId(projectState.getId()).orElseThrow(() -> new NotFoundException());
+
+      StateDto stateDto = StateDto.builder()
+        .pull(pull.getStateType())
+        .build(build.getStateType())
+        .run(run.getStateType())
+        .build();
+
+      BuildTotalResponseDto buildTotalResponseDto = BuildTotalResponseDto.builder()
+        .projectStateId(projectState.getId())
+        .state(stateDto)
+        .build();
+
+      //완성된 buildTotalResponseDto를 저장
+      responseDtos.add(buildTotalResponseDto);
+    }
+
+    //완료 로그 출력
+    log.info("projectState insert finished  responseDtoSize : {}",responseDtos.size());
+
+    //responseDtos 리턴
+    return responseDtos;
   }
 }
