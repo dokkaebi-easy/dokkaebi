@@ -1,0 +1,33 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  profiles:
+    include: eth
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/dockerby
+    username: root
+    password: ssafy
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    defer-datasource-initialization: true
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
+
+uploadPath:
+  path: "./fileData/"
