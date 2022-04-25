@@ -2,7 +2,9 @@ package com.ssafy.dockerby.entity.project;
 
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.entity.BaseEntity;
+import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.project.enums.StateType;
+import com.ssafy.dockerby.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,6 +42,10 @@ public class Project extends BaseEntity {
 //  private User user;
 
   // History 매핑
+  //연관 관계 매핑
+  @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+  @Builder.Default
+  private List<ConfigHistory> histories = new ArrayList<>();
 //  private List<String> history;
 
   @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
