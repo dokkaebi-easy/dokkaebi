@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.repository.User;
+package com.ssafy.dockerby.repository.project;
 
 import com.ssafy.dockerby.entity.ConfigHistory;
 

@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -46,9 +44,6 @@ public class User extends BaseEntity {
     @Column(length = 60)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
-
     //연관 관계 매핑
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
@@ -58,11 +53,10 @@ public class User extends BaseEntity {
         this.credential = passwordEncoder.encode(this.credential);
     }
 
-    public static User of(SignupDto signupDto, String encodePassword, UserRole userRole) {
+    public static User of(SignupDto signupDto, String encodePassword) {
         return User.builder()
             .credential(encodePassword)
             .name(signupDto.getName())
-            .role(userRole)
             .principal(signupDto.getPrincipal())
             .build();
     }

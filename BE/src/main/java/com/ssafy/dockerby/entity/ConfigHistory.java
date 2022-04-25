@@ -46,7 +46,7 @@ public class ConfigHistory {
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_info_id")
     private User user;
 
 }
