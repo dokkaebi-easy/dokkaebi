@@ -1,6 +1,6 @@
-package com.ssafy.dockerby.repository.User;
+package com.ssafy.dockerby.repository.user;
 
-import com.ssafy.dockerby.entity.User.User;
+import com.ssafy.dockerby.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

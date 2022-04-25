@@ -1,8 +1,7 @@
-package com.ssafy.dockerby.dto.User;
+package com.ssafy.dockerby.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ssafy.dockerby.entity.User.User;
-import javax.servlet.http.HttpSession;
+import com.ssafy.dockerby.entity.user.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
