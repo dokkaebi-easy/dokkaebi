@@ -11,7 +11,6 @@ import com.ssafy.dockerby.entity.project.states.Build;
 import com.ssafy.dockerby.entity.project.states.Run;
 import com.ssafy.dockerby.entity.project.states.Pull;
 import com.ssafy.dockerby.entity.user.User;
-import com.ssafy.dockerby.repository.User.HistoryRepository;
 import com.ssafy.dockerby.repository.user.UserRepository;
 import com.ssafy.dockerby.repository.project.BuildRepository;
 import com.ssafy.dockerby.repository.project.FrameworkRepository;
@@ -20,11 +19,10 @@ import com.ssafy.dockerby.repository.project.ProjectRepository;
 import com.ssafy.dockerby.repository.project.ProjectStateRepository;
 import com.ssafy.dockerby.repository.project.PullRepository;
 import com.ssafy.dockerby.repository.project.RunRepository;
+import com.ssafy.dockerby.repository.User.ConfigHistoryRepository;
 
 import com.ssafy.dockerby.util.FileManager;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -52,7 +50,7 @@ public class ProjectServiceImpl implements ProjectService {
   private final FrameworkRepository frameworkRepository;
   private final FrameworkTypeRepository frameworkTypeRepository;
 
-  private final HistoryRepository historyRepository;
+  private final ConfigHistoryRepository configHistoryRepository;
   private final UserRepository userRepository;
 
   @Override
@@ -368,12 +366,12 @@ public class ProjectServiceImpl implements ProjectService {
         .project(project)
         .msg(detail)
         .build();
-    historyRepository.save(history);
+    configHistoryRepository.save(history);
     log.info("history save {} to {} detail-{}",history.getUser().getName(),history.getProject().getProjectName(),history.getMsg());
   }
 
   public List<ConfigHistoryListDto>  historyList(){
-    List<ConfigHistory> configHistories = historyRepository.findAll(
+    List<ConfigHistory> configHistories = configHistoryRepository.findAll(
         Sort.by(Sort.Direction.DESC, "registDate"));
     List<ConfigHistoryListDto> resultList = new ArrayList<>();
 
