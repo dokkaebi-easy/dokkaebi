@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.controller;
+package com.ssafy.dockerby.core.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

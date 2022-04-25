@@ -2,12 +2,15 @@ package com.ssafy.dockerby.core.docker.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-public class NginxConfig {
+public class DockerNginxConfig {
 
   @Builder.Default
   private List<String> domains = new ArrayList<>();
@@ -26,27 +29,19 @@ public class NginxConfig {
   }
 
   @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  @AllArgsConstructor(access = AccessLevel.PRIVATE)
   public static class ProxyLocation {
-    private final String location;
-    private final String url;
-
-    public ProxyLocation(String location, String url) {
-      this.location = location;
-      this.url = url;
-    }
+    private String location;
+    private String url;
   }
 
   @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class HttpsOption {
     private String sslCertificate;
     private String sslCertificateKey;
     private String sslPath;
-
-    public HttpsOption(String sslCertificate, String sslCertificateKey, String sslPath) {
-      this.sslCertificate = sslCertificate;
-      this.sslCertificateKey = sslCertificateKey;
-      this.sslPath = sslPath;
-    }
   }
 
 }
