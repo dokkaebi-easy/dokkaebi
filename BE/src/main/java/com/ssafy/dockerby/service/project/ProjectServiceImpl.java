@@ -1,6 +1,5 @@
 package com.ssafy.dockerby.service.project;
 
-import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.core.docker.DockerBuilder;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
@@ -23,6 +22,7 @@ import com.ssafy.dockerby.entity.project.states.Pull;
 import com.ssafy.dockerby.entity.project.states.Run;
 import com.ssafy.dockerby.entity.user.User;
 import com.ssafy.dockerby.repository.project.BuildRepository;
+import com.ssafy.dockerby.repository.project.ConfigHistoryRepository;
 import com.ssafy.dockerby.repository.project.FrameworkRepository;
 import com.ssafy.dockerby.repository.project.FrameworkTypeRepository;
 import com.ssafy.dockerby.repository.project.ProjectRepository;
@@ -35,9 +35,7 @@ import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +59,7 @@ public class ProjectServiceImpl implements ProjectService {
 
   private final FrameworkRepository frameworkRepository;
   private final FrameworkTypeRepository frameworkTypeRepository;
-  private final com.ssafy.dockerby.repository.User.ConfigHistoryRepository configHistoryRepository;
+  private final ConfigHistoryRepository configHistoryRepository;
   private final UserRepository userRepository;
   //TODO : buildNumber 입력 받아야합니다.
   private static int buildNumber=1;
@@ -74,7 +72,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 
   @Override
-  public List<DockerContainerConfig> upsert(Principal principal,ProjectRequestDto projectRequestDto) {
+  public List<DockerContainerConfig> upsert(Principal principal,ProjectRequestDto projectRequestDto)
+      throws ChangeSetPersister.NotFoundException {
     Project project = projectRepository.findOneByProjectName(projectRequestDto.getProjectName())
         .orElseGet(() ->
             projectRepository.save(Project.from(projectRequestDto)));
@@ -88,6 +87,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     upsertConfigFile(projectRequestDto.getProjectName(), buildConfigs);
     //프로젝트 입력
+
+    //로그인 유저 탐색
+    User user = userRepository.findByPrincipal(principal.getName())
+        .orElseThrow(() -> new ChangeSetPersister.NotFoundException());;
+    //히스토리 저장
+    createHistory(user,project,"upsert Project");
 
     return buildConfigs;
   }
@@ -117,11 +122,7 @@ public class ProjectServiceImpl implements ProjectService {
     build.updateProjectState(projectState);
     run.updateProjectState(projectState);
 
-    //로그인 유저 탐색
-    User user = userRepository.findByPrincipal(principal.getName())
-        .orElseThrow(() -> new ChangeSetPersister.NotFoundException());;
-    //히스토리 저장
-    createHistory(user,project,"Create Project");
+
 
     return projectStateRepository.save(projectState);
   }
@@ -397,7 +398,7 @@ public class ProjectServiceImpl implements ProjectService {
     List<BuildTotalResponseDto> responseDtos = new ArrayList<>();
 
     //해당 projectId의 projectState List로 받음
-    List<ProjectState> projectStates = projectStateRepository.findAllByProjectId(projectId);
+    List<ProjectState> projectStates = projectStateRepository.findAllByProjectIdOrderByRegistDateDesc(projectId);
 
     //입력 시작 로그 출력
     log.info("projectState insert start  projectStateSize : {}",projectStates.size());

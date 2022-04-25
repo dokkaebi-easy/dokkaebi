@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface ProjectStateRepository extends JpaRepository<ProjectState,Long> {
   Optional<ProjectState> findByProjectId(Long projectId);
 
-  List<ProjectState> findAllByProjectId(Long projectId);
+  List<ProjectState> findAllByProjectIdOrderByRegistDateDesc(Long projectId);
 }

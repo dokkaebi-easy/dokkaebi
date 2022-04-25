@@ -6,7 +6,6 @@ import com.ssafy.dockerby.dto.user.SignupDto;
 import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.dto.user.UserResponseDto;
 import com.ssafy.dockerby.entity.user.User;
-import com.ssafy.dockerby.entity.user.UserRole;
 import com.ssafy.dockerby.repository.user.UserRepository;
 import java.io.IOException;
 import java.util.Optional;
@@ -37,7 +36,7 @@ public class UserServiceImpl implements UserService {
         isSignupValied(signupDto);
         log.info("Verification passed : {}", signupDto.getPrincipal());
         //Credential encode 변환 후 User객체 생성 //현재 "USER" roll만 입력, 추후 다른 권한 생길시 변경
-        User user = User.of(signupDto, passwordEncoder.encode(signupDto.getCredential()), UserRole.USER);
+        User user = User.of(signupDto, passwordEncoder.encode(signupDto.getCredential()));
         userRepository.save(user);
         log.info("User signup Complete : {}", user.getPrincipal());
         UserResponseDto userResponseDto = UserResponseDto.of(user);

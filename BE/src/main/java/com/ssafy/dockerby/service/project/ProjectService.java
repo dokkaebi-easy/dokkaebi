@@ -5,7 +5,6 @@ import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
 import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
 import com.ssafy.dockerby.dto.project.FrameworkVersionResponseDto;
-import com.ssafy.dockerby.dto.project.ProjectListDto;
 import com.ssafy.dockerby.dto.project.*;
 import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
@@ -21,7 +20,8 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 
 public interface ProjectService {
 
-  List<DockerContainerConfig> upsert(ProjectRequestDto projectRequestDto);
+  List<DockerContainerConfig> upsert(Principal principal,ProjectRequestDto projectRequestDto)
+      throws NotFoundException;
 
   ProjectState build(Long projectId) throws ChangeSetPersister.NotFoundException, IOException;
 

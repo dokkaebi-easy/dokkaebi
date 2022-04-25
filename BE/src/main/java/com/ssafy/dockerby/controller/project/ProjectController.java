@@ -29,10 +29,9 @@ public class ProjectController {
   @PostMapping
   public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException, ChangeSetPersister.NotFoundException {
     //요청 로그출력
-    log.info("project create request received {} ",projectRequestDto.toString());
+    log.info("project create request received {} , {} ",projectRequestDto.toString(), principal.getName());
 
-    List<DockerContainerConfig> configs = projectService.upsert(projectRequestDto);
-    ProjectResponseDto projectResponseDto = projectService.createProject(principal,projectRequestDto);
+    List<DockerContainerConfig> configs = projectService.upsert(principal,projectRequestDto);
 
 
     log.info("project build start / waiting -> processing");
