@@ -8,13 +8,16 @@ import com.ssafy.dockerby.dto.project.ProjectResponseDto;
 import com.ssafy.dockerby.dto.project.StateRequestDto;
 import com.ssafy.dockerby.dto.project.StateResponseDto;
 import com.ssafy.dockerby.entity.project.ProjectState;
+import java.security.Principal;
 import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.io.IOException;
 import java.util.List;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 
 public interface ProjectService {
-  ProjectResponseDto createProject(ProjectRequestDto projectRequestDto) throws IOException, UserDefindedException;
+  ProjectResponseDto createProject(Principal principal,ProjectRequestDto projectRequestDto)
+      throws IOException, UserDefindedException, NotFoundException;
 
   ProjectState build(ProjectRequestDto projectRequestDto) throws ChangeSetPersister.NotFoundException;
 
@@ -24,7 +27,7 @@ public interface ProjectService {
 
   List<FrameworkVersionResponseDto> getFrameworkVersion(Long typeId) throws ChangeSetPersister.NotFoundException;
 
-   ProjectListDto projectList() throws ChangeSetPersister.NotFoundException, UserDefindedException;
+  List<ProjectListDto> projectList() throws ChangeSetPersister.NotFoundException, UserDefindedException;
 
-  List<BuildTotalResponseDto> buildTotal(Long projectId);
+  List<BuildTotalResponseDto> buildTotal(Long projectId) throws NotFoundException;
 }

@@ -15,9 +15,9 @@ public interface UserService extends UserDetailsService {
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
     Boolean duplicatePrincipalCheck(String principal) throws UserDefindedException;
+
     Boolean duplicateNameCheck(String name) throws UserDefindedException;
 
     UserResponseDto signup(SignupDto signupDto) throws IOException, UserDefindedException;
-
 }
 
