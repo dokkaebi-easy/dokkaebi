@@ -1,10 +1,10 @@
-package com.ssafy.dockerby.controller.User;
+package com.ssafy.dockerby.controller.user;
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
-import com.ssafy.dockerby.dto.User.SigninDto;
-import com.ssafy.dockerby.dto.User.SignupDto;
-import com.ssafy.dockerby.dto.User.UserResponseDto;
-import com.ssafy.dockerby.service.User.UserService;
+import com.ssafy.dockerby.dto.user.SigninDto;
+import com.ssafy.dockerby.dto.user.SignupDto;
+import com.ssafy.dockerby.dto.user.UserResponseDto;
+import com.ssafy.dockerby.service.user.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
