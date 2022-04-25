@@ -8,10 +8,10 @@ import io.swagger.annotations.Api;
 import java.util.HashMap;
 import java.util.Map;
 import io.swagger.annotations.ApiOperation;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,11 +27,12 @@ public class ProjectController {
   private final ProjectServiceImpl projectService;
 
   @PostMapping
-  public ResponseEntity createProject(@RequestBody ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException, ChangeSetPersister.NotFoundException {
+  public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException, ChangeSetPersister.NotFoundException {
     //요청 로그출력
     log.info("project create request received {} ",projectRequestDto.toString());
 
     List<DockerContainerConfig> configs = projectService.upsert(projectRequestDto);
+    ProjectResponseDto projectResponseDto = projectService.createProject(principal,projectRequestDto);
 
 
     log.info("project build start / waiting -> processing");
@@ -111,12 +112,20 @@ public class ProjectController {
 
   @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다")
   @GetMapping("/all")
-  public ResponseEntity<ProjectListDto> projects()
-      throws UserDefindedException, NotFoundException {
+  public ResponseEntity<List<ProjectListResponseDto>> projects(){
     log.info("Project all API received");
 
-    ProjectListDto projectListDto = projectService.projectList();
-    return ResponseEntity.ok(projectListDto);
+    List<ProjectListResponseDto> projectList = projectService.projectList();
+    return ResponseEntity.ok(projectList);
+  }
+
+  @ApiOperation(value = "ConfigHistory 리스트", notes = "ConfigHistory 목록을 가져온다")
+  @GetMapping("/confighistory")
+  public ResponseEntity<List<ConfigHistoryListResponseDto>> confighistory() {
+    log.info("confighistory API received");
+
+    List<ConfigHistoryListResponseDto> configHistoryList = projectService.historyList();
+    return ResponseEntity.ok(configHistoryList);
   }
 
 }

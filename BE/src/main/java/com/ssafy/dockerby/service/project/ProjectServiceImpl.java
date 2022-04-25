@@ -4,13 +4,15 @@ import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.core.docker.DockerBuilder;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
+import com.ssafy.dockerby.dto.project.ConfigHistoryListResponseDto;
 import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
 import com.ssafy.dockerby.dto.project.FrameworkVersionResponseDto;
-import com.ssafy.dockerby.dto.project.ProjectListDto;
+import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.dto.project.StateDto;
 import com.ssafy.dockerby.dto.project.StateRequestDto;
 import com.ssafy.dockerby.dto.project.StateResponseDto;
+import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.entity.project.ProjectConfig;
 import com.ssafy.dockerby.entity.project.ProjectState;
@@ -19,6 +21,7 @@ import com.ssafy.dockerby.entity.project.frameworks.FrameworkType;
 import com.ssafy.dockerby.entity.project.states.Build;
 import com.ssafy.dockerby.entity.project.states.Pull;
 import com.ssafy.dockerby.entity.project.states.Run;
+import com.ssafy.dockerby.entity.user.User;
 import com.ssafy.dockerby.repository.project.BuildRepository;
 import com.ssafy.dockerby.repository.project.FrameworkRepository;
 import com.ssafy.dockerby.repository.project.FrameworkTypeRepository;
@@ -26,9 +29,11 @@ import com.ssafy.dockerby.repository.project.ProjectRepository;
 import com.ssafy.dockerby.repository.project.ProjectStateRepository;
 import com.ssafy.dockerby.repository.project.PullRepository;
 import com.ssafy.dockerby.repository.project.RunRepository;
+import com.ssafy.dockerby.repository.user.UserRepository;
 import com.ssafy.dockerby.util.ConfigParser;
 import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +44,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -55,7 +61,8 @@ public class ProjectServiceImpl implements ProjectService {
 
   private final FrameworkRepository frameworkRepository;
   private final FrameworkTypeRepository frameworkTypeRepository;
-
+  private final com.ssafy.dockerby.repository.User.ConfigHistoryRepository configHistoryRepository;
+  private final UserRepository userRepository;
   //TODO : buildNumber 입력 받아야합니다.
   private static int buildNumber=1;
   @Value("${dockerby.configRootPath}")
@@ -64,8 +71,10 @@ public class ProjectServiceImpl implements ProjectService {
   @Value("${dockerby.logPath}")
   private String logPath;
 
+
+
   @Override
-  public List<DockerContainerConfig> upsert(ProjectRequestDto projectRequestDto) {
+  public List<DockerContainerConfig> upsert(Principal principal,ProjectRequestDto projectRequestDto) {
     Project project = projectRepository.findOneByProjectName(projectRequestDto.getProjectName())
         .orElseGet(() ->
             projectRepository.save(Project.from(projectRequestDto)));
@@ -108,8 +117,15 @@ public class ProjectServiceImpl implements ProjectService {
     build.updateProjectState(projectState);
     run.updateProjectState(projectState);
 
+    //로그인 유저 탐색
+    User user = userRepository.findByPrincipal(principal.getName())
+        .orElseThrow(() -> new ChangeSetPersister.NotFoundException());;
+    //히스토리 저장
+    createHistory(user,project,"Create Project");
+
     return projectStateRepository.save(projectState);
   }
+
 
   @Override
   public ProjectState build(Long ProjectId)
@@ -286,7 +302,7 @@ public class ProjectServiceImpl implements ProjectService {
     //frameworkTypes initialized
     List<FrameworkTypeResponseDto> frameworkTypes = new ArrayList<>();
 
-    try { 
+    try {
       // 모든 FrameworkType을 조회한 뒤 리스트에 담아서 반환
       frameworkTypeRepository.findAll().forEach(value ->
           frameworkTypes.add(FrameworkTypeResponseDto.from(value)));
@@ -332,30 +348,51 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public ProjectListDto projectList()
-      throws UserDefindedException {
+  public List<ProjectListResponseDto> projectList(){
     log.info("Project List");
     List<Project> projectList = projectRepository.findAll();
 
-    List<Map> resultList = new ArrayList<>();
+    List<ProjectListResponseDto> resultList = new ArrayList<>();
 
-    for (Project project : projectList) {
-      Map<String, Object> map = new HashMap<>();
-      map.put("projectId", project.getId());
-      map.put("projectName", project.getProjectName());
-      map.put("state", project.getStateType());
-      resultList.add(map);
+    for(Project project : projectList){
+      ProjectListResponseDto projectListDto = ProjectListResponseDto.from(project);
+      resultList.add(projectListDto);
     }
 
-    ProjectListDto projectListDto = ProjectListDto.builder()
-        .projects(resultList)
-        .build();
 
-    log.info("project count {}", projectListDto.getProjects().size());
-    return projectListDto;
+    log.info("project list size {}",resultList.size());
+    return resultList;
   }
+
+  //history 저장
+  private void createHistory(User user, Project project,String detail){
+    ConfigHistory history = ConfigHistory.builder()
+        .user(user)
+        .project(project)
+        .msg(detail)
+        .build();
+    configHistoryRepository.save(history);
+    log.info("history save {} to {} detail-{}",history.getUser().getName(),history.getProject().getProjectName(),history.getMsg());
+  }
+
+  public List<ConfigHistoryListResponseDto>  historyList(){
+    List<ConfigHistory> configHistories = configHistoryRepository.findAll(
+        Sort.by(Sort.Direction.DESC, "registDate"));
+    List<ConfigHistoryListResponseDto> resultList = new ArrayList<>();
+
+    for(ConfigHistory configHistory : configHistories){
+      ConfigHistoryListResponseDto configHistoryListDto = ConfigHistoryListResponseDto.from(configHistory);
+      resultList.add(configHistoryListDto);
+    }
+
+
+    log.info("ConfigHistory list size {}",resultList.size());
+    return resultList;
+  }
+
+
   @Override
-  public List<BuildTotalResponseDto> buildTotal(Long projectId) {
+  public List<BuildTotalResponseDto> buildTotal(Long projectId) throws NotFoundException {
     //responseDtos initialized
     List<BuildTotalResponseDto> responseDtos = new ArrayList<>();
 
