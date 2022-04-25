@@ -9,13 +9,35 @@ import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import RepositoryModal from 'Components/Pages/Setting/GitLabPage/RepositoryModal/RepositoryModal';
+import GitData, { Git } from 'Components/MDClass/GitData/GitData';
 
-export default function GitLabRepositories() {
+interface GitProps {
+  gitData: Git;
+}
+export default function GitLabRepositories({ gitData }: GitProps) {
+  const [projectID, setProjectID] = useState('');
+  const [repositoryURL, setRepositoryURL] = useState('');
+  const [branchSpecifier, setBranchSpecifier] = useState('');
   const [credentials, setCredentials] = useState([]);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleProjectIDChange = (event: any) => {
+    setProjectID(event.target.value);
+    gitData.projectID = event.target.value;
+  };
+
+  const handleRepositoryURLChange = (event: any) => {
+    setRepositoryURL(event.target.value);
+    gitData.repositoryurl = event.target.value;
+  };
+
+  const handleBranchSpecifierChange = (event: any) => {
+    setBranchSpecifier(event.target.value);
+    gitData.branchspecifier = event.target.value;
+  };
 
   return (
     <Box my={3}>
@@ -39,6 +61,8 @@ export default function GitLabRepositories() {
                 size="small"
                 sx={{ my: 1 }}
                 placeholder="Project ID"
+                defaultValue={projectID}
+                onChange={handleProjectIDChange}
               />
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
@@ -53,6 +77,8 @@ export default function GitLabRepositories() {
                 size="small"
                 sx={{ my: 1 }}
                 placeholder="Repository URL"
+                defaultValue={repositoryURL}
+                onChange={handleRepositoryURLChange}
               />
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
@@ -84,6 +110,8 @@ export default function GitLabRepositories() {
                 size="small"
                 sx={{ my: 1 }}
                 placeholder="Branch Specifier"
+                defaultValue={branchSpecifier}
+                onChange={handleBranchSpecifierChange}
               />
             </Grid>
           </Grid>

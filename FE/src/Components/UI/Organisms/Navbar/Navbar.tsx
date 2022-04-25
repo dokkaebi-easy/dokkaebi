@@ -20,7 +20,11 @@ export default function Navbar() {
   return (
     <AppBar
       position="sticky"
-      sx={{ top: 24, borderRadius: 3, backgroundColor: '#999' }}
+      sx={{
+        top: 24,
+        borderRadius: 3,
+        backgroundColor: 'rgba(200,200,200,0.5)',
+      }}
     >
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

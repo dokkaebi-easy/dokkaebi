@@ -10,7 +10,7 @@ import Paper from '@mui/material/Paper';
 import BuildPage from './BuildPage/BuildPage';
 import GitLabPage from './GitLabPage/GitLabPage';
 
-const steps = ['Build Settings', 'GitLab Setting', 'Create an ad'];
+const steps = ['Build Settings', 'GitLab Setting', 'Make Project'];
 
 export default function Setting() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -81,7 +81,7 @@ export default function Setting() {
             </Step>
           ))}
         </Stepper>
-        <div>
+        <Box>
           {allStepsCompleted() ? (
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
@@ -115,7 +115,7 @@ export default function Setting() {
               </TabContext>
             </>
           )}
-        </div>
+        </Box>
       </Paper>
     </Box>
   );

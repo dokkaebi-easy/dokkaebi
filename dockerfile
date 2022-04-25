@@ -3,13 +3,13 @@ COPY ./FE .
 RUN npm install
 RUN npm run build
 
-FROM openjdk:11 as builder
+FROM openjdk:11-jdk as builder
 COPY ./BE .
 COPY --from=react /build /src/main/resources/static/
 
 RUN chmod +x ./gradlew
 RUN ./gradlew clean build
 
-FROM openjdk:11
+FROM openjdk:11-jdk
 COPY --from=builder /build/libs/*.jar app.jar
 ENTRYPOINT [ "java", "-jar","./app.jar" ]

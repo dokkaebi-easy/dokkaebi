@@ -4,15 +4,22 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { v4 as uuid } from 'uuid';
 
 interface selectProps {
   label: string;
   Items: string[];
+  defaultValue?: string;
   change?: (event: string) => void;
 }
 
-export default function SelectItem({ label, Items, change }: selectProps) {
-  const [value, setValue] = React.useState('');
+export default function SelectItem({
+  label,
+  Items,
+  defaultValue = '',
+  change,
+}: selectProps) {
+  const [value, setValue] = React.useState(defaultValue);
 
   const handleChange = (event: SelectChangeEvent) => {
     setValue(event.target.value);
@@ -35,7 +42,7 @@ export default function SelectItem({ label, Items, change }: selectProps) {
             <em>None</em>
           </MenuItem>
           {Items.map((value) => (
-            <MenuItem key={value} value={value}>
+            <MenuItem key={uuid()} value={value}>
               {value}
             </MenuItem>
           ))}
@@ -46,5 +53,6 @@ export default function SelectItem({ label, Items, change }: selectProps) {
 }
 
 SelectItem.defaultProps = {
+  defaultValue: '',
   change: undefined,
 };
