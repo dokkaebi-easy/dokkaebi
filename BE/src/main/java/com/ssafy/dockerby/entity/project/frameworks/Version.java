@@ -6,20 +6,20 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class Framework {
+public class Version {
 
   @Id  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "framework_id")
+  @Column(name = "version_id")
   private Long id;
 
   private String buildType;
 
-  private String version;
+  private String inputVersion;
+  private String dockerVersion;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name ="framework_type_id")
-  private FrameworkType frameworkType;
+  @JoinColumn(name ="language_id")
+  private Language language;
 }

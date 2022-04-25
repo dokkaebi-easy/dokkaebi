@@ -1,6 +1,6 @@
 package com.ssafy.dockerby.core.docker;
 
-import com.ssafy.dockerby.core.docker.dto.ContainerConfig;
+import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class DockerfileMaker {
    * MySQL은 Dockerfile을 생성하지 않아 바로 break 된다.
    * @param config : Framework/Library 환경설정 값
    */
-  public void make(ContainerConfig config) throws IOException {
+  public void make(DockerContainerConfig config) throws IOException {
     switch (config.getFramework()) {
       case Vue:
         makeVueWithNginxDockerFile(config);
@@ -40,7 +40,7 @@ public class DockerfileMaker {
     }
   }
 
-  private void makeSpringBootDockerfile(ContainerConfig config) throws IOException {
+  private void makeSpringBootDockerfile(DockerContainerConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY ").append(rootDir).append(config.getProjectDirectory()).append(" .").append('\n');
@@ -66,7 +66,7 @@ public class DockerfileMaker {
     saveDockerFile(path.toString(),sb.toString());
   }
 
-  private void makeReactWithNginxDockerFile(ContainerConfig config) throws IOException {
+  private void makeReactWithNginxDockerFile(DockerContainerConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY ").append(rootDir).append(config.getProjectDirectory()).append(" .").append('\n');
@@ -87,7 +87,7 @@ public class DockerfileMaker {
     saveDockerFile(path.toString(),sb.toString());
   }
 
-  private void makeVueWithNginxDockerFile(ContainerConfig config) throws IOException {
+  private void makeVueWithNginxDockerFile(DockerContainerConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY ").append(rootDir).append(config.getProjectDirectory()).append(" .").append('\n');
