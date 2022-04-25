@@ -1,8 +1,8 @@
 package com.ssafy.dockerby.core.docker;
 
-import com.ssafy.dockerby.core.docker.dto.NginxConfig;
-import com.ssafy.dockerby.core.docker.dto.NginxConfig.HttpsOption;
-import com.ssafy.dockerby.core.docker.dto.NginxConfig.ProxyLocation;
+import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig;
+import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig.HttpsOption;
+import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig.ProxyLocation;
 import com.ssafy.dockerby.core.docker.etcMaker.NginxConfigMaker;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ class EtcConfigMakerTest {
     locations.add(new ProxyLocation("/api","http://localhost:8080"));
     locations.add(new ProxyLocation("/api/v1","http://senagi.site:8080"));
 
-    NginxConfig config = NginxConfig.builder()
+    DockerNginxConfig config = DockerNginxConfig.builder()
         .domains(domains)
         .locations(locations)
         .build();
@@ -49,7 +49,7 @@ class EtcConfigMakerTest {
     locations.add(new ProxyLocation("/api","http://localhost:8080"));
     locations.add(new ProxyLocation("/api/v1","http://senagi.site:8080"));
 
-    NginxConfig config = NginxConfig.builder()
+    DockerNginxConfig config = DockerNginxConfig.builder()
         .domains(domains)
         .locations(locations)
         .isHttps(true)

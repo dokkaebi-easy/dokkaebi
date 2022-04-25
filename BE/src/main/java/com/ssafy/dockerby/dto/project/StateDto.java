@@ -1,6 +1,5 @@
 package com.ssafy.dockerby.dto.project;
 
-import com.ssafy.dockerby.entity.project.enums.BuildType;
 import com.ssafy.dockerby.entity.project.enums.StateType;
 import lombok.*;
 
@@ -11,14 +10,14 @@ import javax.persistence.Enumerated;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class StateResponseDto {
-  @NonNull
-  private Long projectId;
+public class StateDto {
 
   @Enumerated(value = EnumType.STRING)
-  private BuildType buildType;
+  private StateType pull;
 
   @Enumerated(value = EnumType.STRING)
-  private StateType stateType;
+  private StateType build;
 
+  @Enumerated(value = EnumType.STRING)
+  private StateType run;
 }
