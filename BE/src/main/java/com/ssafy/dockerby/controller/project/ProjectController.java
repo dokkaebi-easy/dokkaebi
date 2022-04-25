@@ -1,10 +1,12 @@
 package com.ssafy.dockerby.controller.project;
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
+import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.ssafy.dockerby.dto.project.*;
-import com.ssafy.dockerby.entity.project.ProjectState;
 import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
+import java.util.HashMap;
+import java.util.Map;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,20 +27,46 @@ public class ProjectController {
   private final ProjectServiceImpl projectService;
 
   @PostMapping
-  public ResponseEntity<ProjectResponseDto> createProject(ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException, ChangeSetPersister.NotFoundException {
+  public ResponseEntity createProject(@RequestBody ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException, ChangeSetPersister.NotFoundException {
     //요청 로그출력
     log.info("project create request received {} ",projectRequestDto.toString());
 
-    //프로젝트 저장 & response 반환
-    ProjectResponseDto projectResponseDto = projectService.createProject(projectRequestDto);
+    List<DockerContainerConfig> configs = projectService.upsert(projectRequestDto);
+
 
     log.info("project build start / waiting -> processing");
-    //프로젝트 buildStart
-    ProjectState projectState = projectService.build(projectRequestDto);
 
-    //TODO : Response 확인
-    log.info("project create Success {} {}", projectResponseDto.toString(), projectState.toString());
-    return ResponseEntity.ok(projectResponseDto);
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("status", "Success");
+
+    log.info("PrjoectController.createProject success : {}", projectRequestDto);
+    return ResponseEntity.ok(map);
+  }
+
+  @PostMapping("/build")
+  public ResponseEntity buildProject(Long projectId ) throws IOException, ChangeSetPersister.NotFoundException {
+    log.info("buildProject request API received , id : {}",projectId);
+
+    //프로젝트 빌드 시작
+    projectService.build(projectId);
+
+    return ResponseEntity.ok(null);
+  }
+
+
+
+  @PatchMapping
+  public ResponseEntity updateProject(ProjectRequestDto projectRequestDto) {
+    log.info("PrjoectController.updateProject input : {}", projectRequestDto);
+
+    // TODO
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("status", "Success");
+
+    log.info("PrjoectController.updateProject success : {}", projectRequestDto);
+    return ResponseEntity.ok(map);
   }
 
   @GetMapping("/frameworkType")
@@ -54,15 +82,11 @@ public class ProjectController {
   }
 
   @GetMapping("/frameworkVersion")
-  public ResponseEntity<List<FrameworkVersionResponseDto>> GetFrameworkVersion(Long typeId) throws ChangeSetPersister.NotFoundException {
+  public ResponseEntity<FrameworkVersionResponseDto> GetFrameworkVersion(Long typeId) throws ChangeSetPersister.NotFoundException {
     //version 요청 로그 출력
     log.info("frameworkVersion API received typeId: {}",typeId);
 
-    //version list 입력
-    List<FrameworkVersionResponseDto> frameworkVersionResponses = projectService.getFrameworkVersion(typeId);
-
-    //version list 반환
-    return ResponseEntity.ok(frameworkVersionResponses);
+    return ResponseEntity.ok(projectService.getFrameworkVersion(typeId));
   }
 
   @GetMapping("/build/Detail")

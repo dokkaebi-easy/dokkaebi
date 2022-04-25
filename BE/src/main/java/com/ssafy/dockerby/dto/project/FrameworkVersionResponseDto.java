@@ -1,19 +1,21 @@
 package com.ssafy.dockerby.dto.project;
 
+import com.ssafy.dockerby.entity.project.frameworks.Version;
 import com.sun.istack.NotNull;
+import java.util.List;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
 @Getter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FrameworkVersionResponseDto {
 
-  @Nullable
-  private String frameworkBuildType;
+  private List<String> frameworkVersion;
 
-  @NotNull
-  private String frameworkVersion;
+  private List<String> buildTool;
+
+  public static FrameworkVersionResponseDto from(List<String> versions, List<String> buildTools) {
+    return new FrameworkVersionResponseDto(versions, buildTools);
+  }
 
 }

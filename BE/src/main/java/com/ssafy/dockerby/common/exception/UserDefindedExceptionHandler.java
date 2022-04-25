@@ -18,7 +18,7 @@ public class UserDefindedExceptionHandler {
     public ResponseEntity<Map<String, String>> ExceptionHandler(Exception e) {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-
+        //TODO : 로그 엉망으로 찍힘 확인필요
         log.error("controller Error Occurred, {}, {}", e.getCause(), e.getMessage());
 
         Map<String, String> map = new HashMap<>();
