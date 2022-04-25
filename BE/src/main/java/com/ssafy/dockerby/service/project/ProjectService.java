@@ -26,4 +26,5 @@ public interface ProjectService {
 
    ProjectListDto projectList() throws ChangeSetPersister.NotFoundException, UserDefindedException;
 
+  List<BuildTotalResponseDto> buildTotal(Long projectId);
 }

@@ -65,7 +65,7 @@ public class ProjectController {
     return ResponseEntity.ok(frameworkVersionResponses);
   }
 
-  @GetMapping("/buildDetail")
+  @GetMapping("/build/Detail")
   public ResponseEntity<StateResponseDto> projectState(StateRequestDto stateRequestDto ) throws ChangeSetPersister.NotFoundException {
     //요청 로그 출력
     log.info("buildDetail request received {}",stateRequestDto.toString());
@@ -74,6 +74,15 @@ public class ProjectController {
     StateResponseDto stateResponseDto = projectService.checkState(stateRequestDto);
 
     return ResponseEntity.ok(stateResponseDto);
+  }
+  @GetMapping("/build/total")
+  public ResponseEntity<List<BuildTotalResponseDto>> buildTotal(Long projectId) throws ChangeSetPersister.NotFoundException {
+    // 요청 로그 출력
+    log.info("buildTotal API request received {} ", projectId);
+
+    List<BuildTotalResponseDto> buildTotalResponseDtos = projectService.buildTotal(projectId);
+
+    return ResponseEntity.ok(buildTotalResponseDtos);
   }
 
   @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다")

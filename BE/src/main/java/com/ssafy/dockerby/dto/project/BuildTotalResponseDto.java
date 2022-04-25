@@ -1,18 +1,15 @@
 package com.ssafy.dockerby.dto.project;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FrameworkTypeResponseDto {
+public class BuildTotalResponseDto {
 
-  @NotNull
-  private Long frameworkTypeId;
+  private Long projectStateId;
 
-  @NotNull
-  private String frameworkName;
+  private StateDto state;
 
 }

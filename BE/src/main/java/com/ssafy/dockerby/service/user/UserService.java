@@ -1,9 +1,9 @@
-package com.ssafy.dockerby.service.User;
+package com.ssafy.dockerby.service.user;
 
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
-import com.ssafy.dockerby.dto.User.SignupDto;
-import com.ssafy.dockerby.dto.User.UserResponseDto;
+import com.ssafy.dockerby.dto.user.SignupDto;
+import com.ssafy.dockerby.dto.user.UserResponseDto;
 import java.io.IOException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
