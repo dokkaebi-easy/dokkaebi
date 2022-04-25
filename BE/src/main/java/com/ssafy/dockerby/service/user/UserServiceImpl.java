@@ -1,13 +1,13 @@
-package com.ssafy.dockerby.service.User;
+package com.ssafy.dockerby.service.user;
 
 import com.ssafy.dockerby.common.ExceptionClass;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
-import com.ssafy.dockerby.dto.User.SignupDto;
-import com.ssafy.dockerby.dto.User.UserDetailDto;
-import com.ssafy.dockerby.dto.User.UserResponseDto;
-import com.ssafy.dockerby.entity.User.User;
-import com.ssafy.dockerby.entity.User.UserRole;
-import com.ssafy.dockerby.repository.User.UserRepository;
+import com.ssafy.dockerby.dto.user.SignupDto;
+import com.ssafy.dockerby.dto.user.UserDetailDto;
+import com.ssafy.dockerby.dto.user.UserResponseDto;
+import com.ssafy.dockerby.entity.user.User;
+import com.ssafy.dockerby.entity.user.UserRole;
+import com.ssafy.dockerby.repository.user.UserRepository;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

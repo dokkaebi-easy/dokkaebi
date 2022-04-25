@@ -1,6 +1,6 @@
-package com.ssafy.dockerby.entity.User;
+package com.ssafy.dockerby.entity.user;
 
-import com.ssafy.dockerby.dto.User.SignupDto;
+import com.ssafy.dockerby.dto.user.SignupDto;
 import com.ssafy.dockerby.entity.BaseEntity;
 import com.sun.istack.NotNull;
 import javax.persistence.Column;

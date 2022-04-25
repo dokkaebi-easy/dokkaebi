@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.entity.User;
+package com.ssafy.dockerby.entity.user;
 
 import lombok.Getter;
 

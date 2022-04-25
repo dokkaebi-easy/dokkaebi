@@ -1,6 +1,6 @@
-package com.ssafy.dockerby.dto.User;
+package com.ssafy.dockerby.dto.user;
 
-import com.ssafy.dockerby.entity.User.User;
+import com.ssafy.dockerby.entity.user.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import lombok.ToString;
 
 @Builder
 @Slf4j

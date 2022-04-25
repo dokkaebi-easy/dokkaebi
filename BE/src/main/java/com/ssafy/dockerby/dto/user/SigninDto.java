@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.dto.User;
+package com.ssafy.dockerby.dto.user;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
