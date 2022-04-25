@@ -1,5 +1,5 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { ConnectedRouter as Router } from 'connected-react-router';
+import { Switch, Route } from 'react-router-dom';
+import BasicLayout from 'Components/Layouts/BasicLayout/BasicLayout';
 import CssBaseline from '@mui/material/CssBaseline';
 import SignUp from 'Components/Pages/SignUp/SignUp';
 import Home from 'Components/Pages/Home/Home';
