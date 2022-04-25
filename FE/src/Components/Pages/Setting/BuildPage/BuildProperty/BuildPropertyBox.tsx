@@ -3,27 +3,27 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import PropertyData from 'MDClass/PropertyData/PropertyData';
+import PropertyData, {
+  Property,
+} from 'Components/MDClass/PropertyData/PropertyData';
+import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
 import { v4 as uuid } from 'uuid';
-import Property from './Property/Property';
+import PropertyBox from '../Property/PropertyBox';
 
-// interface PropertyData {
-//   name: string;
-//   data: string[];
-// }
+interface PropertyProps {
+  buildValue: Build;
+}
 
-export default function BuildProperty() {
-  const [propertyData, setPropertyData] = useState<PropertyData[]>([]);
+export default function BuildPropertyBox({ buildValue }: PropertyProps) {
+  const [propertyDatas, setPropertyDatas] = useState<Property[]>(
+    buildValue.propertys,
+  );
 
   const handleOnClick = () => {
     const newData = new PropertyData();
-    setPropertyData((cur) => [...cur, newData]);
+    setPropertyDatas((cur) => [...cur, newData]);
+    buildValue.propertys = [...buildValue.propertys, new PropertyData()];
   };
-
-  useEffect(() => {
-    const newData = new PropertyData();
-    setPropertyData([newData]);
-  }, []);
 
   return (
     <Box my={3}>
@@ -43,8 +43,14 @@ export default function BuildProperty() {
               Property Add
             </Button>
           </Box>
-          {propertyData.map(() => {
-            return <Property key={uuid()} />;
+          {propertyDatas.map((value, index) => {
+            return (
+              <PropertyBox
+                key={uuid()}
+                value={value}
+                buildValue={buildValue.propertys[index]}
+              />
+            );
           })}
         </Paper>
       </Box>

@@ -13,8 +13,11 @@ function App() {
         <Route path="/signup">
           <SignUp />
         </Route>
-        <Route path="/">
+        <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/">
+          <BasicLayout />
         </Route>
       </Switch>
     </>

@@ -11,15 +11,35 @@ import Stack from '@mui/material/Stack';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { v4 as uuid } from 'uuid';
 import ConnetctModal from 'Components/Pages/Setting/GitLabPage/ConnetctModal/ConnetctModal';
+import GitData, { Git } from 'Components/MDClass/GitData/GitData';
 
-export default function GitLabConnect() {
+interface GitProps {
+  gitData: Git;
+}
+
+export default function GitLabConnect({ gitData }: GitProps) {
+  const [name, setName] = useState('');
+  const [hostURL, setHostURL] = useState('');
   const [credentials, setCredentials] = useState([]);
   const [secretToken, setSecretToken] = useState('');
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleOnClick = () => setSecretToken(uuid());
+  const handleOnClick = () => {
+    const token = uuid();
+    setSecretToken(token);
+    gitData.secrettoken = token;
+  };
+  const handleNameChange = (event: any) => {
+    setName(event.target.value);
+    gitData.name = event.target.value;
+  };
+
+  const handleHostURLChange = (event: any) => {
+    setHostURL(event.target.value);
+    gitData.hosturl = event.target.value;
+  };
 
   return (
     <Box my={3}>
@@ -43,6 +63,8 @@ export default function GitLabConnect() {
                 size="small"
                 sx={{ my: 1 }}
                 placeholder="name"
+                defaultValue={name}
+                onChange={handleNameChange}
               />
             </Grid>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
@@ -52,11 +74,13 @@ export default function GitLabConnect() {
               <TextField
                 fullWidth
                 id="outlined-basic"
-                label="name"
+                label="Host URL"
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="name"
+                placeholder="Host URL"
+                defaultValue={hostURL}
+                onChange={handleHostURLChange}
               />
             </Grid>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>

@@ -3,7 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 export default function Navbar() {
   const [pageName, setPageName] = useState('');
@@ -20,13 +20,19 @@ export default function Navbar() {
   return (
     <AppBar
       position="sticky"
-      sx={{ top: 24, borderRadius: 3, backgroundColor: '#999' }}
+      sx={{
+        top: 24,
+        borderRadius: 3,
+        backgroundColor: 'rgba(200,200,200,0.5)',
+      }}
     >
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {pageName}
         </Typography>
-        <Button color="inherit">Login</Button>
+        <Link to="/login">
+          <Button color="inherit">Login</Button>
+        </Link>
       </Toolbar>
     </AppBar>
   );
