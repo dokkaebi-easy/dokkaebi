@@ -42,7 +42,7 @@ function Login() {
   };
 
   const LinkToMain = () => {
-    window.location.href = '/HomeLayout';
+    window.location.href = '/';
   };
 
   return (

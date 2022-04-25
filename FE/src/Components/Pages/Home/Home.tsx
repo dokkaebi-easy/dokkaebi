@@ -11,9 +11,9 @@ import axios from 'axios';
 export default function Home() {
   useEffect(() => {
     // axios 요청 Build Project 리스트 목록
-    axios.get('/api/project').then((res) => {
-      console.log(res.data);
-    });
+    // axios.get('/api/project').then((res) => {
+    //   console.log(res.data);
+    // });
   }, []);
   return (
     <Box sx={{ marginTop: 5 }}>
