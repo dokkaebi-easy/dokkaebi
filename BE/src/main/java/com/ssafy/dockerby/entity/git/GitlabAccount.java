@@ -42,7 +42,7 @@ public class GitlabAccount {
         requestDto.getEmail(),
         requestDto.getPassword(),
         requestDto.getEmail(),
-        null
+        new ArrayList<>()
     );
   }
 
