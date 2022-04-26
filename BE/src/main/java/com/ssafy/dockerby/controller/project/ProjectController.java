@@ -1,6 +1,8 @@
 package com.ssafy.dockerby.controller.project;
 
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
+import com.ssafy.dockerby.core.gitlab.GitlabWrapper;
+import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
 import com.ssafy.dockerby.dto.project.ConfigHistoryListResponseDto;
 import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
@@ -23,8 +25,10 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +41,8 @@ public class ProjectController {
   private final ProjectServiceImpl projectService;
 
   @PostMapping
-  public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto ) throws ChangeSetPersister.NotFoundException {
+  public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto )
+      throws ChangeSetPersister.NotFoundException, IOException {
     //요청 로그출력
     log.info("project create request received {} , {} ",projectRequestDto.toString(), principal.getName());
 
@@ -59,7 +64,7 @@ public class ProjectController {
     log.info("buildProject request API received , id : {}",projectId);
 
     //프로젝트 빌드 시작
-    projectService.build(projectId);
+    projectService.build(projectId, null);
 
     return ResponseEntity.ok(null);
   }
@@ -137,4 +142,15 @@ public class ProjectController {
     return ResponseEntity.ok(configHistoryList);
   }
 
+  @PostMapping("/hook/{projectName}")
+  public ResponseEntity webHook(@PathVariable String projectName,
+      @RequestHeader(name = "X-Gitlab-Token") String token,
+      @RequestBody Map<String, Object> params) throws NotFoundException, IOException {
+    GitlabWebHookDto webHookDto = GitlabWrapper.wrap(params);
+    // TODO : 경동님의 PROJECT 환경설정 조회
+
+    projectService.build(1L,webHookDto);
+
+    return ResponseEntity.ok(null);
+  }
 }

@@ -2,6 +2,7 @@ package com.ssafy.dockerby.service.project;
 
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
+import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
 import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
 import com.ssafy.dockerby.dto.project.FrameworkVersionResponseDto;
@@ -19,9 +20,9 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 public interface ProjectService {
 
   List<DockerContainerConfig> upsert(Principal principal,ProjectRequestDto projectRequestDto)
-      throws NotFoundException;
+      throws NotFoundException, IOException;
 
-  BuildState build(Long projectId) throws ChangeSetPersister.NotFoundException, IOException;
+  BuildState build(Long ProjectId, GitlabWebHookDto webHookDto) throws ChangeSetPersister.NotFoundException, IOException;
 
   StateResponseDto checkState(StateRequestDto stateRequestDto) throws ChangeSetPersister.NotFoundException;
 

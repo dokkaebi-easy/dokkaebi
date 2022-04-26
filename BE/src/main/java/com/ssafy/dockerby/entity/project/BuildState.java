@@ -1,5 +1,5 @@
 package com.ssafy.dockerby.entity.project;
-
+import com.ssafy.dockerby.entity.git.WebhookHistory;
 import com.ssafy.dockerby.entity.project.states.Build;
 import com.ssafy.dockerby.entity.project.states.Pull;
 import com.ssafy.dockerby.entity.project.states.Run;
@@ -45,6 +45,8 @@ public class BuildState {
   @OneToOne(mappedBy = "buildState", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Run run;
 
+  @OneToOne(mappedBy = "buildState", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private WebhookHistory webhookHistory;
 
   public static BuildState from() {
     return BuildState.builder().build();
@@ -66,6 +68,9 @@ public class BuildState {
     project.addBuildState(this);
   }
 
+  public void setWebhookHistory(WebhookHistory history) {
+    this.webhookHistory = history;
+  }
   @Override
   public String toString() {
     return "BuildState{" +
@@ -76,4 +81,6 @@ public class BuildState {
         ", run=" + run +
         '}';
   }
+
+
 }
