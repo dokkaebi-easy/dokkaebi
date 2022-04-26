@@ -1,18 +1,25 @@
 package com.ssafy.dockerby.service.project;
 
-import com.ssafy.dockerby.core.docker.DockerBuilder;
+import com.ssafy.dockerby.core.docker.DockerAdapter;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
+import com.ssafy.dockerby.core.gitlab.GitlabAdapter;
+import com.ssafy.dockerby.core.gitlab.GitlabWrapper;
+import com.ssafy.dockerby.core.gitlab.dto.GitlabCloneDto;
+import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.core.util.CommandInterpreter;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
 import com.ssafy.dockerby.dto.project.ConfigHistoryListResponseDto;
 import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
 import com.ssafy.dockerby.dto.project.FrameworkVersionResponseDto;
+import com.ssafy.dockerby.dto.project.GitConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.dto.project.StateDto;
 import com.ssafy.dockerby.dto.project.StateRequestDto;
 import com.ssafy.dockerby.dto.project.StateResponseDto;
 import com.ssafy.dockerby.entity.ConfigHistory;
+import com.ssafy.dockerby.entity.git.GitlabAccessToken;
+import com.ssafy.dockerby.entity.git.WebhookHistory;
 import com.ssafy.dockerby.entity.project.BuildState;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.entity.project.ProjectConfig;
@@ -31,6 +38,7 @@ import com.ssafy.dockerby.repository.project.ProjectRepository;
 import com.ssafy.dockerby.repository.project.PullRepository;
 import com.ssafy.dockerby.repository.project.RunRepository;
 import com.ssafy.dockerby.repository.user.UserRepository;
+import com.ssafy.dockerby.service.git.GitlabService;
 import com.ssafy.dockerby.util.ConfigParser;
 import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
@@ -66,6 +74,8 @@ public class ProjectServiceImpl implements ProjectService {
   private final ConfigHistoryRepository configHistoryRepository;
   private final UserRepository userRepository;
 
+  private final GitlabService gitlabService;
+
   @Value("${dockerby.configRootPath}")
   private String configRootPath;
 
@@ -73,11 +83,10 @@ public class ProjectServiceImpl implements ProjectService {
   private String logPath;
 
 
-
-
   @Override
-  public List<DockerContainerConfig> upsert(Principal principal,ProjectRequestDto projectRequestDto)
-      throws ChangeSetPersister.NotFoundException {
+  public List<DockerContainerConfig> upsert(Principal principal,
+      ProjectRequestDto projectRequestDto)
+      throws ChangeSetPersister.NotFoundException, IOException {
     Project project = projectRepository.findOneByProjectName(projectRequestDto.getProjectName())
         .orElseGet(() ->
             projectRepository.save(Project.from(projectRequestDto)));
@@ -94,9 +103,32 @@ public class ProjectServiceImpl implements ProjectService {
 
     //로그인 유저 탐색
     User user = userRepository.findByPrincipal(principal.getName())
-        .orElseThrow(() -> new ChangeSetPersister.NotFoundException());;
+        .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+    ;
     //히스토리 저장
-    createHistory(user,project,"upsert Project");
+    createHistory(user, project, "upsert Project");
+
+    GitConfigDto getConfigDto = projectRequestDto.getGitConfig();
+    if (getConfigDto != null) {
+      gitlabService.config(project.getId())
+          .map(config -> gitlabService.updateConfig(project, getConfigDto))
+          .orElseGet(() -> gitlabService.createConfig(project, getConfigDto));
+
+      // Git clone
+
+      StringBuilder filePath = new StringBuilder();
+      filePath.append(project.getProjectName()).append("/").append(logPath);
+
+      GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
+      String cloneCommand = GitlabAdapter.getCloneCommand(
+          GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
+              getConfigDto.getBranchName()));
+
+      List<String> commands = new ArrayList<>();
+      commands.add(cloneCommand);
+      CommandInterpreter.run(filePath.toString(), project.getProjectName(), 0, commands);
+
+    }
 
     return buildConfigs;
   }
@@ -136,7 +168,7 @@ public class ProjectServiceImpl implements ProjectService {
     buildState.setProject(project);
     buildState.setBuildNumber(buildStateRepository.findAllByProjectId(project.getId()).size());
 
-    Pull pull= Pull.from();
+    Pull pull = Pull.from();
     Build build = Build.from();
     Run run = Run.from();
 
@@ -150,7 +182,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public BuildState build(Long ProjectId)
+  public BuildState build(Long ProjectId, GitlabWebHookDto webHookDto)
       throws ChangeSetPersister.NotFoundException, IOException {
     //빌드 시작 로그 출력
     log.info("build start in service part");
@@ -163,11 +195,16 @@ public class ProjectServiceImpl implements ProjectService {
 
     BuildState buildState = createBuildState(project);
 
+    if (webHookDto != null) {
+      WebhookHistory webhookHistory = WebhookHistory.of(webHookDto);
+      webhookHistory.setBuildState(buildState);
+    }
+
     em.flush();
 
     StringBuilder filePath = new StringBuilder();
-    filePath.append(logPath).append("/").append(project.getProjectName());
-    DockerBuilder dockerBuilder = new DockerBuilder(project.getProjectName());
+    filePath.append(project.getProjectName()).append("/").append(logPath);
+    DockerAdapter dockerAdapter = new DockerAdapter(project.getProjectName());
     List<DockerContainerConfig> configs = loadConfigFiles(project.getProjectName(),
         project.getProjectConfigs());
 
@@ -175,8 +212,11 @@ public class ProjectServiceImpl implements ProjectService {
     //Pull start
     try { // pull 트라이
       //TODO / ProjectService : GitPull 트라이
-
-      dockerBuilder.saveDockerfiles(configs);
+      List<String> commands = new ArrayList<>();
+      commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
+      CommandInterpreter.runDestPath(webHookDto.getRepositoryName(), filePath.toString(), "pull",
+          buildNumber, commands);
+      dockerAdapter.saveDockerfiles(configs);
       // pull 완료 build 진행중 update
       buildState.getPull().updateStateType("Done");
       buildState.getBuild().updateStateType("Processing");
@@ -185,9 +225,8 @@ public class ProjectServiceImpl implements ProjectService {
       em.flush();
 
       //성공 로그 출력
-      log.info(" Pull Done : {}",buildState.getPull().toString());
-    }
-    catch (Exception e){ // state failed 넣기
+      log.info(" Pull Done : {}", buildState.getPull().toString());
+    } catch (Exception e) { // state failed 넣기
       //pullState failed 입력
       buildState.getPull().updateStateType("Failed");
       project.updateState(StateType.Failed);
@@ -205,8 +244,8 @@ public class ProjectServiceImpl implements ProjectService {
     //Build start
     try { // Build 트라이
       //TODO / ProjectService : Build 트라이
-      List<String> buildCommands = dockerBuilder.getBuildCommands(configs);
-      CommandInterpreter.run(filePath.toString(),"build",buildNumber,buildCommands);
+      List<String> buildCommands = dockerAdapter.getBuildCommands(configs);
+      CommandInterpreter.run(filePath.toString(), "build", buildNumber, buildCommands);
 
       // state Done 넣기
       buildState.getBuild().updateStateType("Done");
@@ -216,9 +255,8 @@ public class ProjectServiceImpl implements ProjectService {
       em.flush();
 
       //성공 로그 출력
-      log.info("Build Done : {}",buildState.getBuild().toString());
-    }
-    catch (Exception e){ // state failed 넣기
+      log.info("Build Done : {}", buildState.getBuild().toString());
+    } catch (Exception e) { // state failed 넣기
       //buildState failed 입력
       buildState.getBuild().updateStateType("Failed");
       project.updateState(StateType.Failed);
@@ -235,11 +273,12 @@ public class ProjectServiceImpl implements ProjectService {
     //Run start
     try { // run 트라이
       //TODO / ProjectService : DockerRun 트라이
-      if(buildNumber != 1) {
-        CommandInterpreter.run(filePath.toString(),"remove",buildNumber,dockerBuilder.getRemoveCommands(configs));
+      if (buildNumber != 1) {
+        CommandInterpreter.run(filePath.toString(), "remove", buildNumber,
+            dockerAdapter.getRemoveCommands(configs));
       }
-      List<String> buildCommands = dockerBuilder.getRunCommands(configs);
-      CommandInterpreter.run(filePath.toString(),"run",buildNumber,buildCommands);
+      List<String> buildCommands = dockerAdapter.getRunCommands(configs);
+      CommandInterpreter.run(filePath.toString(), "run", buildNumber, buildCommands);
       // state Done 넣기
       buildState.getRun().updateStateType("Done");
 
@@ -247,9 +286,8 @@ public class ProjectServiceImpl implements ProjectService {
       em.flush();
 
       //성공 로그 출력
-      log.info("Run Done : {}",buildState.getRun().toString());
-    }
-    catch (Exception e){ // state failed 넣기
+      log.info("Run Done : {}", buildState.getRun().toString());
+    } catch (Exception e) { // state failed 넣기
       //dockerRunState failed 입력
       buildState.getRun().updateStateType("Failed");
       project.updateState(StateType.Failed);
@@ -351,7 +389,7 @@ public class ProjectServiceImpl implements ProjectService {
       }
       //성공 로그 출력
       log.info("getFrameworkVersion request success");
-      return FrameworkVersionResponseDto.from(versions,buildTools);
+      return FrameworkVersionResponseDto.from(versions, buildTools);
     } catch (Exception error) {
       //실패 로그 출력
       log.error("getFrameworkVersion request failed {} {}", error.getCause(), error.getMessage());
@@ -360,45 +398,45 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public List<ProjectListResponseDto> projectList(){
+  public List<ProjectListResponseDto> projectList() {
     log.info("Project List");
     List<Project> projectList = projectRepository.findAll();
 
     List<ProjectListResponseDto> resultList = new ArrayList<>();
 
-    for(Project project : projectList){
+    for (Project project : projectList) {
       ProjectListResponseDto projectListDto = ProjectListResponseDto.from(project);
       resultList.add(projectListDto);
     }
 
-
-    log.info("project list size {}",resultList.size());
+    log.info("project list size {}", resultList.size());
     return resultList;
   }
 
   //history 저장
-  private void createHistory(User user, Project project,String detail){
+  private void createHistory(User user, Project project, String detail) {
     ConfigHistory history = ConfigHistory.builder()
         .user(user)
         .project(project)
         .msg(detail)
         .build();
     configHistoryRepository.save(history);
-    log.info("history save {} to {} detail-{}",history.getUser().getName(),history.getProject().getProjectName(),history.getMsg());
+    log.info("history save {} to {} detail-{}", history.getUser().getName(),
+        history.getProject().getProjectName(), history.getMsg());
   }
 
-  public List<ConfigHistoryListResponseDto>  historyList(){
+  public List<ConfigHistoryListResponseDto> historyList() {
     List<ConfigHistory> configHistories = configHistoryRepository.findAll(
         Sort.by(Sort.Direction.DESC, "registDate"));
     List<ConfigHistoryListResponseDto> resultList = new ArrayList<>();
 
-    for(ConfigHistory configHistory : configHistories){
-      ConfigHistoryListResponseDto configHistoryListDto = ConfigHistoryListResponseDto.from(configHistory);
+    for (ConfigHistory configHistory : configHistories) {
+      ConfigHistoryListResponseDto configHistoryListDto = ConfigHistoryListResponseDto.from(
+          configHistory);
       resultList.add(configHistoryListDto);
     }
 
-
-    log.info("ConfigHistory list size {}",resultList.size());
+    log.info("ConfigHistory list size {}", resultList.size());
     return resultList;
   }
 

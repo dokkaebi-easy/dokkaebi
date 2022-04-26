@@ -9,13 +9,13 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DockerBuilder {
+public class DockerAdapter {
 
   private final String rootDir;
   private final DockerfileMaker dockerfileMaker;
   private final DockerCommandMaker dockerCommandMaker;
 
-  public DockerBuilder(String projectName) {
+  public DockerAdapter(String projectName) {
     StringBuilder sb = new StringBuilder();
     sb.append("/home/").append(projectName);
     this.rootDir = sb.toString();

@@ -57,29 +57,6 @@ CREATE TABLE `dockerby`.`gitlab_account` (
   `username` VARCHAR(255) NULL,
   PRIMARY KEY (`gitlab_account_id`));
 
-CREATE TABLE `dockerby`.`gitlab_config` (
-  `gitlab_config_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  `host_url` VARCHAR(45) NOT NULL,
-  `secret_token` VARCHAR(45) NOT NULL,
-  `repository_url` VARCHAR(45) NOT NULL,
-  `branch_name` VARCHAR(45) NOT NULL,
-  `gitlab_account_id` BIGINT NULL,
-  `gitlab_access_token_id` BIGINT NULL,
-  PRIMARY KEY (`gitlab_config_id`),
-  INDEX `fk-gitlab_account-gitlab_config_idx` (`gitlab_account_id` ASC),
-  INDEX `fk-gitlab_access_token-gitlab_config_idx` (`gitlab_access_token_id` ASC),
-  CONSTRAINT `fk-gitlab_access_token-gitlab_config`
-    FOREIGN KEY (`gitlab_access_token_id`)
-    REFERENCES `dockerby`.`gitlab_access_token` (`gitlab_access_token_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk-gitlab_account-gitlab_config`
-    FOREIGN KEY (`gitlab_account_id`)
-    REFERENCES `dockerby`.`gitlab_account` (`gitlab_account_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-
 CREATE TABLE `dockerby`.`project` (
   `project_id` BIGINT NOT NULL AUTO_INCREMENT,
   `project_name` VARCHAR(255) NOT NULL,
@@ -95,6 +72,36 @@ CREATE TABLE `dockerby`.`project_config` (
   PRIMARY KEY (`project_config_id`),
   INDEX `fk-project-project_config_idx` (`project_id` ASC),
   CONSTRAINT `fk-project-project_config`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `dockerby`.`project` (`project_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `dockerby`.`gitlab_config` (
+  `gitlab_config_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `host_url` VARCHAR(45) NOT NULL,
+  `secret_token` VARCHAR(45) NOT NULL,
+  `repository_url` VARCHAR(45) NOT NULL,
+  `branch_name` VARCHAR(45) NOT NULL,
+  `gitlab_account_id` BIGINT NULL,
+  `gitlab_access_token_id` BIGINT NULL,
+  `project_id` BIGINT NULL,
+  PRIMARY KEY (`gitlab_config_id`),
+  INDEX `fk-gitlab_account-gitlab_config_idx` (`gitlab_account_id` ASC),
+  INDEX `fk-gitlab_access_token-gitlab_config_idx` (`gitlab_access_token_id` ASC),
+  INDEX `fk-project-gitlab_config_idx` (`project_id` ASC),
+  CONSTRAINT `fk-gitlab_access_token-gitlab_config`
+    FOREIGN KEY (`gitlab_access_token_id`)
+    REFERENCES `dockerby`.`gitlab_access_token` (`gitlab_access_token_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk-gitlab_account-gitlab_config`
+    FOREIGN KEY (`gitlab_account_id`)
+    REFERENCES `dockerby`.`gitlab_account` (`gitlab_account_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk-project-gitlab_config`
     FOREIGN KEY (`project_id`)
     REFERENCES `dockerby`.`project` (`project_id`)
     ON DELETE NO ACTION
@@ -155,6 +162,23 @@ CREATE TABLE `dockerby`.`build_state` (
     REFERENCES `dockerby`.`project` (`project_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+CREATE TABLE `dockerby`.`webhook_history` (
+  `webhook_history_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `event_kind` VARCHAR(255) NULL,
+  `username` VARCHAR(255) NULL,
+  `git_http_url` VARCHAR(255) NULL,
+  `default_branch` VARCHAR(255) NULL,
+  `repository_name` VARCHAR(255) NULL,
+  `build_state_id` BIGINT NULL,
+  PRIMARY KEY (`webhook_history_id`),
+  INDEX `fk-build_state-webhook_history_idx` (`build_state_id` ASC),
+  CONSTRAINT `fk-build_state-webhook_history`
+    FOREIGN KEY (`build_state_id`)
+    REFERENCES `dockerby`.`build_state` (`build_state_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
 
 CREATE TABLE `dockerby`.`pull` (
   `pull_id` BIGINT NOT NULL AUTO_INCREMENT,
