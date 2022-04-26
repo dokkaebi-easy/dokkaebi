@@ -297,6 +297,7 @@ public class ProjectServiceImpl implements ProjectService {
     //성공 로그 출력
     log.info("ProjectService checkState success state : {}", state);
 
+
     //state 를 넣은 response 반환환
     return StateResponseDto.builder()
         .projectId(stateRequestDto.getProjectId())
