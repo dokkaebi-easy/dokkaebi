@@ -1,18 +1,13 @@
 package com.ssafy.dockerby.config;
 
-import com.ssafy.dockerby.security.CustomAuthenticationFailureHandler;
-import com.ssafy.dockerby.security.CustomAuthenticationProvider;
-import com.ssafy.dockerby.security.CustomAuthenticationSuccessHandler;
 import com.ssafy.dockerby.security.CustomLogoutHandler;
 import com.ssafy.dockerby.security.CustomLogoutSuccessHandler;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 //스프링 시큐리티 필터가 스프링 필터체인에 등록이 됨, 스프링 시큐리티 필터가 SecurityConfig 이것을 말한다.지금부터 등록할 필터가 기본 필터에 등록이 된다.
@@ -20,9 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-    private final CustomAuthenticationProvider customAuthenticationProvider;
     private final CustomLogoutHandler customLogoutHandler;
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
@@ -31,43 +23,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
         ;
-
         http
             .authorizeRequests()
-            //user 관련된 권한(로그인,로그아웃,회원가입) 및 swagger 모두 접근허용
+            .requestMatchers(request -> CorsUtils.isPreFlightRequest(request)).permitAll()
             .antMatchers("/api/user/**", "/swagger-ui.html/**", "/configuration/**",
                 "/swagger-resources/**", "/v2/api-docs", "/webjars/**",
                 "/webjars/springfox-swagger-ui/*.{js,css}").permitAll()
-            //그외 USER 권한만 허용
-//            .anyRequest().hasAnyRole("USER");
-            // TODO: 2022-04-24  권한수정
-            // 개발 편의를 위해 모두허용
             .anyRequest().permitAll();
 
         //로그인 form
         http
-            .formLogin()
-            .loginProcessingUrl("/api/user/auth/signin") //로그인 요청
-            .usernameParameter("principal") //username parameter 이름 변경
-            .passwordParameter("credential")//password parameter 이름 변경
-            .successHandler(
-                customAuthenticationSuccessHandler) //  로그인 성공시 customAuthenticationSuccessHandler  사용
-            .failureHandler(
-                customAuthenticationFailureHandler) // 로그인 실패시 customAuthenticationFailureHandler 사용
-        ;
-        //자동 로그인 기능
-//        http.rememberMe()
-//            .rememberMeParameter("remember")      // 기본 파라미터명은 remember-me
-//            .tokenValiditySeconds(3600)           // Default 는 14일
-//            .alwaysRemember(true)                // 리멤버 미 기능이 활성화되지 않아도 항상 실행
-//        ;
+            .formLogin().disable();
+
         // 로그아웃 처리
         http.logout()
             .logoutUrl("/api/user/auth/signout") // 로그아웃 처리 URL
             .logoutSuccessUrl("/api/user/auth/signin")
-            .deleteCookies("JSESSIONID"
-//              , "remember-me"
-            ) // 로그아웃 후 해당 쿠키 삭제
+            .deleteCookies("JSESSIONID") // 로그아웃 후 해당 쿠키 삭제
             .addLogoutHandler(customLogoutHandler) // 로그아웃 처리 핸들러
             .logoutSuccessHandler(customLogoutSuccessHandler) // 로그아웃 성공시 핸들러
         ;
@@ -78,9 +50,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(customAuthenticationProvider);
-    }
 
 }
