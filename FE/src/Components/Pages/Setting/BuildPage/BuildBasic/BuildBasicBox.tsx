@@ -8,15 +8,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
+import { Build } from 'Components/MDClass/BuildData/BuildData';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
 import BuildProperty from '../BuildProperty/BuildPropertyBox';
 
-interface Version {
-  version: string[];
+interface FrameworkAxios {
+  frameworkTypeId: number;
+  frameworkName: string;
 }
-interface Types {
-  version: string[];
+
+interface VersionTypeAxois {
+  buildTool: string[];
+  frameworkVersion: string[];
 }
 
 interface buildProps {
@@ -25,21 +29,21 @@ interface buildProps {
   DelClick: (value: number) => void;
 }
 
-const FramAndLib = ['SpringBoot', 'Django', 'Vue', 'React', 'MySQL'];
-
 export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
   const [name, setName] = useState(value.name);
   const [fileDir, setFileDir] = useState(value.projectDirectory);
-  const [select, setSelect] = useState('');
-  const [version, setVersion] = useState('');
-  const [type, setType] = useState('');
-  const [types, setTypes] = useState([]);
-  const [versions, setVersions] = useState([]);
+  const [frameworkName, setFrameworkName] = useState(value.frameworkName);
+  const [version, setVersion] = useState(value.version);
+  const [type, setType] = useState(value.type);
+  const [framAndLibs, setFramAndLibs] = useState<string[]>([]);
+  const [types, setTypes] = useState<string[]>([]);
+  const [versions, setVersions] = useState<string[]>([]);
 
   const handleNameOnChange = (event: any) => {
     setName(event.target.value);
     value.name = event.target.value;
   };
+
   const handleFileDirOnClick = (event: any) => {
     setFileDir(event.target.value);
     value.projectDirectory = event.target.value;
@@ -50,7 +54,7 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
   };
 
   const handlePropsFLChange = (event: string) => {
-    setSelect(event);
+    setFrameworkName(event);
     setVersion('');
     setType('');
     value.frameworkName = event;
@@ -60,10 +64,40 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
 
   const handlePropsVersionChange = (event: string) => {
     setVersion(event);
+    value.version = event;
   };
   const handlePropsTypeChange = (event: string) => {
     setType(event);
+    value.type = event;
   };
+  useEffect(() => {
+    if (frameworkName) {
+      const params = { typeId: framAndLibs.indexOf(frameworkName) + 1 };
+      axios
+        .get('/api/project/frameworkVersion', { params })
+        .then((res) => {
+          const data = res.data as VersionTypeAxois;
+          setVersions(data.frameworkVersion);
+          setTypes(data.buildTool);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [frameworkName]);
+
+  useEffect(() => {
+    axios
+      .get('/api/project/frameworkType')
+      .then((res) => {
+        const data = res.data as FrameworkAxios[];
+        const arr = data.map((value) => value.frameworkName);
+        setFramAndLibs(arr);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Box>
@@ -85,16 +119,16 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
           <Grid item>
             <Typography>Framework/ Library</Typography>
             <SelectItem
-              defaultValue={value.frameworkName}
+              defaultValue={frameworkName}
               label="Framework/ Library"
-              Items={FramAndLib}
+              Items={framAndLibs}
               change={handlePropsFLChange}
             />
           </Grid>
           <Grid item>
             <Typography>Version</Typography>
             <SelectItem
-              defaultValue={value.version}
+              defaultValue={version}
               label="versions"
               Items={versions}
               change={handlePropsVersionChange}
@@ -103,7 +137,7 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
           <Grid item>
             <Typography>Type</Typography>
             <SelectItem
-              defaultValue={value.type}
+              defaultValue={type}
               label="Types"
               Items={types}
               change={handlePropsTypeChange}

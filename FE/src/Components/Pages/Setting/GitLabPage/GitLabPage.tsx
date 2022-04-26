@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import GitLabConnect from 'Components/Pages/Setting/GitLabPage/GitLabConnect/GitLabConnect';
 import GitLabRepositories from 'Components/Pages/Setting/GitLabPage/GitLabRepositories/GitLabRepositories';
-import GitData, { Git } from 'Components/MDClass/GitData/GitData';
+import { useStore } from 'Components/Store/settingStore';
 
 export default function GitLabPage() {
-  const [gitData, setGitData] = useState<Git>(new GitData());
+  const gitConfig = useStore((state) => state.gitConfig);
+  // const setGitConfig = useStore((state) => state.setGitConfig);
 
   return (
     <Box>
@@ -18,8 +19,8 @@ export default function GitLabPage() {
       </Box>
       <Box>
         <Paper sx={{ padding: 3 }}>
-          <GitLabConnect gitData={gitData} />
-          <GitLabRepositories gitData={gitData} />
+          <GitLabConnect gitData={gitConfig} />
+          <GitLabRepositories gitData={gitConfig} />
         </Paper>
       </Box>
     </Box>

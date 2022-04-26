@@ -11,17 +11,18 @@ import Stack from '@mui/material/Stack';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { v4 as uuid } from 'uuid';
 import ConnetctModal from 'Components/Pages/Setting/GitLabPage/ConnetctModal/ConnetctModal';
-import GitData, { Git } from 'Components/MDClass/GitData/GitData';
+import { Git } from 'Components/MDClass/GitData/GitData';
 
 interface GitProps {
   gitData: Git;
 }
 
 export default function GitLabConnect({ gitData }: GitProps) {
-  const [name, setName] = useState('');
-  const [hostURL, setHostURL] = useState('');
+  const [name, setName] = useState(gitData.name);
+  const [hostURL, setHostURL] = useState(gitData.hostUrl);
+  const [credential, setCredential] = useState(gitData.credentials);
   const [credentials, setCredentials] = useState([]);
-  const [secretToken, setSecretToken] = useState('');
+  const [secretToken, setSecretToken] = useState(gitData.secretToken);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -29,7 +30,7 @@ export default function GitLabConnect({ gitData }: GitProps) {
   const handleOnClick = () => {
     const token = uuid();
     setSecretToken(token);
-    gitData.secrettoken = token;
+    gitData.secretToken = token;
   };
   const handleNameChange = (event: any) => {
     setName(event.target.value);
@@ -38,7 +39,7 @@ export default function GitLabConnect({ gitData }: GitProps) {
 
   const handleHostURLChange = (event: any) => {
     setHostURL(event.target.value);
-    gitData.hosturl = event.target.value;
+    gitData.hostUrl = event.target.value;
   };
 
   return (
