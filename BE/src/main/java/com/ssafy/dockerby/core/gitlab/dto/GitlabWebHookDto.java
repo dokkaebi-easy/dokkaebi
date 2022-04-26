@@ -15,10 +15,11 @@ public class GitlabWebHookDto {
   private String username;
   private String gitHttpUrl;
   private String defaultBranch;
+  private String repositoryName;
 
   public static GitlabWebHookDto of(String eventKind, String username, String gitHttpUrl,
-      String defaultBranch) {
-    return new GitlabWebHookDto(eventKind, username, gitHttpUrl, defaultBranch
+      String defaultBranch, String repositoryName) {
+    return new GitlabWebHookDto(eventKind, username, gitHttpUrl, defaultBranch,repositoryName
     );
   }
 
@@ -27,7 +28,8 @@ public class GitlabWebHookDto {
         history.getEventKind(),
         history.getUsername(),
         history.getGitHttpUrl(),
-        history.getDefaultBranch()
+        history.getDefaultBranch(),
+        history.getRepositoryName()
     );
   }
 

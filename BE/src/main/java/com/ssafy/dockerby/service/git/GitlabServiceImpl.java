@@ -67,6 +67,7 @@ public class GitlabServiceImpl implements GitlabService {
           .orElseThrow(() -> new NotFoundException());
       config.setToken(newToken);
     }
+    return config;
   }
 
   @Override
@@ -101,6 +102,12 @@ public class GitlabServiceImpl implements GitlabService {
   }
 
   @Override
+  public GitlabAccessToken token(Long id) {
+    return tokenRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException());
+  }
+
+  @Override
   public void deleteToken(Long id) {
     GitlabAccessToken token = tokenRepository.findById(id)
         .orElseThrow(() -> new NotFoundException());
@@ -127,6 +134,12 @@ public class GitlabServiceImpl implements GitlabService {
     accountRepository.findAllByEmailIsNotNull()
         .forEach(value -> results.add(GitAccountResponseDto.from(value)));
     return results;
+  }
+
+  @Override
+  public GitlabAccount account(Long id) {
+    return accountRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException());
   }
 
   @Override

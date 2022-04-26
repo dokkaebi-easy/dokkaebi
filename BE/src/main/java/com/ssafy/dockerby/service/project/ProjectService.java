@@ -20,7 +20,7 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 public interface ProjectService {
 
   List<DockerContainerConfig> upsert(Principal principal,ProjectRequestDto projectRequestDto)
-      throws NotFoundException;
+      throws NotFoundException, IOException;
 
   BuildState build(Long ProjectId, GitlabWebHookDto webHookDto) throws ChangeSetPersister.NotFoundException, IOException;
 

@@ -2,6 +2,9 @@ package com.ssafy.dockerby.service.project;
 
 import com.ssafy.dockerby.core.docker.DockerAdapter;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
+import com.ssafy.dockerby.core.gitlab.GitlabAdapter;
+import com.ssafy.dockerby.core.gitlab.GitlabWrapper;
+import com.ssafy.dockerby.core.gitlab.dto.GitlabCloneDto;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.core.util.CommandInterpreter;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
@@ -15,6 +18,7 @@ import com.ssafy.dockerby.dto.project.StateDto;
 import com.ssafy.dockerby.dto.project.StateRequestDto;
 import com.ssafy.dockerby.dto.project.StateResponseDto;
 import com.ssafy.dockerby.entity.ConfigHistory;
+import com.ssafy.dockerby.entity.git.GitlabAccessToken;
 import com.ssafy.dockerby.entity.git.WebhookHistory;
 import com.ssafy.dockerby.entity.project.BuildState;
 import com.ssafy.dockerby.entity.project.Project;
@@ -82,7 +86,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public List<DockerContainerConfig> upsert(Principal principal,
       ProjectRequestDto projectRequestDto)
-      throws ChangeSetPersister.NotFoundException {
+      throws ChangeSetPersister.NotFoundException, IOException {
     Project project = projectRepository.findOneByProjectName(projectRequestDto.getProjectName())
         .orElseGet(() ->
             projectRepository.save(Project.from(projectRequestDto)));
@@ -107,11 +111,22 @@ public class ProjectServiceImpl implements ProjectService {
     GitConfigDto getConfigDto = projectRequestDto.getGitConfig();
     if (getConfigDto != null) {
       gitlabService.config(project.getId())
-          .map(config -> gitlabService.updateConfig(project,getConfigDto))
-          .orElseGet(() -> {gitlabService.createConfig(project, getConfigDto);
-          });
+          .map(config -> gitlabService.updateConfig(project, getConfigDto))
+          .orElseGet(() -> gitlabService.createConfig(project, getConfigDto));
 
       // Git clone
+
+      StringBuilder filePath = new StringBuilder();
+      filePath.append(project.getProjectName()).append("/").append(logPath);
+
+      GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
+      String cloneCommand = GitlabAdapter.getCloneCommand(
+          GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
+              getConfigDto.getBranchName()));
+
+      List<String> commands = new ArrayList<>();
+      commands.add(cloneCommand);
+      CommandInterpreter.run(filePath.toString(), project.getProjectName(), 0, commands);
 
     }
 
@@ -188,7 +203,7 @@ public class ProjectServiceImpl implements ProjectService {
     em.flush();
 
     StringBuilder filePath = new StringBuilder();
-    filePath.append(logPath).append("/").append(project.getProjectName());
+    filePath.append(project.getProjectName()).append("/").append(logPath);
     DockerAdapter dockerAdapter = new DockerAdapter(project.getProjectName());
     List<DockerContainerConfig> configs = loadConfigFiles(project.getProjectName(),
         project.getProjectConfigs());
@@ -197,7 +212,10 @@ public class ProjectServiceImpl implements ProjectService {
     //Pull start
     try { // pull 트라이
       //TODO / ProjectService : GitPull 트라이
-
+      List<String> commands = new ArrayList<>();
+      commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
+      CommandInterpreter.runDestPath(webHookDto.getRepositoryName(), filePath.toString(), "pull",
+          buildNumber, commands);
       dockerAdapter.saveDockerfiles(configs);
       // pull 완료 build 진행중 update
       buildState.getPull().updateStateType("Done");

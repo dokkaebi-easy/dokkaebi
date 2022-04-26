@@ -169,6 +169,7 @@ CREATE TABLE `dockerby`.`webhook_history` (
   `username` VARCHAR(255) NULL,
   `git_http_url` VARCHAR(255) NULL,
   `default_branch` VARCHAR(255) NULL,
+  `repository_name` VARCHAR(255) NULL,
   `build_state_id` BIGINT NULL,
   PRIMARY KEY (`webhook_history_id`),
   INDEX `fk-build_state-webhook_history_idx` (`build_state_id` ASC),

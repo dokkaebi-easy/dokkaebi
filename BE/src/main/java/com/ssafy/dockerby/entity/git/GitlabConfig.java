@@ -32,6 +32,8 @@ public class GitlabConfig {
   private String repositoryUrl;
   private String branchName;
 
+  private String repositoryName;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "gitlab_account_id")
   GitlabAccount account;
@@ -44,8 +46,8 @@ public class GitlabConfig {
   @JoinColumn(name = "project_id")
   Project project;
 
-  public static GitlabConfig of(String name, String hostUrl, String secretToken, String repositoryUrl, String branchName) {
-    return new GitlabConfig(null,name,hostUrl,secretToken,repositoryUrl,branchName,null,null, null);
+  public static GitlabConfig of(String name, String hostUrl, String secretToken, String repositoryUrl, String branchName, String repositoryName) {
+    return new GitlabConfig(null,name,hostUrl,secretToken,repositoryUrl,branchName,repositoryName,null,null, null);
   }
 
   public static GitlabConfig from(GitConfigDto configDto) {
@@ -56,6 +58,7 @@ public class GitlabConfig {
         configDto.getSecretToken(),
         configDto.getRepositoryUrl(),
         configDto.getBranchName(),
+        configDto.getRepositoryName(),
         null, null, null
     );
   }
@@ -81,7 +84,5 @@ public class GitlabConfig {
     this.secretToken = configDto.getSecretToken();
     this.repositoryUrl = configDto.getRepositoryUrl();
     this.branchName = configDto.getBranchName();
-
-
   }
 }

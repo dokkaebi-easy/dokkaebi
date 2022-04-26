@@ -15,7 +15,9 @@ public class GitlabWrapper {
           ((Map<String,Object>)request.get("project")).get("git_http_url"));
       String defaultBranch = String.valueOf(
           ((Map<String,Object>)request.get("project")).get("default_branch"));
-      return GitlabWebHookDto.of(eventType,username,gitHttpUrl,defaultBranch);
+      String repositoryName = String.valueOf(
+          ((Map<String,Object>)request.get("repository")).get("name"));
+      return GitlabWebHookDto.of(eventType,username,gitHttpUrl,defaultBranch,repositoryName);
 
     } else if (eventType.equals("merge_request")) {
       String username = String.valueOf(((Map<String,Object>)request.get("user")).get("username"));
@@ -23,7 +25,9 @@ public class GitlabWrapper {
           ((Map<String,Object>)request.get("project")).get("git_http_url"));
       String defaultBranch = String.valueOf(
           ((Map<String,Object>)request.get("project")).get("default_branch"));
-      return GitlabWebHookDto.of(eventType.replace('_',' '),username,gitHttpUrl,defaultBranch);
+      String repositoryName = String.valueOf(
+          ((Map<String,Object>)request.get("repository")).get("name"));
+      return GitlabWebHookDto.of(eventType.replace('_',' '),username,gitHttpUrl,defaultBranch,repositoryName);
     } else {
       throw new NotSupportedException();
     }

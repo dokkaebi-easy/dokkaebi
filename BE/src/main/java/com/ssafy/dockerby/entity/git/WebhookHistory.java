@@ -29,6 +29,7 @@ public class WebhookHistory {
   private String username;
   private String gitHttpUrl;
   private String defaultBranch;
+  private String repositoryName;
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "build_state_id")
   private BuildState buildState;
@@ -40,6 +41,7 @@ public class WebhookHistory {
         dto.getUsername(),
         dto.getGitHttpUrl(),
         dto.getDefaultBranch(),
+        dto.getRepositoryName(),
         null
     );
   }

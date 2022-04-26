@@ -42,7 +42,8 @@ public class ProjectController {
   private final ProjectServiceImpl projectService;
 
   @PostMapping
-  public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto ) throws ChangeSetPersister.NotFoundException {
+  public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto )
+      throws ChangeSetPersister.NotFoundException, IOException {
     //요청 로그출력
     log.info("project create request received {} , {} ",projectRequestDto.toString(), principal.getName());
 
