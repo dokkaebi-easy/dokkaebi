@@ -46,14 +46,14 @@ CREATE TABLE `dockerby`.`build_tool` (
 
 CREATE TABLE `dockerby`.`gitlab_access_token` (
   `gitlab_access_token_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  `access_token` VARCHAR(255) NOT NULL,
+  `name` VARCHAR(255) NULL,
+  `access_token` VARCHAR(255) NULL,
   PRIMARY KEY (`gitlab_access_token_id`));
 
 CREATE TABLE `dockerby`.`gitlab_account` (
   `gitlab_account_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NULL,
+  `password` VARCHAR(255) NULL,
   `username` VARCHAR(255) NULL,
   PRIMARY KEY (`gitlab_account_id`));
 
@@ -84,6 +84,7 @@ CREATE TABLE `dockerby`.`gitlab_config` (
   `secret_token` VARCHAR(45) NOT NULL,
   `repository_url` VARCHAR(45) NOT NULL,
   `branch_name` VARCHAR(45) NOT NULL,
+  `repository_name` VARCHAR(255) NULL,
   `gitlab_account_id` BIGINT NULL,
   `gitlab_access_token_id` BIGINT NULL,
   `project_id` BIGINT NULL,
