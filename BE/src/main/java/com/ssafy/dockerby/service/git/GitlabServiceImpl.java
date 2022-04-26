@@ -14,6 +14,7 @@ import com.ssafy.dockerby.repository.git.GitlabAccountRepository;
 import com.ssafy.dockerby.repository.git.GitlabConfigRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class GitlabServiceImpl implements GitlabService {
   private final GitlabAccountRepository accountRepository;
   private final GitlabConfigRepository configRepository;
   @Override
-  public void createConfig(Project project, GitConfigDto configDto) {
+  public GitlabConfig createConfig(Project project, GitConfigDto configDto) {
     GitlabConfig config = GitlabConfig.from(configDto);
 
     GitlabAccount account = accountRepository.findById(configDto.getAccountId())
@@ -45,10 +46,11 @@ public class GitlabServiceImpl implements GitlabService {
 
     configRepository.save(config);
 
+    return config;
   }
 
   @Override
-  public void updateConfig(Project project, GitConfigDto configDto) {
+  public GitlabConfig updateConfig(Project project, GitConfigDto configDto) {
     GitlabConfig config = configRepository.findByProjectId(project.getId())
         .orElseThrow(() -> new NotFoundException());
 
@@ -68,10 +70,8 @@ public class GitlabServiceImpl implements GitlabService {
   }
 
   @Override
-  public GitConfigDto config(Long projectId) {
-    GitlabConfig config = configRepository.findByProjectId(projectId)
-        .orElseThrow(() -> new NotFoundException());
-    return GitConfigDto.from(config);
+  public Optional<GitlabConfig> config(Long projectId) {
+    return configRepository.findByProjectId(projectId);
   }
 
   @Override
