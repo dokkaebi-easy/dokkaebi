@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BuildTotalResponseDto {
 
-  private Long projectStateId;
+  private Long buildStateId;
 
   private StateDto state;
 

@@ -4,12 +4,23 @@ import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.entity.BaseEntity;
 import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.project.enums.StateType;
-import com.ssafy.dockerby.entity.user.User;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
@@ -49,7 +60,7 @@ public class Project extends BaseEntity {
 
   @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
   @Builder.Default
-  private List<ProjectState> projectStates = new ArrayList<>();
+  private List<BuildState> buildStates = new ArrayList<>();
 
 
 //비지니스 로직
@@ -68,7 +79,7 @@ public class Project extends BaseEntity {
     this.configs = configs;
     configs.forEach(config -> config.setProject(this));
   }
-  public void addProjectState(ProjectState projectState){
-    this.projectStates.add(projectState);
+  public void addBuildState(BuildState buildState){
+    this.buildStates.add(buildState);
   }
 }

@@ -52,27 +52,37 @@
 //        Assertions.assertThat(result.equals(str));
 //    }
 //
+//    @Test
+//    public void loadFile() throws IOException {
+//      // given
+//      String filePath = ".";
+//      String fileName = "AuthKey";
+//      // when
+//      String str = FileManager.loadFile(filePath, fileName);
+//      // then
+//      System.out.println(str);
+//    }
 //
-////    @Test
-////    public void Json파일저장및읽어오기()
-////        throws ExecutionException, InterruptedException, IOException, UserDefindedException {
-////        // given
-////        String filePath = "./fileData";
-////        String fileName = "userinfo";
-////        UserDto userDto = UserDto.builder()
-////            .id(0L)
-////            .name("김민현")
-////            .principal("kimminhyeon")
-////            .credential("12345")
-////            .build();
-////        // when
-////        //파일 저장
-////        FileManager.saveJsonFile(filePath, fileName, userDto);
-////        //파일 읽어오기
-////        UserDto resultDto = FileManager.loadJsonFile(filePath, fileName, UserDto.class);
-////        // then
-////        Assertions.assertThat(userDto.equals(resultDto));
-////    }
+//    @Test
+//    public void Json파일저장및읽어오기()
+//        throws ExecutionException, InterruptedException, IOException, UserDefindedException {
+//        // given
+//        String filePath = "./fileData";
+//        String fileName = "userinfo";
+//        UserDto userDto = UserDto.builder()
+//            .id(0L)
+//            .name("김민현")
+//            .principal("kimminhyeon")
+//            .credential("12345")
+//            .build();
+//        // when
+//        //파일 저장
+//        FileManager.saveJsonFile(filePath, fileName, userDto);
+//        //파일 읽어오기
+//        UserDto resultDto = FileManager.loadJsonFile(filePath, fileName, UserDto.class);
+//        // then
+//        Assertions.assertThat(userDto.equals(resultDto));
+//    }
 //
-//
+
 //}
