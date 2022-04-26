@@ -3,6 +3,7 @@ package com.ssafy.dockerby.controller.user;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.user.SigninDto;
 import com.ssafy.dockerby.dto.user.SignupDto;
+import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.dto.user.UserResponseDto;
 import com.ssafy.dockerby.service.user.UserService;
 import io.swagger.annotations.Api;
@@ -10,10 +11,18 @@ import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +41,7 @@ public class UserController {
     private final UserService userService;
 
     @ApiOperation(value = "회원가입", notes = "회원가입을 한다")
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup")
     public ResponseEntity<UserResponseDto> signup(@RequestBody SignupDto signupDto)
         throws IOException, UserDefindedException {
         log.info("signup API received ID: {}",signupDto.getPrincipal());
@@ -42,9 +51,25 @@ public class UserController {
     }
 
     // swagger API 생성용 // Security에서 로그인 처리함
-    @ApiOperation(value = "로그인", notes = "데이터 형식 : form-data")
+    @ApiOperation(value = "로그인")
     @PostMapping("/auth/signin")
-    public void signin(SigninDto signinDto) {
+    public ResponseEntity signin(HttpServletRequest request, HttpServletResponse response,@RequestBody SigninDto signinDto)
+        throws IOException {
+        log.info("signinDto: {} {}",signinDto.getPrincipal(),signinDto.getCredential());
+
+        //로그인 처리
+        UserDetailDto userDetailDto = userService.signin(signinDto);
+        log.info("login Success User: {}",userDetailDto.getUsername());
+
+        HttpSession session = request.getSession();
+        session.setMaxInactiveInterval(36000);//session 최대 유효시간(초) 설정
+        session.setAttribute("user",userDetailDto); // 세션에 user 정보 저장
+        log.debug("session set Complete");
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", "Success");
+        map.put("message", "Login Successful");
+        return new ResponseEntity(map, HttpStatus.OK);
     }
 
     //swagger API 생성용// Security에서 로그아웃 처리함
@@ -53,27 +78,6 @@ public class UserController {
     public void signout() {
     }
 
-    // , security에서 로그인 성공시 Redirect하는 api
-    @ApiIgnore //swagger에서 hidden 시키는 어노테이션
-    @GetMapping("/signin/success")
-    public ResponseEntity loginSuccess() {
-        log.info("Login Successful");
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", "Success");
-        map.put("message", "Login Successful");
-        return new ResponseEntity(map, HttpStatus.OK);
-    }
-
-    // security에서 로그인 실패시 Redirect하는 api
-    @ApiIgnore//swagger에서 hidden 시키는 어노테이션
-    @GetMapping("/signin/fail")
-    public ResponseEntity loginFail() {
-        log.info("Login failed");
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", "Fail");
-        map.put("message", "Login failed");
-        return new ResponseEntity(map, HttpStatus.OK);
-    }
 
     // security에서 로그아웃 성공시 Redirect하는 api
     @ApiIgnore//swagger에서 hidden 시키는 어노테이션

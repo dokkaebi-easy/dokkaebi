@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class Project extends BaseEntity {
 
   @Id

@@ -19,11 +19,14 @@ public class UserDefindedExceptionHandler {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         //TODO : 로그 엉망으로 찍힘 확인필요
-        log.error("controller Error Occurred, {}, {}", e.getCause(), e.getMessage());
+        log.error("Controller Error");
+        log.error("Error Class :{}", e.getClass(), e.getMessage());
+        log.error("Controller Error, {}, {}", e.getCause(), e.getMessage());
 
         Map<String, String> map = new HashMap<>();
         map.put("error type", httpStatus.getReasonPhrase());
         map.put("code", "400");
+        map.put("error Class",e.getClass().getSimpleName());
         map.put("message", "controller Error Occurred : " + e.getCause() + e.getMessage());
 
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
@@ -37,6 +40,7 @@ public class UserDefindedExceptionHandler {
         map.put("error type", e.getHttpStatusType());
         map.put("error code",
             Integer.toString(e.getHttpStatusCode())); // Map<String, Object>로 설정하면 toString 불필요
+        map.put("error Class",e.getClass().getSimpleName());
         map.put("message", e.getMessage());
 
         return new ResponseEntity<>(map, responseHeaders, e.getHttpStatus());
