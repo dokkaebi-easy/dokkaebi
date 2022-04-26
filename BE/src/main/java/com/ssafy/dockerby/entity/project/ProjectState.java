@@ -20,26 +20,40 @@ public class ProjectState extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "project_id")
   private Project project;
 
-  @OneToOne(mappedBy = "projectState" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "projectState", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Pull pull;
 
-  @OneToOne(mappedBy = "projectState" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "projectState", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Build build;
 
-  @OneToOne(mappedBy = "projectState" , fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "projectState", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Run run;
+
+  public static ProjectState of(Pull pull, Build build, Run run) {
+    return ProjectState.builder()
+        .pull(Pull.from())
+        .build(Build.from())
+        .run(Run.from())
+        .build();
+  }
+
+  public void setProject(Project project) {
+    this.project = project;
+    project.addProjectState(this);
+  }
+
   @Override
   public String toString() {
     return "ProjectState{" +
-      "id=" + id +
-      ", project=" + project +
-      ", pull=" + pull +
-      ", build=" + build +
-      ", run=" + run +
-      '}';
+        "id=" + id +
+        ", project=" + project +
+        ", pull=" + pull +
+        ", build=" + build +
+        ", run=" + run +
+        '}';
   }
 }

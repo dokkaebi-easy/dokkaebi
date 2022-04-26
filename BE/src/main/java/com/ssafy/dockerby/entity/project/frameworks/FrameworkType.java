@@ -8,9 +8,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class FrameworkType {
 
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +18,10 @@ public class FrameworkType {
 
   private String frameworkName;
 
-  @OneToMany(mappedBy = "frameworkType",cascade = CascadeType.ALL)
-  @Builder.Default
-  private List<Framework> frameworks = new ArrayList<>();
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "language_id")
+  private Language language;
+
+  @OneToMany(mappedBy = "frameworkType")
+  private List<BuildTool> buildTools = new ArrayList<>();
 }

@@ -1,6 +1,7 @@
 package com.ssafy.dockerby.dto.project;
 
 import com.sun.istack.NotNull;
+import java.util.List;
 import lombok.*;
 
 @Getter
@@ -13,16 +14,10 @@ public class ProjectRequestDto {
   @NotNull
   private String projectName;
 
-  private String description;
+  private List<BuildConfigDto> buildConfigs;
 
-  private String settingJson;
+  private GitConfigDto gitConfig;
 
-  @Override
-  public String toString() {
-    return "ProjectRequestDto{" +
-      "projectName='" + projectName + '\'' +
-      ", description='" + description + '\'' +
-      ", settingJson='" + settingJson + '\'' +
-      '}';
-  }
+  private NginxConfigDto nginxConfig;
+
 }

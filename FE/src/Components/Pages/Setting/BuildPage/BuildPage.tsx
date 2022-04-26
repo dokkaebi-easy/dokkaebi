@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
@@ -8,25 +8,22 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import { v4 as uuid } from 'uuid';
 import BuildBasic from 'Components/Pages/Setting/BuildPage/BuildBasic/BuildBasicBox';
-import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
+import BuildData from 'Components/MDClass/BuildData/BuildData';
 import { useStore } from 'Components/Store/settingStore';
-import NginxData, { Nginx } from 'Components/MDClass/NginxData/NginxData';
 import NginxBasic from './NginxBasic/NginxBasic';
 
 export default function BuildPage() {
-  const project = useStore((state) => state.setProjectName);
-  const buildConfig = useStore((state) => state.setBuildConfig);
-  const nginxConfig = useStore((state) => state.setNginxConfig);
+  const projectName = useStore((state) => state.projectName);
+  const setProjectName = useStore((state) => state.setProjectName);
 
-  const [projectName, setProjectName] = useState('');
-  const [nginxData, setNginxData] = useState<Nginx>(new NginxData());
-  const [buildDatas, setBuildDatas] = useState<Build[]>([new BuildData()]);
+  const buildConfigs = useStore((state) => state.buildConfigs);
+  const setBuildConfigs = useStore((state) => state.setBuildConfigs);
+  const nginxConfig = useStore((state) => state.nginxConfig);
+  const setNginxConfig = useStore((state) => state.setNginxConfig);
 
   const handlePropsDelClick = (index: number) => {
-    setBuildDatas((cur) => {
-      cur.splice(index, 1);
-      return [...cur];
-    });
+    buildConfigs.splice(index, 1);
+    setBuildConfigs(buildConfigs);
   };
 
   const handleChange = (event: any) => {
@@ -35,15 +32,8 @@ export default function BuildPage() {
 
   const handleAddClick = () => {
     const data = new BuildData();
-    setBuildDatas((cur) => [...cur, data]);
+    setBuildConfigs([...buildConfigs, data]);
   };
-
-  useEffect(() => {
-    project(projectName);
-    nginxConfig(nginxData);
-    buildConfig(buildDatas);
-    console.log('a');
-  }, [projectName, nginxData, ...buildDatas]);
 
   return (
     <Box>
@@ -67,7 +57,7 @@ export default function BuildPage() {
           />
           <Divider />
           <Box sx={{ my: 3 }}>
-            {buildDatas.map((value, index) => (
+            {buildConfigs.map((value, index) => (
               <BuildBasic
                 key={uuid()}
                 index={index}
@@ -86,7 +76,7 @@ export default function BuildPage() {
             </Box>
             <Divider />
             <Box mt={3}>
-              <NginxBasic nginxValue={nginxData} />
+              <NginxBasic nginxValue={nginxConfig} />
             </Box>
           </Box>
         </Paper>

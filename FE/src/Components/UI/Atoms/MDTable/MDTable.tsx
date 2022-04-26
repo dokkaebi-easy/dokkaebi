@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,6 +7,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import ProjectDatas, {
+  Project,
+} from 'Components/MDClass/ProjectData/ProjectData';
+import { v4 as uuid } from 'uuid';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -39,15 +43,19 @@ function createData(
   return { name, succes, fail, time, build, state };
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 1),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 1),
-  createData('Eclair', 262, 16.0, 24, 6.0, 1),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 1),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1),
-];
+// const rows = [
+//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 1),
+//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 1),
+//   createData('Eclair', 262, 16.0, 24, 6.0, 1),
+//   createData('Cupcake', 305, 3.7, 67, 4.3, 1),
+//   createData('Gingerbread', 356, 16.0, 49, 3.9, 1),
+// ];
 
-export default function MDTable() {
+interface TableProps {
+  rows: Project[];
+}
+
+export default function MDTable({ rows }: TableProps) {
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -58,19 +66,19 @@ export default function MDTable() {
             <StyledTableCell align="right">최근 실패</StyledTableCell>
             <StyledTableCell align="right">최근 소요 시간</StyledTableCell>
             <StyledTableCell align="right">S</StyledTableCell>
-            <StyledTableCell align="right">W</StyledTableCell>
+            <StyledTableCell align="right">W </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <StyledTableRow key={row.name}>
+            <StyledTableRow key={uuid()}>
               <StyledTableCell component="th" scope="row">
-                {row.name}
+                {row.projectName}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.succes}</StyledTableCell>
-              <StyledTableCell align="right">{row.fail}</StyledTableCell>
-              <StyledTableCell align="right">{row.time}</StyledTableCell>
-              <StyledTableCell align="right">{row.build}</StyledTableCell>
+              <StyledTableCell align="right">{row.projectName}</StyledTableCell>
+              <StyledTableCell align="right">{row.projectName}</StyledTableCell>
+              <StyledTableCell align="right">{row.state}</StyledTableCell>
+              <StyledTableCell align="right">{row.state}</StyledTableCell>
               <StyledTableCell align="right">{row.state}</StyledTableCell>
             </StyledTableRow>
           ))}
