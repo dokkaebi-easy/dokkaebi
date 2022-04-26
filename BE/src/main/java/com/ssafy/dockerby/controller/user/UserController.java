@@ -41,7 +41,7 @@ public class UserController {
     private final UserService userService;
 
     @ApiOperation(value = "회원가입", notes = "회원가입을 한다")
-    @PostMapping(value = "/signup")
+    @PostMapping( "/signup")
     public ResponseEntity<UserResponseDto> signup(@RequestBody SignupDto signupDto)
         throws IOException, UserDefindedException {
         log.info("signup API received ID: {}",signupDto.getPrincipal());

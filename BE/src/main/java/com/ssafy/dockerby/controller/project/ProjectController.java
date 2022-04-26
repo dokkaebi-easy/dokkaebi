@@ -55,8 +55,7 @@ public class ProjectController {
     try { //유저가 있을때
       projectService.createConfigHistory(request,project,msg);
     }catch (Exception e){ // 유저가 없을때 //ex)git hook 상황
-      log.info("Exception {} {}",e.getClass(),e.getMessage());
-      log.info("User information does not exist");
+      log.error("User information does not exist Exception {} {}",e.getClass(),e.getMessage());
     }
 
     Map<String, Object> map = new HashMap<>();
