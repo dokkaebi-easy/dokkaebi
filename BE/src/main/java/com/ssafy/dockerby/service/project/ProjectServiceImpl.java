@@ -17,6 +17,7 @@ import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.dto.project.StateDto;
 import com.ssafy.dockerby.dto.project.StateRequestDto;
 import com.ssafy.dockerby.dto.project.StateResponseDto;
+import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.git.GitlabAccessToken;
 import com.ssafy.dockerby.entity.git.WebhookHistory;
@@ -42,10 +43,14 @@ import com.ssafy.dockerby.service.git.GitlabService;
 import com.ssafy.dockerby.util.ConfigParser;
 import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -84,12 +89,20 @@ public class ProjectServiceImpl implements ProjectService {
 
 
   @Override
-  public List<DockerContainerConfig> upsert(Principal principal,
-      ProjectRequestDto projectRequestDto)
-      throws ChangeSetPersister.NotFoundException, IOException {
-    Project project = projectRepository.findOneByProjectName(projectRequestDto.getProjectName())
-        .orElseGet(() ->
-            projectRepository.save(Project.from(projectRequestDto)));
+  public Map<String, Object> upsert(ProjectRequestDto projectRequestDto)
+      throws ChangeSetPersister.NotFoundException,IOException {
+    Project project;
+    String msg;
+
+    Optional<Project> projects = projectRepository.findOneByProjectName(projectRequestDto.getProjectName());
+    if (projects.isPresent()){
+      msg = "Update";
+      project = projects.get();
+    }
+    else{
+      msg = "Create";
+      project = projectRepository.save(Project.from(projectRequestDto));
+    }
 
     List<DockerContainerConfig> buildConfigs = ConfigParser.getBuildConfig(projectRequestDto);
 
@@ -99,15 +112,7 @@ public class ProjectServiceImpl implements ProjectService {
     project.addProjectConfigs(configs);
 
     upsertConfigFile(projectRequestDto.getProjectName(), buildConfigs);
-    //프로젝트 입력
-
-    //로그인 유저 탐색
-    User user = userRepository.findByPrincipal(principal.getName())
-        .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
-    ;
-    //히스토리 저장
-    createHistory(user, project, "upsert Project");
-
+    log.info("GitConfigDto project ID : {}",project.getId());
     GitConfigDto getConfigDto = projectRequestDto.getGitConfig();
     if (getConfigDto != null) {
       gitlabService.config(project.getId())
@@ -120,17 +125,22 @@ public class ProjectServiceImpl implements ProjectService {
       filePath.append(project.getProjectName()).append("/").append(logPath);
 
       GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
-      String cloneCommand = GitlabAdapter.getCloneCommand(
-          GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
-              getConfigDto.getBranchName()));
-
-      List<String> commands = new ArrayList<>();
-      commands.add(cloneCommand);
-      CommandInterpreter.run(filePath.toString(), project.getProjectName(), 0, commands);
+//      String cloneCommand = GitlabAdapter.getCloneCommand(
+//          GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
+//              getConfigDto.getBranchName()));
+//
+//      List<String> commands = new ArrayList<>();
+//      commands.add(cloneCommand);
+//      CommandInterpreter.run(filePath.toString(), project.getProjectName(), 0, commands);
 
     }
 
-    return buildConfigs;
+    Map<String, Object> result = new HashMap<>();
+    result.put("buildConfigs", buildConfigs);
+    result.put("project",project);
+    result.put("msg",msg);
+
+    return result;
   }
 
   private void upsertConfigFile(String projectName, List<DockerContainerConfig> buildConfigs) {
@@ -414,12 +424,25 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   //history 저장
-  private void createHistory(User user, Project project, String detail) {
+  public void createConfigHistory(HttpServletRequest request, Project project,String msg)
+      throws ChangeSetPersister.NotFoundException {
+    //세션 정보 가져오기
+    HttpSession session = request.getSession();
+    UserDetailDto userDetailDto = (UserDetailDto) session.getAttribute("user");
+    log.info("session User Pricipal : {} ",userDetailDto.getUsername());
+
+    //로그인 유저 탐색
+    User user = userRepository.findByPrincipal(userDetailDto.getUsername())
+        .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+    log.info("user find username : {} ",user.getName());
+
+
     ConfigHistory history = ConfigHistory.builder()
         .user(user)
         .project(project)
-        .msg(detail)
+        .msg(msg)
         .build();
+    //configHistory 저장
     configHistoryRepository.save(history);
     log.info("history save {} to {} detail-{}", history.getUser().getName(),
         history.getProject().getProjectName(), history.getMsg());
