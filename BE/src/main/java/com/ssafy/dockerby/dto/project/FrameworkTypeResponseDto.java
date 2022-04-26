@@ -1,13 +1,11 @@
 package com.ssafy.dockerby.dto.project;
 
+import com.ssafy.dockerby.entity.project.frameworks.FrameworkType;
 import com.sun.istack.NotNull;
 import lombok.*;
 
 @Getter
-@Setter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FrameworkTypeResponseDto {
 
   @NotNull
@@ -15,5 +13,9 @@ public class FrameworkTypeResponseDto {
 
   @NotNull
   private String frameworkName;
+
+  public static FrameworkTypeResponseDto from(FrameworkType frameworkType) {
+    return new FrameworkTypeResponseDto(frameworkType.getId(), frameworkType.getFrameworkName());
+  }
 
 }

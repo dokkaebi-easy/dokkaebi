@@ -5,17 +5,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import TextField from '@mui/material/TextField';
-import PropertyData, {
-  Property,
-} from 'Components/MDClass/PropertyData/PropertyData';
-import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
+import { Property } from 'Components/MDClass/PropertyData/PropertyData';
 
 interface PropertyProps {
   value: Property;
   buildValue: Property;
 }
 
-const PropertyItem = ['Publish', 'Volume', 'Evn', 'Build'];
+const PropertyItem = ['Publish', 'Volume', 'Evn'];
 
 export default function PropertyBox({ value, buildValue }: PropertyProps) {
   const [property, setProperty] = useState(value.property);
@@ -24,8 +21,8 @@ export default function PropertyBox({ value, buildValue }: PropertyProps) {
 
   const handlePropsPropertyChange = (event: string) => {
     setProperty(event);
-    value.property = event;
-    buildValue.property = event;
+    value.property = event.toLowerCase();
+    buildValue.property = event.toLowerCase();
   };
   const handleFirstDataChange = (event: any) => {
     setFirstData(event.target.value);

@@ -9,15 +9,18 @@ import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import RepositoryModal from 'Components/Pages/Setting/GitLabPage/RepositoryModal/RepositoryModal';
-import GitData, { Git } from 'Components/MDClass/GitData/GitData';
+import { Git } from 'Components/MDClass/GitData/GitData';
 
 interface GitProps {
   gitData: Git;
 }
 export default function GitLabRepositories({ gitData }: GitProps) {
-  const [projectID, setProjectID] = useState('');
-  const [repositoryURL, setRepositoryURL] = useState('');
-  const [branchSpecifier, setBranchSpecifier] = useState('');
+  const [projectID, setProjectID] = useState(gitData.projectID);
+  const [repositoryURL, setRepositoryURL] = useState(gitData.repositoryUrl);
+  const [branchSpecifier, setBranchSpecifier] = useState(
+    gitData.branchSpecifier,
+  );
+  const [credential, setCredential] = useState(gitData.repositoryCredentials);
   const [credentials, setCredentials] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -31,12 +34,12 @@ export default function GitLabRepositories({ gitData }: GitProps) {
 
   const handleRepositoryURLChange = (event: any) => {
     setRepositoryURL(event.target.value);
-    gitData.repositoryurl = event.target.value;
+    gitData.repositoryUrl = event.target.value;
   };
 
   const handleBranchSpecifierChange = (event: any) => {
     setBranchSpecifier(event.target.value);
-    gitData.branchspecifier = event.target.value;
+    gitData.branchSpecifier = event.target.value;
   };
 
   return (

@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PropertyData, {
   Property,
 } from 'Components/MDClass/PropertyData/PropertyData';
-import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
+import { Build } from 'Components/MDClass/BuildData/BuildData';
 import { v4 as uuid } from 'uuid';
 import PropertyBox from '../Property/PropertyBox';
 
