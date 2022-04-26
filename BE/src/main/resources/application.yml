@@ -6,9 +6,9 @@ spring:
     include: eth
 
   datasource:
-    url: "jdbc:mysql://localhost:3306/dockerby"
+    url: "jdbc:mysql://localhost:8483/dockerby?useSSL=false&serverTimezone=UTC&autoReconnect=true&allowPublicKeyRetrieval=true"
     username: root
-    password: qor30105cjf
+    password: ssafy
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   sql:
