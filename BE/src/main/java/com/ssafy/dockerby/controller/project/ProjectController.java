@@ -22,6 +22,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -149,6 +150,7 @@ public class ProjectController {
     GitlabWebHookDto webHookDto = GitlabWrapper.wrap(params);
     // TODO : 경동님의 PROJECT 환경설정 조회
 
+    log.debug("ProjectController.Webhook : X-Gitlab-Toke : {} / " , token,params);
     projectService.build(1L,webHookDto);
 
     return ResponseEntity.ok(null);
