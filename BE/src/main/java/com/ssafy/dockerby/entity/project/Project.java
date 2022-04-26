@@ -3,6 +3,7 @@ package com.ssafy.dockerby.entity.project;
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.entity.BaseEntity;
 import com.ssafy.dockerby.entity.ConfigHistory;
+import com.ssafy.dockerby.entity.git.GitlabConfig;
 import com.ssafy.dockerby.entity.project.enums.StateType;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,7 +45,10 @@ public class Project extends BaseEntity {
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   @Builder.Default
-  private List<ProjectConfig> configs = new ArrayList<>();
+  private List<ProjectConfig> projectConfigs = new ArrayList<>();
+
+  @OneToOne(mappedBy = "project", fetch = FetchType.LAZY)
+  private GitlabConfig gitConfig;
 
   //연관관계 매핑
 
@@ -75,11 +80,21 @@ public class Project extends BaseEntity {
     return this;
   }
 
-  public void addConfig(List<ProjectConfig> configs) {
-    this.configs = configs;
+  public void addProjectConfigs(List<ProjectConfig> configs) {
+    this.projectConfigs = configs;
     configs.forEach(config -> config.setProject(this));
   }
+
+  public void addProjectConfig(ProjectConfig config) {
+    this.projectConfigs.add(config);
+    config.setProject(this);
+  }
+
   public void addBuildState(BuildState buildState){
     this.buildStates.add(buildState);
+  }
+
+  public void setConfig(GitlabConfig config) {
+    this.gitConfig = config;
   }
 }
