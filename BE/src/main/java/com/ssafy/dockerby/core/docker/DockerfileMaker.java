@@ -28,6 +28,7 @@ public class DockerfileMaker {
         makeSpringBootDockerfile(config);
         break;
       case Django:
+        makeDjangoDockerfile(config);
         break;
       case React:
         makeReactWithNginxDockerFile(config);
@@ -102,6 +103,35 @@ public class DockerfileMaker {
       .append("/usr/share/nginx/html");
     sb.append("EXPOSE ").append("3000");
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
+
+    StringBuilder path = new StringBuilder();
+    sb.append(rootDir).append(config.getProjectDirectory()).append('/');
+    saveDockerFile(path.toString(),sb.toString());
+  }
+
+  private void makeDjangoDockerfile(DockerContainerConfig config) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
+    sb.append("RUN ").append("pip install django").append('\n');
+
+    sb.append("WORKDIR ").append("/usr/src/app").append('\n');
+
+    sb.append("ENV ").append("PYTHONDONTWRITEBYTECODE 1").append('\n');
+    sb.append("ENV ").append("PYTHONUNBUFFERED 1").append('\n');
+
+    sb.append("RUN ").append("pip install --upgrade pip").append('\n');
+    sb.append("RUN ").append("pip freeze > requirements.txt").append('\n');
+
+    sb.append("COPY ./requirements.txt /usr/src/app");
+
+    sb.append("RUN ").append("pip install -r requirements.txt").append('\n');
+
+    sb.append("COPY ").append(". /usr/src/app").append('\n');
+
+    sb.append("EXPOSE ").append("8000").append('\n');
+
+    sb.append("RUN ").append("python manage.py migrate").append('\n');
+    sb.append("CMD [\"python\", \"manage.py\", \"runserver\", \"0.0.0.0:8000\"]");
 
     StringBuilder path = new StringBuilder();
     sb.append(rootDir).append(config.getProjectDirectory()).append('/');

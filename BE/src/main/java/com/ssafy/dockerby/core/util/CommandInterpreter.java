@@ -35,4 +35,25 @@ public class CommandInterpreter {
     }
   }
 
+  public static void runDestPath(String destPath, String logPath, String projectName, int buildNumber, List<String> commands)
+      throws IOException {
+    StringBuilder sb = new StringBuilder();
+    sb.append(logPath).append('/').append(projectName).append('_').append(buildNumber);
+    FileManager.checkAndMakeDir(logPath);
+    File file = new File(sb.toString());
+    File destFile = new File(destPath);
+    DefaultExecutor executor = new DefaultExecutor();
+    try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+      for (String command : commands) {
+        CommandLine commandLine = CommandLine.parse(command);
+        PumpStreamHandler handler = new PumpStreamHandler(fileOutputStream);
+        executor.setWorkingDirectory(destFile);
+        executor.setStreamHandler(handler);
+        executor.setExitValues(
+            new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
+        int execute = executor.execute(commandLine);
+        fileOutputStream.flush();
+      }
+    }
+  }
 }

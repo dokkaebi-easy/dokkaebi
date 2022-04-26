@@ -4,6 +4,7 @@ import com.ssafy.dockerby.dto.git.GitTokenRequestDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class GitlabAccessToken {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "gitlab_access_token_id")
   private Long id;
 
