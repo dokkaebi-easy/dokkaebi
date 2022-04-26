@@ -17,24 +17,24 @@ public class ConfigParser {
     Map<String, List<String>> properties = new HashMap<>();
 
     List<String> publishes = new ArrayList<>();
-    for (ConfigProperty property : buildConfigDto.getPublish()) {
-      publishes.add(property.getFirst() + ":" + property.getSecond());
+    List<String> volumes = new ArrayList<>();
+    List<String> envs = new ArrayList<>();
+    for (ConfigProperty property : buildConfigDto.getProperties()) {
+      switch (property.getProperty()) {
+        case "publish":
+        case "volume":
+          publishes.add(property.getFirst() + ":" + property.getSecond());
+          break;
+        case  "env":
+          envs.add(property.getFirst() + "=" + property.getSecond());
+          break;
+      }
     }
     if (!publishes.isEmpty()) {
       properties.put("publish", publishes);
     }
-
-    List<String> volumes = new ArrayList<>();
-    for (ConfigProperty property : buildConfigDto.getPublish()) {
-      volumes.add(property.getFirst() + ":" + property.getSecond());
-    }
     if (!volumes.isEmpty()) {
       properties.put("volume", volumes);
-    }
-
-    List<String> envs = new ArrayList<>();
-    for (ConfigProperty property : buildConfigDto.getPublish()) {
-      envs.add(property.getFirst() + "=" + property.getSecond());
     }
     if (!envs.isEmpty()) {
       properties.put("env", envs);

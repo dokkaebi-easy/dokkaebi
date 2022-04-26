@@ -1,23 +1,32 @@
 package com.ssafy.dockerby.controller.project;
 
-import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
-import com.ssafy.dockerby.dto.project.*;
+import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
+import com.ssafy.dockerby.dto.project.ConfigHistoryListResponseDto;
+import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
+import com.ssafy.dockerby.dto.project.FrameworkVersionResponseDto;
+import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
+import com.ssafy.dockerby.dto.project.ProjectRequestDto;
+import com.ssafy.dockerby.dto.project.StateRequestDto;
+import com.ssafy.dockerby.dto.project.StateResponseDto;
 import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = {"Project"})
 @RestController
@@ -91,7 +100,7 @@ public class ProjectController {
   }
 
   @GetMapping("/build/Detail")
-  public ResponseEntity<StateResponseDto> projectState(StateRequestDto stateRequestDto ) throws ChangeSetPersister.NotFoundException {
+  public ResponseEntity<StateResponseDto> buildState(StateRequestDto stateRequestDto ) throws ChangeSetPersister.NotFoundException {
     //요청 로그 출력
     log.info("buildDetail request received {}",stateRequestDto.toString());
 

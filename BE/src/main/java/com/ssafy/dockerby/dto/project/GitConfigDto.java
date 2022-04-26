@@ -9,7 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GitConfigDto {
-
-  private String url;
-
+  private String name;
+  private String hostUrl;
+  private Long accessTokenId;   // git connection credentials
+  private Long accountId;       // repositories credentials
+  private Long projectId;
+  private String repositoryUrl;
+  private String secretToken;
+  private String branchName;    // branchSpecifier
 }
