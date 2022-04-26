@@ -9,15 +9,15 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DockerBuilder {
+public class DockerAdapter {
 
   private final String rootDir;
   private final DockerfileMaker dockerfileMaker;
   private final DockerCommandMaker dockerCommandMaker;
 
-  public DockerBuilder(String projectName) {
+  public DockerAdapter(String projectName) {
     StringBuilder sb = new StringBuilder();
-    sb.append("/home/").append(projectName).append("/");
+    sb.append("/home/").append(projectName);
     this.rootDir = sb.toString();
     this.dockerfileMaker = new DockerfileMaker(this.rootDir);
     this.dockerCommandMaker = new DockerCommandMaker(projectName, this.rootDir);
@@ -44,7 +44,7 @@ public class DockerBuilder {
     return dockerCommandMaker.bridge();
   }
 
-  private String removeContainer(DockerContainerConfig config) {
+  private String remove(DockerContainerConfig config) {
     return dockerCommandMaker.removeContainer(config);
   }
 
@@ -57,6 +57,14 @@ public class DockerBuilder {
     return commands;
   }
 
+  public List<String> getRemoveCommands(List<DockerContainerConfig> configs) {
+    List<String> commands = new ArrayList<>();
+    commands.add(network());
+
+    configs.forEach(config -> commands.add(remove(config)));
+
+    return commands;
+  }
   public List<String> getRunCommands(List<DockerContainerConfig> configs) {
     List<String> commands = new ArrayList<>();
     commands.add(network());

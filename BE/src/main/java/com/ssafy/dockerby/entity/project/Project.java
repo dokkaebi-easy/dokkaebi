@@ -2,12 +2,27 @@ package com.ssafy.dockerby.entity.project;
 
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.entity.BaseEntity;
+import com.ssafy.dockerby.entity.ConfigHistory;
+import com.ssafy.dockerby.entity.git.GitlabConfig;
 import com.ssafy.dockerby.entity.project.enums.StateType;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
@@ -30,7 +45,10 @@ public class Project extends BaseEntity {
 
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   @Builder.Default
-  private List<ProjectConfig> configs = new ArrayList<>();
+  private List<ProjectConfig> projectConfigs = new ArrayList<>();
+
+  @OneToOne(mappedBy = "project", fetch = FetchType.LAZY)
+  private GitlabConfig gitConfig;
 
   //연관관계 매핑
 
@@ -40,11 +58,14 @@ public class Project extends BaseEntity {
 //  private User user;
 
   // History 매핑
-//  private List<String> history;
+  //연관 관계 매핑
+  @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+  @Builder.Default
+  private List<ConfigHistory> histories = new ArrayList<>();
 
   @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
   @Builder.Default
-  private List<ProjectState> projectStates = new ArrayList<>();
+  private List<BuildState> buildStates = new ArrayList<>();
 
 
 //비지니스 로직
@@ -59,11 +80,21 @@ public class Project extends BaseEntity {
     return this;
   }
 
-  public void addConfig(List<ProjectConfig> configs) {
-    this.configs = configs;
+  public void addProjectConfigs(List<ProjectConfig> configs) {
+    this.projectConfigs = configs;
     configs.forEach(config -> config.setProject(this));
   }
-  public void addProjectState(ProjectState projectState){
-    this.projectStates.add(projectState);
+
+  public void addProjectConfig(ProjectConfig config) {
+    this.projectConfigs.add(config);
+    config.setProject(this);
+  }
+
+  public void addBuildState(BuildState buildState){
+    this.buildStates.add(buildState);
+  }
+
+  public void setConfig(GitlabConfig config) {
+    this.gitConfig = config;
   }
 }
