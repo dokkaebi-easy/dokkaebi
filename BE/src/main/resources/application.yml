@@ -5,12 +5,6 @@ spring:
   profiles:
     include: eth
 
-  datasource:
-    url: "jdbc:mysql://localhost:8483/dockerby?useSSL=false&serverTimezone=UTC&autoReconnect=true&allowPublicKeyRetrieval=true"
-    username: root
-    password: ssafy
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
   sql:
     init:
       mode: never
@@ -21,6 +15,7 @@ spring:
         format_sql: true
         show_sql: true
     defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.MariaDB103Dialect
 
 logging.level:
   org.hibernate.SQL: debug

@@ -66,7 +66,6 @@ public class UserDetailDto implements UserDetails {
     public static UserDetailDto of(User user) {
         return UserDetailDto.builder()
             .id(user.getId())
-            .role(user.getRole().toString())
             .credential(user.getCredential())
             .name(user.getName())
             .principal(user.getPrincipal())

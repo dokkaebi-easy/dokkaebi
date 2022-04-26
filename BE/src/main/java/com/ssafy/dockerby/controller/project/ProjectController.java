@@ -1,22 +1,32 @@
 package com.ssafy.dockerby.controller.project;
 
-import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
-import com.ssafy.dockerby.dto.project.*;
+import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
+import com.ssafy.dockerby.dto.project.ConfigHistoryListResponseDto;
+import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
+import com.ssafy.dockerby.dto.project.FrameworkVersionResponseDto;
+import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
+import com.ssafy.dockerby.dto.project.ProjectRequestDto;
+import com.ssafy.dockerby.dto.project.StateRequestDto;
+import com.ssafy.dockerby.dto.project.StateResponseDto;
 import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
-import java.util.HashMap;
-import java.util.Map;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = {"Project"})
 @RestController
@@ -27,11 +37,11 @@ public class ProjectController {
   private final ProjectServiceImpl projectService;
 
   @PostMapping
-  public ResponseEntity createProject(@RequestBody ProjectRequestDto projectRequestDto ) throws IOException, UserDefindedException, ChangeSetPersister.NotFoundException {
+  public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto ) throws ChangeSetPersister.NotFoundException {
     //요청 로그출력
-    log.info("project create request received {} ",projectRequestDto.toString());
+    log.info("project create request received {} , {} ",projectRequestDto.toString(), principal.getName());
 
-    List<DockerContainerConfig> configs = projectService.upsert(projectRequestDto);
+    List<DockerContainerConfig> configs = projectService.upsert(principal,projectRequestDto);
 
 
     log.info("project build start / waiting -> processing");
@@ -90,7 +100,7 @@ public class ProjectController {
   }
 
   @GetMapping("/build/Detail")
-  public ResponseEntity<StateResponseDto> projectState(StateRequestDto stateRequestDto ) throws ChangeSetPersister.NotFoundException {
+  public ResponseEntity<StateResponseDto> buildState(StateRequestDto stateRequestDto ) throws ChangeSetPersister.NotFoundException {
     //요청 로그 출력
     log.info("buildDetail request received {}",stateRequestDto.toString());
 
@@ -111,12 +121,20 @@ public class ProjectController {
 
   @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다")
   @GetMapping("/all")
-  public ResponseEntity<ProjectListDto> projects()
-      throws UserDefindedException, NotFoundException {
+  public ResponseEntity<List<ProjectListResponseDto>> projects(){
     log.info("Project all API received");
 
-    ProjectListDto projectListDto = projectService.projectList();
-    return ResponseEntity.ok(projectListDto);
+    List<ProjectListResponseDto> projectList = projectService.projectList();
+    return ResponseEntity.ok(projectList);
+  }
+
+  @ApiOperation(value = "ConfigHistory 리스트", notes = "ConfigHistory 목록을 가져온다")
+  @GetMapping("/confighistory")
+  public ResponseEntity<List<ConfigHistoryListResponseDto>> confighistory() {
+    log.info("confighistory API received");
+
+    List<ConfigHistoryListResponseDto> configHistoryList = projectService.historyList();
+    return ResponseEntity.ok(configHistoryList);
   }
 
 }
