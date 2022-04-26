@@ -17,7 +17,7 @@ import com.ssafy.dockerby.entity.project.BuildState;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.entity.project.ProjectConfig;
 import com.ssafy.dockerby.entity.project.enums.StateType;
-import com.ssafy.dockerby.entity.project.frameworks.FrameworkType;
+import com.ssafy.dockerby.entity.core.FrameworkType;
 import com.ssafy.dockerby.entity.project.states.Build;
 import com.ssafy.dockerby.entity.project.states.Pull;
 import com.ssafy.dockerby.entity.project.states.Run;
@@ -87,7 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
     List<ProjectConfig> configs = new ArrayList<>();
     buildConfigs.forEach(config -> configs.add(ProjectConfig.from(config.getName())));
 
-    project.addConfig(configs);
+    project.addProjectConfigs(configs);
 
     upsertConfigFile(projectRequestDto.getProjectName(), buildConfigs);
     //프로젝트 입력
@@ -169,7 +169,7 @@ public class ProjectServiceImpl implements ProjectService {
     filePath.append(logPath).append("/").append(project.getProjectName());
     DockerBuilder dockerBuilder = new DockerBuilder(project.getProjectName());
     List<DockerContainerConfig> configs = loadConfigFiles(project.getProjectName(),
-        project.getConfigs());
+        project.getProjectConfigs());
 
     int buildNumber = buildState.getBuildNumber();
     //Pull start

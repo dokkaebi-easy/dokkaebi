@@ -1,6 +1,6 @@
 package com.ssafy.dockerby.dto.project;
 
-import com.ssafy.dockerby.entity.project.frameworks.FrameworkType;
+import com.ssafy.dockerby.entity.core.FrameworkType;
 import com.sun.istack.NotNull;
 import lombok.*;
 

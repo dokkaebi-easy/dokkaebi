@@ -67,15 +67,15 @@ CREATE TABLE `dockerby`.`gitlab_config` (
   `gitlab_account_id` BIGINT NULL,
   `gitlab_access_token_id` BIGINT NULL,
   PRIMARY KEY (`gitlab_config_id`),
-  INDEX `fk-gitlab_account-gitlab_config_idx` (`gitlab_access_token_id` ASC),
-  INDEX `fk-gitlab_access_token-gitlab_config_idx` (`gitlab_account_id` ASC),
+  INDEX `fk-gitlab_account-gitlab_config_idx` (`gitlab_account_id` ASC),
+  INDEX `fk-gitlab_access_token-gitlab_config_idx` (`gitlab_access_token_id` ASC),
   CONSTRAINT `fk-gitlab_access_token-gitlab_config`
-    FOREIGN KEY (`gitlab_account_id`)
+    FOREIGN KEY (`gitlab_access_token_id`)
     REFERENCES `dockerby`.`gitlab_access_token` (`gitlab_access_token_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk-gitlab_account-gitlab_config`
-    FOREIGN KEY (`gitlab_access_token_id`)
+    FOREIGN KEY (`gitlab_account_id`)
     REFERENCES `dockerby`.`gitlab_account` (`gitlab_account_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
@@ -147,7 +147,6 @@ CREATE TABLE `dockerby`.`build_state` (
   `build_state_id` BIGINT NOT NULL AUTO_INCREMENT,
   `build_number` INT NULL,
   `regist_date` DATETIME NULL,
-  `last_modified_date` DATETIME NULL,
   `project_id` BIGINT NULL,
   PRIMARY KEY (`build_state_id`),
   INDEX `fk-project-build_state_idx` (`project_id` ASC),
@@ -160,8 +159,6 @@ CREATE TABLE `dockerby`.`build_state` (
 CREATE TABLE `dockerby`.`pull` (
   `pull_id` BIGINT NOT NULL AUTO_INCREMENT,
   `state_type` VARCHAR(60) NULL,
-  `regist_date` DATETIME NULL,
-  `last_modified_date` DATETIME NULL,
   `build_state_id` BIGINT NULL,
   PRIMARY KEY (`pull_id`),
   INDEX `fk-build_state-pull_idx` (`build_state_id` ASC),
@@ -174,8 +171,6 @@ CREATE TABLE `dockerby`.`pull` (
 CREATE TABLE `dockerby`.`build` (
   `build_id` BIGINT NOT NULL AUTO_INCREMENT,
   `state_type` VARCHAR(60) NULL,
-  `regist_date` DATETIME NULL,
-  `last_modified_date` DATETIME NULL,
   `build_state_id` BIGINT NULL,
   PRIMARY KEY (`build_id`),
   INDEX `fk-build_state-build_idx` (`build_state_id` ASC),
@@ -188,8 +183,6 @@ CREATE TABLE `dockerby`.`build` (
 CREATE TABLE `dockerby`.`run` (
   `run_id` BIGINT NOT NULL AUTO_INCREMENT,
   `state_type` VARCHAR(60) NULL,
-  `regist_date` DATETIME NULL,
-  `last_modified_date` DATETIME NULL,
   `build_state_id` BIGINT NULL,
   PRIMARY KEY (`run_id`),
   INDEX `fk-build_state-run_idx` (`build_state_id` ASC),
