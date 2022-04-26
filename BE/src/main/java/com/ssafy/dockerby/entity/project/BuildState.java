@@ -1,5 +1,4 @@
 package com.ssafy.dockerby.entity.project;
-
 import com.ssafy.dockerby.entity.git.WebhookHistory;
 import com.ssafy.dockerby.entity.project.states.Build;
 import com.ssafy.dockerby.entity.project.states.Pull;

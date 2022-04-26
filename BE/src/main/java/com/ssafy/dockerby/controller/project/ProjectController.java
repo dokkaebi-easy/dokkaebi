@@ -150,6 +150,7 @@ public class ProjectController {
     GitlabWebHookDto webHookDto = GitlabWrapper.wrap(params);
     // TODO : 경동님의 PROJECT 환경설정 조회
 
+    log.debug("ProjectController.Webhook : X-Gitlab-Toke : {} / " , token,params);
     projectService.build(1L,webHookDto);
 
     return ResponseEntity.ok(null);
