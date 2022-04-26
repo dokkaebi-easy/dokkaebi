@@ -30,14 +30,13 @@ public class BuildConfigDto {
 
   private String buildPath;
 
-  private List<ConfigProperty> publish;
-  private List<ConfigProperty> volume;
-  private List<ConfigProperty> env;
+  private List<ConfigProperty> properties;
 
   @Getter
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   public static class ConfigProperty {
+    private String property;
     private String first;
     private String second;
   }

@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.entity.project.frameworks;
+package com.ssafy.dockerby.entity.core;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
