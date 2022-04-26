@@ -14,7 +14,6 @@ public class GitConfigDto {
   private String hostUrl;
   private Long accessTokenId;   // git connection credentials
   private Long accountId;       // repositories credentials
-  private Long projectId;
   private String repositoryUrl;
   private String secretToken;
   private String branchName;    // branchSpecifier
@@ -26,7 +25,6 @@ public class GitConfigDto {
         config.getHostUrl(),
         config.getToken().getId(),
         config.getAccount().getId(),
-        config.getProject().getId(),
         config.getRepositoryUrl(),
         config.getSecretToken(),
         config.getBranchName(),

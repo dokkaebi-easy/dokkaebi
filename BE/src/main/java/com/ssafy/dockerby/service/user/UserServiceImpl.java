@@ -2,6 +2,7 @@ package com.ssafy.dockerby.service.user;
 
 import com.ssafy.dockerby.common.ExceptionClass;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
+import com.ssafy.dockerby.dto.user.SigninDto;
 import com.ssafy.dockerby.dto.user.SignupDto;
 import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.dto.user.UserResponseDto;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +33,7 @@ public class UserServiceImpl implements UserService {
     String authKey = "authKey";
 
     @Override
-    public UserResponseDto signup(SignupDto signupDto) throws IOException, UserDefindedException {
+    public UserResponseDto signup(SignupDto signupDto) throws UserDefindedException {
         // 인증 확인
         isSignupValied(signupDto);
         log.info("Verification passed : {}", signupDto.getPrincipal());
@@ -42,6 +44,18 @@ public class UserServiceImpl implements UserService {
         UserResponseDto userResponseDto = UserResponseDto.of(user);
         userResponseDto.SuccessState();
         return (userResponseDto);
+    }
+
+    public UserDetailDto signin(SigninDto signinDto) {
+        UserDetailDto userDetailDto = (UserDetailDto) loadUserByUsername(signinDto.getPrincipal());
+
+        String reqPassword = signinDto.getCredential();
+
+        if (!passwordEncoder.matches(reqPassword, userDetailDto.getPassword())) {
+            log.error("Passwords do not match");
+            throw new BadCredentialsException("Passwords do not match\n");
+        }
+        return userDetailDto;
     }
 
     //아이디 중복 검증
