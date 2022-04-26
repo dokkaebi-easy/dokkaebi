@@ -18,6 +18,7 @@ public class GitConfigDto {
   private String repositoryUrl;
   private String secretToken;
   private String branchName;    // branchSpecifier
+  private String repositoryName;
 
   public static GitConfigDto from(GitlabConfig config) {
     return new GitConfigDto(
@@ -28,7 +29,8 @@ public class GitConfigDto {
         config.getProject().getId(),
         config.getRepositoryUrl(),
         config.getSecretToken(),
-        config.getBranchName()
+        config.getBranchName(),
+        config.getRepositoryName()
     );
 
   }
