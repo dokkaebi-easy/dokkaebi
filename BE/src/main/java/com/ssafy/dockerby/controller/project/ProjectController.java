@@ -11,14 +11,17 @@ import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import com.ssafy.dockerby.dto.project.StateRequestDto;
 import com.ssafy.dockerby.dto.project.StateResponseDto;
+import com.ssafy.dockerby.dto.user.UserDetailDto;
+import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -42,16 +45,23 @@ public class ProjectController {
   private final ProjectServiceImpl projectService;
 
   @PostMapping
-  public ResponseEntity createProject(Principal principal,@RequestBody ProjectRequestDto projectRequestDto )
-      throws ChangeSetPersister.NotFoundException, IOException {
+  public ResponseEntity createProject(HttpServletRequest request,@RequestBody ProjectRequestDto projectRequestDto ) throws ChangeSetPersister.NotFoundException, IOException {
     //요청 로그출력
-    log.info("project create request received {} , {} ",projectRequestDto.toString(), principal.getName());
+    log.info("project create request");
+    log.info("Request Project : {}",projectRequestDto.getProjectName());
+    Map<String, Object> upsertResult = projectService.upsert(projectRequestDto);
 
-    List<DockerContainerConfig> configs = projectService.upsert(principal,projectRequestDto);
-
-
+    List<DockerContainerConfig> configs = (List<DockerContainerConfig>) upsertResult.get("buildConfigs");
+    Project project = (Project) upsertResult.get("project");
+    String msg = (String) upsertResult.get("msg");
     log.info("project build start / waiting -> processing");
 
+    //히스토리 저장
+    try { //유저가 있을때
+      projectService.createConfigHistory(request,project,msg);
+    }catch (Exception e){ // 유저가 없을때 //ex)git hook 상황
+      log.error("User information does not exist Exception {} {}",e.getClass(),e.getMessage());
+    }
 
     Map<String, Object> map = new HashMap<>();
     map.put("status", "Success");
