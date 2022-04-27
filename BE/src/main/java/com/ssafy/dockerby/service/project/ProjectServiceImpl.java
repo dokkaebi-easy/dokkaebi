@@ -204,7 +204,6 @@ public class ProjectServiceImpl implements ProjectService {
     int buildNumber = Integer.parseInt(buildState.getBuildNumber().toString());
     //Pull start
     try { // pull 트라이
-      //TODO / ProjectService : GitPull 트라이
       if (buildState.getWebhookHistory() != null) {
         List<String> commands = new ArrayList<>();
         commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
@@ -241,7 +240,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     //Build start
     try { // Build 트라이
-      //TODO / ProjectService : Build 트라이
       List<String> buildCommands = dockerAdapter.getBuildCommands(configs);
       CommandInterpreter.run(filePath.toString(), "build", buildNumber, buildCommands);
 
@@ -270,7 +268,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     //Run start
     try { // run 트라이
-      //TODO / ProjectService : DockerRun 트라이
       if (buildNumber != 1) {
         CommandInterpreter.run(filePath.toString(), "remove", buildNumber,
           dockerAdapter.getRemoveCommands(configs));
@@ -312,7 +309,6 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public StateResponseDto checkState(StateRequestDto stateRequestDto)
     throws NotFoundException {
-    //TODO /ProjectSercice : checkState Test 작성
 
     //StateRequest 에서 받은 projectId로 DB 탐색
     BuildState buildState = buildStateRepository.findByProjectId(
@@ -483,14 +479,14 @@ public class ProjectServiceImpl implements ProjectService {
   public BuildDetailResponseDto BuildDetail(BuildDetailRequestDto buildDetailRequestDto) throws IOException {
     //요청 로그 출력
     log.info("buildDetail Service start");
-    
-    BuildState buildState = buildStateRepository.findById(buildDetailRequestDto.getBuildStateId()).orElseThrow(() -> new NotFoundException());
+
+    BuildState buildState = buildStateRepository.findById(buildDetailRequestDto.getId()).orElseThrow(() -> new NotFoundException());
 
     log.info("buildState receive success {}", buildState.getProject().getProjectName());
 
 
     String path = rootPath+"/" + buildState.getProject().getProjectName() + "/log";//경로  projects/{프로젝트 이름}/log
-    String fileName = (buildDetailRequestDto.getBuildType()) + "_" + buildState.getBuildNumber();//  상태_빌드 넘버
+    String fileName = (buildDetailRequestDto.getName()) + "_" + buildState.getBuildNumber();//  상태_빌드 넘버
 
     StringBuilder consoleLog = new StringBuilder();
 

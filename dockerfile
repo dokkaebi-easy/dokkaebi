@@ -19,14 +19,10 @@ RUN apt update &&  apt install -y mariadb-server-10.5 \
      && apt install -y git && apt update \
      && apt install -y nginx
 
-COPY ./keygen.sh home/conf/keygen.sh
 COPY ./install.sh home/conf/install.sh
 COPY ./DB home/conf/db
 
-RUN bin/bash home/conf/keygen.sh 
-
 # install NGINX
-COPY ./default.conf /etc/nginx/conf.d/default.conf
-RUN service nginx start 
+COPY ./default.conf /etc/nginx/sites-enabled/default
 
 ENTRYPOINT [ "bin/bash", "home/conf/install.sh" ]

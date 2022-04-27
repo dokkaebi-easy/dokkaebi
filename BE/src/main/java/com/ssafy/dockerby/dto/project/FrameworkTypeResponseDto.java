@@ -9,10 +9,10 @@ import lombok.*;
 public class FrameworkTypeResponseDto {
 
   @NotNull
-  private Long frameworkTypeId;
+  private Long id;
 
   @NotNull
-  private String frameworkName;
+  private String name;
 
   public static FrameworkTypeResponseDto from(FrameworkType frameworkType) {
     return new FrameworkTypeResponseDto(frameworkType.getId(), frameworkType.getFrameworkName());
