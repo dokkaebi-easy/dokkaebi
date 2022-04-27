@@ -87,7 +87,7 @@ public class FileManager {
     return savePath.toString();
   }
 
-  private static void checkAndMakeDir(String filePath) {
+  public static void checkAndMakeDir(String filePath) {
     //폴더가 없을시 생성
     log.info("start checkAndMakeDir {} {}", filePath);
     if (!new File(filePath).exists())

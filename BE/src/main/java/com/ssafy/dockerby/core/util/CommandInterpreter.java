@@ -1,5 +1,6 @@
 package com.ssafy.dockerby.core.util;
 
+import com.ssafy.dockerby.util.FileManager;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,24 +19,41 @@ public class CommandInterpreter {
       throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append(path).append('/').append(projectName).append('_').append(buildNumber);
+    FileManager.checkAndMakeDir(path);
     File file = new File(sb.toString());
-    FileOutputStream fileOutputStream = new FileOutputStream(file);
-    commands.forEach(command -> {
-      CommandLine commandLine = CommandLine.parse(command);
-      DefaultExecutor executor = new DefaultExecutor();
-      PumpStreamHandler handler = new PumpStreamHandler(fileOutputStream);
-      executor.setStreamHandler(handler);
-      executor.setExitValues(new int[] {0,1,125});  // 1 == error 하지만 network_bridge already 1 125 == already container
-      try {
+    DefaultExecutor executor = new DefaultExecutor();
+    try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+      for (String command : commands) {
+        CommandLine commandLine = CommandLine.parse(command);
+        PumpStreamHandler handler = new PumpStreamHandler(fileOutputStream);
+        executor.setStreamHandler(handler);
+        executor.setExitValues(
+            new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
         int execute = executor.execute(commandLine);
         fileOutputStream.flush();
-      } catch (IOException e) {
-        log.error("",e);
       }
-    });
-
-
-    fileOutputStream.close();
+    }
   }
 
+  public static void runDestPath(String destPath, String logPath, String projectName, int buildNumber, List<String> commands)
+      throws IOException {
+    StringBuilder sb = new StringBuilder();
+    sb.append(logPath).append('/').append(projectName).append('_').append(buildNumber);
+    FileManager.checkAndMakeDir(logPath);
+    File file = new File(sb.toString());
+    File destFile = new File(destPath);
+    DefaultExecutor executor = new DefaultExecutor();
+    try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+      for (String command : commands) {
+        CommandLine commandLine = CommandLine.parse(command);
+        PumpStreamHandler handler = new PumpStreamHandler(fileOutputStream);
+        executor.setWorkingDirectory(destFile);
+        executor.setStreamHandler(handler);
+        executor.setExitValues(
+            new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
+        int execute = executor.execute(commandLine);
+        fileOutputStream.flush();
+      }
+    }
+  }
 }

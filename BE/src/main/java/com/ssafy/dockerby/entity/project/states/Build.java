@@ -2,7 +2,7 @@ package com.ssafy.dockerby.entity.project.states;
 
 
 import com.ssafy.dockerby.entity.BaseEntity;
-import com.ssafy.dockerby.entity.project.ProjectState;
+import com.ssafy.dockerby.entity.project.BuildState;
 import com.ssafy.dockerby.entity.project.enums.StateType;
 import lombok.*;
 
@@ -13,10 +13,10 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class Build extends BaseEntity  {
+public class Build  {
 
   @Id
-  @Column(name = "docker_build_id")
+  @Column(name = "build_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
@@ -25,15 +25,15 @@ public class Build extends BaseEntity  {
   private StateType stateType = StateType.Waiting;
 
   @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-  @JoinColumn(name = "project_state_id")
-  private ProjectState projectState;
+  @JoinColumn(name = "build_state_id")
+  private BuildState buildState;
 
   public static Build from() {
     return Build.builder().build();
   }
 
-  public void updateProjectState(ProjectState projectState){
-    this.projectState = projectState;
+  public void updateBuildState(BuildState buildState){
+    this.buildState = buildState;
   }
 
   public void updateStateType (String stateType){

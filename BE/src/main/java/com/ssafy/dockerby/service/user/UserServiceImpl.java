@@ -2,17 +2,18 @@ package com.ssafy.dockerby.service.user;
 
 import com.ssafy.dockerby.common.ExceptionClass;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
+import com.ssafy.dockerby.dto.user.SigninDto;
 import com.ssafy.dockerby.dto.user.SignupDto;
 import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.dto.user.UserResponseDto;
 import com.ssafy.dockerby.entity.user.User;
-import com.ssafy.dockerby.entity.user.UserRole;
 import com.ssafy.dockerby.repository.user.UserRepository;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,17 +33,29 @@ public class UserServiceImpl implements UserService {
     String authKey = "authKey";
 
     @Override
-    public UserResponseDto signup(SignupDto signupDto) throws IOException, UserDefindedException {
+    public UserResponseDto signup(SignupDto signupDto) throws UserDefindedException {
         // 인증 확인
         isSignupValied(signupDto);
         log.info("Verification passed : {}", signupDto.getPrincipal());
         //Credential encode 변환 후 User객체 생성 //현재 "USER" roll만 입력, 추후 다른 권한 생길시 변경
-        User user = User.of(signupDto, passwordEncoder.encode(signupDto.getCredential()), UserRole.USER);
+        User user = User.of(signupDto, passwordEncoder.encode(signupDto.getCredential()));
         userRepository.save(user);
         log.info("User signup Complete : {}", user.getPrincipal());
         UserResponseDto userResponseDto = UserResponseDto.of(user);
         userResponseDto.SuccessState();
         return (userResponseDto);
+    }
+
+    public UserDetailDto signin(SigninDto signinDto) {
+        UserDetailDto userDetailDto = (UserDetailDto) loadUserByUsername(signinDto.getPrincipal());
+
+        String reqPassword = signinDto.getCredential();
+
+        if (!passwordEncoder.matches(reqPassword, userDetailDto.getPassword())) {
+            log.error("Passwords do not match");
+            throw new BadCredentialsException("Passwords do not match\n");
+        }
+        return userDetailDto;
     }
 
     //아이디 중복 검증
