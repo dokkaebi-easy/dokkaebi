@@ -7,9 +7,9 @@ import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import { v4 as uuid } from 'uuid';
-import BuildBasic from 'Components/Pages/Setting/BuildPage/BuildBasic/BuildBasicBox';
+import BuildBasic from 'Components/Pages/Setting/BuildPage/BuildBasicBox/BuildBasicBox';
 import BuildData from 'Components/MDClass/BuildData/BuildData';
-import { useStore } from 'Components/Store/settingStore';
+import { useStore } from 'Components/Store/SettingStore/SettingStore';
 import NginxBasic from './NginxBasic/NginxBasic';
 
 export default function BuildPage() {

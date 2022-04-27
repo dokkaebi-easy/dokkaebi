@@ -29,7 +29,7 @@ export default function SideNavibar() {
         height: '95vh',
         width: 250,
         borderRadius: 5,
-        background: 'linear-gradient(195deg, #42424a, #191919)',
+        background: 'linear-gradient(135deg, #4a4a4a, #5a5a5a)',
       }}
       elevation={3}
     >

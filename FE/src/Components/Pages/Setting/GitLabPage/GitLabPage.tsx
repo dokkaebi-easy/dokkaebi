@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import GitLabConnect from 'Components/Pages/Setting/GitLabPage/GitLabConnect/GitLabConnect';
 import GitLabRepositories from 'Components/Pages/Setting/GitLabPage/GitLabRepositories/GitLabRepositories';
-import { useStore } from 'Components/Store/settingStore';
+import { useStore } from 'Components/Store/SettingStore/SettingStore';
 
 export default function GitLabPage() {
   const gitConfig = useStore((state) => state.gitConfig);

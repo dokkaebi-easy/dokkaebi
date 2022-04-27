@@ -12,7 +12,7 @@ interface PropertyProps {
   buildValue: Property;
 }
 
-const PropertyItem = ['Publish', 'Volume', 'Evn'];
+const PropertyItem = ['publish', 'volume', 'evn'];
 
 export default function PropertyBox({ value, buildValue }: PropertyProps) {
   const [property, setProperty] = useState(value.property);
@@ -21,8 +21,8 @@ export default function PropertyBox({ value, buildValue }: PropertyProps) {
 
   const handlePropsPropertyChange = (event: string) => {
     setProperty(event);
-    value.property = event.toLowerCase();
-    buildValue.property = event.toLowerCase();
+    value.property = event;
+    buildValue.property = event;
   };
   const handleFirstDataChange = (event: any) => {
     setFirstData(event.target.value);
@@ -43,7 +43,7 @@ export default function PropertyBox({ value, buildValue }: PropertyProps) {
           defaultValue={value.property}
           label="Property"
           Items={PropertyItem}
-          change={handlePropsPropertyChange}
+          Change={handlePropsPropertyChange}
         />
       </Grid>
       <Grid item>

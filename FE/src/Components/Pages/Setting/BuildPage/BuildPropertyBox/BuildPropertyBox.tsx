@@ -8,7 +8,7 @@ import PropertyData, {
 } from 'Components/MDClass/PropertyData/PropertyData';
 import { Build } from 'Components/MDClass/BuildData/BuildData';
 import { v4 as uuid } from 'uuid';
-import PropertyBox from '../Property/PropertyBox';
+import PropertyBox from '../PropertyBox/PropertyBox';
 
 interface PropertyProps {
   buildValue: Build;
