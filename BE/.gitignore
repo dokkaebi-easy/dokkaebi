@@ -1,6 +1,7 @@
 HELP.md
 .gradle
 build/
+fileData/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -36,3 +37,5 @@ out/
 ### VS Code ###
 .vscode/
 /src/main/resources/static/
+/log/
+/jsonData/

@@ -1,0 +1,36 @@
+[INFO ] 01:00:55.806 c.ssafy.dockerby.DockerbyApplication - Starting DockerbyApplication using Java 11.0.14 on DESKTOP-KVCQHCD with PID 21788 (C:\Users\multicampus\Desktop\개인\자율프로젝트\S06P31S205\BE\build\classes\java\main started by SSAFY in C:\Users\multicampus\Desktop\개인\자율프로젝트\S06P31S205\BE)
+[INFO ] 01:00:55.810 c.ssafy.dockerby.DockerbyApplication - The following 1 profile is active: "eth"
+[INFO ] 01:00:56.981 o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[INFO ] 01:00:57.063 o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 74 ms. Found 12 JPA repository interfaces.
+[INFO ] 01:00:57.510 o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[INFO ] 01:00:57.518 o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+[INFO ] 01:00:57.518 o.a.catalina.core.StandardService - Starting service [Tomcat]
+[INFO ] 01:00:57.519 o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.58]
+[INFO ] 01:00:57.601 o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[INFO ] 01:00:57.601 o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1725 ms
+[INFO ] 01:00:57.656 com.ssafy.dockerby.util.FileManager - start load File . AuthKey
+[INFO ] 01:00:57.718 com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+[INFO ] 01:00:57.765 com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+[INFO ] 01:00:57.836 org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.5.Final
+[INFO ] 01:00:57.957 o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[INFO ] 01:00:58.042 org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MariaDB103Dialect
+[INFO ] 01:00:58.660 o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[INFO ] 01:00:58.667 o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+[WARN ] 01:00:58.724 o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[INFO ] 01:00:59.476 o.s.s.web.DefaultSecurityFilterChain - Will not secure any request
+[INFO ] 01:00:59.493 s.d.s.w.PropertySourcedRequestMappingHandlerMapping - Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+[INFO ] 01:00:59.705 o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+[INFO ] 01:00:59.721 o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+[INFO ] 01:00:59.722 s.d.s.w.p.DocumentationPluginsBootstrapper - Context refreshed
+[INFO ] 01:00:59.733 s.d.s.w.p.DocumentationPluginsBootstrapper - Found 1 custom documentation plugin(s)
+[INFO ] 01:00:59.761 s.d.s.w.s.ApiListingReferenceScanner - Scanning for api listing references
+[INFO ] 01:00:59.947 c.ssafy.dockerby.DockerbyApplication - Started DockerbyApplication in 4.865 seconds (JVM running for 7.675)
+[INFO ] 01:01:09.282 o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[INFO ] 01:01:09.283 o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+[INFO ] 01:01:09.284 o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+[INFO ] 01:01:09.347 c.s.d.controller.user.UserController - signinDto: mh 123
+[INFO ] 01:01:09.565 c.s.d.controller.user.UserController - login Success User: mh
+[WARN ] 01:01:10.357 o.a.c.util.SessionIdGeneratorBase - Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [789] milliseconds.
+[INFO ] 01:06:19.527 o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+[INFO ] 01:06:19.530 com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+[INFO ] 01:06:19.560 com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

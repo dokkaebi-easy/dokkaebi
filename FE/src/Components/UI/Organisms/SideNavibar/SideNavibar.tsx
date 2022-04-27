@@ -29,7 +29,7 @@ export default function SideNavibar() {
         height: '95vh',
         width: 250,
         borderRadius: 5,
-        background: 'linear-gradient(195deg, #42424a, #191919)',
+        background: 'linear-gradient(135deg, #4a4a4a, #5a5a5a)',
       }}
       elevation={3}
     >
@@ -53,7 +53,7 @@ export default function SideNavibar() {
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
-              <ListItemText primary="Inbox" />
+              <ListItemText primary="Menu1" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -61,7 +61,7 @@ export default function SideNavibar() {
               <ListItemIcon>
                 <DashboardCustomizeIcon />
               </ListItemIcon>
-              <ListItemText primary="Drafts" />
+              <ListItemText primary="Menu2" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -70,7 +70,7 @@ export default function SideNavibar() {
                 <ListItemIcon>
                   <SettingsIcon />
                 </ListItemIcon>
-                <ListItemText primary="Setting" />
+                <ListItemText primary="Menu3" />
               </ListItemButton>
             </Link>
           </ListItem>

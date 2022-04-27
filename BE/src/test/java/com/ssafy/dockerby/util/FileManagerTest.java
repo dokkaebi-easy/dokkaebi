@@ -1,58 +1,68 @@
-package com.ssafy.dockerby.util;
-
-import com.ssafy.dockerby.common.exception.UserDefindedException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.concurrent.ExecutionException;
-import org.assertj.core.api.Assertions;
-import org.json.JSONObject;
-import org.junit.jupiter.api.Test;
-
-import org.springframework.test.context.web.WebAppConfiguration;
-
-
-@WebAppConfiguration
-class FileManagerTest {
-
-    @Test
-    public void str파일저장하고_읽어오기()
-        throws ExecutionException, InterruptedException, IOException, UserDefindedException {
-        // given
-        String filePath = "./fileData";
-        String fileName = "testFile";
-        String str = "title\ngood\nmylife";
-        // when
-        // 파일 저장
-        FileManager.saveFile(filePath, fileName, str);
-        // 파일 읽어오기
-        String result = FileManager.loadFile(filePath, fileName);
-        // then
-        Assertions.assertThat(result.equals(str));
-    }
-
-    @Test
-    public void List파일저장하고_읽어오기()
-        throws ExecutionException, InterruptedException, IOException, UserDefindedException {
-        // given
-        String filePath = "./fileData";
-        String fileName = "testlistFile";
-        ArrayList<String> str = new ArrayList<>();
-        str.add("aa");
-        str.add("bb");
-        str.add("cc");
-        str.add("dd");
-        str.add("ee");
-        // when
-        //파일 저장
-        FileManager.saveFile(filePath, fileName, str);
-        //파일 읽어오기
-        String result = FileManager.loadFile(filePath, fileName);
-        // then
-        Assertions.assertThat(result.equals(str));
-    }
-
-
+//package com.ssafy.dockerby.util;
+//
+//import com.ssafy.dockerby.common.exception.UserDefindedException;
+//import java.io.IOException;
+//import java.util.ArrayList;
+//import java.util.LinkedList;
+//import java.util.concurrent.ExecutionException;
+//import org.assertj.core.api.Assertions;
+//import org.json.JSONObject;
+//import org.junit.jupiter.api.Test;
+//
+//import org.springframework.test.context.web.WebAppConfiguration;
+//
+//
+//@WebAppConfiguration
+//class FileManagerTest {
+//
+//    @Test
+//    public void str파일저장하고_읽어오기()
+//        throws ExecutionException, InterruptedException, IOException, UserDefindedException {
+//        // given
+//        String filePath = "./fileData";
+//        String fileName = "testFile";
+//        String str = "title\ngood\nmylife";
+//        // when
+//        // 파일 저장
+//        FileManager.saveFile(filePath, fileName, str);
+//        // 파일 읽어오기
+//        String result = FileManager.loadFile(filePath, fileName);
+//        // then
+//        Assertions.assertThat(result.equals(str));
+//    }
+//
+//    @Test
+//    public void List파일저장하고_읽어오기()
+//        throws ExecutionException, InterruptedException, IOException, UserDefindedException {
+//        // given
+//        String filePath = "./fileData";
+//        String fileName = "testlistFile";
+//        ArrayList<String> str = new ArrayList<>();
+//        str.add("aa");
+//        str.add("bb");
+//        str.add("cc");
+//        str.add("dd");
+//        str.add("ee");
+//        // when
+//        //파일 저장
+//        FileManager.saveFile(filePath, fileName, str);
+//        //파일 읽어오기
+//        String result = FileManager.loadFile(filePath, fileName);
+//        // then
+//        Assertions.assertThat(result.equals(str));
+//    }
+//
+//    @Test
+//    public void loadFile() throws IOException {
+//      // given
+//      String filePath = ".";
+//      String fileName = "AuthKey";
+//      // when
+//      String str = FileManager.loadFile(filePath, fileName);
+//      // then
+//      System.out.println(str);
+//    }
+//
 //    @Test
 //    public void Json파일저장및읽어오기()
 //        throws ExecutionException, InterruptedException, IOException, UserDefindedException {
@@ -73,6 +83,6 @@ class FileManagerTest {
 //        // then
 //        Assertions.assertThat(userDto.equals(resultDto));
 //    }
+//
 
-
-}
+//}

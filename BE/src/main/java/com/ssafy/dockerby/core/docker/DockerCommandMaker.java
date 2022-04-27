@@ -1,6 +1,7 @@
 package com.ssafy.dockerby.core.docker;
 
 import com.ssafy.dockerby.core.docker.dto.ContainerConfig;
+import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class DockerCommandMaker {
     this.rootDir = rootDir;
   }
 
-  public String build(ContainerConfig config) {
+  public String build(DockerContainerConfig config) {
     StringBuilder sb = new StringBuilder();
     // TODO : Image tag를 latest로 하는 것은 권장되지 않습니다.
     sb.append("docker build -t ")
@@ -24,7 +25,7 @@ public class DockerCommandMaker {
     return sb.toString();
   }
 
-  public String run(ContainerConfig config) {
+  public String run(DockerContainerConfig config) {
     StringBuilder sb = new StringBuilder();
     sb.append("docker run -d --name ")
         .append(projectName).append('-').append(config.getName());
@@ -46,7 +47,7 @@ public class DockerCommandMaker {
     return "docker network create " + this.networkBridge;
   }
 
-  public String removeContainer(ContainerConfig config) {
+  public String removeContainer(DockerContainerConfig config) {
     StringBuilder sb = new StringBuilder();
     sb.append("docker rm -f ").append(projectName).append('-').append(config.getName());
     return sb.toString();

@@ -1,32 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
+import { useLocation, Link } from 'react-router-dom';
 
 export default function Navbar() {
+  const [pageName, setPageName] = useState('');
+  const location = useLocation();
+
+  useEffect(() => {
+    const name = location.pathname.split('/');
+    if (name.length !== 2 || name[1] === '') {
+      setPageName('Main');
+    } else {
+      setPageName(name[1].replace(/\b[a-z]/, (letter) => letter.toUpperCase()));
+    }
+  }, [location]);
   return (
     <AppBar
       position="sticky"
-      sx={{ top: 24, borderRadius: 3, backgroundColor: '#999' }}
+      sx={{
+        top: 24,
+        borderRadius: 3,
+        backgroundColor: 'rgba(200,200,200,0.5)',
+      }}
     >
       <Toolbar>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon />
-        </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          News
+          {pageName}
         </Typography>
-        <Button color="inherit">Login</Button>
+        <Link to="/login">
+          <Button color="inherit">Login</Button>
+        </Link>
       </Toolbar>
     </AppBar>
   );
