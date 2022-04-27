@@ -10,12 +10,6 @@ import styled from '@emotion/styled';
 import { api } from '../../../api/index';
 
 export default function BuildDetail() {
-  // useEffect(() => {
-  //   api.get(`project/build/detail/buildStateId?buildStateId=${}`).then((res) => {
-  //     console.log(res);
-  //   });
-  // }, []);
-
   return (
     <Box
       mt={3}

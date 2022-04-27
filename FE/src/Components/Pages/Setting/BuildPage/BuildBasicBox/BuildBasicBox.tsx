@@ -88,7 +88,6 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
       .get('/api/project/frameworkVersion', { params })
       .then((res) => {
         const data = res.data as VersionTypeAxois;
-        console.log(data);
         setVersion('');
         setType('');
 
@@ -129,6 +128,12 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
           console.log(err);
         });
     }
+
+    return () => {
+      setFramAndLibs([]);
+      setVersions([]);
+      setTypes([]);
+    };
   }, []);
 
   return (

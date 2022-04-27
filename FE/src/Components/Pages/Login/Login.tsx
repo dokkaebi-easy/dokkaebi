@@ -39,7 +39,6 @@ function Login() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(event.currentTarget);
     const data = new FormData(event.currentTarget);
     const loginData = JSON.stringify({
       principal: data.get('id'),
@@ -50,7 +49,6 @@ function Login() {
       .post(`user/auth/signin`, loginData, { withCredentials: true })
       .then((res) => {
         const datas = res.data as Message;
-        console.log(datas);
         if (datas.status === 'Success') {
           window.localStorage.setItem('login', 'true');
           window.location.href = '/';

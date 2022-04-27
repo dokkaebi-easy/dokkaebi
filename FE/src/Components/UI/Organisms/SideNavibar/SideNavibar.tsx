@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -18,9 +18,7 @@ const linestyle = {
   backgroundImage:
     'linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff, rgba(255, 255, 255, 0))',
 };
-
 export default function SideNavibar() {
-  // const [screenWidth, setScreenWidth] = useState(screen.width);
   return (
     <Paper
       sx={{
@@ -30,17 +28,24 @@ export default function SideNavibar() {
         height: '95vh',
         width: 250,
         borderRadius: 5,
-        background: 'linear-gradient(135deg, #4a4a4a, #5a5a5a)',
+        background: 'linear-gradient(195deg, #42424a, #191919)',
       }}
       elevation={3}
     >
       <Box sx={{ color: 'white', textAlign: 'center' }}>
         <List>
           <ListItem disablePadding>
-            <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
+            <Link
+              to="/"
+              style={{
+                color: 'white',
+                textDecoration: 'none',
+                width: '100%',
+              }}
+            >
               <ListItemButton>
                 <ListItemIcon>
-                  <InboxIcon />
+                  <InboxIcon sx={{ color: 'white' }} />
                 </ListItemIcon>
                 <ListItemText primary="Dockerby" />
               </ListItemButton>
@@ -52,11 +57,15 @@ export default function SideNavibar() {
           <ListItem disablePadding>
             <Link
               to="/setting"
-              style={{ color: 'white', textDecoration: 'none' }}
+              style={{
+                color: 'white',
+                textDecoration: 'none',
+                width: '100%',
+              }}
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <SettingsIcon />
+                  <SettingsIcon sx={{ color: 'white' }} />
                 </ListItemIcon>
                 <ListItemText primary="Build Create" />
               </ListItemButton>
@@ -65,11 +74,15 @@ export default function SideNavibar() {
           <ListItem disablePadding>
             <Link
               to="/detail"
-              style={{ color: 'white', textDecoration: 'none' }}
+              style={{
+                color: 'white',
+                textDecoration: 'none',
+                width: '100%',
+              }}
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <DashboardIcon />
+                  <DashboardIcon sx={{ color: 'white' }} />
                 </ListItemIcon>
                 <ListItemText primary="Build Detail 임시" />
               </ListItemButton>
@@ -78,7 +91,7 @@ export default function SideNavibar() {
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <DashboardCustomizeIcon />
+                <DashboardCustomizeIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               <ListItemText primary="Menu2" />
             </ListItemButton>
