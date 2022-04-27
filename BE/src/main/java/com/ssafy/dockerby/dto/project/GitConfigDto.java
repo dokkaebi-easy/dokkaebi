@@ -14,10 +14,10 @@ public class GitConfigDto {
   private String hostUrl;
   private Long accessTokenId;   // git connection credentials
   private Long accountId;       // repositories credentials
+  private Long gitProjectId;    // gitlab project id
   private String repositoryUrl;
   private String secretToken;
   private String branchName;    // branchSpecifier
-  private String repositoryName;
 
   public static GitConfigDto from(GitlabConfig config) {
     return new GitConfigDto(
@@ -25,10 +25,10 @@ public class GitConfigDto {
         config.getHostUrl(),
         config.getToken().getId(),
         config.getAccount().getId(),
+        config.getGitProjectId(),
         config.getRepositoryUrl(),
         config.getSecretToken(),
-        config.getBranchName(),
-        config.getRepositoryName()
+        config.getBranchName()
     );
 
   }
