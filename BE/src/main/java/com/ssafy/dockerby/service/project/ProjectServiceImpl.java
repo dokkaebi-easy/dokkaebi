@@ -112,8 +112,11 @@ public class ProjectServiceImpl implements ProjectService {
     project.addProjectConfigs(configs);
 
     upsertConfigFile(projectRequestDto.getProjectName(), buildConfigs);
+
     log.info("GitConfigDto project ID : {}",project.getId());
+
     GitConfigDto getConfigDto = projectRequestDto.getGitConfig();
+
     if (getConfigDto != null) {
       gitlabService.config(project.getId())
           .map(config -> gitlabService.updateConfig(project, getConfigDto))
@@ -159,7 +162,7 @@ public class ProjectServiceImpl implements ProjectService {
       List<ProjectConfig> configs)
       throws IOException {
     StringBuilder filePath = new StringBuilder();
-    filePath.append("projects/").append(projectName).append("/").append(configRootPath);
+    filePath.append("./projects/").append(projectName).append("/").append(configRootPath);
     List<DockerContainerConfig> results = new ArrayList<>();
 
     for (ProjectConfig config : configs) {
@@ -213,7 +216,7 @@ public class ProjectServiceImpl implements ProjectService {
     em.flush();
 
     StringBuilder filePath = new StringBuilder();
-    filePath.append("projects/").append(project.getProjectName()).append("/").append(logPath);
+    filePath.append("./projects/").append(project.getProjectName()).append("/").append(logPath);
     DockerAdapter dockerAdapter = new DockerAdapter(project.getProjectName());
     List<DockerContainerConfig> configs = loadConfigFiles(project.getProjectName(),
         project.getProjectConfigs());
@@ -222,11 +225,11 @@ public class ProjectServiceImpl implements ProjectService {
     //Pull start
     try { // pull 트라이
       //TODO / ProjectService : GitPull 트라이
-      List<String> commands = new ArrayList<>();
-      commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
-      CommandInterpreter.runDestPath(webHookDto.getRepositoryName(), filePath.toString(), "pull",
-          buildNumber, commands);
-      dockerAdapter.saveDockerfiles(configs);
+//      List<String> commands = new ArrayList<>();
+//      commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
+//      CommandInterpreter.runDestPath(webHookDto.getRepositoryName(), filePath.toString(), "pull",
+//          buildNumber, commands);
+//      dockerAdapter.saveDockerfiles(configs);
 
       // pull 완료 build 진행중 update
       buildState.getPull().updateStateType("Done");
