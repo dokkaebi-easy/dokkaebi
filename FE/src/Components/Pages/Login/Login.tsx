@@ -13,7 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { fileApi } from '../../../api/index';
+import { api } from '../../../api/index';
 
 interface Message {
   message: string;
@@ -45,21 +45,18 @@ function Login() {
       principal: data.get('id'),
       credential: data.get('password'),
     });
-    console.log(loginData);
-    // const principa = data.get('id');
-    // const credential = data.get('password');
 
-    // setLoginData(data);
-    fileApi.post(`user/auth/signin`, loginData).then((res) => {
-      const datas = res.data as Message;
-      console.log(datas);
-    });
+    api
+      .post(`user/auth/signin`, loginData, { withCredentials: true })
+      .then((res) => {
+        const datas = res.data as Message;
+        console.log(datas);
+        if (datas.status === 'Success') {
+          window.localStorage.setItem('login', 'true');
+          window.location.href = '/';
+        }
+      });
   };
-
-  // const loginAPI = (data: FormData) => {
-  //   console.log(data);
-  //   window.location.href = '/';
-  // };
 
   return (
     <ThemeProvider theme={theme}>
