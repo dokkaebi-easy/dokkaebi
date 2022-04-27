@@ -84,7 +84,7 @@ CREATE TABLE `dockerby`.`gitlab_config` (
   `secret_token` VARCHAR(255) NOT NULL,
   `repository_url` VARCHAR(255) NOT NULL,
   `branch_name` VARCHAR(255) NOT NULL,
-  `repository_name` VARCHAR(255) NULL,
+  `git_project_id` BIGINT NULL,
   `gitlab_account_id` BIGINT NULL,
   `gitlab_access_token_id` BIGINT NULL,
   `project_id` BIGINT NULL,

@@ -13,11 +13,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class GitlabConfig {
@@ -32,7 +34,7 @@ public class GitlabConfig {
   private String repositoryUrl;
   private String branchName;
 
-  private String repositoryName;
+  private Long gitProjectId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "gitlab_account_id")
@@ -46,21 +48,26 @@ public class GitlabConfig {
   @JoinColumn(name = "project_id")
   Project project;
 
-  public static GitlabConfig of(String name, String hostUrl, String secretToken, String repositoryUrl, String branchName, String repositoryName) {
-    return new GitlabConfig(null,name,hostUrl,secretToken,repositoryUrl,branchName,repositoryName,null,null, null);
+  public static GitlabConfig of(String name, String hostUrl, String secretToken, String repositoryUrl, String branchName, String repositoryName, Long gitProjectId) {
+    return new GitlabConfig().builder()
+        .name(name)
+        .hostUrl(hostUrl)
+        .secretToken(secretToken)
+        .repositoryUrl(repositoryUrl)
+        .branchName(branchName)
+        .gitProjectId(gitProjectId)
+        .build();
   }
 
   public static GitlabConfig from(GitConfigDto configDto) {
-    return new GitlabConfig(
-        null,
-        configDto.getName(),
-        configDto.getHostUrl(),
-        configDto.getSecretToken(),
-        configDto.getRepositoryUrl(),
-        configDto.getBranchName(),
-        configDto.getRepositoryName(),
-        null, null, null
-    );
+    return new GitlabConfig().builder()
+        .name(configDto.getName())
+        .hostUrl(configDto.getHostUrl())
+        .secretToken(configDto.getSecretToken())
+        .repositoryUrl(configDto.getRepositoryUrl())
+        .branchName(configDto.getBranchName())
+        .gitProjectId(configDto.getGitProjectId())
+        .build();
   }
 
   public void setAccount(GitlabAccount account) {
