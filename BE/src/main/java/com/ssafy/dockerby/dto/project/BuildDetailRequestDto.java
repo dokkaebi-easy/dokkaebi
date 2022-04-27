@@ -13,17 +13,17 @@ import javax.persistence.Enumerated;
 public class BuildDetailRequestDto {
 
   @NotNull
-  private Long buildStateId;
+  private Long id;
 
   @NotNull
   @Enumerated(value = EnumType.STRING)
-  private BuildType buildType;
+  private BuildType name;
 
   @Override
   public String toString() {
     return "BuildDetailRequestDto{" +
-      "buildStateId=" + buildStateId +
-      ", buildType=" + buildType +
+      "buildStateId=" + id +
+      ", buildType=" + name +
       '}';
   }
 
