@@ -4,7 +4,6 @@ import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig.FrameworkType;
 import com.ssafy.dockerby.dto.project.BuildConfigDto;
 import com.ssafy.dockerby.dto.project.BuildConfigDto.ConfigProperty;
-import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectRequestDto;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,14 +21,17 @@ public class ConfigParser {
     for (ConfigProperty property : buildConfigDto.getProperties()) {
       switch (property.getProperty()) {
         case "publish":
-        case "volume":
           publishes.add(property.getFirst() + ":" + property.getSecond());
           break;
-        case  "env":
+        case "volume":
+          volumes.add(property.getFirst() + ":" + property.getSecond());
+          break;
+        case "env":
           envs.add(property.getFirst() + "=" + property.getSecond());
           break;
       }
     }
+
     if (!publishes.isEmpty()) {
       properties.put("publish", publishes);
     }
@@ -43,11 +45,6 @@ public class ConfigParser {
     return properties;
   }
 
-  // TODO
-  private static DockerContainerConfig nginxParser(NginxConfigDto nginxConfig) {
-    return null;
-  }
-
   public static List<DockerContainerConfig> getBuildConfig(ProjectRequestDto requestDto) {
     List<DockerContainerConfig> configs = new ArrayList<>();
     requestDto.getBuildConfigs().forEach(config ->
@@ -59,12 +56,25 @@ public class ConfigParser {
             .projectDirectory(config.getProjectDirectory())
             .buildPath(config.getBuildPath())
             .properties(getProperties(config))
+            .useNginx(FrameworkType.valueOf(config.getFrameworkName()), config.getType())
             .build()
         ));
+
     if (requestDto.getNginxConfig() != null) {
-      //TODO : null에러 발생
-//      configs.add(nginxParser(requestDto.getNginxConfig()));
+      for (DockerContainerConfig config : configs) {
+        if (config.isUseNginx()) {
+          if(!config.getProperties().containsKey("publish"))
+            config.getProperties().put("publish",new ArrayList<>());
+          List<String> publish = config.getProperties().get("publish");
+          publish.add("80:80");
+          if (requestDto.getNginxConfig().isHttps()) {
+            publish.add("443:443");
+          }
+          break;
+        }
+      }
     }
+
     return configs;
   }
 

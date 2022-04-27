@@ -60,9 +60,10 @@ public class FileManager {
 
   //일반 파일 String으로 반환함
   public static String loadFile(String filePath, String fileName) throws IOException {
-    log.info("start load File {} {}", filePath, fileName);
     String loadPath = makePath(filePath, "/", fileName);
+    log.info("start load File {} ", loadPath);
     byte[] bytes = Files.readAllBytes(Paths.get(loadPath));
+    log.info("complete load {} ", new String(bytes));
     return new String(bytes);
   }
 
