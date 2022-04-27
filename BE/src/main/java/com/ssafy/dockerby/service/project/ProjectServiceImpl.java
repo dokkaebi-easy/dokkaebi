@@ -484,13 +484,13 @@ public class ProjectServiceImpl implements ProjectService {
     //요청 로그 출력
     log.info("buildDetail Service start");
     
-    BuildState buildState = buildStateRepository.findById(buildDetailRequestDto.getBuildStateId()).orElseThrow(() -> new NotFoundException());
+    BuildState buildState = buildStateRepository.findById(buildDetailRequestDto.getId()).orElseThrow(() -> new NotFoundException());
 
     log.info("buildState receive success {}", buildState.getProject().getProjectName());
 
 
     String path = rootPath+"/" + buildState.getProject().getProjectName() + "/log";//경로  projects/{프로젝트 이름}/log
-    String fileName = (buildDetailRequestDto.getBuildType()) + "_" + buildState.getBuildNumber();//  상태_빌드 넘버
+    String fileName = (buildDetailRequestDto.getName()) + "_" + buildState.getBuildNumber();//  상태_빌드 넘버
 
     StringBuilder consoleLog = new StringBuilder();
 

@@ -49,14 +49,14 @@ public class ConfigParser {
     List<DockerContainerConfig> configs = new ArrayList<>();
     requestDto.getBuildConfigs().forEach(config ->
         configs.add(DockerContainerConfig.builder()
-            .framework(FrameworkType.valueOf(config.getFrameworkName()))
+            .framework(FrameworkType.from(config.getFrameworkId().intValue()))
             .name(config.getName())
             .version(config.getVersion())
             .type(config.getType())
             .projectDirectory(config.getProjectDirectory())
             .buildPath(config.getBuildPath())
             .properties(getProperties(config))
-            .useNginx(FrameworkType.valueOf(config.getFrameworkName()), config.getType())
+            .useNginx(FrameworkType.from(config.getFrameworkId().intValue()), config.getType())
             .build()
         ));
 
