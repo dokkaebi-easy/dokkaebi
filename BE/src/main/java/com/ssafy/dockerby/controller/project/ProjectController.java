@@ -1,17 +1,9 @@
 package com.ssafy.dockerby.controller.project;
 
-import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
+
 import com.ssafy.dockerby.core.gitlab.GitlabWrapper;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
-import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
-import com.ssafy.dockerby.dto.project.ConfigHistoryListResponseDto;
-import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
-import com.ssafy.dockerby.dto.project.FrameworkVersionResponseDto;
-import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
-import com.ssafy.dockerby.dto.project.ProjectRequestDto;
-import com.ssafy.dockerby.dto.project.StateRequestDto;
-import com.ssafy.dockerby.dto.project.StateResponseDto;
-import com.ssafy.dockerby.dto.user.UserDetailDto;
+import com.ssafy.dockerby.dto.project.*;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
@@ -21,11 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -45,7 +35,7 @@ public class ProjectController {
   private final ProjectServiceImpl projectService;
 
   @PostMapping
-  public ResponseEntity createProject(HttpServletRequest request,@RequestBody ProjectRequestDto projectRequestDto ) throws ChangeSetPersister.NotFoundException, IOException {
+  public ResponseEntity createProject(HttpServletRequest request,@RequestBody ProjectRequestDto projectRequestDto ) throws NotFoundException, IOException {
     //요청 로그출력
     log.info("project create request");
     log.info("Request Project : {}",projectRequestDto.getProjectName());
@@ -70,7 +60,7 @@ public class ProjectController {
   }
 
   @PostMapping("/build")
-  public ResponseEntity buildProject(Long projectId ) throws IOException, ChangeSetPersister.NotFoundException {
+  public ResponseEntity buildProject(Long projectId ) throws IOException, NotFoundException {
     log.info("buildProject request API received , id : {}",projectId);
 
     //프로젝트 빌드 시작
@@ -107,17 +97,17 @@ public class ProjectController {
   }
 
   @GetMapping("/frameworkVersion")
-  public ResponseEntity<FrameworkVersionResponseDto> GetFrameworkVersion(Long typeId) throws ChangeSetPersister.NotFoundException {
+  public ResponseEntity<FrameworkVersionResponseDto> GetFrameworkVersion(Long typeId) throws NotFoundException {
     //version 요청 로그 출력
     log.info("frameworkVersion API received typeId: {}",typeId);
 
     return ResponseEntity.ok(projectService.getFrameworkVersion(typeId));
   }
 
-  @GetMapping("/build/Detail")
-  public ResponseEntity<StateResponseDto> buildState(StateRequestDto stateRequestDto ) throws ChangeSetPersister.NotFoundException {
+  @GetMapping("/build")
+  public ResponseEntity<StateResponseDto> buildUpdateState(StateRequestDto stateRequestDto ) throws NotFoundException {
     //요청 로그 출력
-    log.info("buildDetail request received {}",stateRequestDto.toString());
+    log.info("buildUpdateState API request received {}",stateRequestDto.toString());
 
     //프로젝트 state 저장 stateResponse 반환
     StateResponseDto stateResponseDto = projectService.checkState(stateRequestDto);
@@ -125,7 +115,7 @@ public class ProjectController {
     return ResponseEntity.ok(stateResponseDto);
   }
   @GetMapping("/build/total")
-  public ResponseEntity<List<BuildTotalResponseDto>> buildTotal(Long projectId) throws ChangeSetPersister.NotFoundException {
+  public ResponseEntity<List<BuildTotalResponseDto>> buildTotal(Long projectId) throws NotFoundException {
     // 요청 로그 출력
     log.info("buildTotal API request received {} ", projectId);
 
@@ -134,15 +124,15 @@ public class ProjectController {
     return ResponseEntity.ok(buildTotalResponseDtos);
   }
 
-  @GetMapping("/build/Detail")
-  public ResponseEntity<StateResponseDto> buildState(StateRequestDto stateRequestDto ) throws ChangeSetPersister.NotFoundException {
+  @GetMapping("/build/detail")
+  public ResponseEntity<BuildDetailResponseDto> buildDetail(BuildDetailRequestDto buildDetailRequestDto) throws NotFoundException, IOException {
     //요청 로그 출력
-    log.info("buildDetail request received {}",stateRequestDto.toString());
+    log.info("buildDetail API request received {}",buildDetailRequestDto.toString());
 
     //프로젝트 state 저장 stateResponse 반환
-    StateResponseDto stateResponseDto = projectService.checkState(stateRequestDto);
+    BuildDetailResponseDto buildDetailResponseDto = projectService.BuildDetail(buildDetailRequestDto);
 
-    return ResponseEntity.ok(stateResponseDto);
+    return ResponseEntity.ok(buildDetailResponseDto);
   }
 
   @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다")

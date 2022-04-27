@@ -27,7 +27,7 @@ public class BuildState {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Integer buildNumber;
+  private Long buildNumber;
 
   @CreatedDate
   private LocalDateTime registDate;
@@ -52,7 +52,7 @@ public class BuildState {
     return BuildState.builder().build();
   }
 
-  public void setBuildNumber(int number){
+  public void setBuildNumber(Long number){
     this.buildNumber=number;
   }
 
@@ -71,16 +71,19 @@ public class BuildState {
   public void setWebhookHistory(WebhookHistory history) {
     this.webhookHistory = history;
   }
+
+
   @Override
   public String toString() {
     return "BuildState{" +
-        "id=" + id +
-        ", project=" + project +
-        ", pull=" + pull +
-        ", build=" + build +
-        ", run=" + run +
-        '}';
+      "id=" + id +
+      ", buildNumber=" + buildNumber +
+      ", registDate=" + registDate +
+      ", project=" + project +
+      ", pull=" + pull +
+      ", build=" + build +
+      ", run=" + run +
+      ", webhookHistory=" + webhookHistory +
+      '}';
   }
-
-
 }
