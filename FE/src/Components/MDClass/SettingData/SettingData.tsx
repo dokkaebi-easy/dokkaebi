@@ -7,14 +7,14 @@ export default class SettingData {
 
   public buildConfigs: Build;
 
-  public gitConfigs: Git;
+  public gitConfig: Git;
 
-  public nginxConfigs: Nginx;
+  public nginxConfig: Nginx;
 
   constructor() {
     this.projectName = '';
     this.buildConfigs = new BuildData();
-    this.gitConfigs = new GitData();
-    this.nginxConfigs = new NginxData();
+    this.gitConfig = new GitData();
+    this.nginxConfig = new NginxData();
   }
 }

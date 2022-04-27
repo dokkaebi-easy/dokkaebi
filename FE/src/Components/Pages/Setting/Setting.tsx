@@ -9,6 +9,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import Paper from '@mui/material/Paper';
 import BuildPage from './BuildPage/BuildPage';
 import GitLabPage from './GitLabPage/GitLabPage';
+import AxiosPage from './AxiosPage/AxiosPage';
 
 const steps = ['Build Settings', 'GitLab Setting', 'Make Project'];
 
@@ -111,7 +112,9 @@ export default function Setting() {
                 <TabPanel value="1">
                   <GitLabPage />
                 </TabPanel>
-                <TabPanel value="2">Item Three</TabPanel>
+                <TabPanel value="2">
+                  <AxiosPage />
+                </TabPanel>
               </TabContext>
             </>
           )}
