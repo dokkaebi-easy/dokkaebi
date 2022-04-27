@@ -224,14 +224,16 @@ public class ProjectServiceImpl implements ProjectService {
     //Pull start
     try { // pull 트라이
       //TODO / ProjectService : GitPull 트라이
-      List<String> commands = new ArrayList<>();
-      commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
-      StringBuilder repositoryPath = new StringBuilder();
-      repositoryPath.append(project.getProjectName()).append("/")
-          .append(webHookDto.getRepositoryName());
-      CommandInterpreter.runDestPath(repositoryPath.toString(), filePath.toString(), "pull",
-          buildNumber, commands);
-      dockerAdapter.saveDockerfiles(configs);
+      if(buildState.getWebhookHistory() != null) {
+        List<String> commands = new ArrayList<>();
+        commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
+        StringBuilder repositoryPath = new StringBuilder();
+        repositoryPath.append(project.getProjectName()).append("/")
+            .append(webHookDto.getRepositoryName());
+        CommandInterpreter.runDestPath(repositoryPath.toString(), filePath.toString(), "pull",
+            buildNumber, commands);
+        dockerAdapter.saveDockerfiles(configs);
+      }
       // pull 완료 build 진행중 update
       buildState.getPull().updateStateType("Done");
       buildState.getBuild().updateStateType("Processing");
