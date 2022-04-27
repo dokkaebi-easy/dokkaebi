@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GitAccountResponseDto {
   Long id;
-  String email;
+  String name;  // fe 편의를 위해 name으로 지정
 
   public static GitAccountResponseDto of(Long id, String email) {
     return new GitAccountResponseDto(id, email);
