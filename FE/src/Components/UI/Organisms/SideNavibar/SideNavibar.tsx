@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -20,6 +20,7 @@ const linestyle = {
 };
 
 export default function SideNavibar() {
+  // const [screenWidth, setScreenWidth] = useState(screen.width);
   return (
     <Paper
       sx={{
@@ -36,7 +37,7 @@ export default function SideNavibar() {
       <Box sx={{ color: 'white', textAlign: 'center' }}>
         <List>
           <ListItem disablePadding>
-            <Link to="/">
+            <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
               <ListItemButton>
                 <ListItemIcon>
                   <InboxIcon />
@@ -49,12 +50,30 @@ export default function SideNavibar() {
         <Divider light sx={linestyle} />
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Menu1" />
-            </ListItemButton>
+            <Link
+              to="/setting"
+              style={{ color: 'white', textDecoration: 'none' }}
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  <SettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Build Create" />
+              </ListItemButton>
+            </Link>
+          </ListItem>
+          <ListItem disablePadding>
+            <Link
+              to="/detail"
+              style={{ color: 'white', textDecoration: 'none' }}
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Build Detail 임시" />
+              </ListItemButton>
+            </Link>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton>
@@ -63,16 +82,6 @@ export default function SideNavibar() {
               </ListItemIcon>
               <ListItemText primary="Menu2" />
             </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <Link to="/setting">
-              <ListItemButton>
-                <ListItemIcon>
-                  <SettingsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Menu3" />
-              </ListItemButton>
-            </Link>
           </ListItem>
         </List>
       </Box>

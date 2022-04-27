@@ -18,13 +18,26 @@ export default function Detail() {
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
     >
       <Box sx={{ width: '90%', padding: 3 }}>
+        <Typography
+          sx={{ textWeight: 4 }}
+          my={4}
+          variant="h2"
+          textAlign="center"
+        >
+          Stage View
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={4}>
             <CircularProgressWithLabel
               value={progress}
               propsColor={pullColor}
             />
-            <Typography align="center" variant="h3">
+            <Typography
+              sx={{ textWeight: 3 }}
+              mt={2}
+              align="center"
+              variant="h4"
+            >
               Git Pull
             </Typography>
           </Grid>
@@ -33,13 +46,23 @@ export default function Detail() {
               value={progress}
               propsColor={buildColor}
             />
-            <Typography align="center" variant="h3">
+            <Typography
+              sx={{ textWeight: 3 }}
+              mt={2}
+              align="center"
+              variant="h4"
+            >
               Dokcer Build
             </Typography>
           </Grid>
           <Grid item xs={4}>
             <CircularProgressWithLabel value={progress} propsColor={runColor} />
-            <Typography align="center" variant="h3">
+            <Typography
+              sx={{ textWeight: 3 }}
+              mt={2}
+              align="center"
+              variant="h4"
+            >
               Dokcer Run
             </Typography>
           </Grid>

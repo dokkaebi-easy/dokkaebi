@@ -7,11 +7,14 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
+import ResponseIdNameData, {
+  ResponseIdName,
+} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface modalSwitch {
   open: boolean;
   Close: () => void;
-  Change: () => void;
+  Change: (data: ResponseIdName[]) => void;
 }
 
 const style = {
@@ -42,11 +45,14 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
       name: id,
       accessToken: apiToken,
     };
-    // 수정
-    axios.post('/api/git/token', { parameters }).then((res) => {
-      console.log(res.data);
-    });
-    Change();
+    axios
+      .post('/api/git/token', parameters)
+      .then((res) => {
+        Change(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleCloseClick = () => {

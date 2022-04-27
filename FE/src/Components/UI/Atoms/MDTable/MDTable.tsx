@@ -11,6 +11,7 @@ import ProjectDatas, {
   Project,
 } from 'Components/MDClass/ProjectData/ProjectData';
 import { v4 as uuid } from 'uuid';
+import axios from 'axios';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,11 +33,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-interface TableProps {
-  rows: Project[];
-}
+export default function MDTable() {
+  const [projects, setProject] = useState<Project[]>([]);
 
-export default function MDTable({ rows }: TableProps) {
+  useEffect(() => {
+    axios.get('/api/project/all').then((res) => {
+      const data = res.data as Project[];
+      setProject([...data]);
+    });
+  }, []);
+
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -51,9 +57,9 @@ export default function MDTable({ rows }: TableProps) {
             <StyledTableCell align="right">최근 소요 시간</StyledTableCell>
           </TableRow>
         </TableHead>
-        {rows ? (
+        {projects ? (
           <TableBody>
-            {rows.map((row) => (
+            {projects.map((row) => (
               <StyledTableRow key={uuid()}>
                 <StyledTableCell align="center">
                   {row.projectId}

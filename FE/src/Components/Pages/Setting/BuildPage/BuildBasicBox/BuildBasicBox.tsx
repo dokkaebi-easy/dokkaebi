@@ -7,16 +7,16 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+import FormHelperText from '@mui/material/FormHelperText';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Build } from 'Components/MDClass/BuildData/BuildData';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
+import ResponseIdNameData, {
+  ResponseIdName,
+} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
+import { useStore } from 'Components/Store/DropDownStore/DropDownStore';
 import BuildProperty from '../BuildPropertyBox/BuildPropertyBox';
-
-interface FrameworkAxios {
-  frameworkTypeId: number;
-  frameworkName: string;
-}
 
 interface VersionTypeAxois {
   buildTool: string[];
@@ -30,12 +30,17 @@ interface buildProps {
 }
 
 export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
+  const framAndLibsdata = useStore((state) => state.framworkandLib);
+  const setFramAndLibsdata = useStore((state) => state.setFramworkandLib);
+
   const [name, setName] = useState(value.name);
   const [fileDir, setFileDir] = useState(value.projectDirectory);
   const [buildPath, setBuildPath] = useState(value.buildPath);
   const [frameworkName, setFrameworkName] = useState(value.frameworkName);
+  const [frameworkId, setFrameworkId] = useState(-1);
   const [version, setVersion] = useState(value.version);
   const [type, setType] = useState(value.type);
+
   const [framAndLibs, setFramAndLibs] = useState<string[]>([
     value.frameworkName,
   ]);
@@ -62,8 +67,6 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
 
   const handlePropsFLChange = (event: string) => {
     setFrameworkName(event);
-    setVersion('');
-    setType('');
     value.frameworkName = event;
     value.version = '';
     value.type = '';
@@ -77,9 +80,44 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
     setType(event);
     value.type = event;
   };
+  const handleItemClickProps = (index: number) => {
+    setFrameworkName(framAndLibsdata[index].name);
+
+    const params = { typeId: framAndLibsdata[index].id };
+    axios
+      .get('/api/project/frameworkVersion', { params })
+      .then((res) => {
+        const data = res.data as VersionTypeAxois;
+        console.log(data);
+        setVersion('');
+        setType('');
+
+        setVersions(data.frameworkVersion);
+        setTypes(data.buildTool);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
-    if (frameworkName && framAndLibs.length) {
-      const params = { typeId: framAndLibs.indexOf(frameworkName) + 1 };
+    axios
+      .get('/api/project/frameworkType')
+      .then((res) => {
+        const data = res.data as ResponseIdName[];
+        setFramAndLibsdata(data);
+        const arr = data.map((value) => {
+          if (frameworkName === value.name) setFrameworkId(value.id);
+          return value.name;
+        });
+        setFramAndLibs([...arr]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    if (frameworkId !== -1) {
+      const params = { typeId: framAndLibsdata[index].id };
       axios
         .get('/api/project/frameworkVersion', { params })
         .then((res) => {
@@ -91,23 +129,6 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
           console.log(err);
         });
     }
-    return () => {
-      setVersions([value.version]);
-      setTypes([value.type]);
-    };
-  }, [frameworkName, framAndLibs]);
-
-  useEffect(() => {
-    axios
-      .get('/api/project/frameworkType')
-      .then((res) => {
-        const data = res.data as FrameworkAxios[];
-        const arr = data.map((value) => value.frameworkName);
-        setFramAndLibs(arr);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }, []);
 
   return (
@@ -134,25 +155,37 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
               label="Framework/ Library"
               Items={framAndLibs}
               Change={handlePropsFLChange}
+              Click={handleItemClickProps}
             />
           </Grid>
           <Grid item>
             <Typography>Version</Typography>
             <SelectItem
               defaultValue={version}
-              label="versions"
+              label="Versions"
               Items={versions}
               Change={handlePropsVersionChange}
             />
           </Grid>
           <Grid item>
-            <Typography>Type</Typography>
+            <Typography>
+              {frameworkName === 'Vue' || frameworkName === 'React'
+                ? 'Nginx Use'
+                : 'Type'}
+            </Typography>
             <SelectItem
               defaultValue={type}
               label="Types"
               Items={types}
               Change={handlePropsTypeChange}
             />
+            {frameworkName === 'Vue' || frameworkName === 'React' ? (
+              <FormHelperText id="component-helper-text">
+                (※ Yes는 하나만)
+              </FormHelperText>
+            ) : (
+              <Box />
+            )}
           </Grid>
           <Grid item />
           <Grid item>

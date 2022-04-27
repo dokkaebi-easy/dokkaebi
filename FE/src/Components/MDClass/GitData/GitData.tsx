@@ -3,7 +3,7 @@ export interface Git {
   hostUrl: string;
   accessTokenId: number;
   secretToken: string;
-  projectId: number;
+  gitProjectId: number;
   repositoryUrl: string;
   accountId: number;
   branchName: string;
@@ -18,7 +18,7 @@ export default class GitData {
 
   public secretToken: string;
 
-  public projectId: number;
+  public gitProjectId: number;
 
   public repositoryUrl: string;
 
@@ -31,7 +31,7 @@ export default class GitData {
     this.hostUrl = '';
     this.accessTokenId = 0;
     this.secretToken = '';
-    this.projectId = 0;
+    this.gitProjectId = 0;
     this.repositoryUrl = '';
     this.accountId = 0;
     this.branchName = '';
