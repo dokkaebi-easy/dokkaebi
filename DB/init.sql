@@ -84,7 +84,7 @@ CREATE TABLE `dockerby`.`gitlab_config` (
   `secret_token` VARCHAR(255) NOT NULL,
   `repository_url` VARCHAR(255) NOT NULL,
   `branch_name` VARCHAR(255) NOT NULL,
-  `repository_name` VARCHAR(255) NULL,
+  `git_project_id` BIGINT NULL,
   `gitlab_account_id` BIGINT NULL,
   `gitlab_access_token_id` BIGINT NULL,
   `project_id` BIGINT NULL,
@@ -230,6 +230,8 @@ INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`la
 
 INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Gradle",1);
 INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Maven",1);
+INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Yes",2);
+INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Yes",3);
 
 INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","7","openjdk:7-jdk",1);
 INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","8","openjdk:8-jdk",1);

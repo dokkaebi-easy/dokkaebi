@@ -1,12 +1,14 @@
 package com.ssafy.dockerby.entity.git;
 
 import com.ssafy.dockerby.dto.git.GitTokenRequestDto;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,11 +28,11 @@ public class GitlabAccessToken {
   private String name;
   private String accessToken;
 
-  @OneToOne(mappedBy = "token")
-  GitlabConfig config;
+  @OneToMany(mappedBy = "token")
+  List<GitlabConfig> configs = new ArrayList<>();
 
   public static GitlabAccessToken of(String name, String accessToken) {
-    return new GitlabAccessToken(null, name, accessToken, null);
+    return new GitlabAccessToken(null, name, accessToken, new ArrayList<>());
   }
 
   public static GitlabAccessToken from(GitTokenRequestDto requestDto) {
@@ -38,11 +40,11 @@ public class GitlabAccessToken {
         null,
         requestDto.getName(),
         requestDto.getAccessToken(),
-        null);
+        new ArrayList<>());
   }
 
-  public void setConfig(GitlabConfig config) {
-    this.config = config;
+  public void setConfigs(List<GitlabConfig> configs) {
+    this.configs = configs;
   }
 
   public void softDelete() {
@@ -53,5 +55,9 @@ public class GitlabAccessToken {
   public void update(GitTokenRequestDto requestDto) {
     this.name = requestDto.getName();
     this.accessToken = requestDto.getAccessToken();
+  }
+
+  public void setConfig(GitlabConfig config) {
+    this.configs.add(config);
   }
 }
