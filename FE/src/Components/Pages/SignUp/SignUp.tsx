@@ -86,7 +86,6 @@ function SignUp() {
   };
 
   const singUpAPI = (sign: any) => {
-    console.log(sign);
     api.post(`/user/signup`, sign).then((res) => {
       const data = res.data as ResponsId;
       if (data.state === 'Success') {

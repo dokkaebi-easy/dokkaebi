@@ -6,6 +6,8 @@ import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 import PersonIcon from '@mui/icons-material/Person';
 import { AiOutlineGitlab } from 'react-icons/ai';
 import styled from '@emotion/styled';
+import Paper from '@mui/material/Paper';
+import { Typography } from '@mui/material';
 import { api } from '../../../api/index';
 
 const data = {
@@ -37,9 +39,14 @@ export default function BuildDetail() {
   return (
     <Box
       mt={3}
-      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'left',
+        padding: 5,
+      }}
     >
-      <Grid container direction="column">
+      <Grid container direction="column" justifyContent="left">
         <Grid item display="flex">
           <CheckCircleOutlineIcon color="success" sx={{ fontSize: 60 }} />
           <Title>
@@ -61,10 +68,12 @@ export default function BuildDetail() {
             <Gitbranch>깃랩 브랜치 : {data.gitInfo.gitBranch}</Gitbranch>
           </div>
         </Grid>
-        <Log>
-          <Console> 콘솔 로그</Console>
+        <Box>
+          <Typography variant="h4" sx={{ marginY: 3 }}>
+            콘솔 로그
+          </Typography>
           <Span>{data.consoleLog}</Span>
-        </Log>
+        </Box>
       </Grid>
     </Box>
   );
