@@ -45,7 +45,7 @@ export default function BuildPage() {
               <BuildBasic
                 key={uuid()}
                 index={index}
-                value={value}
+                buildData={value}
                 DelClick={handlePropsDelClick}
               />
             ))}
