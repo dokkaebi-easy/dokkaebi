@@ -128,13 +128,13 @@ public class ProjectServiceImpl implements ProjectService {
       filePath.append("projects/").append(project.getProjectName()).append("/").append(logPath);
 
       GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
-//      String cloneCommand = GitlabAdapter.getCloneCommand(
-//          GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
-//              getConfigDto.getBranchName()));
-//
-//      List<String> commands = new ArrayList<>();
-//      commands.add(cloneCommand);
-//      CommandInterpreter.run(filePath.toString(), project.getProjectName(), 0, commands);
+      String cloneCommand = GitlabAdapter.getCloneCommand(
+          GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
+              getConfigDto.getBranchName()));
+
+      List<String> commands = new ArrayList<>();
+      commands.add(cloneCommand);
+      CommandInterpreter.run(filePath.toString(), project.getProjectName(), 0, commands);
 
     }
 
