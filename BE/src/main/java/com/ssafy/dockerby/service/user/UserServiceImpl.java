@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
     //유효성 검증
     private void isSignupValied(SignupDto signupDto) throws UserDefindedException, IOException {
 
-        String authKey = FileManager.loadFile(".","AuthKey");
+        String authKey = FileManager.loadFile("","AuthKey");
 
         log.info("start isValied : {}", signupDto.getPrincipal());
         //아이디 중복 검증
