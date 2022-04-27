@@ -25,5 +25,6 @@ uploadPath:
   path: "./fileData/"
 
 dockerby:
-  configRootPath: "jsonData"
+  rootPath: "projects"
+  configPath: "jsonData"
   logPath : "log"

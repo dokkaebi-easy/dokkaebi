@@ -46,6 +46,11 @@ dependencies {
 	// Java에서 외부 명령어 실행 라이브러리
 	implementation 'org.apache.commons:commons-exec:1.3'
 
+	// @Nullable unknown enum constant When.MAYBE
+	// https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+
 }
 
 tasks.named('test') {

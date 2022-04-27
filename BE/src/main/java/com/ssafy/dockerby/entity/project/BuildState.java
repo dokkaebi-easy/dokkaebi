@@ -1,4 +1,5 @@
 package com.ssafy.dockerby.entity.project;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.dockerby.entity.git.WebhookHistory;
 import com.ssafy.dockerby.entity.project.states.Build;
 import com.ssafy.dockerby.entity.project.states.Pull;
@@ -27,9 +28,10 @@ public class BuildState {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Integer buildNumber;
+  private Long buildNumber;
 
   @CreatedDate
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
   private LocalDateTime registDate;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -52,7 +54,7 @@ public class BuildState {
     return BuildState.builder().build();
   }
 
-  public void setBuildNumber(int number){
+  public void setBuildNumber(Long number){
     this.buildNumber=number;
   }
 
@@ -71,16 +73,19 @@ public class BuildState {
   public void setWebhookHistory(WebhookHistory history) {
     this.webhookHistory = history;
   }
+
+
   @Override
   public String toString() {
     return "BuildState{" +
-        "id=" + id +
-        ", project=" + project +
-        ", pull=" + pull +
-        ", build=" + build +
-        ", run=" + run +
-        '}';
+      "id=" + id +
+      ", buildNumber=" + buildNumber +
+      ", registDate=" + registDate +
+      ", project=" + project +
+      ", pull=" + pull +
+      ", build=" + build +
+      ", run=" + run +
+      ", webhookHistory=" + webhookHistory +
+      '}';
   }
-
-
 }
