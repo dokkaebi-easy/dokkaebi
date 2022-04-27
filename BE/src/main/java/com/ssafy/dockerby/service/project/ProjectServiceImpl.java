@@ -25,6 +25,7 @@ import com.ssafy.dockerby.repository.user.UserRepository;
 import com.ssafy.dockerby.service.git.GitlabService;
 import com.ssafy.dockerby.util.ConfigParser;
 import com.ssafy.dockerby.util.FileManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,12 +80,12 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public Map<String, Object> upsert(ProjectRequestDto projectRequestDto)
-      throws ChangeSetPersister.NotFoundException, IOException {
+    throws NotFoundException, IOException {
     Project project;
     String msg;
 
     Optional<Project> projects = projectRepository.findOneByProjectName(
-        projectRequestDto.getProjectName());
+      projectRequestDto.getProjectName());
     if (projects.isPresent()) {
       msg = "Update";
       project = projects.get();
@@ -104,8 +106,8 @@ public class ProjectServiceImpl implements ProjectService {
     GitConfigDto getConfigDto = projectRequestDto.getGitConfig();
     if (getConfigDto != null) {
       gitlabService.config(project.getId())
-          .map(config -> gitlabService.updateConfig(project, getConfigDto))
-          .orElseGet(() -> gitlabService.createConfig(project, getConfigDto));
+        .map(config -> gitlabService.updateConfig(project, getConfigDto))
+        .orElseGet(() -> gitlabService.createConfig(project, getConfigDto));
 
       // Git clone
 
@@ -114,11 +116,11 @@ public class ProjectServiceImpl implements ProjectService {
 
       GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
       String command = GitlabAdapter.getCloneCommand(
-          GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
-              getConfigDto.getBranchName()));
+        GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
+          getConfigDto.getBranchName()));
 
       CommandInterpreter.runDestPath(filePath.toString(),
-          new StringBuilder().append(filePath).append("/").append(logPath).toString(), "clone", 0, command);
+        new StringBuilder().append(filePath).append("/").append(logPath).toString(), "clone", 0, command);
 
     }
 
