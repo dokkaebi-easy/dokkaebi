@@ -122,7 +122,7 @@ public class ProjectServiceImpl implements ProjectService {
       // Git clone
 
       StringBuilder filePath = new StringBuilder();
-      filePath.append(project.getProjectName()).append("/").append(logPath);
+      filePath.append("projects/").append(project.getProjectName()).append("/").append(logPath);
 
       GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
 //      String cloneCommand = GitlabAdapter.getCloneCommand(
@@ -145,7 +145,7 @@ public class ProjectServiceImpl implements ProjectService {
 
   private void upsertConfigFile(String projectName, List<DockerContainerConfig> buildConfigs) {
     StringBuilder filePath = new StringBuilder();
-    filePath.append(configRootPath).append("/").append(projectName);
+    filePath.append("projects/").append(projectName).append("/").append(configRootPath);
     buildConfigs.forEach(config -> {
       try {
         FileManager.saveJsonFile(filePath.toString(), config.getName(), config);
@@ -159,7 +159,7 @@ public class ProjectServiceImpl implements ProjectService {
       List<ProjectConfig> configs)
       throws IOException {
     StringBuilder filePath = new StringBuilder();
-    filePath.append(configRootPath).append("/").append(projectName);
+    filePath.append("projects/").append(projectName).append("/").append(configRootPath);
     List<DockerContainerConfig> results = new ArrayList<>();
 
     for (ProjectConfig config : configs) {
@@ -213,7 +213,7 @@ public class ProjectServiceImpl implements ProjectService {
     em.flush();
 
     StringBuilder filePath = new StringBuilder();
-    filePath.append(project.getProjectName()).append("/").append(logPath);
+    filePath.append("projects/").append(project.getProjectName()).append("/").append(logPath);
     DockerAdapter dockerAdapter = new DockerAdapter(project.getProjectName());
     List<DockerContainerConfig> configs = loadConfigFiles(project.getProjectName(),
         project.getProjectConfigs());
@@ -227,6 +227,7 @@ public class ProjectServiceImpl implements ProjectService {
       CommandInterpreter.runDestPath(webHookDto.getRepositoryName(), filePath.toString(), "pull",
           buildNumber, commands);
       dockerAdapter.saveDockerfiles(configs);
+
       // pull 완료 build 진행중 update
       buildState.getPull().updateStateType("Done");
       buildState.getBuild().updateStateType("Processing");
@@ -238,8 +239,10 @@ public class ProjectServiceImpl implements ProjectService {
       log.info(" Pull Done : {}", buildState.getPull().toString());
     } catch (Exception e) { // state failed 넣기
       //pullState failed 입력
+
       buildState.getPull().updateStateType("Failed");
       project.updateState(StateType.Failed);
+
       log.info("update state to Failed");
 
       //dirtyCheck 후 flush
@@ -254,8 +257,8 @@ public class ProjectServiceImpl implements ProjectService {
     //Build start
     try { // Build 트라이
       //TODO / ProjectService : Build 트라이
-      List<String> buildCommands = dockerAdapter.getBuildCommands(configs);
-      CommandInterpreter.run(filePath.toString(), "build", buildNumber, buildCommands);
+//      List<String> buildCommands = dockerAdapter.getBuildCommands(configs);
+//      CommandInterpreter.run(filePath.toString(), "build", buildNumber, buildCommands);
 
       // state Done 넣기
       buildState.getBuild().updateStateType("Done");
@@ -283,12 +286,12 @@ public class ProjectServiceImpl implements ProjectService {
     //Run start
     try { // run 트라이
       //TODO / ProjectService : DockerRun 트라이
-      if (buildNumber != 1) {
-        CommandInterpreter.run(filePath.toString(), "remove", buildNumber,
-            dockerAdapter.getRemoveCommands(configs));
-      }
-      List<String> buildCommands = dockerAdapter.getRunCommands(configs);
-      CommandInterpreter.run(filePath.toString(), "run", buildNumber, buildCommands);
+//      if (buildNumber != 1) {
+//        CommandInterpreter.run(filePath.toString(), "remove", buildNumber,
+//            dockerAdapter.getRemoveCommands(configs));
+//      }
+//      List<String> buildCommands = dockerAdapter.getRunCommands(configs);
+//      CommandInterpreter.run(filePath.toString(), "run", buildNumber, buildCommands);
       // state Done 넣기
       buildState.getRun().updateStateType("Done");
 
