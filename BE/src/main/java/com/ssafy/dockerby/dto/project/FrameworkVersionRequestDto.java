@@ -1,8 +1,12 @@
 package com.ssafy.dockerby.dto.project;
 
 import com.sun.istack.NotNull;
-import lombok.*;
-import org.springframework.lang.Nullable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
