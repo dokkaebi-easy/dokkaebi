@@ -1,5 +1,6 @@
 package com.ssafy.dockerby.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.dockerby.entity.user.User;
 import com.ssafy.dockerby.entity.project.Project;
 import java.time.LocalDateTime;
@@ -38,6 +39,7 @@ public class ConfigHistory {
 
     @CreatedDate
     @Column(updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime registDate;
 
     //연관관계 매핑

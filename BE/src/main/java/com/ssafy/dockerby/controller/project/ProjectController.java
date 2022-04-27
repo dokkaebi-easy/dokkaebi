@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProjectController {
   private final ProjectServiceImpl projectService;
 
+  @ApiOperation(value = "프로젝트 생성", notes = "프로젝트를 생성한다.")
   @PostMapping
   public ResponseEntity createProject(HttpServletRequest request,@RequestBody ProjectRequestDto projectRequestDto ) throws NotFoundException, IOException {
     //요청 로그출력
@@ -59,6 +60,8 @@ public class ProjectController {
     return ResponseEntity.ok(map);
   }
 
+
+  @ApiOperation(value = "프로젝트 빌드", notes = "프로젝트 빌드를 한다.")
   @PostMapping("/build")
   public ResponseEntity buildProject(Long projectId ) throws IOException, NotFoundException {
     log.info("buildProject request API received , id : {}",projectId);
@@ -70,12 +73,10 @@ public class ProjectController {
   }
 
 
-
+  @ApiOperation(value = "프레임 워크 버전", notes = "프레임 워크 버전을 반환 해준다.")
   @PatchMapping
-  public ResponseEntity updateProject(ProjectRequestDto projectRequestDto) {
+  public ResponseEntity updateProject(@RequestBody ProjectRequestDto projectRequestDto) {
     log.info("PrjoectController.updateProject input : {}", projectRequestDto);
-
-    // TODO
 
     Map<String, Object> map = new HashMap<>();
     map.put("status", "Success");
@@ -84,6 +85,7 @@ public class ProjectController {
     return ResponseEntity.ok(map);
   }
 
+  @ApiOperation(value = "프레임 워크 타입", notes = "프레임 워크 타입을 반환 해준다.")
   @GetMapping("/frameworkType")
   public ResponseEntity<List<FrameworkTypeResponseDto>> getFrameworkType(){
     //type 요청 로그 출력
@@ -95,7 +97,7 @@ public class ProjectController {
     //type list 반환
     return ResponseEntity.ok(frameworkTypes);
   }
-
+  @ApiOperation(value = "프레임 워크 버전", notes = "프레임 워크 타입별 버전을 반환 해준다.")
   @GetMapping("/frameworkVersion")
   public ResponseEntity<FrameworkVersionResponseDto> GetFrameworkVersion(Long typeId) throws NotFoundException {
     //version 요청 로그 출력
@@ -103,9 +105,9 @@ public class ProjectController {
 
     return ResponseEntity.ok(projectService.getFrameworkVersion(typeId));
   }
-
-  @GetMapping("/build")
-  public ResponseEntity<StateResponseDto> buildUpdateState(StateRequestDto stateRequestDto ) throws NotFoundException {
+  @ApiOperation(value = "프로젝트 빌드 상황", notes = "해당 프로젝트 타입의 빌드 상태를 반환 한다.")
+  @PostMapping("/build/refresh")
+  public ResponseEntity<StateResponseDto> buildUpdateState(@RequestBody StateRequestDto stateRequestDto ) throws NotFoundException {
     //요청 로그 출력
     log.info("buildUpdateState API request received {}",stateRequestDto.toString());
 
@@ -114,6 +116,7 @@ public class ProjectController {
 
     return ResponseEntity.ok(stateResponseDto);
   }
+  @ApiOperation(value = "프로젝트 전체 빌드 상황", notes = "프로젝트 전체 빌드 상황을 가져온다.")
   @GetMapping("/build/total")
   public ResponseEntity<List<BuildTotalResponseDto>> buildTotal(Long projectId) throws NotFoundException {
     // 요청 로그 출력
@@ -124,8 +127,9 @@ public class ProjectController {
     return ResponseEntity.ok(buildTotalResponseDtos);
   }
 
-  @GetMapping("/build/detail")
-  public ResponseEntity<BuildDetailResponseDto> buildDetail(BuildDetailRequestDto buildDetailRequestDto) throws NotFoundException, IOException {
+  @ApiOperation(value = "프로젝트 상세", notes = "프로젝트 상세 내역을 가져온다.")
+  @PostMapping("/build/detail")
+  public ResponseEntity<BuildDetailResponseDto> buildDetail(@RequestBody BuildDetailRequestDto buildDetailRequestDto) throws NotFoundException, IOException {
     //요청 로그 출력
     log.info("buildDetail API request received {}",buildDetailRequestDto.toString());
 
@@ -135,7 +139,7 @@ public class ProjectController {
     return ResponseEntity.ok(buildDetailResponseDto);
   }
 
-  @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다")
+  @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다.")
   @GetMapping("/all")
   public ResponseEntity<List<ProjectListResponseDto>> projects(){
     log.info("Project all API received");
@@ -144,10 +148,10 @@ public class ProjectController {
     return ResponseEntity.ok(projectList);
   }
 
-  @ApiOperation(value = "ConfigHistory 리스트", notes = "ConfigHistory 목록을 가져온다")
-  @GetMapping("/confighistory")
-  public ResponseEntity<List<ConfigHistoryListResponseDto>> confighistory() {
-    log.info("confighistory API received");
+  @ApiOperation(value = "ConfigHistory 리스트", notes = "ConfigHistory 목록을 가져온다.")
+  @GetMapping("/configHistory")
+  public ResponseEntity<List<ConfigHistoryListResponseDto>> configHistory() {
+    log.info("configHistory API received");
 
     List<ConfigHistoryListResponseDto> configHistoryList = projectService.historyList();
     return ResponseEntity.ok(configHistoryList);

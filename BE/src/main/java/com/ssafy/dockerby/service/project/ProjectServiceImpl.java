@@ -25,8 +25,8 @@ import com.ssafy.dockerby.repository.user.UserRepository;
 import com.ssafy.dockerby.service.git.GitlabService;
 import com.ssafy.dockerby.util.ConfigParser;
 import com.ssafy.dockerby.util.FileManager;
-
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,11 +37,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +50,6 @@ import org.springframework.stereotype.Service;
 public class ProjectServiceImpl implements ProjectService {
 
   private final EntityManager em;
-
   private final ProjectRepository projectRepository;
   private final BuildStateRepository buildStateRepository;
   private final PullRepository pullRepository;
@@ -61,15 +58,12 @@ public class ProjectServiceImpl implements ProjectService {
   private final FrameworkTypeRepository frameworkTypeRepository;
   private final ConfigHistoryRepository configHistoryRepository;
   private final UserRepository userRepository;
-
   private final GitlabService gitlabService;
 
   @Value("${dockerby.rootPath}")
   private String rootPath;
-
   @Value("${dockerby.configPath}")
   private String configPath;
-
   @Value("${dockerby.logPath}")
   private String logPath;
 
@@ -112,7 +106,7 @@ public class ProjectServiceImpl implements ProjectService {
       // Git clone
 
       StringBuilder filePath = new StringBuilder();
-      filePath.append(rootPath+project.getProjectName());
+      filePath.append(rootPath+"/"+project.getProjectName());
 
       GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
       String command = GitlabAdapter.getCloneCommand(
@@ -134,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
 
   private void upsertConfigFile(String projectName, List<DockerContainerConfig> buildConfigs) {
     StringBuilder filePath = new StringBuilder();
-    filePath.append(rootPath+projectName).append("/").append(configPath);
+    filePath.append(rootPath+"/"+projectName).append("/").append(configPath);
     buildConfigs.forEach(config -> {
       try {
         FileManager.saveJsonFile(filePath.toString(), config.getName(), config);
@@ -148,7 +142,7 @@ public class ProjectServiceImpl implements ProjectService {
                                                       List<ProjectConfig> configs)
     throws IOException {
     StringBuilder filePath = new StringBuilder();
-    filePath.append(rootPath+projectName).append("/").append(configPath);
+    filePath.append(rootPath+"/"+projectName).append("/").append(configPath);
     List<DockerContainerConfig> results = new ArrayList<>();
 
     for (ProjectConfig config : configs) {
@@ -202,7 +196,7 @@ public class ProjectServiceImpl implements ProjectService {
     em.flush();
 
     StringBuilder filePath = new StringBuilder();
-    filePath.append(rootPath+project.getProjectName()).append("/").append(logPath);
+    filePath.append(rootPath+"/"+project.getProjectName()).append("/").append(logPath);
     DockerAdapter dockerAdapter = new DockerAdapter(project.getProjectName());
     List<DockerContainerConfig> configs = loadConfigFiles(project.getProjectName(),
       project.getProjectConfigs());
@@ -215,7 +209,7 @@ public class ProjectServiceImpl implements ProjectService {
         List<String> commands = new ArrayList<>();
         commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
         StringBuilder repositoryPath = new StringBuilder();
-        repositoryPath.append(rootPath+project.getProjectName()).append("/")
+        repositoryPath.append(rootPath+"/"+project.getProjectName()).append("/")
           .append(webHookDto.getRepositoryName());
         CommandInterpreter.runDestPath(repositoryPath.toString(), filePath.toString(), "pull",
           buildNumber, commands);
@@ -495,7 +489,7 @@ public class ProjectServiceImpl implements ProjectService {
     log.info("buildState receive success {}", buildState.getProject().getProjectName());
 
 
-    String path = rootPath + buildState.getProject().getProjectName() + "/log";//경로  projects/{프로젝트 이름}/log
+    String path = rootPath+"/" + buildState.getProject().getProjectName() + "/log";//경로  projects/{프로젝트 이름}/log
     String fileName = (buildDetailRequestDto.getBuildType()) + "_" + buildState.getBuildNumber();//  상태_빌드 넘버
 
     StringBuilder consoleLog = new StringBuilder();

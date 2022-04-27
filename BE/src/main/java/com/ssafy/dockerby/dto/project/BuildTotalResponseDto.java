@@ -1,5 +1,6 @@
 package com.ssafy.dockerby.dto.project;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.istack.NotNull;
 import lombok.*;
 
@@ -18,7 +19,9 @@ public class BuildTotalResponseDto {
   @NotNull
   private Long buildNumber;
 
+  @NotNull
   @Builder.Default
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
   private LocalDateTime registDate = LocalDateTime.now();
 
   @NotNull
