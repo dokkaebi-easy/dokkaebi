@@ -25,40 +25,43 @@ interface VersionTypeAxois {
 
 interface buildProps {
   index: number;
-  value: Build;
+  buildData: Build;
   DelClick: (value: number) => void;
 }
 
-export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
-  const framAndLibsdata = useStore((state) => state.framworkandLib);
-  const setFramAndLibsdata = useStore((state) => state.setFramworkandLib);
+export default function BuildBasicBox({
+  index,
+  buildData,
+  DelClick,
+}: buildProps) {
+  const framAndLibsDatas = useStore((state) => state.framworkandLib);
+  const setFramAndLibsDatas = useStore((state) => state.setFramworkandLib);
 
-  const [name, setName] = useState(value.name);
-  const [fileDir, setFileDir] = useState(value.projectDirectory);
-  const [buildPath, setBuildPath] = useState(value.buildPath);
-  const [frameworkName, setFrameworkName] = useState(value.frameworkName);
-  const [frameworkId, setFrameworkId] = useState(-1);
-  const [version, setVersion] = useState(value.version);
-  const [type, setType] = useState(value.type);
+  const [name, setName] = useState(buildData.name);
+  const [fileDir, setFileDir] = useState(buildData.projectDirectory);
+  const [buildPath, setBuildPath] = useState(buildData.buildPath);
+  const [frameworkId, setFrameworkId] = useState(buildData.frameworkId);
 
-  const [framAndLibs, setFramAndLibs] = useState<string[]>([
-    value.frameworkName,
-  ]);
-  const [versions, setVersions] = useState<string[]>([value.version]);
-  const [types, setTypes] = useState<string[]>([value.type]);
+  const [frameworkName, setFrameworkName] = useState('');
+  const [version, setVersion] = useState(buildData.version);
+  const [type, setType] = useState(buildData.type);
+
+  const [framAndLibs, setFramAndLibs] = useState<string[]>([]);
+  const [versions, setVersions] = useState<string[]>([buildData.version]);
+  const [types, setTypes] = useState<string[]>([buildData.type]);
 
   const handleNameOnChange = (event: any) => {
     setName(event.target.value);
-    value.name = event.target.value;
+    buildData.name = event.target.value;
   };
 
   const handleFileDirOnChange = (event: any) => {
     setFileDir(event.target.value);
-    value.projectDirectory = event.target.value;
+    buildData.projectDirectory = event.target.value;
   };
   const handlebuildPathOnChange = (event: any) => {
     setBuildPath(event.target.value);
-    value.buildPath = event.target.value;
+    buildData.buildPath = event.target.value;
   };
 
   const handleDelOnClick = () => {
@@ -67,23 +70,25 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
 
   const handlePropsFLChange = (event: string) => {
     setFrameworkName(event);
-    value.frameworkName = event;
-    value.version = '';
-    value.type = '';
+    buildData.version = '';
+    setVersion('');
+    buildData.type = '';
+    setType('');
   };
 
   const handlePropsVersionChange = (event: string) => {
     setVersion(event);
-    value.version = event;
+    buildData.version = event;
   };
   const handlePropsTypeChange = (event: string) => {
     setType(event);
-    value.type = event;
+    buildData.type = event;
   };
-  const handleItemClickProps = (index: number) => {
-    setFrameworkName(framAndLibsdata[index].name);
+  const handleFrameworkClickProps = (index: number) => {
+    setFrameworkId(framAndLibsDatas[index].id);
+    buildData.frameworkId = framAndLibsDatas[index].id;
 
-    const params = { typeId: framAndLibsdata[index].id };
+    const params = { typeId: buildData.frameworkId };
     axios
       .get('/api/project/frameworkVersion', { params })
       .then((res) => {
@@ -91,8 +96,8 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
         setVersion('');
         setType('');
 
-        setVersions(data.frameworkVersion);
-        setTypes(data.buildTool);
+        setVersions([...data.frameworkVersion]);
+        setTypes([...data.buildTool]);
       })
       .catch((err) => {
         console.log(err);
@@ -104,25 +109,30 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
       .get('/api/project/frameworkType')
       .then((res) => {
         const data = res.data as ResponseIdName[];
-        setFramAndLibsdata(data);
-        const arr = data.map((value) => {
-          if (frameworkName === value.name) setFrameworkId(value.id);
+        setFramAndLibsDatas([...data]);
+
+        const arr = data.map((value) => value.name);
+        setFramAndLibs([...arr]);
+
+        framAndLibsDatas.map((value) => {
+          if (value.id === buildData.frameworkId) {
+            setFrameworkName(value.name);
+          }
           return value.name;
         });
-        setFramAndLibs([...arr]);
       })
       .catch((err) => {
         console.log(err);
       });
 
     if (frameworkId !== -1) {
-      const params = { typeId: framAndLibsdata[index].id };
+      const params = { typeId: frameworkId };
       axios
         .get('/api/project/frameworkVersion', { params })
         .then((res) => {
           const data = res.data as VersionTypeAxois;
-          setVersions(data.frameworkVersion);
-          setTypes(data.buildTool);
+          setVersions([...data.frameworkVersion]);
+          setTypes([...data.buildTool]);
         })
         .catch((err) => {
           console.log(err);
@@ -160,7 +170,7 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
               label="Framework/ Library"
               Items={framAndLibs}
               Change={handlePropsFLChange}
-              Click={handleItemClickProps}
+              Click={handleFrameworkClickProps}
             />
           </Grid>
           <Grid item>
@@ -237,7 +247,7 @@ export default function BuildBasicBox({ index, value, DelClick }: buildProps) {
             Delete
           </Button>
         </Stack>
-        <BuildProperty buildValue={value} />
+        <BuildProperty buildValue={buildData} />
       </Paper>
     </Box>
   );

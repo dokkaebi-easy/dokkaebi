@@ -23,11 +23,11 @@ export default class BuildStateData {
   constructor() {
     this.buildNumber = 1;
     this.buildStateId = 1;
-    this.registDate = '1';
+    this.registDate = 'yyyy-MM-dd';
     this.state = {
-      build: '1',
-      pull: '1',
-      run: '1',
+      build: 'Processing',
+      pull: 'Processing',
+      run: 'Processing',
     };
   }
 }

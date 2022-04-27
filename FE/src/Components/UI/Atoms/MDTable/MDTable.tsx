@@ -63,16 +63,61 @@ export default function MDTable() {
             {projects.map((row) => (
               <StyledTableRow key={uuid()}>
                 <StyledTableCell align="center">
-                  <Link to={`/detail/${row.projectId}`}>{row.projectId}</Link>
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.projectId}
+                  </Link>
                 </StyledTableCell>
                 <StyledTableCell align="center" component="th" scope="row">
-                  <Link to={`/detail/${row.projectId}`}>{row.projectName}</Link>
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.projectName}
+                  </Link>
                 </StyledTableCell>
-                <StyledTableCell align="center">{row.state}</StyledTableCell>
-                <StyledTableCell align="center">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
+                <StyledTableCell align="center">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
