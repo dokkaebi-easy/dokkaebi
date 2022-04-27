@@ -1,12 +1,12 @@
 export interface Git {
   name: string;
   hostUrl: string;
-  credentials: string;
+  accessTokenId: number;
   secretToken: string;
-  projectID: string;
+  projectId: number;
   repositoryUrl: string;
-  repositoryCredentials: string;
-  branchSpecifier: string;
+  accountId: number;
+  branchName: string;
 }
 
 export default class GitData {
@@ -14,26 +14,26 @@ export default class GitData {
 
   public hostUrl: string;
 
-  public credentials: string;
+  public accessTokenId: number;
 
   public secretToken: string;
 
-  public projectID: string;
+  public projectId: number;
 
   public repositoryUrl: string;
 
-  public repositoryCredentials: string;
+  public accountId: number;
 
-  public branchSpecifier: string;
+  public branchName: string;
 
   constructor() {
     this.name = '';
     this.hostUrl = '';
-    this.credentials = '';
+    this.accessTokenId = 0;
     this.secretToken = '';
-    this.projectID = '';
+    this.projectId = 0;
     this.repositoryUrl = '';
-    this.repositoryCredentials = '';
-    this.branchSpecifier = '';
+    this.accountId = 0;
+    this.branchName = '';
   }
 }

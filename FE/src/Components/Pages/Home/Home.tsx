@@ -24,6 +24,7 @@ export default function Home() {
       setProject(data.projects);
     });
   }, []);
+
   return (
     <Box sx={{ marginTop: 5 }}>
       <MDTable rows={projects} />

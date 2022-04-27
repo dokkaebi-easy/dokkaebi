@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -10,26 +10,36 @@ import Stack from '@mui/material/Stack';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import RepositoryModal from 'Components/Pages/Setting/GitLabPage/RepositoryModal/RepositoryModal';
 import { Git } from 'Components/MDClass/GitData/GitData';
+import axios from 'axios';
 
 interface GitProps {
   gitData: Git;
 }
+
+interface AccountAxios {
+  id: number;
+  email: string;
+}
+
 export default function GitLabRepositories({ gitData }: GitProps) {
-  const [projectID, setProjectID] = useState(gitData.projectID);
+  const [projectID, setProjectID] = useState(gitData.projectId);
   const [repositoryURL, setRepositoryURL] = useState(gitData.repositoryUrl);
-  const [branchSpecifier, setBranchSpecifier] = useState(
-    gitData.branchSpecifier,
-  );
-  const [credential, setCredential] = useState(gitData.repositoryCredentials);
-  const [credentials, setCredentials] = useState([]);
+  const [branchName, setBranchName] = useState(gitData.branchName);
+  const [account, setAccount] = useState('');
+  const [accounts, setAccounts] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleItemClickProps = (index: number) => {
+    setAccount(accounts[index]);
+    gitData.accountId = index + 1;
+  };
+
   const handleProjectIDChange = (event: any) => {
     setProjectID(event.target.value);
-    gitData.projectID = event.target.value;
+    gitData.projectId = event.target.value;
   };
 
   const handleRepositoryURLChange = (event: any) => {
@@ -37,10 +47,32 @@ export default function GitLabRepositories({ gitData }: GitProps) {
     gitData.repositoryUrl = event.target.value;
   };
 
-  const handleBranchSpecifierChange = (event: any) => {
-    setBranchSpecifier(event.target.value);
-    gitData.branchSpecifier = event.target.value;
+  const handleBranchNameChange = (event: any) => {
+    setBranchName(event.target.value);
+    gitData.branchName = event.target.value;
   };
+
+  const handleAxiosProps = () => {
+    axios.get('/api/git/accounts').then((res) => {
+      const data = res.data as AccountAxios[];
+      const arr = data.map((value) => value.email);
+      setAccounts(arr);
+      setAccount(arr[gitData.accountId - 1]);
+    });
+  };
+
+  useEffect(() => {
+    axios.get('/api/git/accounts').then((res) => {
+      const data = res.data as AccountAxios[];
+      const arr = data.map((value) => value.email);
+      setAccounts(arr);
+      setAccount(arr[gitData.accountId - 1]);
+    });
+
+    return () => {
+      setAccounts([]);
+    };
+  }, []);
 
   return (
     <Box my={3}>
@@ -89,7 +121,12 @@ export default function GitLabRepositories({ gitData }: GitProps) {
             </Grid>
             <Grid item xs={10}>
               <Stack direction="row" spacing={2} alignItems="center">
-                <SelectItem label="Credentials" Items={credentials} />
+                <SelectItem
+                  defaultValue={account}
+                  label="Credentials"
+                  Items={accounts}
+                  Click={handleItemClickProps}
+                />
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
@@ -98,7 +135,11 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                 >
                   Add
                 </Button>
-                <RepositoryModal open={open} Close={handleClose} />
+                <RepositoryModal
+                  open={open}
+                  Close={handleClose}
+                  Change={handleAxiosProps}
+                />
               </Stack>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
@@ -113,8 +154,8 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                 size="small"
                 sx={{ my: 1 }}
                 placeholder="Branch Specifier"
-                defaultValue={branchSpecifier}
-                onChange={handleBranchSpecifierChange}
+                defaultValue={branchName}
+                onChange={handleBranchNameChange}
               />
             </Grid>
           </Grid>

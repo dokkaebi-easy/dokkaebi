@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStore } from 'Components/Store/settingStore';
+import { useStore } from 'Components/Store/SettingStore/SettingStore';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import axios from 'axios';
@@ -34,16 +34,14 @@ export default function AxiosPage() {
       nginxConfig,
       projectName,
     };
-    console.log(JSON.stringify(params));
-
-    // axios.post('/api/project', { params }).then((res) => {
-    //   console.log(res.data);
-    // });
-    console.log(params);
-    console.log(projectName);
-    console.log(buildConfigs);
-    console.log(gitConfig);
-    console.log(nginxConfig);
+    axios
+      .post('/api/project', params)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <Box>
