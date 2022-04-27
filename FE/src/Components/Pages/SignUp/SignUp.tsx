@@ -11,17 +11,25 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import { unset } from 'lodash';
+import axios from 'axios';
+import { api } from '../../../api/index';
 
 interface IFormInput {
-  id: string;
+  principal: string;
   name: string;
-  password: string;
+  credential: string;
   passwordConfirm: string;
-  authkey: string;
+  authKey: string;
+}
+
+interface ResponsId {
+  name: string;
+  state: string;
+  principal: string;
 }
 
 const schema = yup.object().shape({
-  id: yup
+  principal: yup
     .string()
     .required('아이디는 필수 입니다.')
     .min(2, '2자 이상 입력하세요.')
@@ -32,7 +40,7 @@ const schema = yup.object().shape({
     .required('이름은 필수 입니다.')
     .min(2, '2자 이상 입력하세요.')
     .max(25, '25자 이하로 입력하세요.'),
-  password: yup
+  credential: yup
     .string()
     .required('비밀번호는 필수 입니다.')
     .min(8, '8자 이상 입력하세요.')
@@ -43,8 +51,8 @@ const schema = yup.object().shape({
     ),
   passwordConfirm: yup
     .string()
-    .oneOf([yup.ref('password'), null], '비밀번호가 일치하지 않습니다.'),
-  authkey: yup.string().required('부여받은 인증키를 입력하세요'),
+    .oneOf([yup.ref('credential'), null], '비밀번호가 일치하지 않습니다.'),
+  authKey: yup.string().required('부여받은 인증키를 입력하세요'),
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -57,11 +65,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function linkToMain() {
-  window.location.href = '/';
-}
-
 function SignUp() {
+  const [json, setJson] = useState<string>();
+
   const {
     register,
     handleSubmit,
@@ -72,11 +78,18 @@ function SignUp() {
 
   const { heading, submitButton } = useStyles();
 
-  const [json, setJson] = useState<string>();
-
   const onSubmit = (data: IFormInput) => {
     unset(data, 'passwordConfirm');
     setJson(JSON.stringify(data));
+  };
+
+  const singUpAPI = (sign: any) => {
+    console.log(sign);
+    api.post(`/user/signup`, sign).then((res) => {
+      const data = res.data as ResponsId;
+      // console.log(data);
+    });
+    // window.location.href = '/';
   };
 
   return (
@@ -88,24 +101,24 @@ function SignUp() {
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <TextField
             // eslint-disable-next-line react/jsx-props-no-spreading
-            {...register('id')}
+            {...register('principal')}
             variant="outlined"
             margin="normal"
             label="ID"
-            helperText={errors.id?.message}
-            error={!!errors.id?.message}
+            helperText={errors.principal?.message}
+            error={!!errors.principal?.message}
             fullWidth
             InputLabelProps={{ required: false }}
             required
           />
           <TextField
             // eslint-disable-next-line react/jsx-props-no-spreading
-            {...register('password')}
+            {...register('credential')}
             variant="outlined"
             margin="normal"
             label="비밀번호"
-            helperText={errors.password?.message}
-            error={!!errors.password?.message}
+            helperText={errors.credential?.message}
+            error={!!errors.credential?.message}
             type="password"
             fullWidth
             InputLabelProps={{ required: false }}
@@ -138,12 +151,12 @@ function SignUp() {
           />
           <TextField
             // eslint-disable-next-line react/jsx-props-no-spreading
-            {...register('authkey')}
+            {...register('authKey')}
             variant="outlined"
             margin="normal"
             label="인증키"
-            helperText={errors.authkey?.message}
-            error={!!errors.authkey?.message}
+            helperText={errors.authKey?.message}
+            error={!!errors.authKey?.message}
             fullWidth
             InputLabelProps={{ required: false }}
             required
@@ -154,7 +167,7 @@ function SignUp() {
             variant="contained"
             color="primary"
             className={submitButton}
-            // onClick={linkToMain}
+            onClick={() => singUpAPI(json)}
           >
             가입하기
           </Button>

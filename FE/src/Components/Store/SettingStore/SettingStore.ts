@@ -7,8 +7,8 @@ interface SettingData {
   projectName: string;
   setProjectName: (name: string) => void;
 
-  buildConfig: Build[];
-  setBuildConfig: (buildDatas: Build[]) => void;
+  buildConfigs: Build[];
+  setBuildConfigs: (buildDatas: Build[]) => void;
 
   gitConfig: Git;
   setGitConfig: (gitData: Git) => void;
@@ -20,26 +20,22 @@ interface SettingData {
 export const useStore = create<SettingData>((set) => ({
   projectName: '',
   setProjectName: (name) =>
-    set((state) => {
-      state.projectName = name;
-      return state;
-    }),
-  buildConfig: [new BuildData()],
-  setBuildConfig: (buildData) =>
-    set((state) => {
-      state.buildConfig = buildData;
-      return state;
-    }),
+    set(() => ({
+      projectName: name,
+    })),
+  buildConfigs: [new BuildData()],
+  setBuildConfigs: (buildDatas) =>
+    set(() => ({
+      buildConfigs: buildDatas,
+    })),
   gitConfig: new GitData(),
   setGitConfig: (gitData) =>
-    set((state) => {
-      state.gitConfig = gitData;
-      return state;
-    }),
+    set(() => ({
+      gitConfig: gitData,
+    })),
   nginxConfig: new NginxData(),
   setNginxConfig: (nginxData) =>
-    set((state) => {
-      state.nginxConfig = nginxData;
-      return state;
-    }),
+    set(() => ({
+      nginxConfig: nginxData,
+    })),
 }));
