@@ -51,7 +51,6 @@ public class ProjectController {
     log.info("Request Project : {}",projectRequestDto.getProjectName());
     Map<String, Object> upsertResult = projectService.upsert(projectRequestDto);
 
-    List<DockerContainerConfig> configs = (List<DockerContainerConfig>) upsertResult.get("buildConfigs");
     Project project = (Project) upsertResult.get("project");
     String msg = (String) upsertResult.get("msg");
     log.info("project build start / waiting -> processing");
@@ -169,10 +168,12 @@ public class ProjectController {
       @RequestHeader(name = "X-Gitlab-Token") String token,
       @RequestBody Map<String, Object> params) throws NotFoundException, IOException {
     GitlabWebHookDto webHookDto = GitlabWrapper.wrap(params);
-    // TODO : 경동님의 PROJECT 환경설정 조회
+
+    Project project = projectService.projectByName(projectName)
+        .orElseThrow(() -> new NotFoundException());
 
     log.debug("ProjectController.Webhook : X-Gitlab-Toke : {} / " , token,params);
-    projectService.build(1L,webHookDto);
+    projectService.build(project.getId(),webHookDto);
 
     return ResponseEntity.ok(null);
   }
