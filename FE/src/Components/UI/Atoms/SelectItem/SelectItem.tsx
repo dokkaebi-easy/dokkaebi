@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -10,21 +10,31 @@ interface selectProps {
   label: string;
   Items: string[];
   defaultValue?: string;
-  change?: (event: string) => void;
+  Change?: (event: string) => void;
+  Click?: (event: number) => void;
 }
 
 export default function SelectItem({
   label,
   Items,
   defaultValue = '',
-  change,
+  Change,
+  Click,
 }: selectProps) {
   const [value, setValue] = React.useState(defaultValue);
 
   const handleChange = (event: SelectChangeEvent) => {
     setValue(event.target.value);
-    if (typeof change === 'function') change(event.target.value);
+    if (typeof Change === 'function') Change(event.target.value);
   };
+
+  const handleItemClick = (index: number) => {
+    if (typeof Click === 'function') Click(index);
+  };
+
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   return (
     <Box>
@@ -41,8 +51,12 @@ export default function SelectItem({
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
-          {Items.map((value) => (
-            <MenuItem key={uuid()} value={value}>
+          {Items.map((value, index) => (
+            <MenuItem
+              key={uuid()}
+              value={value}
+              onClick={() => handleItemClick(index)}
+            >
               {value}
             </MenuItem>
           ))}
@@ -54,5 +68,6 @@ export default function SelectItem({
 
 SelectItem.defaultProps = {
   defaultValue: '',
-  change: undefined,
+  Change: undefined,
+  Click: undefined,
 };

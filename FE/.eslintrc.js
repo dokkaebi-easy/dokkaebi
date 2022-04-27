@@ -28,6 +28,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 0,
     // 인수 재 설정
     'no-param-reassign': 0,
+    'react/jsx-props-no-spreading': 'off',
   },
   settings: {
     'import/resolver': {

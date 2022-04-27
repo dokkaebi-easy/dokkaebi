@@ -6,10 +6,12 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import axios from 'axios';
 
 interface modalSwitch {
   open: boolean;
   Close: () => void;
+  Change: () => void;
 }
 
 const style = {
@@ -24,7 +26,33 @@ const style = {
   p: 4,
 };
 
-export default function ConnetctModal({ open, Close }: modalSwitch) {
+export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
+  const [id, setId] = useState('');
+  const [apiToken, setApiToken] = useState('');
+
+  const handleIdChange = (event: any) => {
+    setId(event.target.value);
+  };
+  const handleApiTokenChange = (event: any) => {
+    setApiToken(event.target.value);
+  };
+
+  const handleSaveClick = () => {
+    const parameters = {
+      name: id,
+      accessToken: apiToken,
+    };
+    // 수정
+    axios.post('/api/git/token', { parameters }).then((res) => {
+      console.log(res.data);
+    });
+    Change();
+  };
+
+  const handleCloseClick = () => {
+    Close();
+  };
+
   return (
     <Modal
       open={open}
@@ -53,6 +81,7 @@ export default function ConnetctModal({ open, Close }: modalSwitch) {
             size="small"
             sx={{ my: 1 }}
             placeholder="ID"
+            onChange={handleIdChange}
           />
           <Typography>API Token</Typography>
           <TextField
@@ -63,12 +92,13 @@ export default function ConnetctModal({ open, Close }: modalSwitch) {
             size="small"
             sx={{ my: 1 }}
             placeholder="API Token"
+            onChange={handleApiTokenChange}
           />
           <Stack mt={3} direction="row" justifyContent="flex-end" spacing={2}>
-            <Button variant="outlined" size="small">
+            <Button variant="outlined" size="small" onClick={handleSaveClick}>
               Save
             </Button>
-            <Button variant="outlined" size="small">
+            <Button variant="outlined" size="small" onClick={handleCloseClick}>
               Cancel
             </Button>
           </Stack>

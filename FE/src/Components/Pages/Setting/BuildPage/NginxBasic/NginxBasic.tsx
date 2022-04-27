@@ -5,17 +5,10 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
-
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
-
 import { v4 as uuid } from 'uuid';
-
-import NginxData, {
-  Nginx,
-  HttpsOption,
-} from 'Components/MDClass/NginxData/NginxData';
-
+import { Nginx } from 'Components/MDClass/NginxData/NginxData';
 import LocationsData, {
   Locations,
 } from 'Components/MDClass/LocationsData/LocationsData';
@@ -29,9 +22,6 @@ export default function NginxBasic({ nginxValue }: NginxProps) {
   const [https, setHttps] = useState(nginxValue.https);
   const [domainURL, setDomainURL] = useState(nginxValue.domainUrl);
   const [locations, setLocations] = useState<Locations[]>(nginxValue.locations);
-  // const [httpsOption, setHttpsOption] = useState<HttpsOption>(
-  //   nginxValue.httpsOption,
-  // );
   const [sslCertificate, setSslCertificate] = useState(
     nginxValue.httpsOption.sslCertificate,
   );
@@ -49,7 +39,6 @@ export default function NginxBasic({ nginxValue }: NginxProps) {
   const handleDomainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDomainURL(event.target.value);
     nginxValue.domainUrl = event.target.value;
-    console.log(nginxValue);
   };
 
   const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +59,6 @@ export default function NginxBasic({ nginxValue }: NginxProps) {
   ) => {
     setSslCertificate(event.target.value);
     nginxValue.httpsOption.sslCertificate = event.target.value;
-    console.log(event.target.value);
   };
 
   const handleSslCertificateKeyChange = (

@@ -13,6 +13,12 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
+import { fileApi } from '../../../api/index';
+
+interface Message {
+  message: string;
+  status: string;
+}
 
 function Copyright(props: any) {
   return (
@@ -29,21 +35,31 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 function Login() {
-  const [loginData, setLoginData] = useState('');
+  const [loginData, setLoginData] = useState<string>('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log(event.currentTarget);
     const data = new FormData(event.currentTarget);
-    console.log({
-      id: data.get('id'),
-      password: data.get('password'),
+    const loginData = JSON.stringify({
+      principal: data.get('id'),
+      credential: data.get('password'),
     });
-    // setLoginData(data.id);
+    console.log(loginData);
+    // const principa = data.get('id');
+    // const credential = data.get('password');
+
+    // setLoginData(data);
+    fileApi.post(`user/auth/signin`, loginData).then((res) => {
+      const datas = res.data as Message;
+      console.log(datas);
+    });
   };
 
-  const LinkToMain = () => {
-    window.location.href = '/';
-  };
+  // const loginAPI = (data: FormData) => {
+  //   console.log(data);
+  //   window.location.href = '/';
+  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -100,7 +116,7 @@ function Login() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={LinkToMain}
+              // onClick={loginAPI(loginData)}
             >
               로그인
             </Button>
