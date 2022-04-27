@@ -96,7 +96,7 @@ public class GitlabServiceImpl implements GitlabService {
   @Override
   public List<GitTokenResponseDto> tokens() {
     List<GitTokenResponseDto> results = new ArrayList<>();
-    tokenRepository.findAlLByAccessTokenNotNull()
+    tokenRepository.findAllByAccessTokenIsNotNull()
         .forEach(value -> results.add(GitTokenResponseDto.from(value)));
     return results;
   }

@@ -53,7 +53,7 @@ public class UserController {
     // swagger API 생성용 // Security에서 로그인 처리함
     @ApiOperation(value = "로그인")
     @PostMapping("/auth/signin")
-    public ResponseEntity signin(HttpServletRequest request,@RequestBody SigninDto signinDto)
+    public ResponseEntity signin(HttpServletRequest request, HttpServletResponse response,@RequestBody SigninDto signinDto)
         throws IOException {
         log.info("signinDto: {} {}",signinDto.getPrincipal(),signinDto.getCredential());
 
