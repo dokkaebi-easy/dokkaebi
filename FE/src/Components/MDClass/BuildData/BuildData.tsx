@@ -7,7 +7,7 @@ export interface Build {
   type: string;
   projectDirectory: string;
   buildPath: string;
-  propertys: Property[];
+  properties: Property[];
 }
 
 export default class BuildData {
@@ -23,7 +23,7 @@ export default class BuildData {
 
   public buildPath: string;
 
-  public propertys: Property[];
+  public properties: Property[];
 
   constructor() {
     this.frameworkName = '';
@@ -32,6 +32,6 @@ export default class BuildData {
     this.type = '';
     this.projectDirectory = '';
     this.buildPath = '';
-    this.propertys = [new PropertyData()];
+    this.properties = [new PropertyData()];
   }
 }

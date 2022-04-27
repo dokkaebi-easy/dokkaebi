@@ -30,7 +30,7 @@ export default function Navbar() {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {pageName}
         </Typography>
-        <Link to="/login">
+        <Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>
           <Button color="inherit">Login</Button>
         </Link>
       </Toolbar>
