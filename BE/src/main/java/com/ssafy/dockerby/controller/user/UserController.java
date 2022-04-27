@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class UserController {
 
     @ApiOperation(value = "회원가입", notes = "회원가입을 한다")
     @PostMapping( "/signup")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody SignupDto signupDto)
+    public ResponseEntity<UserResponseDto> signup(@Valid @RequestBody SignupDto signupDto)
         throws IOException, UserDefindedException {
         log.info("signup API received ID: {}",signupDto.getPrincipal());
 
@@ -92,7 +93,7 @@ public class UserController {
 
     @ApiOperation(value = "아이디 중복체크", notes = "사용 가능한 아이디는 true, 중복된 아이디는 false를 반환")
     @PostMapping("/duplicate/id")
-    public ResponseEntity duplicatepPrincipal(@RequestParam String id)
+    public ResponseEntity duplicatepPrincipal(@Valid @RequestParam String id)
         throws UserDefindedException {
         log.info("duplicatepPrincipal API received ID: {}",id);
         Map<String, Object> map = new HashMap<>();
@@ -104,7 +105,7 @@ public class UserController {
 
     @ApiOperation(value = "이름 중복체크", notes = "사용 가능한 이름은 true, 중복된 이름은 false를 반환")
     @PostMapping("/duplicate/name")
-    public ResponseEntity duplicateName(@RequestParam String name) throws UserDefindedException {
+    public ResponseEntity duplicateName(@Valid @RequestParam String name) throws UserDefindedException {
         log.info("duplicatepPrincipal API received name: {}",name);
 
         Map<String, Object> map = new HashMap<>();

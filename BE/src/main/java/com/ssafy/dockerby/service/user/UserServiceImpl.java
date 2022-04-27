@@ -8,6 +8,7 @@ import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.dto.user.UserResponseDto;
 import com.ssafy.dockerby.entity.user.User;
 import com.ssafy.dockerby.repository.user.UserRepository;
+import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     //임시 authKey
-    String authKey = "authKey";
 
     @Override
-    public UserResponseDto signup(SignupDto signupDto) throws UserDefindedException {
+    public UserResponseDto signup(SignupDto signupDto) throws UserDefindedException, IOException {
         // 인증 확인
         isSignupValied(signupDto);
         log.info("Verification passed : {}", signupDto.getPrincipal());
@@ -88,7 +88,10 @@ public class UserServiceImpl implements UserService {
     }
 
     //유효성 검증
-    private void isSignupValied(SignupDto signupDto) throws UserDefindedException {
+    private void isSignupValied(SignupDto signupDto) throws UserDefindedException, IOException {
+
+        String authKey = FileManager.loadFile(".","AuthKey");
+
         log.info("start isValied : {}", signupDto.getPrincipal());
         //아이디 중복 검증
 

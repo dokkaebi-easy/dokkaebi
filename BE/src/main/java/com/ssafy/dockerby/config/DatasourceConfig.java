@@ -16,7 +16,7 @@ public class DatasourceConfig {
     DataSourceBuilder builder = DataSourceBuilder.create();
     builder.driverClassName("org.mariadb.jdbc.Driver");
     builder.username("root");
-    builder.password(FileManager.loadFile("","AuthKey"));
+    builder.password(FileManager.loadFile(".","AuthKey"));
     builder.url("jdbc:mariadb://localhost:3306/dockerby?useSSL=false&serverTimezone=UTC&autoReconnect=true&allowPublicKeyRetrieval=true");
     return builder.build();
   }
