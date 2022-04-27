@@ -23,12 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = {"User"}) //Swagger 중간 제목
@@ -52,6 +47,7 @@ public class UserController {
 
     // swagger API 생성용 // Security에서 로그인 처리함
     @ApiOperation(value = "로그인")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/auth/signin")
     public ResponseEntity signin(HttpServletRequest request, HttpServletResponse response,@RequestBody SigninDto signinDto)
         throws IOException {
