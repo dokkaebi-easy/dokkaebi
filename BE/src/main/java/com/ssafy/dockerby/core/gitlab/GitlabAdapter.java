@@ -12,6 +12,8 @@ public class GitlabAdapter {
 
   public static String getCloneCommand(GitlabCloneDto dto) {
     List<String> urls = parseHttpUrl(dto.getGitHttpUrl());
+    if(urls.size() != 2)
+      throw new IllegalArgumentException("GitlabAdapter.getCloneCommand() Git http url이 잘못된 형식입니다. : " + dto.getGitHttpUrl());
     StringBuilder sb = new StringBuilder();
     sb.append("git clone -b ").append(dto.getBranch())
         .append(" --single-branch ").append(urls.get(0))
@@ -26,12 +28,12 @@ public class GitlabAdapter {
     return sb.toString();
   }
 
-  private static List<String> parseHttpUrl(String url) {
+  public static List<String> parseHttpUrl(String url) {
     List<String> result = new ArrayList<>();
-    Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher(url);
-    while (matcher.find()) {
-      result.add(matcher.group());
+    Matcher matcher = Pattern.compile(regex).matcher(url);
+    if(matcher.find()) {
+      result.add(matcher.group(1));
+      result.add(matcher.group(2));
     }
     return result;
   }

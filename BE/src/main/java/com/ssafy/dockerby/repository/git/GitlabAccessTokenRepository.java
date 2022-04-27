@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface GitlabAccessTokenRepository extends CrudRepository<GitlabAccessToken, Long> {
 
-  List<GitlabAccessToken> findAlLByAccessTokenNotNull();
+  List<GitlabAccessToken> findAllByAccessTokenIsNotNull();
 }
