@@ -7,22 +7,25 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
+import FormHelperText from '@mui/material/FormHelperText';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import RepositoryModal from 'Components/Pages/Setting/GitLabPage/RepositoryModal/RepositoryModal';
 import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
+import { useStore } from 'Components/Store/DropDownStore/DropDownStore';
+import ResponseIdNameData, {
+  ResponseIdName,
+} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface GitProps {
   gitData: Git;
 }
 
-interface AccountAxios {
-  id: number;
-  email: string;
-}
-
 export default function GitLabRepositories({ gitData }: GitProps) {
-  const [projectID, setProjectID] = useState(gitData.projectId);
+  const dropDownItems = useStore((state) => state.account);
+  const setDropDownItems = useStore((state) => state.setAccount);
+
+  const [projectID, setProjectID] = useState(gitData.gitProjectId);
   const [repositoryURL, setRepositoryURL] = useState(gitData.repositoryUrl);
   const [branchName, setBranchName] = useState(gitData.branchName);
   const [account, setAccount] = useState('');
@@ -39,7 +42,7 @@ export default function GitLabRepositories({ gitData }: GitProps) {
 
   const handleProjectIDChange = (event: any) => {
     setProjectID(event.target.value);
-    gitData.projectId = event.target.value;
+    gitData.gitProjectId = Number(event.target.value);
   };
 
   const handleRepositoryURLChange = (event: any) => {
@@ -52,20 +55,18 @@ export default function GitLabRepositories({ gitData }: GitProps) {
     gitData.branchName = event.target.value;
   };
 
-  const handleAxiosProps = () => {
-    axios.get('/api/git/accounts').then((res) => {
-      const data = res.data as AccountAxios[];
-      const arr = data.map((value) => value.email);
-      setAccounts(arr);
-      setAccount(arr[gitData.accountId - 1]);
-    });
+  const handleAxiosProps = (data: ResponseIdName[]) => {
+    const arr = data.map((value) => value.name);
+    setAccounts([...arr]);
+    setAccount(arr[gitData.accountId - 1]);
   };
 
   useEffect(() => {
     axios.get('/api/git/accounts').then((res) => {
-      const data = res.data as AccountAxios[];
-      const arr = data.map((value) => value.email);
-      setAccounts(arr);
+      const data = res.data as ResponseIdName[];
+      setDropDownItems([...data]);
+      const arr = data.map((value) => value.name);
+      setAccounts([...arr]);
       setAccount(arr[gitData.accountId - 1]);
     });
 
@@ -99,6 +100,9 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                 defaultValue={projectID}
                 onChange={handleProjectIDChange}
               />
+              <FormHelperText id="component-helper-text">
+                (※ only number)
+              </FormHelperText>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
               <Typography>Repository URL</Typography>

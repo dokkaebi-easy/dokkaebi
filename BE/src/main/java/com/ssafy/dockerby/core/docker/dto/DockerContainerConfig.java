@@ -41,6 +41,8 @@ public class DockerContainerConfig {
   // Build 속성 들 (port, volume, env, buildPath...)
   private Map<String, List<String>> properties;
 
+  private boolean useNginx;
+
   public enum FrameworkType {
     SpringBoot, Vue, React, Django, MySQL
   }
@@ -62,5 +64,20 @@ public class DockerContainerConfig {
   @Override
   public int hashCode() {
     return Objects.hash(framework, version, type, properties, projectDirectory);
+  }
+
+  public static class DockerContainerConfigBuilder {
+
+    public DockerContainerConfigBuilder useNginx(FrameworkType frameworkType, String type) {
+      if (type != null) {
+        if (frameworkType == FrameworkType.React && type.equals("Yes")
+            || frameworkType == FrameworkType.Vue && type.equals("Yes")) {
+          useNginx = true;
+          return this;
+        }
+      }
+      useNginx = false;
+      return this;
+    }
   }
 }

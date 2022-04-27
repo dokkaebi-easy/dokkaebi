@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
@@ -10,12 +10,10 @@ import { v4 as uuid } from 'uuid';
 import BuildBasic from 'Components/Pages/Setting/BuildPage/BuildBasicBox/BuildBasicBox';
 import BuildData from 'Components/MDClass/BuildData/BuildData';
 import { useStore } from 'Components/Store/SettingStore/SettingStore';
-import NginxBasic from './NginxBasic/NginxBasic';
+import NginxBasic from './NginxBasicBox/NginxBasicBox';
+import ProjectNameBox from './ProjectNameBox/ProjectNameBox';
 
 export default function BuildPage() {
-  const projectName = useStore((state) => state.projectName);
-  const setProjectName = useStore((state) => state.setProjectName);
-
   const buildConfigs = useStore((state) => state.buildConfigs);
   const setBuildConfigs = useStore((state) => state.setBuildConfigs);
   const nginxConfig = useStore((state) => state.nginxConfig);
@@ -23,11 +21,7 @@ export default function BuildPage() {
 
   const handlePropsDelClick = (index: number) => {
     buildConfigs.splice(index, 1);
-    setBuildConfigs(buildConfigs);
-  };
-
-  const handleChange = (event: any) => {
-    setProjectName(event.target.value);
+    setBuildConfigs([...buildConfigs]);
   };
 
   const handleAddClick = () => {
@@ -44,17 +38,7 @@ export default function BuildPage() {
       </Box>
       <Box>
         <Paper sx={{ padding: 3, pt: 4 }}>
-          <Typography>Project Name</Typography>
-          <TextField
-            onChange={handleChange}
-            id="outlined-basic"
-            label="Project Name"
-            variant="outlined"
-            size="small"
-            sx={{ my: 2 }}
-            placeholder="ProjectName"
-            defaultValue={projectName}
-          />
+          <ProjectNameBox />
           <Divider />
           <Box sx={{ my: 3 }}>
             {buildConfigs.map((value, index) => (
