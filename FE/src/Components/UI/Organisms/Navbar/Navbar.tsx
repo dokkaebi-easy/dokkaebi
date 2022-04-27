@@ -4,10 +4,17 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useLocation, Link } from 'react-router-dom';
+import { api } from '../../../../api/index';
 
 export default function Navbar() {
   const [pageName, setPageName] = useState('');
   const location = useLocation();
+
+  const loginInfo = window.localStorage.getItem('login');
+  const logout = () => {
+    window.localStorage.removeItem('login');
+    api.post(`user/auth/signout`);
+  };
 
   useEffect(() => {
     const name = location.pathname.split('/');
@@ -30,9 +37,17 @@ export default function Navbar() {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {pageName}
         </Typography>
-        <Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>
-          <Button color="inherit">Login</Button>
-        </Link>
+        {loginInfo ? (
+          <Link to="/login">
+            <Button color="inherit" onClick={logout}>
+              Logout
+            </Button>
+          </Link>
+        ) : (
+          <Link to="/login">
+            <Button color="inherit">Login</Button>
+          </Link>
+        )}
       </Toolbar>
     </AppBar>
   );

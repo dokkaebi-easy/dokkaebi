@@ -11,7 +11,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import { unset } from 'lodash';
-import axios from 'axios';
 import { api } from '../../../api/index';
 
 interface IFormInput {
@@ -67,6 +66,8 @@ const useStyles = makeStyles((theme) => ({
 
 function SignUp() {
   const [json, setJson] = useState<string>();
+  const [inputId, setInputId] = useState<string>('');
+  const [inputName, setInputName] = useState<string>('');
 
   const {
     register,
@@ -80,6 +81,7 @@ function SignUp() {
 
   const onSubmit = (data: IFormInput) => {
     unset(data, 'passwordConfirm');
+    singUpAPI(data);
     setJson(JSON.stringify(data));
   };
 
@@ -87,9 +89,40 @@ function SignUp() {
     console.log(sign);
     api.post(`/user/signup`, sign).then((res) => {
       const data = res.data as ResponsId;
-      // console.log(data);
+      if (data.state === 'Success') {
+        window.location.href = '/login';
+      }
     });
     // window.location.href = '/';
+  };
+  const changeId = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputId(e.currentTarget.value);
+  };
+
+  const checkId = (id: string | undefined) => {
+    api.post(`/user/duplicate/id?id=${id}`).then((res) => {
+      if (res.data.state === 'Fail' || inputId === '') {
+        alert('사용할 수 없는 아이디 입니다.');
+        setInputId('');
+      } else {
+        alert('사용 가능한 아이디 입니다.');
+      }
+    });
+  };
+
+  const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputName(e.currentTarget.value);
+  };
+
+  const checkName = (name: string | undefined) => {
+    api.post(`/user/duplicate/name?name=${name}`).then((res) => {
+      if (res.data.state === 'Fail') {
+        alert('사용할 수 없는 이름 입니다.');
+        setInputName('');
+      } else {
+        alert('사용 가능한 이름 입니다.');
+      }
+    });
   };
 
   return (
@@ -110,7 +143,17 @@ function SignUp() {
             fullWidth
             InputLabelProps={{ required: false }}
             required
+            onChange={changeId}
+            value={inputId}
           />
+          <Button
+            color="primary"
+            onClick={() => {
+              checkId(inputId);
+            }}
+          >
+            ID 중복 확인
+          </Button>
           <TextField
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...register('credential')}
@@ -148,7 +191,17 @@ function SignUp() {
             fullWidth
             InputLabelProps={{ required: false }}
             required
+            onChange={changeName}
+            value={inputName}
           />
+          <Button
+            color="primary"
+            onClick={() => {
+              checkName(inputName);
+            }}
+          >
+            이름 중복 확인
+          </Button>
           <TextField
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...register('authKey')}
@@ -167,16 +220,9 @@ function SignUp() {
             variant="contained"
             color="primary"
             className={submitButton}
-            onClick={() => singUpAPI(json)}
           >
             가입하기
           </Button>
-          {json && (
-            <>
-              <Typography variant="body1">json 데이터 출력</Typography>
-              <Typography variant="body2">{json}</Typography>
-            </>
-          )}
         </form>
       </ContainerDiv>
     </Container>
