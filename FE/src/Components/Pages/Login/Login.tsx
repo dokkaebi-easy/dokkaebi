@@ -1,10 +1,7 @@
-import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LoginIcon from '@mui/icons-material/Login';
@@ -35,8 +32,6 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 function Login() {
-  const [loginData, setLoginData] = useState<string>('');
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -53,6 +48,9 @@ function Login() {
           window.localStorage.setItem('login', 'true');
           window.location.href = '/';
         }
+      })
+      .catch((error) => {
+        alert('로그인에 실패했습니다.');
       });
   };
 
@@ -102,16 +100,11 @@ function Login() {
               id="password"
               autoComplete="current-password"
             />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              // onClick={loginAPI(loginData)}
             >
               로그인
             </Button>
@@ -121,7 +114,7 @@ function Login() {
                   Forgot password?
                 </Link>
               </Grid> */}
-              <Grid item direction="row-reverse">
+              <Grid container direction="row-reverse">
                 <Link to="/signup" style={{ textDecoration: 'none' }}>
                   <span>가입하기</span>
                 </Link>

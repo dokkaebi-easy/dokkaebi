@@ -12,6 +12,7 @@ import ProjectDatas, {
 } from 'Components/MDClass/ProjectData/ProjectData';
 import { v4 as uuid } from 'uuid';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -62,13 +63,13 @@ export default function MDTable() {
             {projects.map((row) => (
               <StyledTableRow key={uuid()}>
                 <StyledTableCell align="center">
-                  {row.projectId}
+                  <Link to={`/detail/${row.projectId}`}>{row.projectId}</Link>
                 </StyledTableCell>
-                <StyledTableCell component="th" scope="row">
-                  {row.projectName}
+                <StyledTableCell align="center" component="th" scope="row">
+                  <Link to={`/detail/${row.projectId}`}>{row.projectName}</Link>
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
+                <StyledTableCell align="center">{row.state}</StyledTableCell>
+                <StyledTableCell align="center">{row.state}</StyledTableCell>
                 <StyledTableCell align="right">{row.state}</StyledTableCell>
                 <StyledTableCell align="right">{row.state}</StyledTableCell>
                 <StyledTableCell align="right">{row.state}</StyledTableCell>

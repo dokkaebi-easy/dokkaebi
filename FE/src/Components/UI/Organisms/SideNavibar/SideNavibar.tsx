@@ -73,7 +73,7 @@ export default function SideNavibar() {
           </ListItem>
           <ListItem disablePadding>
             <Link
-              to="/detail"
+              to="/builddetail"
               style={{
                 color: 'white',
                 textDecoration: 'none',
