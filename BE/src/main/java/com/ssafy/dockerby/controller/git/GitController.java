@@ -6,6 +6,7 @@ import com.ssafy.dockerby.dto.git.GitAccountResponseDto;
 import com.ssafy.dockerby.dto.git.GitTokenRequestDto;
 import com.ssafy.dockerby.dto.git.GitTokenResponseDto;
 import com.ssafy.dockerby.dto.project.GitTestConfigDto;
+import com.ssafy.dockerby.entity.git.GitlabAccessToken;
 import com.ssafy.dockerby.service.git.GitlabService;
 import io.swagger.annotations.Api;
 
@@ -85,7 +86,8 @@ public class GitController {
 
   @PostMapping("/testConnection")
   public ResponseEntity testConnection(@RequestBody GitTestConfigDto requestDto) {
-    String firstResponseMessage = GitlabAccess.isProjectToken(requestDto.getHostUrl(), requestDto.getAccessToken());
+    GitlabAccessToken token = gitlabService.token(requestDto.getAccessTokenId());
+    String firstResponseMessage = GitlabAccess.isProjectToken(requestDto.getHostUrl(), token.getAccessToken());
     String secondResponseMessage = GitlabAccess.isGitlabRepositoryUrl(requestDto.getProjectId(), requestDto.getRepositoryUrl());
     String thirdResponseMessage = GitlabAccess.isGitlabBranch(requestDto.getProjectId(), requestDto.getBranchName());
 

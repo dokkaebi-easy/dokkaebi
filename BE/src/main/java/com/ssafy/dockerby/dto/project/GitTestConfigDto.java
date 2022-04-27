@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GitTestConfigDto {
     private String hostUrl;
-    private String accessToken;   // git connection accessToken
+    private Long accessTokenId;   // git connection accessToken
     private Long projectId;
     private String repositoryUrl;
     private String branchName;    // branchSpecifier
@@ -19,7 +19,7 @@ public class GitTestConfigDto {
     public static GitTestConfigDto from(GitlabConfig config) {
         return new GitTestConfigDto(
                 config.getHostUrl(),
-                config.getToken().getAccessToken(),
+                config.getToken().getId(),
                 config.getProject().getId(),
                 config.getRepositoryUrl(),
                 config.getBranchName()
