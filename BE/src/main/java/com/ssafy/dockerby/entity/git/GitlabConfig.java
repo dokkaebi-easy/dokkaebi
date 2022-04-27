@@ -40,7 +40,7 @@ public class GitlabConfig {
   @JoinColumn(name = "gitlab_account_id")
   GitlabAccount account;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "gitlab_access_token_id")
   GitlabAccessToken token;
 
