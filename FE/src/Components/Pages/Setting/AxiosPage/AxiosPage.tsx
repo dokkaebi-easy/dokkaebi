@@ -38,12 +38,10 @@ export default function AxiosPage() {
       nginxConfig,
       projectName,
     };
-    console.log(JSON.stringify(data));
 
     axios
       .post('/api/project', data)
       .then((res) => {
-        console.log(res.data);
         setNextPage('success');
       })
       .catch((error) => {

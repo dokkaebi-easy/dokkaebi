@@ -14,12 +14,7 @@ import BuildStateBox from './BuildStateBox/BuildStateBox';
 
 export default function Detail() {
   const params = useParams();
-  const [buildStates, setBuildStates] = useState<BuildState[]>([
-    new BuildStateData(),
-    new BuildStateData(),
-    new BuildStateData(),
-    new BuildStateData(),
-  ]);
+  const [buildStates, setBuildStates] = useState<BuildState[]>([]);
   const [progress, setProgress] = useState('진행중... (미완성)');
   const [pullColor, setPullColor] = useState(100);
   const [runColor, setRunColor] = useState(200);

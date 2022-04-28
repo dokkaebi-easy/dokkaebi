@@ -62,7 +62,7 @@ export default function BasicLayout() {
       >
         <Navbar />
         <Switch>
-          <Route path="/builddetail/:stateId/:state">
+          <Route path="/state/:id/:name">
             <BuildDetail />
           </Route>
           <Route path="/detail/:projectId">
