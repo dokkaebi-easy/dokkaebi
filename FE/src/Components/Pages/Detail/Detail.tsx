@@ -5,20 +5,64 @@ import Typography from '@mui/material/Typography';
 import CircularProgressWithLabel from 'Components/UI/Atoms/CircularProgressWithLabel/CircularProgressWithLabel';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import BuildStateData, {
   BuildState,
 } from 'Components/MDClass/BuildStateData/BuildStateData';
+import BuildStateBox from 'Components/Pages/Detail/BuildStateBox/BuildStateBox';
 import { v4 as uuid } from 'uuid';
-import BuildStateBox from './BuildStateBox/BuildStateBox';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import { useStore } from 'Components/Store/SettingStore/SettingStore';
+import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
+import GitData, { Git } from 'Components/MDClass/GitData/GitData';
+import NginxData, { Nginx } from 'Components/MDClass/NginxData/NginxData';
+
+interface ProjectConfigInfo {
+  buildConfigs: Build[];
+  gitConfig: Git;
+  nginxConfig: Nginx;
+  projectId: number;
+  projectName: string;
+}
 
 export default function Detail() {
-  const params = useParams();
+  const setProjectId = useStore((state) => state.setProjectId);
+  const setProjectName = useStore((state) => state.setProjectName);
+  const setBuildConfigs = useStore((state) => state.setBuildConfigs);
+  const setGitConfig = useStore((state) => state.setGitConfig);
+  const setNginxConfig = useStore((state) => state.setNginxConfig);
+
   const [buildStates, setBuildStates] = useState<BuildState[]>([]);
   const [progress, setProgress] = useState('진행중... (미완성)');
   const [pullColor, setPullColor] = useState(100);
   const [runColor, setRunColor] = useState(200);
   const [buildColor, setBuildColor] = useState(500);
+
+  const history = useHistory();
+  const params = useParams();
+
+  const handleBackClick = () => {
+    history.push(`/`);
+  };
+
+  const handleEditClick = () => {
+    const projectId = Object.values(params)[0];
+    axios.get(`/api/project/config/${projectId}`).then((res) => {
+      const data = res.data as ProjectConfigInfo;
+      console.log(data);
+
+      if (data.projectId) setProjectId(data.projectId);
+      if (data.projectName) setProjectName(data.projectName);
+      if (data.buildConfigs) setBuildConfigs([...data.buildConfigs]);
+      else setBuildConfigs([new BuildData()]);
+      if (data.gitConfig) setGitConfig(data.gitConfig);
+      else setGitConfig(new GitData());
+      if (data.nginxConfig) setNginxConfig(data.nginxConfig);
+      else setNginxConfig(new NginxData());
+    });
+    history.push(`/setting`);
+  };
 
   useEffect(() => {
     axios
@@ -38,6 +82,29 @@ export default function Detail() {
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
     >
       <Box sx={{ width: '90%', padding: 3 }}>
+        <Stack mt={5} spacing={2} direction="row" justifyContent="flex-end">
+          <Button
+            variant="contained"
+            sx={{ background: 'linear-gradient(195deg, #ee6666, #ff2222)' }}
+          >
+            Del
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleEditClick}
+            sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+          >
+            Edit
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={handleBackClick}
+            sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+          >
+            Back
+          </Button>
+        </Stack>
         <Typography
           sx={{ textWeight: 4 }}
           my={4}
@@ -116,9 +183,19 @@ export default function Detail() {
               </Grid>
             </Grid>
           </Box>
-          {buildStates.map((value) => {
-            return <BuildStateBox key={uuid()} buildState={value} />;
-          })}
+          {buildStates.length ? (
+            <>
+              {buildStates.map((value) => {
+                return <BuildStateBox key={uuid()} buildState={value} />;
+              })}
+            </>
+          ) : (
+            <Paper sx={{ backgroundColor: 'rgb(240, 240,240)', padding: 3 }}>
+              <Typography align="center" variant="h6">
+                빌드 해주세요...
+              </Typography>
+            </Paper>
+          )}
         </Box>
       </Box>
     </Box>

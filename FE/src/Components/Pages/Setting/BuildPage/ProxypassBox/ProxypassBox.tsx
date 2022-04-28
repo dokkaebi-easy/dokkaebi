@@ -77,7 +77,10 @@ export default function ProxypassBox({
             startIcon={<DeleteIcon />}
             size="small"
             onClick={handleProxyDelClick}
-            sx={{ color: 'black', borderColor: 'black' }}
+            sx={{
+              color: 'red',
+              borderColor: 'red',
+            }}
           >
             Delete
           </Button>

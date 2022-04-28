@@ -79,7 +79,7 @@ export default function SideNavibar() {
               </ListItemButton>
             </Link>
           </ListItem>
-          {pageName === 'detail' || pageName === 'state' ? (
+          {pageName === 'detail' ? (
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>

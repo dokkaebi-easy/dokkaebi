@@ -3,13 +3,12 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelIcon from '@mui/icons-material/Cancel';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
 import PersonIcon from '@mui/icons-material/Person';
 import { AiOutlineGitlab } from 'react-icons/ai';
 import Typography from '@mui/material/Typography';
-import styled from '@emotion/styled';
-import Paper from '@mui/material/Paper';
-import { useLocation, useParams } from 'react-router-dom';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import { useLocation, useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 interface GitInfo {
@@ -40,6 +39,11 @@ export default function StateDetail() {
   });
   const location = useLocation();
   const params = useParams();
+  const history = useHistory();
+
+  const handleBackClick = () => {
+    history.push(`/detail/${stateData.projectId}`);
+  };
 
   useEffect(() => {
     const data = { ...params };
@@ -49,19 +53,14 @@ export default function StateDetail() {
   }, []);
 
   return (
-    <Box
-      mt={3}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'left',
-        padding: 5,
-      }}
-    >
-      <Grid container direction="column" justifyContent="left">
+    <Box mt={5}>
+      <Grid mt={5} container direction="column" justifyContent="left">
         <Grid item display="flex">
           {stateData.stateType === 'Done' ? (
-            <CheckCircleOutlineIcon color="success" sx={{ fontSize: 60 }} />
+            <CheckCircleOutlineIcon
+              color="success"
+              sx={{ fontSize: 60, fontWeight: '300' }}
+            />
           ) : (
             <CancelIcon color="error" sx={{ fontSize: 60 }} />
           )}
@@ -70,8 +69,19 @@ export default function StateDetail() {
           </Typography>
         </Grid>
         <Grid item display="flex">
-          <Typography variant="h3" sx={{ marginLeft: 15 }}>
-            빌드 #{stateData.buildNumber}
+          <Typography mt={3} variant="h3" sx={{ marginLeft: 15 }}>
+            빌드{' '}
+            <Box
+              sx={{
+                display: 'inline',
+                backgroundColor: 'rgb(33,33,33)',
+                color: 'white',
+                paddingX: 1,
+                borderRadius: 5,
+              }}
+            >
+              #{stateData.buildNumber}
+            </Box>
           </Typography>
         </Grid>
 
@@ -80,7 +90,7 @@ export default function StateDetail() {
             <Grid item display="flex" sx={{ m: 4 }}>
               <PersonIcon sx={{ fontSize: 35 }} />
               <Box sx={{ marginLeft: 3 }}>
-                {stateData.gitInfo ? (
+                {stateData.gitInfo.username ? (
                   <Typography variant="h5">
                     {`사용자 ${stateData.gitInfo.username}님이 시작하셨습니다.`}
                   </Typography>
@@ -95,14 +105,14 @@ export default function StateDetail() {
                 <Typography>
                   랩 저장소 :
                   <a href="##" target="_blank">
-                    {stateData.gitInfo
+                    {stateData.gitInfo.gitRepositoryUrl
                       ? `${stateData.gitInfo.gitRepositoryUrl}`
                       : '비어 있습니다.'}
                   </a>
                 </Typography>
                 <Typography>
                   깃랩 브랜치 :
-                  {stateData.gitInfo
+                  {stateData.gitInfo.gitBranch
                     ? `${stateData.gitInfo.gitBranch}`
                     : '비어 있습니다.'}
                 </Typography>
@@ -111,23 +121,31 @@ export default function StateDetail() {
           </>
         ) : null}
         <Box>
-          <Typography variant="h4" sx={{ marginY: 3 }}>
+          <Typography variant="h5" sx={{ marginY: 3 }}>
             콘솔 로그
           </Typography>
           <Box
             sx={{
               width: 'max',
-              paddingLeft: '5px',
+              padding: 3,
               whiteSpace: 'pre-wrap',
-              backgroundColor: '#84898c',
-              border: ' 5px #020202',
-              borderRadius: '10px',
+              backgroundColor: '#ddd',
+              borderRadius: 3,
             }}
           >
             {stateData.consoleLog}
           </Box>
         </Box>
       </Grid>
+      <Stack mt={5} spacing={2} direction="row">
+        <Button
+          variant="contained"
+          onClick={handleBackClick}
+          sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+        >
+          Back
+        </Button>
+      </Stack>
     </Box>
   );
 }

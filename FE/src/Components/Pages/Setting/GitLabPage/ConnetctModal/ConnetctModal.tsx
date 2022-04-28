@@ -32,19 +32,19 @@ const style = {
 export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
   const [errorId, setErrorId] = useState(false);
   const [errorToken, setErrorToken] = useState(false);
-  const [id, setId] = useState('');
+  const [name, setName] = useState('');
   const [apiToken, setApiToken] = useState('');
 
   const handleIdChange = (event: any) => {
-    setId(event.target.value);
+    setName(event.target.value);
   };
   const handleApiTokenChange = (event: any) => {
     setApiToken(event.target.value);
   };
 
   const handleSaveClick = () => {
-    if (!id || !apiToken) {
-      if (!id) {
+    if (!name || !apiToken) {
+      if (!name) {
         setErrorId(true);
         setTimeout(() => setErrorId(false), 1000);
       }
@@ -57,14 +57,14 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
     }
 
     const parameters = {
-      name: id,
+      name,
       accessToken: apiToken,
     };
     axios
       .post('/api/git/token', parameters)
       .then((res) => {
         Change(res.data);
-        setId('');
+        setName('');
         setApiToken('');
         Close();
       })
@@ -74,7 +74,7 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
   };
 
   const handleCloseClick = () => {
-    setId('');
+    setName('');
     setApiToken('');
     Close();
   };
@@ -98,16 +98,16 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <Typography id="modal-modal-description" sx={{ my: 2 }}>
             GitLab API Token
           </Typography>
-          <Typography>ID</Typography>
+          <Typography>Name</Typography>
           <TextField
             fullWidth
             error={errorId}
             helperText={errorId ? '아이디를 적어주어주세요' : ''}
-            label="ID"
+            label="Name"
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
-            placeholder="ID"
+            placeholder="Name"
             onChange={handleIdChange}
           />
           <Typography>API Token</Typography>
