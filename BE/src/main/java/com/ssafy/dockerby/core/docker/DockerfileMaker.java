@@ -44,7 +44,7 @@ public class DockerfileMaker {
   private void makeSpringBootDockerfile(DockerContainerConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
-    sb.append("COPY ").append(rootDir).append(config.getProjectDirectory()).append(" .").append('\n');
+    sb.append("COPY . . \n");
     if (config.getType() == "Gradle") {
       sb.append("RUN ").append("chmod +x ./gradlew").append('\n');
       sb.append("RUN ").append("./gradlew clean build").append('\n');
@@ -62,51 +62,45 @@ public class DockerfileMaker {
     sb.append(" app.jar").append('\n');
     sb.append("ENTRYPOINT [\"java\", \"-jar\", \"./app.jar\"]");
 
-    StringBuilder path = new StringBuilder();
-    sb.append(rootDir).append(config.getProjectDirectory()).append('/');
-    saveDockerFile(path.toString(),sb.toString());
+    saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
   }
 
   private void makeReactWithNginxDockerFile(DockerContainerConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
-    sb.append("COPY ").append(rootDir).append(config.getProjectDirectory()).append(" .").append('\n');
+    sb.append("COPY . . \n");
 
     sb.append("RUN ").append("npm install").append('\n');
     sb.append("RUN ").append("npm run build").append('\n');
 
     sb.append("FROM ").append("nginx:1.18.0").append('\n');
-    sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf");
+    sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf\n");
     sb.append("COPY --from=builder ");
     sb.append((config.getBuildPath() == null) ? "/build" : config.getBuildPath())
-      .append("/usr/share/nginx/html");
-    sb.append("EXPOSE ").append("3000");
+        .append(" /usr/share/nginx/html\n");
+    sb.append("EXPOSE ").append("3000").append('\n');
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
-    StringBuilder path = new StringBuilder();
-    sb.append(rootDir).append(config.getProjectDirectory()).append('/');
-    saveDockerFile(path.toString(),sb.toString());
+    saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
   }
 
   private void makeVueWithNginxDockerFile(DockerContainerConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
-    sb.append("COPY ").append(rootDir).append(config.getProjectDirectory()).append(" .").append('\n');
+    sb.append("COPY . . \n");
 
     sb.append("RUN ").append("npm install").append('\n');
     sb.append("RUN ").append("npm run build").append('\n');
 
     sb.append("FROM ").append("nginx:1.18.0").append('\n');
-    sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf");
+    sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf\n");
     sb.append("COPY --from=builder ");
     sb.append((config.getBuildPath() == null) ? "/app/dist" : config.getBuildPath())
-      .append("/usr/share/nginx/html");
-    sb.append("EXPOSE ").append("3000");
+      .append(" /usr/share/nginx/html\n");
+    sb.append("EXPOSE ").append("3000").append('\n');
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
-    StringBuilder path = new StringBuilder();
-    sb.append(rootDir).append(config.getProjectDirectory()).append('/');
-    saveDockerFile(path.toString(),sb.toString());
+    saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
   }
 
   private void makeDjangoDockerfile(DockerContainerConfig config) throws IOException {
@@ -133,9 +127,13 @@ public class DockerfileMaker {
     sb.append("RUN ").append("python manage.py migrate").append('\n');
     sb.append("CMD [\"python\", \"manage.py\", \"runserver\", \"0.0.0.0:8000\"]");
 
+    saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
+  }
+
+  private String getDestPath(String projectDirectory) {
     StringBuilder path = new StringBuilder();
-    sb.append(rootDir).append(config.getProjectDirectory()).append('/');
-    saveDockerFile(path.toString(),sb.toString());
+    path.append(rootDir).append(projectDirectory);
+    return path.toString();
   }
 
   private void saveDockerFile(String pjtDir, String sb) throws IOException {

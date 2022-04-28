@@ -1,6 +1,7 @@
 HELP.md
 .gradle
 build/
+logs/
 fileData/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/

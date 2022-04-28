@@ -7,12 +7,14 @@ import java.util.Map;
 public class DockerCommandMaker {
 
   private final String projectName;
-  private final String rootDir;
+
+  private final String projectPath;
+
   private String networkBridge;
 
-  public DockerCommandMaker(String projectName, String rootDir) {
+  public DockerCommandMaker(String projectPath, String projectName) {
     this.projectName = projectName;
-    this.rootDir = rootDir;
+    this.projectPath = projectPath;
   }
 
   public String build(DockerContainerConfig config) {
@@ -20,7 +22,7 @@ public class DockerCommandMaker {
     // TODO : Image tag를 latest로 하는 것은 권장되지 않습니다.
     sb.append("docker build -t ")
         .append(config.getName()).append(":latest")
-        .append(' ').append(rootDir).append(config.getProjectDirectory());
+        .append(' ').append(projectPath).append(config.getProjectDirectory());
     return sb.toString();
   }
 

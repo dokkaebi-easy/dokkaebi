@@ -24,6 +24,9 @@ export default function BasicLayout() {
   window.addEventListener('resize', handleMiniSidenav);
 
   useEffect(() => {
+    if (window.localStorage.getItem('login') === null) {
+      window.location.replace('/login');
+    }
     return () => {
       setOpen(true);
     };

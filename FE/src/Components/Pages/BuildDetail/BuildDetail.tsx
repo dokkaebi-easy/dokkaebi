@@ -2,39 +2,29 @@ import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
+import CancelIcon from '@mui/icons-material/Cancel';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import PersonIcon from '@mui/icons-material/Person';
 import { AiOutlineGitlab } from 'react-icons/ai';
 import styled from '@emotion/styled';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import { api } from '../../../api/index';
 
-const data = {
-  projectName: 'doho123',
-  buildNumber: 1,
-  gitInfo: {
-    username: 'dddd',
-    gitRepositoryUrl: 'http://lab.ssafy.com/s06-final/s06-final/s06p31s205.git',
-    gitBranch: 'dev',
-  },
-  consoleLog:
-    'bb004ff7f98bc9f9a879c28a4eb78629284b8d5f0eb9a692fe8cdebe742d4b35\n"docker build" requires exactly 1 argument.\nSee \'docker build --help\'.\n\nUsage:  docker build [OPTIONS] PATH | URL | -\n\nBuild an image from a Dockerfile\n',
-};
-
 export default function BuildDetail() {
-  // const [data, setData] = useState('');
+  const [detailData, setDetailData] = useState<any>('');
+  const location = useLocation();
 
   useEffect(() => {
-    api
-      .get(`project/build/detail?buildStateId=1&buildType=pull`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    const apiData = JSON.stringify(location.state);
+    api.post(`/project/build/detail`, apiData).then((res) => {
+      const detailDate = res.data;
+      setDetailData(detailDate);
+    });
+  }, [location]);
+  console.log(location);
+  console.log(detailData);
 
   return (
     <Box
@@ -48,31 +38,48 @@ export default function BuildDetail() {
     >
       <Grid container direction="column" justifyContent="left">
         <Grid item display="flex">
-          <CheckCircleOutlineIcon color="success" sx={{ fontSize: 60 }} />
-          <Title>
-            프로젝트 : {data.projectName} 빌드 #{data.buildNumber} (2022. 4. 11
-            오후 10:02:54)
-          </Title>
+          {location.state === 'Done' ? (
+            <CheckCircleOutlineIcon color="success" sx={{ fontSize: 60 }} />
+          ) : (
+            <CancelIcon color="error" sx={{ fontSize: 60 }} />
+          )}
+          <Title>프로젝트 : {detailData.projectName}</Title>
+        </Grid>
+        <Grid item display="flex">
+          <Buildnum>빌드 #{detailData.buildNumber}</Buildnum>
         </Grid>
         <Grid item display="flex" sx={{ m: 4 }}>
           <PersonIcon sx={{ fontSize: 35 }} />
-          <User>사용자 {data.gitInfo.username}님이 시작하셨습니다.</User>
+          <User>
+            {detailData.gitInfo
+              ? `사용자 ${detailData.gitInfo.username}님이 시작하셨습니다.`
+              : ' 사용자 없음 '}
+          </User>
         </Grid>
         <Grid item display="flex" sx={{ my: 2, mx: 4 }}>
           <AiOutlineGitlab size={35} />
           <div>
             <GitUrl>
               &nbsp; 깃랩 저장소 :
-              <a href="##"> {data.gitInfo.gitRepositoryUrl}</a>
+              <a href="##">
+                {detailData.gitInfo
+                  ? `${detailData.gitInfo.gitRepositoryUrl}`
+                  : ' null '}
+              </a>
             </GitUrl>
-            <Gitbranch>깃랩 브랜치 : {data.gitInfo.gitBranch}</Gitbranch>
+            <Gitbranch>
+              깃랩 브랜치 :
+              {detailData.gitInfo
+                ? `${detailData.gitInfo.gitBranch}`
+                : ' null '}
+            </Gitbranch>
           </div>
         </Grid>
         <Box>
           <Typography variant="h4" sx={{ marginY: 3 }}>
             콘솔 로그
           </Typography>
-          <Span>{data.consoleLog}</Span>
+          <Span>{detailData.consoleLog}</Span>
         </Box>
       </Grid>
     </Box>
@@ -82,6 +89,11 @@ export default function BuildDetail() {
 const Title = styled.div`
   font-size: 35px;
   margin-left: 30px;
+`;
+
+const Buildnum = styled.div`
+  font-size: 35px;
+  margin-left: 89px;
 `;
 
 const User = styled.div`
@@ -95,7 +107,7 @@ const GitUrl = styled.div`
 
 const Gitbranch = styled.div`
   font-size: 18px;
-  margin-left: 10px;
+  margin-left: 13px;
 `;
 
 const Log = styled.div`

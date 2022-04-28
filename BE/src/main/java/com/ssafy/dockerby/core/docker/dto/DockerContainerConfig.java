@@ -2,7 +2,6 @@ package com.ssafy.dockerby.core.docker.dto;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -84,5 +83,9 @@ public class DockerContainerConfig {
       useNginx = false;
       return this;
     }
+  }
+
+  public void convertVersion(String docekerHubVersion) {
+    this.version = docekerHubVersion;
   }
 }
