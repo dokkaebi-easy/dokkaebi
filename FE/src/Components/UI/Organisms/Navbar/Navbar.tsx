@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useLocation, Link } from 'react-router-dom';
-import { api } from '../../../../api/index';
+import axios from 'axios';
 
 const transitionStyle = {
   transitionDuration: '0.2s',
@@ -19,13 +19,17 @@ export default function Navbar() {
   const loginInfo = window.localStorage.getItem('login');
   const logout = () => {
     window.localStorage.removeItem('login');
-    api.post(`user/auth/signout`);
+    axios
+      .post(`/api/user/auth/signout`)
+      .then()
+      .catch((err) => console.log(err));
   };
 
   const handleScroll = () => {
     if (window.scrollY) setOpen(true);
     else setOpen(false);
   };
+
   document.addEventListener('scroll', handleScroll);
 
   useEffect(() => {

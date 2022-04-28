@@ -151,7 +151,7 @@ export default function BuildBasicBox({
       <Paper sx={{ padding: 3 }}>
         <Grid container spacing={2}>
           <Grid item>
-            <Typography>Name</Typography>
+            <Typography>별칭</Typography>
             <TextField
               defaultValue={name}
               id="outlined-basic"
