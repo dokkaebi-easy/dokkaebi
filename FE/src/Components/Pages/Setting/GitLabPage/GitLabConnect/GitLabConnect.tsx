@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -11,9 +11,7 @@ import Stack from '@mui/material/Stack';
 import ConnetctModal from 'Components/Pages/Setting/GitLabPage/ConnetctModal/ConnetctModal';
 import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
-import ResponseIdNameData, {
-  ResponseIdName,
-} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
+import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface GitProps {
   gitData: Git;

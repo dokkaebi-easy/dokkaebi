@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
-
-const transitionStyle = {
-  transitionDuration: '0.2s',
-  transitionProperty: 'all',
-};
 
 export default function Navbar() {
   const [pageName, setPageName] = useState('');
@@ -19,10 +14,7 @@ export default function Navbar() {
   const loginInfo = window.localStorage.getItem('login');
   const logout = () => {
     window.localStorage.removeItem('login');
-    axios
-      .post(`/api/user/auth/signout`)
-      .then()
-      .catch((err) => console.log(err));
+    axios.post(`/api/user/auth/signout`).then().catch();
   };
 
   const handleScroll = () => {
