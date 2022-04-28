@@ -33,7 +33,9 @@ public class DockerAdapter {
   }
 
   private String run(DockerContainerConfig config) {
-    return dockerCommandMaker.run(config);
+    if(config.buildPossible())
+      return dockerCommandMaker.run(config);
+    return "";
   }
 
   private String network() {
