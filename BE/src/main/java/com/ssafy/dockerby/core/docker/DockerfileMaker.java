@@ -45,18 +45,18 @@ public class DockerfileMaker {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
-    if (config.getType() == "Gradle") {
+    if (config.getType().equals("Gradle")) {
       sb.append("RUN ").append("chmod +x ./gradlew").append('\n');
       sb.append("RUN ").append("./gradlew clean build").append('\n');
-    } else if (config.getType() == "Maven") {
+    } else if (config.getType().equals("Maven")) {
       sb.append("RUN ").append("chmod +x ./mvnw").append('\n');
       sb.append("RUN ").append("./mvnw clean package").append('\n');
     }
     sb.append("FROM ").append(config.getVersion()).append('\n');
     sb.append("COPY --from=builder ");
-    if (config.getType() == "Gradle") {
+    if (config.getType().equals("Gradle")) {
       sb.append(((config.getBuildPath() == null) ? "/build/libs" : config.getBuildPath()) + "/*.jar");
-    } else if (config.getType() == "Maven") {
+    } else if (config.getType().equals("Maven")) {
       sb.append(((config.getBuildPath() == null) ? "/target" : config.getBuildPath()) + "/*.jar");
     }
     sb.append(" app.jar").append('\n');
