@@ -12,13 +12,13 @@ import { Nginx } from 'Components/MDClass/NginxData/NginxData';
 import LocationsData, {
   Locations,
 } from 'Components/MDClass/LocationsData/LocationsData';
-import Proxypass from '../Proxypass/Proxypass';
+import Proxypass from '../ProxypassBox/ProxypassBox';
 
 interface NginxProps {
   nginxValue: Nginx;
 }
 
-export default function NginxBasic({ nginxValue }: NginxProps) {
+export default function NginxBasicBox({ nginxValue }: NginxProps) {
   const [https, setHttps] = useState(nginxValue.https);
   const [domainURL, setDomainURL] = useState(nginxValue.domainUrl);
   const [locations, setLocations] = useState<Locations[]>(nginxValue.locations);
@@ -139,10 +139,10 @@ export default function NginxBasic({ nginxValue }: NginxProps) {
                 fullWidth
                 disabled={!https}
                 id="outlined-basic"
-                label="Project Name"
+                label="SSL Certificate"
                 variant="outlined"
                 size="small"
-                placeholder="ProjectName"
+                placeholder="SSL Certificate"
                 defaultValue={sslCertificate}
                 onChange={handleSslCertificateChange}
               />
@@ -156,10 +156,10 @@ export default function NginxBasic({ nginxValue }: NginxProps) {
                 fullWidth
                 disabled={!https}
                 id="outlined-basic"
-                label="Project Name"
+                label="SSL Certificate Key"
                 variant="outlined"
                 size="small"
-                placeholder="ProjectName"
+                placeholder="SSL Certificate Key"
                 defaultValue={sslCertificateKey}
                 onChange={handleSslCertificateKeyChange}
               />
@@ -174,10 +174,10 @@ export default function NginxBasic({ nginxValue }: NginxProps) {
                 fullWidth
                 disabled={!https}
                 id="outlined-basic"
-                label="Project Name"
+                label="SSL Path"
                 variant="outlined"
                 size="small"
-                placeholder="ProjectName"
+                placeholder="SSL Path"
                 defaultValue={sslPath}
                 onChange={handleSslPathChange}
               />

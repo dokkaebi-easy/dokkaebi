@@ -1,17 +1,17 @@
 import PropertyData, { Property } from '../PropertyData/PropertyData';
 
 export interface Build {
-  frameworkName: string;
+  frameworkId: number;
   name: string;
   version: string;
   type: string;
   projectDirectory: string;
   buildPath: string;
-  propertys: Property[];
+  properties: Property[];
 }
 
 export default class BuildData {
-  public frameworkName: string;
+  public frameworkId: number;
 
   public name: string;
 
@@ -23,15 +23,15 @@ export default class BuildData {
 
   public buildPath: string;
 
-  public propertys: Property[];
+  public properties: Property[];
 
   constructor() {
-    this.frameworkName = '';
+    this.frameworkId = -1;
     this.name = '';
     this.version = '';
     this.type = '';
     this.projectDirectory = '';
     this.buildPath = '';
-    this.propertys = [new PropertyData()];
+    this.properties = [new PropertyData()];
   }
 }

@@ -3,6 +3,7 @@ import { useStore } from 'Components/Store/SettingStore/SettingStore';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import axios from 'axios';
+import Typography from '@mui/material/Typography';
 
 interface PropertyAxios {
   first: string;
@@ -28,14 +29,16 @@ export default function AxiosPage() {
   const nginxConfig = useStore((state) => state.nginxConfig);
 
   const handleClick = () => {
-    const params = {
+    const data = {
       buildConfigs,
       gitConfig,
       nginxConfig,
       projectName,
     };
+    console.log(JSON.stringify(data));
+
     axios
-      .post('/api/project', params)
+      .post('/api/project', data)
       .then((res) => {
         console.log(res.data);
       })
@@ -44,11 +47,17 @@ export default function AxiosPage() {
       });
   };
   return (
-    <Box>
-      <Box>Run Build</Box>
-      <Button variant="outlined" size="small" onClick={handleClick}>
-        Submit
-      </Button>
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box>
+        <Box my={3}>
+          <Typography variant="h4">Build Setting Save</Typography>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button variant="outlined" size="large" onClick={handleClick}>
+            Save
+          </Button>
+        </Box>
+      </Box>
     </Box>
   );
 }

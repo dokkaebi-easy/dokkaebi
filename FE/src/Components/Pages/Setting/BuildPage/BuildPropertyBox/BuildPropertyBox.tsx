@@ -16,13 +16,18 @@ interface PropertyProps {
 
 export default function BuildPropertyBox({ buildValue }: PropertyProps) {
   const [propertyDatas, setPropertyDatas] = useState<Property[]>(
-    buildValue.propertys,
+    buildValue.properties,
   );
 
   const handleOnClick = () => {
     const newData = new PropertyData();
     setPropertyDatas((cur) => [...cur, newData]);
-    buildValue.propertys = [...buildValue.propertys, new PropertyData()];
+    buildValue.properties = [...buildValue.properties, new PropertyData()];
+  };
+
+  const handleDelClickProps = (index: number) => {
+    buildValue.properties.splice(index, 1);
+    setPropertyDatas([...buildValue.properties]);
   };
 
   return (
@@ -48,7 +53,9 @@ export default function BuildPropertyBox({ buildValue }: PropertyProps) {
               <PropertyBox
                 key={uuid()}
                 value={value}
-                buildValue={buildValue.propertys[index]}
+                buildValue={buildValue.properties[index]}
+                index={index}
+                DelClick={handleDelClickProps}
               />
             );
           })}
