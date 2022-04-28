@@ -71,7 +71,9 @@ public class NginxConfigMaker {
   private String addLocations(List<ProxyLocation> locations) {
     StringBuilder sb = new StringBuilder();
     for (ProxyLocation location : locations) {
-      sb.append(addLocation(location));
+      if (!location.checkBlank()) {
+        sb.append(addLocation(location));
+      }
     }
     return sb.toString();
   }

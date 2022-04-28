@@ -218,12 +218,11 @@ public class ProjectServiceImpl implements ProjectService {
           new StringBuilder().append(filePath).append("/").append(getConfigDto.getGitProjectId())
               .toString(), project.getProjectName());
 
-      List<DockerContainerConfig> dockerConfigs = ConfigParser.getBuildConfig(projectConfigDto);
-      try {
-        dockerAdapter.saveDockerfiles(dockerConfigs);
-      } catch (Exception e) {
-        log.error("docker file not making {} DockerAdapter({})",project.getProjectName());
-      }
+      List<DockerContainerConfig> dockerConfigs = loadConfigFiles(
+          new StringBuilder().append(filePath).append("/").append(configPath).toString(), configs,
+          DockerContainerConfig.class);
+      dockerAdapter.saveDockerfiles(dockerConfigs);
+
       if (!projectConfigDto.getNginxConfig().isNotUse()) {
         String nginxFrontProjectDirectory = "";
         for (DockerContainerConfig config : buildConfigs) {
