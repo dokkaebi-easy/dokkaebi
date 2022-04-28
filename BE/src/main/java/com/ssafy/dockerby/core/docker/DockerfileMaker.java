@@ -112,7 +112,7 @@ public class DockerfileMaker {
     sb.append("ENV ").append("PYTHONDONTWRITEBYTECODE 1").append('\n');
     sb.append("ENV ").append("PYTHONUNBUFFERED 1").append('\n');
 
-    sb.append("COPY ./requirements.txt /usr/src/app");
+    sb.append("COPY ./requirements.txt /usr/src/app").append('\n');
 
     sb.append("RUN ").append("pip install --upgrade pip").append('\n');
 
