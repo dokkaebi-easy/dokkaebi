@@ -204,11 +204,6 @@ public class ProjectServiceImpl implements ProjectService {
 
       FileUtils.deleteDirectory(new File(repositoryPath.toString()));
 
-      StringBuilder configFilePath = new StringBuilder();
-      configFilePath.append(filePath).append("/").append(configPath);
-
-      // Git clone
-      // TODO Upsert이다. Gitlab config가 변경 된 경우에 새로 clone -> update면 pull 받자?
       GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
 
       String cloneCommand = GitlabAdapter.getCloneCommand(
@@ -657,7 +652,7 @@ public class ProjectServiceImpl implements ProjectService {
     BuildDetailResponseDto buildDetailResponseDto = BuildDetailResponseDto.builder()
         .projectName(buildState.getProject().getProjectName())
         .buildNumber(buildState.getBuildNumber())
-        .completeTime(buildState.getRegistDate())
+        .registDate(buildState.getRegistDate())
         .gitInfo(gitInfo)
         .consoleLog(consoleLog.toString())
         .build();
