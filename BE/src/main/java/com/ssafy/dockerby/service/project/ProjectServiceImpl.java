@@ -652,6 +652,7 @@ public class ProjectServiceImpl implements ProjectService {
     BuildDetailResponseDto buildDetailResponseDto = BuildDetailResponseDto.builder()
         .projectName(buildState.getProject().getProjectName())
         .buildNumber(buildState.getBuildNumber())
+        .registDate(buildState.getRegistDate())
         .gitInfo(gitInfo)
         .consoleLog(consoleLog.toString())
         .build();
