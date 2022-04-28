@@ -13,6 +13,8 @@ public class DatasourceConfig {
 
   @Bean
   public DataSource getDataSource() throws IOException {
+    String authKey = FileManager.loadFile("", "AuthKey");
+    authKey.replaceAll("\n","");
     DataSourceBuilder builder = DataSourceBuilder.create();
     builder.driverClassName("org.mariadb.jdbc.Driver");
     builder.username("root");

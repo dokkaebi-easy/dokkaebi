@@ -6,7 +6,7 @@ Time=`date +%H%M%S`
 Time=`echo $Time | base64`
 AuthKey=${AuthKey//-/}$Time
 AuthKey=${AuthKey//=/}
-echo -n $AuthKey > /AuthKey
+echo $AuthKey > /AuthKey
 
 # service 
 service mariadb start
