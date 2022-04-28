@@ -105,8 +105,8 @@ public class ProjectServiceImpl implements ProjectService {
             () -> new NotFoundException("ProjectServiceImpl.configByProjectName : " + projectId));
 
     StringBuilder filePath = new StringBuilder();
-    filePath.append(rootPath).append("/").append(project.getProjectName()).append("/").append(configPath);
-
+    filePath.append(rootPath).append("/").append(project.getProjectName()).append("/")
+        .append(configPath);
 
     List<DockerContainerConfig> configs = loadConfigFiles(filePath.toString(),
         project.getProjectConfigs(), DockerContainerConfig.class);
@@ -123,7 +123,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     List<BuildConfigDto> buildConfigs = new ArrayList<>();
-    for(DockerContainerConfig config : configs) {
+    for (DockerContainerConfig config : configs) {
       Version version = frameworkTypeRepository.findById(
               Long.valueOf(config.getFramework().ordinal()))
           .orElseThrow(() -> new NotFoundException(
@@ -136,9 +136,10 @@ public class ProjectServiceImpl implements ProjectService {
 
       List<ConfigProperty> properties = ConfigParser.dockerContainerPropertyToConfigProperty(
           config.getProperties());
-      buildConfigs.add(BuildConfigDto.from(config,version.getInputVersion(),properties));
+      buildConfigs.add(BuildConfigDto.from(config, version.getInputVersion(), properties));
     }
-    return ProjectConfigDto.of(projectId, project.getProjectName(), buildConfigs,GitConfigDto.from(gitlabConfig),nginxConfigDto);
+    return ProjectConfigDto.of(projectId, project.getProjectName(), buildConfigs,
+        GitConfigDto.from(gitlabConfig), nginxConfigDto);
 
 
   }
@@ -147,11 +148,12 @@ public class ProjectServiceImpl implements ProjectService {
   public Map<Project, String> upsert(ProjectConfigDto projectConfigDto)
       throws NotFoundException, IOException {
 
-    Map<Project,String> result = new HashMap<>();
+    Map<Project, String> result = new HashMap<>();
     Project project;
-    if(projectConfigDto.getProjectId() != 0) {
+    if (projectConfigDto.getProjectId() != 0) {
       project = projectRepository.findById(projectConfigDto.getProjectId())
-          .orElseThrow(() -> new NotFoundException("upsert user not found id " + projectConfigDto.getProjectId()));
+          .orElseThrow(() -> new NotFoundException(
+              "upsert user not found id " + projectConfigDto.getProjectId()));
       result.put(project, "update");
     } else {
       project = projectRepository.save(Project.from(projectConfigDto));
@@ -181,15 +183,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     project.addProjectConfigs(configs);
 
-
-
     log.info("GitConfigDto project ID : {}", project.getId());
     GitConfigDto getConfigDto = projectConfigDto.getGitConfig();
     if (getConfigDto != null) {
       gitlabService.config(project.getId())
           .map(config -> gitlabService.updateConfig(project, getConfigDto))
           .orElseGet(() -> gitlabService.createConfig(project, getConfigDto));
-
 
       StringBuilder filePath = new StringBuilder();
       filePath.append(rootPath + "/" + project.getProjectName());
@@ -215,21 +214,35 @@ public class ProjectServiceImpl implements ProjectService {
           cloneCommand);
 
       upsertConfigFile(configFilePath.toString(), buildConfigs);
-      if(!projectConfigDto.getNginxConfig().isNotUse()) {
+      DockerAdapter dockerAdapter = new DockerAdapter(
+          new StringBuilder().append(filePath).append("/").append(getConfigDto.getGitProjectId())
+              .toString(), project.getProjectName());
+
+      List<DockerContainerConfig> dockerConfigs = ConfigParser.getBuildConfig(projectConfigDto);
+      try {
+        dockerAdapter.saveDockerfiles(dockerConfigs);
+      } catch (Exception e) {
+        log.error("docker file not making {} DockerAdapter({})",project.getProjectName());
+      }
+      if (!projectConfigDto.getNginxConfig().isNotUse()) {
         String nginxFrontProjectDirectory = "";
-        for(DockerContainerConfig config :buildConfigs) {
-          if(config.isUseNginx()) {
+        for (DockerContainerConfig config : buildConfigs) {
+          if (config.isUseNginx()) {
             nginxFrontProjectDirectory = config.getProjectDirectory();
             break;
           }
         }
-        if(nginxFrontProjectDirectory.isEmpty()) {
-          throw new IllegalArgumentException("ProjectServiceImpl.upsert nginxconf 존재하지만 사용하는 prj가 없음");
+        if (nginxFrontProjectDirectory.isEmpty()) {
+          throw new IllegalArgumentException(
+              "ProjectServiceImpl.upsert nginxconf 존재하지만 사용하는 prj가 없음");
         }
         StringBuilder nginxPath = new StringBuilder();
-        nginxPath.append(filePath).append("/").append(getConfigDto.getGitProjectId()).append(nginxFrontProjectDirectory);
-        EtcConfigMaker.nginxConfig(nginxPath.toString(),DockerNginxConfig.from(projectConfigDto.getNginxConfig()));
-        EtcConfigMaker.saveDockerNginxConfig(configFilePath.toString(),projectConfigDto.getNginxConfig());
+        nginxPath.append(filePath).append("/").append(getConfigDto.getGitProjectId())
+            .append(nginxFrontProjectDirectory);
+        EtcConfigMaker.nginxConfig(nginxPath.toString(),
+            DockerNginxConfig.from(projectConfigDto.getNginxConfig()));
+        EtcConfigMaker.saveDockerNginxConfig(configFilePath.toString(),
+            projectConfigDto.getNginxConfig());
       }
     }
 
@@ -240,7 +253,7 @@ public class ProjectServiceImpl implements ProjectService {
    * Project build config를 json 형태로 저장 내부적으로 projects/{projectName}/jsonData으로 경로를 지정한다. 파일 이름은
    * build하는 configName이다.
    *
-   * @param filePath  환경 설정 파일 저장 위치
+   * @param filePath     환경 설정 파일 저장 위치
    * @param buildConfigs FE로부터 입력받은 빌드 환경설정 dto
    */
   private void upsertConfigFile(String filePath, List<DockerContainerConfig> buildConfigs) {
@@ -329,7 +342,8 @@ public class ProjectServiceImpl implements ProjectService {
     StringBuilder repositoryPath = new StringBuilder();
     repositoryPath.append(filePath).append("/").append(project.getGitConfig().getGitProjectId());
 
-    DockerAdapter dockerAdapter = new DockerAdapter(repositoryPath.toString(), project.getProjectName());
+    DockerAdapter dockerAdapter = new DockerAdapter(repositoryPath.toString(),
+        project.getProjectName());
     List<DockerContainerConfig> configs = loadConfigFiles(configFilePath.toString(),
         project.getProjectConfigs(), DockerContainerConfig.class);
 
@@ -513,7 +527,7 @@ public class ProjectServiceImpl implements ProjectService {
       }
       //성공 로그 출력
       log.info("getFrameworkVersion request success");
-      return FrameworkVersionResponseDto.from(type.getLanguage().getName(),versions, buildTools);
+      return FrameworkVersionResponseDto.from(type.getLanguage().getName(), versions, buildTools);
     } catch (Exception error) {
       //실패 로그 출력
       log.error("getFrameworkVersion request failed {} {}", error.getCause(), error.getMessage());
@@ -629,7 +643,8 @@ public class ProjectServiceImpl implements ProjectService {
     String path = rootPath + "/" + buildState.getProject().getProjectName()
         + "/log";//경로  projects/{프로젝트 이름}/log
     String fileName =
-        (buildDetailRequestDto.getName().toString()) + "_" + buildState.getBuildNumber();//  상태_빌드 넘버
+        (buildDetailRequestDto.getName().toString()) + "_"
+            + buildState.getBuildNumber();//  상태_빌드 넘버
 
     StringBuilder consoleLog = new StringBuilder();
 
@@ -649,15 +664,13 @@ public class ProjectServiceImpl implements ProjectService {
           .build();
     }
 
-    String stateType="";
-    if("Pull".equals(buildDetailRequestDto.getName().toString())){
-      stateType=buildState.getPull().getStateType().toString();
-    }
-    else if("Build".equals(buildDetailRequestDto.getName().toString())){
-      stateType=buildState.getBuild().getStateType().toString();
-    }
-    else if("Run".equals(buildDetailRequestDto.getName().toString())){
-      stateType=buildState.getRun().getStateType().toString();
+    String stateType = "";
+    if ("Pull".equals(buildDetailRequestDto.getName().toString())) {
+      stateType = buildState.getPull().getStateType().toString();
+    } else if ("Build".equals(buildDetailRequestDto.getName().toString())) {
+      stateType = buildState.getBuild().getStateType().toString();
+    } else if ("Run".equals(buildDetailRequestDto.getName().toString())) {
+      stateType = buildState.getRun().getStateType().toString();
     }
 
     BuildDetailResponseDto buildDetailResponseDto = BuildDetailResponseDto.builder()
