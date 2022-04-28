@@ -198,7 +198,7 @@ public class ProjectServiceImpl implements ProjectService {
       configFilePath.append(filePath).append("/").append(configPath);
 
       StringBuilder repositoryPath = new StringBuilder();
-      repositoryPath.append(filePath).append("/").append(getConfigDto.getGitProjectId());
+      repositoryPath.append(filePath).append(getConfigDto.getGitProjectId());
 
       // Git clone
 
@@ -211,7 +211,7 @@ public class ProjectServiceImpl implements ProjectService {
               getConfigDto.getBranchName(), getConfigDto.getGitProjectId()));
 
       CommandInterpreter.runDestPath(filePath.toString(),
-          new StringBuilder().append(filePath).append("/").append(logPath).toString(), "clone", 0,
+          new StringBuilder().append(filePath).append("/").append(logPath).toString(), "Clone", 0,
           cloneCommand);
 
       upsertConfigFile(configFilePath.toString(), buildConfigs);
@@ -227,7 +227,7 @@ public class ProjectServiceImpl implements ProjectService {
           throw new IllegalArgumentException("ProjectServiceImpl.upsert nginxconf 존재하지만 사용하는 prj가 없음");
         }
         StringBuilder nginxPath = new StringBuilder();
-        nginxPath.append(filePath).append("/").append(getConfigDto.getGitProjectId()).append("/").append(nginxFrontProjectDirectory);
+        nginxPath.append(filePath).append("/").append(getConfigDto.getGitProjectId()).append(nginxFrontProjectDirectory);
         EtcConfigMaker.nginxConfig(nginxPath.toString(),DockerNginxConfig.from(projectConfigDto.getNginxConfig()));
         EtcConfigMaker.saveDockerNginxConfig(configFilePath.toString(),projectConfigDto.getNginxConfig());
       }
@@ -339,7 +339,7 @@ public class ProjectServiceImpl implements ProjectService {
       if (buildState.getWebhookHistory() != null) {
         List<String> commands = new ArrayList<>();
         commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
-        CommandInterpreter.runDestPath(repositoryPath.toString(), logFilePath.toString(), "pull",
+        CommandInterpreter.runDestPath(repositoryPath.toString(), logFilePath.toString(), "Pull",
             buildNumber, commands);
 
         dockerAdapter.saveDockerfiles(configs);
@@ -371,7 +371,7 @@ public class ProjectServiceImpl implements ProjectService {
     //Build start
     try { // Build 트라이
       List<String> buildCommands = dockerAdapter.getBuildCommands(configs);
-      CommandInterpreter.run(logFilePath.toString(), "build", buildNumber, buildCommands);
+      CommandInterpreter.run(logFilePath.toString(), "Build", buildNumber, buildCommands);
 
       // state Done 넣기
       buildState.getBuild().updateStateType("Done");
@@ -399,11 +399,11 @@ public class ProjectServiceImpl implements ProjectService {
     //Run start
     try { // run 트라이
       if (buildNumber != 1) {
-        CommandInterpreter.run(logFilePath.toString(), "remove", buildNumber,
+        CommandInterpreter.run(logFilePath.toString(), "Remove", buildNumber,
             dockerAdapter.getRemoveCommands(configs));
       }
       List<String> buildCommands = dockerAdapter.getRunCommands(configs);
-      CommandInterpreter.run(logFilePath.toString(), "run", buildNumber, buildCommands);
+      CommandInterpreter.run(logFilePath.toString(), "Run", buildNumber, buildCommands);
       // state Done 넣기
       buildState.getRun().updateStateType("Done");
 
@@ -629,7 +629,7 @@ public class ProjectServiceImpl implements ProjectService {
     String path = rootPath + "/" + buildState.getProject().getProjectName()
         + "/log";//경로  projects/{프로젝트 이름}/log
     String fileName =
-        (buildDetailRequestDto.getName()) + "_" + buildState.getBuildNumber();//  상태_빌드 넘버
+        (buildDetailRequestDto.getName().toString()) + "_" + buildState.getBuildNumber();//  상태_빌드 넘버
 
     StringBuilder consoleLog = new StringBuilder();
 

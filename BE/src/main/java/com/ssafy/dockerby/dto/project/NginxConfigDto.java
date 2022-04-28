@@ -33,6 +33,6 @@ public class NginxConfigDto {
   }
 
   public boolean isNotUse() {
-    return domains.get(0).isBlank() && locations.get(0).isBlank();
+    return domains.get(0).isBlank() && locations.get(0).checkBlank();
   }
 }
