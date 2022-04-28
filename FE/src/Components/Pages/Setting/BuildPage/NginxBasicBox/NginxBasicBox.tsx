@@ -13,6 +13,7 @@ import LocationsData, {
   Locations,
 } from 'Components/MDClass/LocationsData/LocationsData';
 import Proxypass from '../ProxypassBox/ProxypassBox';
+import DomainBox from '../DomainBox/DomainBox';
 
 interface NginxProps {
   nginxValue: Nginx;
@@ -20,7 +21,7 @@ interface NginxProps {
 
 export default function NginxBasicBox({ nginxValue }: NginxProps) {
   const [https, setHttps] = useState(nginxValue.https);
-  const [domainURL, setDomainURL] = useState(nginxValue.domainUrl);
+  const [domains, setDomains] = useState<string[]>(nginxValue.domains);
   const [locations, setLocations] = useState<Locations[]>(nginxValue.locations);
   const [sslCertificate, setSslCertificate] = useState(
     nginxValue.httpsOption.sslCertificate,
@@ -30,15 +31,15 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
   );
   const [sslPath, setSslPath] = useState(nginxValue.httpsOption.sslPath);
 
-  const handleAddClick = () => {
+  const handleDomainAddClick = () => {
+    nginxValue.domains.push('');
+    setDomains([...nginxValue.domains]);
+  };
+
+  const handleProxyPassAddClick = () => {
     const tempLoacations = new LocationsData();
     nginxValue.locations.push(tempLoacations);
     setLocations([...nginxValue.locations]);
-  };
-
-  const handleDomainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDomainURL(event.target.value);
-    nginxValue.domainUrl = event.target.value;
   };
 
   const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +77,15 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
   return (
     <Box>
       <Box position="relative" sx={{ top: 20, left: 10 }}>
-        <Paper sx={{ padding: 1, textAlign: 'center', width: 450 }}>
+        <Paper
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            width: 450,
+            color: ' white',
+            background: 'linear-gradient(195deg, #666, #191919)',
+          }}
+        >
           <Typography variant="h5" component="h2">
             NGINX (front with nginx) setting
           </Typography>
@@ -85,21 +94,27 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
       <Box>
         <Paper sx={{ padding: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography align="center">Domain URL</Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="Project Name"
-                variant="outlined"
-                size="small"
-                sx={{ my: 1 }}
-                placeholder="ProjectName"
-                defaultValue={domainURL}
-                onChange={handleDomainChange}
-              />
+            <Grid item xs={12} sx={{ margin: 'auto auto' }}>
+              {domains.map((value, index) => {
+                return (
+                  <DomainBox
+                    key={uuid()}
+                    value={value}
+                    index={index}
+                    domainValue={nginxValue.domains}
+                  />
+                );
+              })}
+              <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                <Button
+                  onClick={handleDomainAddClick}
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  sx={{ color: 'black', borderColor: 'black' }}
+                >
+                  Domain Add
+                </Button>
+              </Box>
             </Grid>
             <Grid item xs={12}>
               {locations.map((value, index) => {
@@ -122,9 +137,10 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
             <Grid item xs={9}>
               <Box sx={{ display: 'flex', justifyContent: 'end' }}>
                 <Button
-                  onClick={handleAddClick}
+                  onClick={handleProxyPassAddClick}
                   variant="outlined"
                   startIcon={<AddIcon />}
+                  sx={{ color: 'black', borderColor: 'black' }}
                 >
                   Proxypass Add
                 </Button>

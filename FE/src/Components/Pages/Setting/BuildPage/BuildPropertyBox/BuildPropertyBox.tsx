@@ -33,7 +33,15 @@ export default function BuildPropertyBox({ buildValue }: PropertyProps) {
   return (
     <Box my={3}>
       <Box position="relative" sx={{ top: 10, left: 10 }}>
-        <Paper sx={{ padding: 1, textAlign: 'center', width: 120 }}>
+        <Paper
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            width: 120,
+            color: ' white',
+            background: 'linear-gradient(195deg, #666, #191919)',
+          }}
+        >
           Property
         </Paper>
       </Box>
@@ -44,6 +52,7 @@ export default function BuildPropertyBox({ buildValue }: PropertyProps) {
               variant="outlined"
               startIcon={<AddIcon />}
               onClick={handleOnClick}
+              sx={{ color: 'black', borderColor: 'black' }}
             >
               Property Add
             </Button>

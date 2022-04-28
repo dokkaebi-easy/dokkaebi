@@ -105,7 +105,7 @@ public class ProjectServiceImpl implements ProjectService {
             () -> new NotFoundException("ProjectServiceImpl.configByProjectName : " + projectId));
 
     StringBuilder filePath = new StringBuilder();
-    filePath.append(rootPath).append("/").append(projectId).append("/").append(configPath);
+    filePath.append(rootPath).append("/").append(project.getProjectName()).append("/").append(configPath);
 
 
     List<DockerContainerConfig> configs = loadConfigFiles(filePath.toString(),
@@ -240,7 +240,7 @@ public class ProjectServiceImpl implements ProjectService {
    * Project build config를 json 형태로 저장 내부적으로 projects/{projectName}/jsonData으로 경로를 지정한다. 파일 이름은
    * build하는 configName이다.
    *
-   * @param projectName  프로젝트 이름
+   * @param filePath  환경 설정 파일 저장 위치
    * @param buildConfigs FE로부터 입력받은 빌드 환경설정 dto
    */
   private void upsertConfigFile(String filePath, List<DockerContainerConfig> buildConfigs) {
@@ -399,7 +399,7 @@ public class ProjectServiceImpl implements ProjectService {
     //Run start
     try { // run 트라이
       if (buildNumber != 1) {
-        CommandInterpreter.run(filePath.toString(), "remove", buildNumber,
+        CommandInterpreter.run(logFilePath.toString(), "remove", buildNumber,
             dockerAdapter.getRemoveCommands(configs));
       }
       List<String> buildCommands = dockerAdapter.getRunCommands(configs);

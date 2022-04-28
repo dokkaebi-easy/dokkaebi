@@ -117,10 +117,20 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
             onChange={handleUserNameChange}
           />
           <Stack mt={3} direction="row" justifyContent="flex-end" spacing={2}>
-            <Button variant="outlined" size="small" onClick={handleSaveClick}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleSaveClick}
+              sx={{ color: 'black', borderColor: 'black' }}
+            >
               Save
             </Button>
-            <Button variant="outlined" size="small" onClick={handleCloseClick}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleCloseClick}
+              sx={{ color: 'black', borderColor: 'black' }}
+            >
               Cancel
             </Button>
           </Stack>

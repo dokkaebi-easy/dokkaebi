@@ -48,7 +48,15 @@ export default function ConnectCheck({ gitData }: GitProps) {
   return (
     <Box my={3}>
       <Box position="relative" sx={{ top: 20, left: 10 }}>
-        <Paper sx={{ padding: 1, textAlign: 'center', width: 150 }}>
+        <Paper
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            width: 150,
+            color: ' white',
+            background: 'linear-gradient(195deg, #666, #191919)',
+          }}
+        >
           Connect Check
         </Paper>
       </Box>
@@ -81,6 +89,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
                   startIcon={<AddIcon />}
                   size="small"
                   onClick={handleCreateClick}
+                  sx={{ color: 'black', borderColor: 'black' }}
                 >
                   Create
                 </Button>
@@ -89,6 +98,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
                   startIcon={<AutorenewIcon />}
                   size="small"
                   onClick={handleTestConnectionClick}
+                  sx={{ color: 'black', borderColor: 'black' }}
                 >
                   test Connection
                 </Button>

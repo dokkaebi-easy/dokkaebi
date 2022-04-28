@@ -22,7 +22,7 @@ public class UserDefindedExceptionHandler {
         // e.printStackTrace 저장 객체
         StringWriter sw = printStackTraceMapper(e);
 
-        log.error("Error stackTrace: {}", e.getStackTrace());
+        log.error("Error stackTrace: {}", e);
         log.error("Error class : {}", e.getClass().getSimpleName());
         log.error("Error cause : {}", e.getCause());
         log.error(sw.toString());
@@ -36,7 +36,7 @@ public class UserDefindedExceptionHandler {
         HttpHeaders responseHeaders = new HttpHeaders();
         StringWriter sw = printStackTraceMapper(e);
 
-        log.error("Error stackTrace: {}", e.getStackTrace());
+        log.error("Error stackTrace: {}", e);
         log.error("Error class : {}", e.getClass().getSimpleName());
         log.error(sw.toString());
         ErrorResponseDto errorResponseDto = ErrorResponseDto.from(e);
