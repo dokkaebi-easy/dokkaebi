@@ -112,7 +112,7 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    {row.state}
+                    진행중... (미완성)
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="center">
@@ -120,7 +120,7 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    {row.state}
+                    진행중... (미완성)
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="right">
@@ -128,7 +128,7 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    {row.state}
+                    진행중... (미완성)
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="right">
@@ -136,7 +136,7 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    {row.state}
+                    진행중... (미완성)
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="right">
@@ -144,7 +144,7 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    {row.state}
+                    진행중... (미완성)
                   </Link>
                 </StyledTableCell>
               </StyledTableRow>
