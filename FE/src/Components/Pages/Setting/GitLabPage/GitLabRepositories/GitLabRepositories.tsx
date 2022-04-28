@@ -125,13 +125,13 @@ export default function GitLabRepositories({ gitData }: GitProps) {
               />
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Credentials</Typography>
+              <Typography>Access Token</Typography>
             </Grid>
             <Grid item xs={10}>
               <Stack direction="row" spacing={2} alignItems="center">
                 <SelectItem
                   defaultValue={account}
-                  label="Credentials"
+                  label="Access Token"
                   Items={accounts}
                   Click={handleItemClickProps}
                 />
