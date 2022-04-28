@@ -1,6 +1,6 @@
 package com.ssafy.dockerby.entity.project;
 
-import com.ssafy.dockerby.dto.project.ProjectRequestDto;
+import com.ssafy.dockerby.dto.project.ProjectConfigDto;
 import com.ssafy.dockerby.entity.BaseEntity;
 import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.git.GitlabConfig;
@@ -62,9 +62,9 @@ public class Project extends BaseEntity {
 
 
 //비지니스 로직
-  public static Project from(ProjectRequestDto projectRequestDto) {
+  public static Project from(ProjectConfigDto projectConfigDto) {
     return Project.builder()
-      .projectName(projectRequestDto.getProjectName())
+      .projectName(projectConfigDto.getProjectName())
       .build();
   }
 
