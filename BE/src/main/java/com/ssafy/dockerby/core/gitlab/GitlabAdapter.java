@@ -18,7 +18,8 @@ public class GitlabAdapter {
     sb.append("git clone -b ").append(dto.getBranch())
         .append(" --single-branch ").append(urls.get(0))
         .append("gitlab-ci-token:").append(dto.getAccessToken())
-        .append("@").append(urls.get(1));
+        .append("@").append(urls.get(1))
+        .append(" ").append(dto.getGitProjectId());
     return sb.toString();
   }
 

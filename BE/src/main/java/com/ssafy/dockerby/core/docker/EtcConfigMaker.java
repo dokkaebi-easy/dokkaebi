@@ -2,6 +2,7 @@ package com.ssafy.dockerby.core.docker;
 
 import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig;
 import com.ssafy.dockerby.core.docker.etcMaker.NginxConfigMaker;
+import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
 
@@ -31,5 +32,11 @@ public class EtcConfigMaker {
 
     FileManager.saveFile(filePath,"default.conf",config);
 
+  }
+
+  public static void saveDockerNginxConfig(String filePath, NginxConfigDto configDto)
+      throws IOException {
+    DockerNginxConfig config = DockerNginxConfig.from(configDto);
+    FileManager.saveJsonFile(filePath,"nginx",config);
   }
 }
