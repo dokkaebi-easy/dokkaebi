@@ -13,6 +13,7 @@ interface PropertyAxios {
 }
 
 export default function AxiosPage() {
+  const projectId = useStore((state) => state.projectId);
   const projectName = useStore((state) => state.projectName);
   const buildConfigs = useStore((state) => state.buildConfigs);
   const gitConfig = useStore((state) => state.gitConfig);
@@ -27,6 +28,7 @@ export default function AxiosPage() {
       gitConfig,
       nginxConfig,
       projectName,
+      projectId,
     };
 
     axios
