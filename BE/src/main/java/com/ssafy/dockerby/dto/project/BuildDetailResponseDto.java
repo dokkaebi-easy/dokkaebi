@@ -34,7 +34,7 @@ public class BuildDetailResponseDto {
 
   @NotNull
   @CreatedDate
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime registDate;
 
   @Nullable
