@@ -16,16 +16,17 @@ public class DockerAdapter {
 
   public DockerAdapter(String projectPath, String projectName) {
     this.dockerfileMaker = new DockerfileMaker(projectPath);
-    this.dockerCommandMaker = new DockerCommandMaker(projectPath,projectName);
+    this.dockerCommandMaker = new DockerCommandMaker(projectPath, projectName);
   }
 
   public void saveDockerfile(DockerContainerConfig config) throws IOException {
     dockerfileMaker.make(config);
   }
 
-  public void saveDockerfiles(List<DockerContainerConfig> configs) throws IOException{
-    for(DockerContainerConfig config : configs)
+  public void saveDockerfiles(List<DockerContainerConfig> configs) throws IOException {
+    for (DockerContainerConfig config : configs) {
       dockerfileMaker.make(config);
+    }
   }
 
   private String build(DockerContainerConfig config) {
@@ -33,9 +34,7 @@ public class DockerAdapter {
   }
 
   private String run(DockerContainerConfig config) {
-    if(config.isBuildPossible())
-      return dockerCommandMaker.run(config);
-    return "";
+    return dockerCommandMaker.run(config);
   }
 
   private String network() {
@@ -50,7 +49,11 @@ public class DockerAdapter {
     List<String> commands = new ArrayList<>();
     commands.add(network());
 
-    configs.forEach(config -> commands.add(build(config)));
+    for (DockerContainerConfig config : configs) {
+      if (config.buildPossible()) {
+        commands.add(build(config));
+      }
+    }
 
     return commands;
   }
@@ -63,6 +66,7 @@ public class DockerAdapter {
 
     return commands;
   }
+
   public List<String> getRunCommands(List<DockerContainerConfig> configs) {
     List<String> commands = new ArrayList<>();
     commands.add(network());
@@ -78,10 +82,12 @@ public class DockerAdapter {
 
     List<String> buildCommands = new ArrayList<>();
     List<String> runCommands = new ArrayList<>();
-    configs.forEach(config -> {
-      buildCommands.add(build(config));
+    for (DockerContainerConfig config : configs) {
+      if (config.buildPossible()) {
+        buildCommands.add(build(config));
+      }
       runCommands.add(run(config));
-    });
+    }
 
     commands.addAll(buildCommands);
     commands.addAll(runCommands);
