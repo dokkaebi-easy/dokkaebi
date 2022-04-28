@@ -19,6 +19,7 @@ import { useStore } from 'Components/Store/DropDownStore/DropDownStore';
 import BuildProperty from '../BuildPropertyBox/BuildPropertyBox';
 
 interface VersionTypeAxois {
+  name: string;
   buildTool: string[];
   frameworkVersion: string[];
 }
@@ -47,6 +48,7 @@ export default function BuildBasicBox({
   const [type, setType] = useState(buildData.type);
 
   const [framAndLibs, setFramAndLibs] = useState<string[]>([]);
+  const [versionName, setVersionName] = useState('');
   const [versions, setVersions] = useState<string[]>([buildData.version]);
   const [types, setTypes] = useState<string[]>([buildData.type]);
 
@@ -131,6 +133,7 @@ export default function BuildBasicBox({
         .get('/api/project/frameworkVersion', { params })
         .then((res) => {
           const data = res.data as VersionTypeAxois;
+          setVersionName(data.name);
           setVersions([...data.frameworkVersion]);
           setTypes([...data.buildTool]);
         })
@@ -173,7 +176,7 @@ export default function BuildBasicBox({
             />
           </Grid>
           <Grid item>
-            <Typography>Version</Typography>
+            <Typography>{versionName} Version</Typography>
             <SelectItem
               defaultValue={version}
               label="Versions"

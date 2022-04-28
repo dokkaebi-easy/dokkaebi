@@ -24,7 +24,9 @@ export default function Detail() {
     axios
       .get('/api/project/build/total', { params })
       .then((res) => {
-        setBuildStates([...res.data]);
+        const data = res.data as BuildState[];
+        data.reverse();
+        setBuildStates([...data]);
       })
       .catch((err) => {
         console.log(err);
