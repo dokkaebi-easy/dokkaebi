@@ -4,7 +4,7 @@ import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig.FrameworkType;
 import com.ssafy.dockerby.dto.project.BuildConfigDto;
 import com.ssafy.dockerby.dto.project.BuildConfigDto.ConfigProperty;
-import com.ssafy.dockerby.dto.project.ProjectRequestDto;
+import com.ssafy.dockerby.dto.project.ProjectConfigDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +45,13 @@ public class ConfigParser {
     return properties;
   }
 
-  public static List<DockerContainerConfig> getBuildConfig(ProjectRequestDto requestDto) {
+  /**
+   * List<{@link BuildConfigDto}>를 {@link DockerContainerConfig}로 변환해준다.
+   * {@link BuildConfigDto#frameworkId}를 {@link FrameworkType}으로 변환한다.
+   * @param requestDto
+   * @return {@link DockerContainerConfig}
+   */
+  public static List<DockerContainerConfig> getBuildConfig(ProjectConfigDto requestDto) {
     List<DockerContainerConfig> configs = new ArrayList<>();
     requestDto.getBuildConfigs().forEach(config ->
         configs.add(DockerContainerConfig.builder()
@@ -76,6 +82,26 @@ public class ConfigParser {
     }
 
     return configs;
+  }
+
+  public static List<ConfigProperty> dockerContainerPropertyToConfigProperty(
+      Map<String, List<String>> properties) {
+      List<ConfigProperty> result = new ArrayList<>();
+
+      for(String key : properties.keySet()) {
+        List<String> strings = properties.get(key);
+        strings.forEach(property -> {
+          String[] split = null;
+          if(key.equals("env"))
+            split = property.split("=");
+          else if(key.equals("publish") || key.equals("volume"))
+            split = property.split(":");
+          else
+            throw new IllegalArgumentException("dockerContainerPropertyToConfigProperty : "+key);
+          result.add(ConfigProperty.of(key,split[0],split[1]));
+        });
+      }
+    return result;
   }
 
 }

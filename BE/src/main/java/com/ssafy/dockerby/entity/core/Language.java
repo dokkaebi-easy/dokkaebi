@@ -2,6 +2,7 @@ package com.ssafy.dockerby.entity.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,5 +29,20 @@ public class Language {
   @OneToMany(mappedBy = "language")
   private List<Version> versions = new ArrayList<>();
 
+  public Optional<Version> findVersionByInput(String inputVersion) {
+    for(Version version : versions) {
+      if(version.getInputVersion().equals(inputVersion))
+        return Optional.ofNullable(version);
+    }
+    return Optional.ofNullable(null);
+  }
+
+  public Optional<Version> findVersionByDocker(String dockerVersion) {
+    for(Version version : versions) {
+      if(version.getDockerVersion().equals(dockerVersion))
+        return Optional.ofNullable(version);
+    }
+    return Optional.ofNullable(null);
+  }
 
 }

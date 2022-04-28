@@ -26,10 +26,13 @@ public class CommandInterpreter {
       for (String command : commands) {
         CommandLine commandLine = CommandLine.parse(command);
         PumpStreamHandler handler = new PumpStreamHandler(fileOutputStream);
+        fileOutputStream.write(command.getBytes());
+        fileOutputStream.write('\n');
         executor.setStreamHandler(handler);
         executor.setExitValues(
             new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
         int execute = executor.execute(commandLine);
+        fileOutputStream.write('\n');
         fileOutputStream.flush();
       }
     }
@@ -45,10 +48,13 @@ public class CommandInterpreter {
     try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
       CommandLine commandLine = CommandLine.parse(command);
       PumpStreamHandler handler = new PumpStreamHandler(fileOutputStream);
+      fileOutputStream.write(command.getBytes());
+      fileOutputStream.write('\n');
       executor.setStreamHandler(handler);
       executor.setExitValues(
           new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
       int execute = executor.execute(commandLine);
+      fileOutputStream.write('\n');
       fileOutputStream.flush();
     }
   }
@@ -68,6 +74,8 @@ public class CommandInterpreter {
       for (String command : commands) {
         CommandLine commandLine = CommandLine.parse(command);
         PumpStreamHandler handler = new PumpStreamHandler(fileOutputStream);
+        fileOutputStream.write(command.getBytes());
+        fileOutputStream.write('\n');
         executor.setWorkingDirectory(destFile);
         executor.setStreamHandler(handler);
         executor.setExitValues(
@@ -91,6 +99,8 @@ public class CommandInterpreter {
     try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
       CommandLine commandLine = CommandLine.parse(command);
       PumpStreamHandler handler = new PumpStreamHandler(fileOutputStream);
+      fileOutputStream.write(command.getBytes());
+      fileOutputStream.write('\n');
       executor.setWorkingDirectory(destFile);
       executor.setStreamHandler(handler);
       executor.setExitValues(
