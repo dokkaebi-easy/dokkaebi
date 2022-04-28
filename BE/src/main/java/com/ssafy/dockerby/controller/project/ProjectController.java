@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import javax.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +38,7 @@ public class ProjectController {
 
   @ApiOperation(value = "프로젝트 생성", notes = "프로젝트를 생성한다.")
   @PostMapping
-  public ResponseEntity createProject(HttpServletRequest request,@RequestBody ProjectRequestDto projectRequestDto ) throws NotFoundException, IOException {
+  public ResponseEntity createProject(HttpServletRequest request,@Valid @RequestBody ProjectRequestDto projectRequestDto ) throws NotFoundException, IOException {
     //요청 로그출력
     log.info("project create request");
     log.info("Request Project : {}",projectRequestDto.getProjectName());
@@ -63,7 +65,7 @@ public class ProjectController {
 
   @ApiOperation(value = "프로젝트 빌드", notes = "프로젝트 빌드를 한다.")
   @PostMapping("/build")
-  public ResponseEntity buildProject(Long projectId ) throws IOException, NotFoundException {
+  public ResponseEntity buildProject(@Valid Long projectId ) throws IOException, NotFoundException {
     log.info("buildProject request API received , id : {}",projectId);
 
     //프로젝트 빌드 시작
@@ -75,7 +77,7 @@ public class ProjectController {
 
   @ApiOperation(value = "프레임 워크 버전", notes = "프레임 워크 버전을 반환 해준다.")
   @PatchMapping
-  public ResponseEntity updateProject(@RequestBody ProjectRequestDto projectRequestDto) {
+  public ResponseEntity updateProject(@Valid @RequestBody ProjectRequestDto projectRequestDto) {
     log.info("PrjoectController.updateProject input : {}", projectRequestDto);
 
     Map<String, Object> map = new HashMap<>();
