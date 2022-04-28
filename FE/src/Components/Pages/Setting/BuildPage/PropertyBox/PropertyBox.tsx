@@ -89,6 +89,7 @@ export default function PropertyBox({
           startIcon={<DeleteIcon />}
           size="small"
           onClick={handleDelClick}
+          sx={{ color: 'black', borderColor: 'black' }}
         >
           Delete
         </Button>
