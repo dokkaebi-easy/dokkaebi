@@ -11,16 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DockerAdapter {
 
-  private final String rootDir;
   private final DockerfileMaker dockerfileMaker;
   private final DockerCommandMaker dockerCommandMaker;
 
-  public DockerAdapter(String projectName) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("/home/").append(projectName);
-    this.rootDir = sb.toString();
-    this.dockerfileMaker = new DockerfileMaker(this.rootDir);
-    this.dockerCommandMaker = new DockerCommandMaker(projectName, this.rootDir);
+  public DockerAdapter(String projectPath, String projectName) {
+    this.dockerfileMaker = new DockerfileMaker(projectPath);
+    this.dockerCommandMaker = new DockerCommandMaker(projectPath,projectName);
   }
 
   public void saveDockerfile(DockerContainerConfig config) throws IOException {
