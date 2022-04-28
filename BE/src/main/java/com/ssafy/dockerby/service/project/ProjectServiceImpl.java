@@ -650,13 +650,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     String stateType="";
-    if("Pull".equals(buildDetailRequestDto.getName())){
+    if("Pull".equals(buildDetailRequestDto.getName().toString())){
       stateType=buildState.getPull().getStateType().toString();
     }
-    else if("Build".equals(buildDetailRequestDto.getName())){
+    else if("Build".equals(buildDetailRequestDto.getName().toString())){
       stateType=buildState.getBuild().getStateType().toString();
     }
-    else if("Run".equals(buildDetailRequestDto.getName())){
+    else if("Run".equals(buildDetailRequestDto.getName().toString())){
       stateType=buildState.getRun().getStateType().toString();
     }
 

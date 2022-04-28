@@ -41,14 +41,23 @@ public class DockerNginxConfig {
     public boolean isBlank() {
       return location.isBlank() && url.isBlank();
     }
+
+    public static ProxyLocation of(String location, String url) {
+      return new ProxyLocation(location,url);
+    }
   }
 
   @Getter
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  @AllArgsConstructor(access = AccessLevel.PRIVATE)
   public static class HttpsOption {
     private String sslCertificate;
     private String sslCertificateKey;
     private String sslPath;
+
+    public static HttpsOption of(String sslCertificate, String sslCertificateKey, String sslPath) {
+      return new HttpsOption(sslCertificate,sslCertificateKey, sslPath);
+    }
   }
 
   public static DockerNginxConfig from(NginxConfigDto dto) {

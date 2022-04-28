@@ -95,7 +95,7 @@ public class DockerfileMaker {
     sb.append("FROM ").append("nginx:1.18.0").append('\n');
     sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf\n");
     sb.append("COPY --from=builder ");
-    sb.append((config.getBuildPath() == null) ? "/app/dist" : config.getBuildPath())
+    sb.append((config.getBuildPath() == null) ? "/dist" : config.getBuildPath())
       .append(" /usr/share/nginx/html\n");
     sb.append("EXPOSE ").append("3000").append('\n');
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
@@ -130,7 +130,7 @@ public class DockerfileMaker {
 
   private String getDestPath(String projectDirectory) {
     StringBuilder path = new StringBuilder();
-    path.append(rootDir).append(projectDirectory);
+    path.append(rootDir).append("/").append(projectDirectory);
     return path.toString();
   }
 
