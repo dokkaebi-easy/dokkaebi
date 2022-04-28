@@ -160,7 +160,7 @@ public class ProjectController {
   }
 
   @PostMapping("/hook/{projectName}")
-  public ResponseEntity webHook(@Valid @PathVariable String projectName,
+  public ResponseEntity webHook(@PathVariable String projectName,
       @RequestHeader(name = "X-Gitlab-Token") String token,
       @RequestBody Map<String, Object> params) throws NotFoundException, IOException {
     GitlabWebHookDto webHookDto = GitlabWrapper.wrap(params);
