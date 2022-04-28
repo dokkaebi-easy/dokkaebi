@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import GitLabConnect from 'Components/Pages/Setting/GitLabPage/GitLabConnect/GitLabConnect';
 import GitLabRepositories from 'Components/Pages/Setting/GitLabPage/GitLabRepositories/GitLabRepositories';
 import { useStore } from 'Components/Store/SettingStore/SettingStore';
+import ConnectCheck from './ConnectCheck/ConnectCheck';
 
 export default function GitLabPage() {
   const gitConfig = useStore((state) => state.gitConfig);
@@ -13,14 +14,23 @@ export default function GitLabPage() {
   return (
     <Box>
       <Box position="relative" sx={{ top: 20, left: 10 }}>
-        <Paper sx={{ padding: 1, textAlign: 'center', width: 200 }}>
+        <Paper
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            width: 200,
+            color: ' white',
+            background: 'linear-gradient(195deg, #666, #191919)',
+          }}
+        >
           <Typography variant="h5">GitLab Setting</Typography>
         </Paper>
       </Box>
       <Box>
         <Paper sx={{ padding: 3 }}>
-          <GitLabConnect gitData={gitConfig} />
           <GitLabRepositories gitData={gitConfig} />
+          <GitLabConnect gitData={gitConfig} />
+          <ConnectCheck gitData={gitConfig} />
         </Paper>
       </Box>
     </Box>

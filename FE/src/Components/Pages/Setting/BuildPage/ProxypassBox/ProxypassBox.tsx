@@ -12,7 +12,7 @@ interface ProxyProps {
   locationData: Locations;
 }
 
-export default function Proxypass({ value, locationData }: ProxyProps) {
+export default function ProxypassBox({ value, locationData }: ProxyProps) {
   const [path, setPath] = useState(value.location);
   const [url, setUrl] = useState(value.url);
 
@@ -34,11 +34,10 @@ export default function Proxypass({ value, locationData }: ProxyProps) {
         <Grid item xs={10}>
           <TextField
             fullWidth
-            id="outlined-basic"
-            label="Path"
+            label="Proxy pass Path"
             variant="outlined"
             size="small"
-            placeholder="Path"
+            placeholder="Proxy pass Path"
             defaultValue={path}
             onChange={handlePathChange}
           />
@@ -49,11 +48,10 @@ export default function Proxypass({ value, locationData }: ProxyProps) {
         <Grid item xs={10}>
           <TextField
             fullWidth
-            id="outlined-basic"
-            label="URL"
+            label="Proxy pass URL"
             variant="outlined"
             size="small"
-            placeholder="URL"
+            placeholder="Proxy pass URL"
             defaultValue={url}
             onChange={handleUrlChange}
           />

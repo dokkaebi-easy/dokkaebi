@@ -7,11 +7,14 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
+import ResponseIdNameData, {
+  ResponseIdName,
+} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface modalSwitch {
   open: boolean;
   Close: () => void;
-  Change: () => void;
+  Change: (data: ResponseIdName[]) => void;
 }
 
 const style = {
@@ -27,6 +30,8 @@ const style = {
 };
 
 export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
+  const [errorId, setErrorId] = useState(false);
+  const [errorToken, setErrorToken] = useState(false);
   const [id, setId] = useState('');
   const [apiToken, setApiToken] = useState('');
 
@@ -38,18 +43,39 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
   };
 
   const handleSaveClick = () => {
+    if (!id || !apiToken) {
+      if (!id) {
+        setErrorId(true);
+        setTimeout(() => setErrorId(false), 1000);
+      }
+      if (!apiToken) {
+        setErrorToken(true);
+        setTimeout(() => setErrorToken(false), 1000);
+      }
+
+      return;
+    }
+
     const parameters = {
       name: id,
       accessToken: apiToken,
     };
-    // 수정
-    axios.post('/api/git/token', { parameters }).then((res) => {
-      console.log(res.data);
-    });
-    Change();
+    axios
+      .post('/api/git/token', parameters)
+      .then((res) => {
+        Change(res.data);
+        setId('');
+        setApiToken('');
+        Close();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleCloseClick = () => {
+    setId('');
+    setApiToken('');
     Close();
   };
 
@@ -75,7 +101,8 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <Typography>ID</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            error={errorId}
+            helperText={errorId ? '아이디를 적어주어주세요' : ''}
             label="ID"
             variant="outlined"
             size="small"
@@ -86,7 +113,8 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <Typography>API Token</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            error={errorToken}
+            helperText={errorToken ? '토큰을 적어주어주세요' : ''}
             label="API Token"
             variant="outlined"
             size="small"
@@ -95,10 +123,20 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
             onChange={handleApiTokenChange}
           />
           <Stack mt={3} direction="row" justifyContent="flex-end" spacing={2}>
-            <Button variant="outlined" size="small" onClick={handleSaveClick}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleSaveClick}
+              sx={{ color: 'black', borderColor: 'black' }}
+            >
               Save
             </Button>
-            <Button variant="outlined" size="small" onClick={handleCloseClick}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleCloseClick}
+              sx={{ color: 'black', borderColor: 'black' }}
+            >
               Cancel
             </Button>
           </Stack>

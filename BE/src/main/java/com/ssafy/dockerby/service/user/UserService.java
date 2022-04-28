@@ -21,6 +21,6 @@ public interface UserService extends UserDetailsService {
     Boolean duplicateNameCheck(String name) throws UserDefindedException;
 
     UserResponseDto signup(SignupDto signupDto) throws IOException, UserDefindedException;
-    UserDetailDto signin(SigninDto signinDto);
+    UserDetailDto signin(SigninDto signinDto) ;
 }
 

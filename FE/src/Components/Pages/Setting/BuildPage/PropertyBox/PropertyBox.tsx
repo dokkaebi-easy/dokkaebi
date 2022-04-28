@@ -10,11 +10,18 @@ import { Property } from 'Components/MDClass/PropertyData/PropertyData';
 interface PropertyProps {
   value: Property;
   buildValue: Property;
+  index: number;
+  DelClick: (index: number) => void;
 }
 
 const PropertyItem = ['publish', 'volume', 'evn'];
 
-export default function PropertyBox({ value, buildValue }: PropertyProps) {
+export default function PropertyBox({
+  value,
+  buildValue,
+  index,
+  DelClick,
+}: PropertyProps) {
   const [property, setProperty] = useState(value.property);
   const [firstData, setFirstData] = useState(value.first);
   const [secondData, setSecondData] = useState(value.second);
@@ -35,6 +42,10 @@ export default function PropertyBox({ value, buildValue }: PropertyProps) {
     buildValue.second = event.target.value;
   };
 
+  const handleDelClick = () => {
+    DelClick(index);
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item>
@@ -49,7 +60,6 @@ export default function PropertyBox({ value, buildValue }: PropertyProps) {
       <Grid item>
         <Typography>Data1</Typography>
         <TextField
-          id="outlined-basic"
           label="Data1"
           variant="outlined"
           size="small"
@@ -62,7 +72,6 @@ export default function PropertyBox({ value, buildValue }: PropertyProps) {
       <Grid item>
         <Typography>Data2</Typography>
         <TextField
-          id="outlined-basic"
           label="Data2"
           variant="outlined"
           size="small"
@@ -73,7 +82,13 @@ export default function PropertyBox({ value, buildValue }: PropertyProps) {
         />
       </Grid>
       <Grid item sx={{ marginBottom: 1, marginTop: 'auto' }}>
-        <Button variant="outlined" startIcon={<DeleteIcon />} size="small">
+        <Button
+          variant="outlined"
+          startIcon={<DeleteIcon />}
+          size="small"
+          onClick={handleDelClick}
+          sx={{ color: 'black', borderColor: 'black' }}
+        >
           Delete
         </Button>
       </Grid>

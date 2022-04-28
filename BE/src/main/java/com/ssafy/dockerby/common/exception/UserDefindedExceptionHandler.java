@@ -1,7 +1,8 @@
 package com.ssafy.dockerby.common.exception;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.ssafy.dockerby.dto.error.ErrorResponseDto;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,35 +16,40 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class UserDefindedExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<Map<String, String>> ExceptionHandler(Exception e) {
+    public ResponseEntity<ErrorResponseDto> ExceptionHandler(Exception e) {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        //TODO : 로그 엉망으로 찍힘 확인필요
-        log.error("Controller Error");
-        log.error("Error Class :{}", e.getClass(), e.getMessage());
-        log.error("Controller Error, {}, {}", e.getCause(), e.getMessage());
+        // e.printStackTrace 저장 객체
+        StringWriter sw = printStackTraceMapper(e);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("error type", httpStatus.getReasonPhrase());
-        map.put("code", "400");
-        map.put("error Class",e.getClass().getSimpleName());
-        map.put("message", "controller Error Occurred : " + e.getCause() + e.getMessage());
+        log.error("Error stackTrace: {}", e);
+        log.error("Error class : {}", e.getClass().getSimpleName());
+        log.error("Error cause : {}", e.getCause());
+        log.error(sw.toString());
+        ErrorResponseDto errorResponseDto = ErrorResponseDto.from(e);
 
-        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+        return new ResponseEntity<>(errorResponseDto, responseHeaders, httpStatus);
     }
 
     @ExceptionHandler(value = UserDefindedException.class)
-    public ResponseEntity<Map<String, String>> ExceptionHandler(UserDefindedException e) {
+    public ResponseEntity<ErrorResponseDto> ExceptionHandler(UserDefindedException e) {
         HttpHeaders responseHeaders = new HttpHeaders();
+        StringWriter sw = printStackTraceMapper(e);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("error type", e.getHttpStatusType());
-        map.put("error code",
-            Integer.toString(e.getHttpStatusCode())); // Map<String, Object>로 설정하면 toString 불필요
-        map.put("error Class",e.getClass().getSimpleName());
-        map.put("message", e.getMessage());
+        log.error("Error stackTrace: {}", e);
+        log.error("Error class : {}", e.getClass().getSimpleName());
+        log.error(sw.toString());
+        ErrorResponseDto errorResponseDto = ErrorResponseDto.from(e);
 
-        return new ResponseEntity<>(map, responseHeaders, e.getHttpStatus());
+        return new ResponseEntity<>(errorResponseDto, responseHeaders, e.getHttpStatus());
+    }
+
+
+    private StringWriter printStackTraceMapper(Exception e){
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+
+        return sw;
     }
 
 }

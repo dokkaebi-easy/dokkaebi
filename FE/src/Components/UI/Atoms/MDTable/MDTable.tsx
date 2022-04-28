@@ -7,10 +7,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ProjectDatas, {
-  Project,
-} from 'Components/MDClass/ProjectData/ProjectData';
+import { Project } from 'Components/MDClass/ProjectData/ProjectData';
 import { v4 as uuid } from 'uuid';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,16 +34,37 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-interface TableProps {
-  rows: Project[];
-}
+export default function MDTable() {
+  const [projects, setProject] = useState<Project[]>([]);
+  const [loading, setLoading] = React.useState(false);
 
-export default function MDTable({ rows }: TableProps) {
+  const handleClick = (projectId: number) => {
+    setLoading(true);
+
+    const params = { projectId };
+    axios
+      .post('/api/project/build', { params })
+      .then(() => {
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    axios.get('/api/project/all').then((res) => {
+      const data = res.data as Project[];
+      setProject([...data]);
+    });
+  }, []);
+
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
+            <StyledTableCell align="center">빌드 실행</StyledTableCell>
             <StyledTableCell align="center">Project ID</StyledTableCell>
             <StyledTableCell align="center">Name</StyledTableCell>
             <StyledTableCell align="center">S</StyledTableCell>
@@ -51,21 +74,79 @@ export default function MDTable({ rows }: TableProps) {
             <StyledTableCell align="right">최근 소요 시간</StyledTableCell>
           </TableRow>
         </TableHead>
-        {rows ? (
+        {projects ? (
           <TableBody>
-            {rows.map((row) => (
+            {projects.map((row) => (
               <StyledTableRow key={uuid()}>
                 <StyledTableCell align="center">
-                  {row.projectId}
+                  <LoadingButton
+                    size="small"
+                    sx={{
+                      background: 'linear-gradient(195deg, #42424a, #191919)',
+                    }}
+                    onClick={() => handleClick(row.projectId)}
+                    loading={loading}
+                    variant={loading ? 'outlined' : 'contained'}
+                    disabled={loading}
+                    startIcon={<PlayArrowIcon />}
+                  />
                 </StyledTableCell>
-                <StyledTableCell component="th" scope="row">
-                  {row.projectName}
+                <StyledTableCell align="center">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.projectId}
+                  </Link>
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
+                <StyledTableCell align="center" component="th" scope="row">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.projectName}
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    진행중... (미완성)
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    진행중... (미완성)
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    진행중... (미완성)
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    진행중... (미완성)
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    진행중... (미완성)
+                  </Link>
+                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

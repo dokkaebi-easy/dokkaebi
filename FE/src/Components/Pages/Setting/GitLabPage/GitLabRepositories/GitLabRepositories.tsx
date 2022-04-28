@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -7,22 +7,23 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
+import FormHelperText from '@mui/material/FormHelperText';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import RepositoryModal from 'Components/Pages/Setting/GitLabPage/RepositoryModal/RepositoryModal';
 import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
+import { useStore } from 'Components/Store/DropDownStore/DropDownStore';
+import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface GitProps {
   gitData: Git;
 }
 
-interface AccountAxios {
-  id: number;
-  email: string;
-}
-
 export default function GitLabRepositories({ gitData }: GitProps) {
-  const [projectID, setProjectID] = useState(gitData.projectId);
+  const dropDownItems = useStore((state) => state.account);
+  const setDropDownItems = useStore((state) => state.setAccount);
+
+  const [projectID, setProjectID] = useState(gitData.gitProjectId);
   const [repositoryURL, setRepositoryURL] = useState(gitData.repositoryUrl);
   const [branchName, setBranchName] = useState(gitData.branchName);
   const [account, setAccount] = useState('');
@@ -39,7 +40,7 @@ export default function GitLabRepositories({ gitData }: GitProps) {
 
   const handleProjectIDChange = (event: any) => {
     setProjectID(event.target.value);
-    gitData.projectId = event.target.value;
+    gitData.gitProjectId = Number(event.target.value);
   };
 
   const handleRepositoryURLChange = (event: any) => {
@@ -52,20 +53,18 @@ export default function GitLabRepositories({ gitData }: GitProps) {
     gitData.branchName = event.target.value;
   };
 
-  const handleAxiosProps = () => {
-    axios.get('/api/git/accounts').then((res) => {
-      const data = res.data as AccountAxios[];
-      const arr = data.map((value) => value.email);
-      setAccounts(arr);
-      setAccount(arr[gitData.accountId - 1]);
-    });
+  const handleAxiosProps = (data: ResponseIdName[]) => {
+    const arr = data.map((value) => value.name);
+    setAccounts([...arr]);
+    setAccount(arr[gitData.accountId - 1]);
   };
 
   useEffect(() => {
     axios.get('/api/git/accounts').then((res) => {
-      const data = res.data as AccountAxios[];
-      const arr = data.map((value) => value.email);
-      setAccounts(arr);
+      const data = res.data as ResponseIdName[];
+      setDropDownItems([...data]);
+      const arr = data.map((value) => value.name);
+      setAccounts([...arr]);
       setAccount(arr[gitData.accountId - 1]);
     });
 
@@ -77,7 +76,15 @@ export default function GitLabRepositories({ gitData }: GitProps) {
   return (
     <Box my={3}>
       <Box position="relative" sx={{ top: 20, left: 10 }}>
-        <Paper sx={{ padding: 1, textAlign: 'center', width: 170 }}>
+        <Paper
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            width: 170,
+            color: ' white',
+            background: 'linear-gradient(195deg, #666, #191919)',
+          }}
+        >
           Repositories
         </Paper>
       </Box>
@@ -90,7 +97,6 @@ export default function GitLabRepositories({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic"
                 label="Project ID"
                 variant="outlined"
                 size="small"
@@ -99,6 +105,9 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                 defaultValue={projectID}
                 onChange={handleProjectIDChange}
               />
+              <FormHelperText id="component-helper-text">
+                (※ only number)
+              </FormHelperText>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
               <Typography>Repository URL</Typography>
@@ -106,7 +115,6 @@ export default function GitLabRepositories({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic"
                 label="Repository URL"
                 variant="outlined"
                 size="small"
@@ -132,6 +140,7 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                   startIcon={<AddIcon />}
                   size="small"
                   onClick={handleOpen}
+                  sx={{ color: 'black', borderColor: 'black' }}
                 >
                   Add
                 </Button>
@@ -143,12 +152,11 @@ export default function GitLabRepositories({ gitData }: GitProps) {
               </Stack>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Branch Specifier</Typography>
+              <Typography>Branch Name</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic"
                 label="Branch Specifier"
                 variant="outlined"
                 size="small"

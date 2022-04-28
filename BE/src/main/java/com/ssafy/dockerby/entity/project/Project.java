@@ -1,6 +1,6 @@
 package com.ssafy.dockerby.entity.project;
 
-import com.ssafy.dockerby.dto.project.ProjectRequestDto;
+import com.ssafy.dockerby.dto.project.ProjectConfigDto;
 import com.ssafy.dockerby.entity.BaseEntity;
 import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.git.GitlabConfig;
@@ -43,6 +43,7 @@ public class Project extends BaseEntity {
   @Builder.Default
   private StateType stateType = StateType.valueOf("Waiting");
 
+//연관관계 매핑
   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   @Builder.Default
   private List<ProjectConfig> projectConfigs = new ArrayList<>();
@@ -50,15 +51,7 @@ public class Project extends BaseEntity {
   @OneToOne(mappedBy = "project", fetch = FetchType.LAZY)
   private GitlabConfig gitConfig;
 
-  //연관관계 매핑
-
-  //User 매핑
-//  @OneToMany(fetch = FetchType.LAZY)
-//  @JoinColumn(name ="user_id")
-//  private User user;
-
   // History 매핑
-  //연관 관계 매핑
   @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
   @Builder.Default
   private List<ConfigHistory> histories = new ArrayList<>();
@@ -69,9 +62,9 @@ public class Project extends BaseEntity {
 
 
 //비지니스 로직
-  public static Project from(ProjectRequestDto projectRequestDto) {
+  public static Project from(ProjectConfigDto projectConfigDto) {
     return Project.builder()
-      .projectName(projectRequestDto.getProjectName())
+      .projectName(projectConfigDto.getProjectName())
       .build();
   }
 

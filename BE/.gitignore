@@ -1,6 +1,7 @@
 HELP.md
 .gradle
 build/
+logs/
 fileData/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -39,3 +40,4 @@ out/
 /src/main/resources/static/
 /log/
 /jsonData/
+/projects/

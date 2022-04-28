@@ -12,7 +12,7 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import { unset } from 'lodash';
 import axios from 'axios';
-import { api } from '../../../api/index';
+import { useHistory } from 'react-router-dom';
 
 interface IFormInput {
   principal: string;
@@ -65,8 +65,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SignUp() {
-  const [json, setJson] = useState<string>();
+export default function SignUp() {
+  const [inputId, setInputId] = useState<string>('');
+  const [inputName, setInputName] = useState<string>('');
 
   const {
     register,
@@ -77,19 +78,44 @@ function SignUp() {
   });
 
   const { heading, submitButton } = useStyles();
+  const history = useHistory();
 
   const onSubmit = (data: IFormInput) => {
     unset(data, 'passwordConfirm');
-    setJson(JSON.stringify(data));
+    axios.post(`/api/user/signup`, data).then((res) => {
+      const data = res.data as ResponsId;
+      if (data.state === 'Success') history.push('/login');
+    });
   };
 
-  const singUpAPI = (sign: any) => {
-    console.log(sign);
-    api.post(`/user/signup`, sign).then((res) => {
-      const data = res.data as ResponsId;
-      // console.log(data);
+  const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputId(event.currentTarget.value);
+  };
+
+  const handleCheckId = () => {
+    const params = { id: inputId };
+    axios.post(`/api/user/duplicate/id`, null, { params }).then((res) => {
+      if (res.data.state === 'Fail' || inputId === '') {
+        alert('사용할 수 없는 아이디 입니다.');
+        setInputId('');
+      } else {
+        alert('사용 가능한 아이디 입니다.');
+      }
     });
-    // window.location.href = '/';
+  };
+
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputName(event.currentTarget.value);
+  };
+
+  const checkName = (name: string | undefined) => {
+    const params = { name };
+    axios.post(`/api/user/duplicate/name`, null, { params }).then((res) => {
+      if (res.data.state === 'Fail') {
+        alert('사용할 수 없는 이름 입니다.');
+        setInputName('');
+      } else alert('사용 가능한 이름 입니다.');
+    });
   };
 
   return (
@@ -110,7 +136,12 @@ function SignUp() {
             fullWidth
             InputLabelProps={{ required: false }}
             required
+            onChange={handleChangeId}
+            value={inputId}
           />
+          <Button color="primary" onClick={handleCheckId}>
+            ID 중복 확인
+          </Button>
           <TextField
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...register('credential')}
@@ -148,7 +179,17 @@ function SignUp() {
             fullWidth
             InputLabelProps={{ required: false }}
             required
+            onChange={handleChangeName}
+            value={inputName}
           />
+          <Button
+            color="primary"
+            onClick={() => {
+              checkName(inputName);
+            }}
+          >
+            이름 중복 확인
+          </Button>
           <TextField
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...register('authKey')}
@@ -167,23 +208,14 @@ function SignUp() {
             variant="contained"
             color="primary"
             className={submitButton}
-            onClick={() => singUpAPI(json)}
           >
             가입하기
           </Button>
-          {json && (
-            <>
-              <Typography variant="body1">json 데이터 출력</Typography>
-              <Typography variant="body2">{json}</Typography>
-            </>
-          )}
         </form>
       </ContainerDiv>
     </Container>
   );
 }
-
-export default SignUp;
 
 const ContainerDiv = styled.div`
   width: 400px;

@@ -1,5 +1,6 @@
 package com.ssafy.dockerby.core.docker.dto;
 
+import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class DockerNginxConfig {
 
   @Builder.Default
@@ -18,7 +21,7 @@ public class DockerNginxConfig {
   @Builder.Default
   private List<ProxyLocation> locations = new ArrayList<>();
   @Builder.Default
-  private boolean isHttps = false;
+  private boolean https = false;
   private HttpsOption httpsOption;
 
   @Builder.Default
@@ -42,6 +45,15 @@ public class DockerNginxConfig {
     private String sslCertificate;
     private String sslCertificateKey;
     private String sslPath;
+  }
+
+  public static DockerNginxConfig from(NginxConfigDto dto) {
+    return DockerNginxConfig.builder()
+        .domains(dto.getDomains())
+        .locations(dto.getLocations())
+        .https(dto.isHttps())
+        .httpsOption(dto.getHttpsOption())
+        .build();
   }
 
 }

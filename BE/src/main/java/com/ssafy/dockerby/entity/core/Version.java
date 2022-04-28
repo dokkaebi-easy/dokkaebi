@@ -14,8 +14,6 @@ public class Version {
   @Column(name = "version_id")
   private Long id;
 
-  private String buildType;
-
   private String inputVersion;
   private String dockerVersion;
 

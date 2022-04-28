@@ -16,19 +16,32 @@ interface PropertyProps {
 
 export default function BuildPropertyBox({ buildValue }: PropertyProps) {
   const [propertyDatas, setPropertyDatas] = useState<Property[]>(
-    buildValue.propertys,
+    buildValue.properties,
   );
 
   const handleOnClick = () => {
     const newData = new PropertyData();
     setPropertyDatas((cur) => [...cur, newData]);
-    buildValue.propertys = [...buildValue.propertys, new PropertyData()];
+    buildValue.properties = [...buildValue.properties, new PropertyData()];
+  };
+
+  const handleDelClickProps = (index: number) => {
+    buildValue.properties.splice(index, 1);
+    setPropertyDatas([...buildValue.properties]);
   };
 
   return (
     <Box my={3}>
       <Box position="relative" sx={{ top: 10, left: 10 }}>
-        <Paper sx={{ padding: 1, textAlign: 'center', width: 120 }}>
+        <Paper
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            width: 120,
+            color: ' white',
+            background: 'linear-gradient(195deg, #666, #191919)',
+          }}
+        >
           Property
         </Paper>
       </Box>
@@ -39,6 +52,7 @@ export default function BuildPropertyBox({ buildValue }: PropertyProps) {
               variant="outlined"
               startIcon={<AddIcon />}
               onClick={handleOnClick}
+              sx={{ color: 'black', borderColor: 'black' }}
             >
               Property Add
             </Button>
@@ -48,7 +62,9 @@ export default function BuildPropertyBox({ buildValue }: PropertyProps) {
               <PropertyBox
                 key={uuid()}
                 value={value}
-                buildValue={buildValue.propertys[index]}
+                buildValue={buildValue.properties[index]}
+                index={index}
+                DelClick={handleDelClickProps}
               />
             );
           })}

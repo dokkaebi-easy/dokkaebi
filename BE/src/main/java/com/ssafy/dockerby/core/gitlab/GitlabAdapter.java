@@ -10,6 +10,11 @@ public class GitlabAdapter {
 
   private static String regex = "(https?://)(.*)";
 
+  public static String getRepositoryRemoveCommand(String filePath) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("rm -f ").append("./").append(filePath);
+    return sb.toString();
+  }
   public static String getCloneCommand(GitlabCloneDto dto) {
     List<String> urls = parseHttpUrl(dto.getGitHttpUrl());
     if(urls.size() != 2)
@@ -18,7 +23,8 @@ public class GitlabAdapter {
     sb.append("git clone -b ").append(dto.getBranch())
         .append(" --single-branch ").append(urls.get(0))
         .append("gitlab-ci-token:").append(dto.getAccessToken())
-        .append("@").append(urls.get(1));
+        .append("@").append(urls.get(1))
+        .append(" ").append(dto.getGitProjectId());
     return sb.toString();
   }
 

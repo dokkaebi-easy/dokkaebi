@@ -20,7 +20,6 @@ CREATE TABLE `dockerby`.`framework_type` (
 
 CREATE TABLE `dockerby`.`version` (
   `version_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `build_type` VARCHAR(60) NOT NULL,
   `input_version` VARCHAR(45) NOT NULL,
   `docker_version` VARCHAR(45) NOT NULL,
   `language_id` BIGINT NULL,
@@ -230,34 +229,36 @@ INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`la
 
 INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Gradle",1);
 INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Maven",1);
+INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Yes",2);
+INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Yes",3);
 
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","7","openjdk:7-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","8","openjdk:8-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","9","openjdk:9-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","10","openjdk:10-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","11","openjdk:11-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","12","openjdk:12-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","13","openjdk:13-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","14","openjdk:14-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","15","openjdk:15-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","16","openjdk:16-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","17","openjdk:17-jdk",1);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("java","18","openjdk:18-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("7","openjdk:7-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("8","openjdk:8-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("9","openjdk:9-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10","openjdk:10-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("11","openjdk:11-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("12","openjdk:12-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("13","openjdk:13-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("14","openjdk:14-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("15","openjdk:15-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("16","openjdk:16-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("17","openjdk:17-jdk",1);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("18","openjdk:18-jdk",1);
 
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("python","3.5","python:3.5",2);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("python","3.6","python:3.6",2);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("python","3.7","python:3.7",2);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("python","3.8","python:3.8",2);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("python","3.9","python:3.9",2);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("python","3.10","python:3.10",2);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("3.5","python:3.5",2);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("3.6","python:3.6",2);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("3.7","python:3.7",2);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("3.8","python:3.8",2);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("3.9","python:3.9",2);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("3.10","python:3.10",2);
 
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("node","10","node:10.23",3);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("node","12","node:12.22",3);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("node","14","node:14.19",3);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("node","16","node:16.14",3);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("node","17","node:17.9",3);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10","node:10.23",3);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("12","node:12.22",3);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("14","node:14.19",3);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("16","node:16.14",3);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("17","node:17.9",3);
 
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("mysql","5.5","mysql:5.5",4);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("mysql","5.6","mysql:5.6",4);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("mysql","5.7","mysql:5.7",4);
-INSERT INTO `dockerby`.`version`(`build_type`,`input_version`,`docker_version`,`language_id`) VALUES ("mysql","8.0","mysql:8.0",4);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("5.5","mysql:5.5",4);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("5.6","mysql:5.6",4);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("5.7","mysql:5.7",4);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("8.0","mysql:8.0",4);

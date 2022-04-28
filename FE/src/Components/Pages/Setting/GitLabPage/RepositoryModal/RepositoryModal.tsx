@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -7,11 +7,12 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
+import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface modalSwitch {
   open: boolean;
   Close: () => void;
-  Change: () => void;
+  Change: (data: ResponseIdName[]) => void;
 }
 
 const style = {
@@ -26,22 +27,37 @@ const style = {
   p: 4,
 };
 export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
+  const [errorId, setErrorId] = useState(false);
+  const [errorPassword, setErrorPassword] = useState(false);
+  const [errorUserName, setErrorUserName] = useState(false);
+
   const [id, setId] = useState('');
   const [passWord, setPassWord] = useState('');
   const [userName, setUserName] = useState('');
 
   const handleIdChange = (event: any) => {
     setId(event.target.value);
+    setErrorId(false);
   };
 
   const handlePassWordChange = (event: any) => {
     setPassWord(event.target.value);
+    setErrorPassword(false);
   };
   const handleUserNameChange = (event: any) => {
     setUserName(event.target.value);
+    setErrorUserName(false);
   };
 
   const handleSaveClick = () => {
+    if (!id || !passWord || !userName) {
+      if (!id) setErrorId(true);
+      if (!passWord) setErrorPassword(true);
+      if (!userName) setErrorUserName(true);
+
+      return;
+    }
+
     const data = {
       email: id,
       password: passWord,
@@ -51,15 +67,21 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
     axios
       .post('/api/git/account', data)
       .then((res) => {
-        console.log(res.data);
+        Change(res.data);
+        setId('');
+        setPassWord('');
+        setUserName('');
+        Close();
       })
       .catch((err) => {
         console.log(err);
       });
-    Change();
   };
 
   const handleCloseClick = () => {
+    setId('');
+    setPassWord('');
+    setUserName('');
     Close();
   };
   return (
@@ -84,7 +106,8 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
           <Typography>ID</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            error={errorId}
+            helperText={errorId ? '아이디를 적어주어주세요' : ''}
             label="ID"
             variant="outlined"
             size="small"
@@ -95,18 +118,22 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
           <Typography>Password</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            error={errorPassword}
+            helperText={errorPassword ? '비밀번호를 적어주어주세요' : ''}
             label="Password"
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
             placeholder="Password"
+            type="password"
+            autoComplete="current-password"
             onChange={handlePassWordChange}
           />
           <Typography>UserName</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            error={errorUserName}
+            helperText={errorUserName ? '이름를 적어주어주세요' : ''}
             label="UserName"
             variant="outlined"
             size="small"
@@ -115,10 +142,20 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
             onChange={handleUserNameChange}
           />
           <Stack mt={3} direction="row" justifyContent="flex-end" spacing={2}>
-            <Button variant="outlined" size="small" onClick={handleSaveClick}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleSaveClick}
+              sx={{ color: 'black', borderColor: 'black' }}
+            >
               Save
             </Button>
-            <Button variant="outlined" size="small" onClick={handleCloseClick}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleCloseClick}
+              sx={{ color: 'black', borderColor: 'black' }}
+            >
               Cancel
             </Button>
           </Stack>
