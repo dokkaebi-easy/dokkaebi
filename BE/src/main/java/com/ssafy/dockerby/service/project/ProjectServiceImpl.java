@@ -105,7 +105,7 @@ public class ProjectServiceImpl implements ProjectService {
             () -> new NotFoundException("ProjectServiceImpl.configByProjectName : " + projectId));
 
     StringBuilder filePath = new StringBuilder();
-    filePath.append(rootPath).append("/").append(projectId).append("/").append(configPath);
+    filePath.append(rootPath).append("/").append(project.getProjectName()).append("/").append(configPath);
 
 
     List<DockerContainerConfig> configs = loadConfigFiles(filePath.toString(),
