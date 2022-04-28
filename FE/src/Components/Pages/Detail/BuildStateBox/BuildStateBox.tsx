@@ -13,41 +13,6 @@ interface BuildStateProps {
 }
 
 export default function BuildStateBox({ buildState }: BuildStateProps) {
-  const { buildStateId, state } = buildState;
-  console.log(buildStateId);
-  const history = useHistory();
-
-  const linkPull: any = () => {
-    history.push({
-      pathname: '/builddetail',
-      state: {
-        id: buildStateId,
-        name: 'Pull',
-        state: state.pull,
-      },
-    });
-  };
-
-  const linkBuild: any = () => {
-    history.push({
-      pathname: '/builddetail',
-      state: {
-        buildStateId,
-        buildType: 'Build',
-      },
-    });
-  };
-
-  const linkRun: any = () => {
-    history.push({
-      pathname: '/builddetail',
-      state: {
-        buildStateId,
-        buildType: 'Run',
-      },
-    });
-  };
-
   return (
     <Box my={3}>
       <Paper sx={{ backgroundColor: 'rgb(240, 240,240)', padding: 1 }}>
