@@ -10,6 +10,11 @@ public class GitlabAdapter {
 
   private static String regex = "(https?://)(.*)";
 
+  public static String getRepositoryRemoveCommand(String filePath) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("rm -f ").append("./").append(filePath);
+    return sb.toString();
+  }
   public static String getCloneCommand(GitlabCloneDto dto) {
     List<String> urls = parseHttpUrl(dto.getGitHttpUrl());
     if(urls.size() != 2)
