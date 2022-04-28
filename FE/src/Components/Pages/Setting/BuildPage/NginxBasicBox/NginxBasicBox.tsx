@@ -42,6 +42,11 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
     setLocations([...nginxValue.locations]);
   };
 
+  const handleDomainDelClickProps = (index: number) => {
+    nginxValue.domains.splice(index, 1);
+    setDomains([...nginxValue.domains]);
+  };
+
   const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setHttps(event.target.checked);
     nginxValue.https = event.target.checked;
@@ -102,6 +107,7 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
                     value={value}
                     index={index}
                     domainValue={nginxValue.domains}
+                    DelClick={handleDomainDelClickProps}
                   />
                 );
               })}
@@ -154,7 +160,6 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <TextField
                 fullWidth
                 disabled={!https}
-                id="outlined-basic1"
                 label="SSL Certificate"
                 variant="outlined"
                 size="small"
@@ -171,7 +176,6 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <TextField
                 fullWidth
                 disabled={!https}
-                id="outlined-basic2"
                 label="SSL Certificate Key"
                 variant="outlined"
                 size="small"
@@ -189,7 +193,6 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <TextField
                 fullWidth
                 disabled={!https}
-                id="outlined-basic3"
                 label="SSL Path"
                 variant="outlined"
                 size="small"

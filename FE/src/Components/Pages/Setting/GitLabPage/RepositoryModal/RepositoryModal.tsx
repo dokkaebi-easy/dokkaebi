@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -27,22 +27,37 @@ const style = {
   p: 4,
 };
 export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
+  const [errorId, setErrorId] = useState(false);
+  const [errorPassword, setErrorPassword] = useState(false);
+  const [errorUserName, setErrorUserName] = useState(false);
+
   const [id, setId] = useState('');
   const [passWord, setPassWord] = useState('');
   const [userName, setUserName] = useState('');
 
   const handleIdChange = (event: any) => {
     setId(event.target.value);
+    setErrorId(false);
   };
 
   const handlePassWordChange = (event: any) => {
     setPassWord(event.target.value);
+    setErrorPassword(false);
   };
   const handleUserNameChange = (event: any) => {
     setUserName(event.target.value);
+    setErrorUserName(false);
   };
 
   const handleSaveClick = () => {
+    if (!id || !passWord || !userName) {
+      if (!id) setErrorId(true);
+      if (!passWord) setErrorPassword(true);
+      if (!userName) setErrorUserName(true);
+
+      return;
+    }
+
     const data = {
       email: id,
       password: passWord,
@@ -53,6 +68,9 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
       .post('/api/git/account', data)
       .then((res) => {
         Change(res.data);
+        setId('');
+        setPassWord('');
+        setUserName('');
         Close();
       })
       .catch((err) => {
@@ -61,6 +79,9 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
   };
 
   const handleCloseClick = () => {
+    setId('');
+    setPassWord('');
+    setUserName('');
     Close();
   };
   return (
@@ -85,7 +106,8 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
           <Typography>ID</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            error={errorId}
+            helperText={errorId ? '아이디를 적어주어주세요' : ''}
             label="ID"
             variant="outlined"
             size="small"
@@ -96,7 +118,8 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
           <Typography>Password</Typography>
           <TextField
             fullWidth
-            id="outlined-basic1"
+            error={errorPassword}
+            helperText={errorPassword ? '비밀번호를 적어주어주세요' : ''}
             label="Password"
             variant="outlined"
             size="small"
@@ -109,7 +132,8 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
           <Typography>UserName</Typography>
           <TextField
             fullWidth
-            id="outlined-basic3"
+            error={errorUserName}
+            helperText={errorUserName ? '이름를 적어주어주세요' : ''}
             label="UserName"
             variant="outlined"
             size="small"

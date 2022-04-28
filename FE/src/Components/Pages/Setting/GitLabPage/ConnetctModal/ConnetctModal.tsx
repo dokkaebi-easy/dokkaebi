@@ -30,6 +30,8 @@ const style = {
 };
 
 export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
+  const [errorId, setErrorId] = useState(false);
+  const [errorToken, setErrorToken] = useState(false);
   const [id, setId] = useState('');
   const [apiToken, setApiToken] = useState('');
 
@@ -41,6 +43,19 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
   };
 
   const handleSaveClick = () => {
+    if (!id || !apiToken) {
+      if (!id) {
+        setErrorId(true);
+        setTimeout(() => setErrorId(false), 1000);
+      }
+      if (!apiToken) {
+        setErrorToken(true);
+        setTimeout(() => setErrorToken(false), 1000);
+      }
+
+      return;
+    }
+
     const parameters = {
       name: id,
       accessToken: apiToken,
@@ -49,6 +64,8 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
       .post('/api/git/token', parameters)
       .then((res) => {
         Change(res.data);
+        setId('');
+        setApiToken('');
         Close();
       })
       .catch((err) => {
@@ -57,6 +74,8 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
   };
 
   const handleCloseClick = () => {
+    setId('');
+    setApiToken('');
     Close();
   };
 
@@ -82,7 +101,8 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <Typography>ID</Typography>
           <TextField
             fullWidth
-            id="outlined-basic1"
+            error={errorId}
+            helperText={errorId ? '아이디를 적어주어주세요' : ''}
             label="ID"
             variant="outlined"
             size="small"
@@ -93,7 +113,8 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <Typography>API Token</Typography>
           <TextField
             fullWidth
-            id="outlined-basic2"
+            error={errorToken}
+            helperText={errorToken ? '토큰을 적어주어주세요' : ''}
             label="API Token"
             variant="outlined"
             size="small"
