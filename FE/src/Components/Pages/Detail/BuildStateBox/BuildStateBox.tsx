@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import BuildStateData, {
   BuildState,
 } from 'Components/MDClass/BuildStateData/BuildStateData';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 interface BuildStateProps {
   buildState: BuildState;
@@ -48,6 +48,7 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
       },
     });
   };
+
   return (
     <Box my={3}>
       <Paper sx={{ backgroundColor: 'rgb(240, 240,240)', padding: 1 }}>
@@ -62,7 +63,7 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
                 color: 'white',
               }}
             >
-              <Typography align="center">#{buildState.buildStateId}</Typography>
+              <Typography align="center">#{buildState.buildNumber}</Typography>
             </Paper>
             <Paper
               elevation={3}

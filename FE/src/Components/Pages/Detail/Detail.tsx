@@ -35,7 +35,7 @@ export default function Detail() {
         console.log(err);
       });
   }, []);
-  console.log(buildStates);
+
   return (
     <Box
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}

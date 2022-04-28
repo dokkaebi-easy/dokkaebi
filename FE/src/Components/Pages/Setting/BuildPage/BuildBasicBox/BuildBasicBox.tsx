@@ -235,6 +235,7 @@ export default function BuildBasicBox({
             variant="outlined"
             startIcon={<ArrowDropDownIcon />}
             size="small"
+            sx={{ color: 'black', borderColor: 'black' }}
           >
             Property
           </Button>
@@ -243,6 +244,7 @@ export default function BuildBasicBox({
             startIcon={<DeleteIcon />}
             size="small"
             onClick={handleDelOnClick}
+            sx={{ color: 'black', borderColor: 'black' }}
           >
             Delete
           </Button>

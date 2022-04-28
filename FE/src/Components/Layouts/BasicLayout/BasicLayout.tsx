@@ -7,6 +7,7 @@ import Navbar from 'Components/UI/Organisms/Navbar/Navbar';
 import Setting from 'Components/Pages/Setting/Setting';
 import Detail from 'Components/Pages/Detail/Detail';
 import BuildDetail from 'Components/Pages/BuildDetail/BuildDetail';
+import { useHistory } from 'react-router';
 
 const transitionStyle = {
   transitionDuration: '0.2s',
@@ -14,6 +15,7 @@ const transitionStyle = {
 };
 
 export default function BasicLayout() {
+  const history = useHistory();
   const [open, setOpen] = useState(true);
 
   const handleMiniSidenav = () => {
@@ -25,7 +27,7 @@ export default function BasicLayout() {
 
   useEffect(() => {
     if (window.localStorage.getItem('login') === null) {
-      window.location.replace('/login');
+      history.push('/login');
     }
     return () => {
       setOpen(true);
@@ -33,7 +35,7 @@ export default function BasicLayout() {
   }, []);
 
   return (
-    <Box sx={{ fontFamily: 'Jua, sans-serif' }}>
+    <Box>
       <Box
         style={
           open
@@ -60,7 +62,7 @@ export default function BasicLayout() {
       >
         <Navbar />
         <Switch>
-          <Route path="/builddetail/">
+          <Route path="/builddetail/:stateId/:state">
             <BuildDetail />
           </Route>
           <Route path="/detail/:projectId">

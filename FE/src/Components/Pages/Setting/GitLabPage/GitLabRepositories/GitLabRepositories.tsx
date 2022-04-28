@@ -78,7 +78,15 @@ export default function GitLabRepositories({ gitData }: GitProps) {
   return (
     <Box my={3}>
       <Box position="relative" sx={{ top: 20, left: 10 }}>
-        <Paper sx={{ padding: 1, textAlign: 'center', width: 170 }}>
+        <Paper
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            width: 170,
+            color: ' white',
+            background: 'linear-gradient(195deg, #666, #191919)',
+          }}
+        >
           Repositories
         </Paper>
       </Box>
@@ -136,6 +144,7 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                   startIcon={<AddIcon />}
                   size="small"
                   onClick={handleOpen}
+                  sx={{ color: 'black', borderColor: 'black' }}
                 >
                   Add
                 </Button>
