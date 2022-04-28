@@ -47,6 +47,11 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
     setDomains([...nginxValue.domains]);
   };
 
+  const handleLocationDelClickProps = (index: number) => {
+    nginxValue.locations.splice(index, 1);
+    setLocations([...nginxValue.locations]);
+  };
+
   const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setHttps(event.target.checked);
     nginxValue.https = event.target.checked;
@@ -128,6 +133,8 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
                   <Proxypass
                     key={uuid()}
                     value={value}
+                    index={index}
+                    DelClick={handleLocationDelClickProps}
                     locationData={nginxValue.locations[index]}
                   />
                 );

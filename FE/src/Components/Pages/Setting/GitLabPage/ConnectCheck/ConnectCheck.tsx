@@ -32,7 +32,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
 
   const handleTestConnectionClick = () => {
     const data = {
-      accessToken: gitData.accessTokenId,
+      accessTokenId: gitData.accessTokenId,
       branchName: gitData.branchName,
       hostUrl: gitData.hostUrl,
       projectId: gitData.gitProjectId,
