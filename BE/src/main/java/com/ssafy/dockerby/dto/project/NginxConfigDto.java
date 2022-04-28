@@ -24,6 +24,6 @@ public class NginxConfigDto {
   }
 
   public boolean isNotUse() {
-    return domains.isEmpty() && locations.isEmpty() && !https;
+    return domains.get(0).isBlank() && locations.get(0).isBlank();
   }
 }
