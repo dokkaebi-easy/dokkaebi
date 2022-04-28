@@ -121,7 +121,7 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
                   onClick={handleDomainAddClick}
                   variant="outlined"
                   startIcon={<AddIcon />}
-                  sx={{ color: 'black', borderColor: 'black' }}
+                  sx={{ marginRight: 3, color: 'black', borderColor: 'black' }}
                 >
                   Domain Add
                 </Button>
@@ -145,7 +145,11 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <Typography align="center">HTTPS</Typography>
             </Grid>
             <Grid item xs={1}>
-              <Checkbox checked={https} onChange={handleCheckBoxChange} />
+              <Checkbox
+                disabled
+                checked={https}
+                onChange={handleCheckBoxChange}
+              />
             </Grid>
             <Grid item xs={9}>
               <Box sx={{ display: 'flex', justifyContent: 'end' }}>
@@ -153,7 +157,7 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
                   onClick={handleProxyPassAddClick}
                   variant="outlined"
                   startIcon={<AddIcon />}
-                  sx={{ color: 'black', borderColor: 'black' }}
+                  sx={{ marginRight: 3, color: 'black', borderColor: 'black' }}
                 >
                   Proxypass Add
                 </Button>
