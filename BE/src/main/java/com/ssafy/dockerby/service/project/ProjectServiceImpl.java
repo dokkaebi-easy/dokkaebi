@@ -49,6 +49,7 @@ import com.ssafy.dockerby.repository.user.UserRepository;
 import com.ssafy.dockerby.service.git.GitlabService;
 import com.ssafy.dockerby.util.ConfigParser;
 import com.ssafy.dockerby.util.FileManager;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,6 +63,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -195,19 +197,25 @@ public class ProjectServiceImpl implements ProjectService {
       StringBuilder configFilePath = new StringBuilder();
       configFilePath.append(filePath).append("/").append(configPath);
 
+      StringBuilder repositoryPath = new StringBuilder();
+      repositoryPath.append(filePath).append("/").append(getConfigDto.getGitProjectId());
+
       // Git clone
-      // TODO Upsert이다. Gitlab config가 변경 된 경우에 새로 clone -> update면 pull 받자?
+
+      FileUtils.deleteDirectory(new File(repositoryPath.toString()));
+
       GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
-      String command = GitlabAdapter.getCloneCommand(
+
+      String cloneCommand = GitlabAdapter.getCloneCommand(
           GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
               getConfigDto.getBranchName(), getConfigDto.getGitProjectId()));
 
       CommandInterpreter.runDestPath(filePath.toString(),
           new StringBuilder().append(filePath).append("/").append(logPath).toString(), "clone", 0,
-          command);
+          cloneCommand);
 
       upsertConfigFile(configFilePath.toString(), buildConfigs);
-      if(projectConfigDto.getNginxConfig() != null) {
+      if(!projectConfigDto.getNginxConfig().isNotUse()) {
         String nginxFrontProjectDirectory = "";
         for(DockerContainerConfig config :buildConfigs) {
           if(config.isUseNginx()) {
@@ -216,7 +224,7 @@ public class ProjectServiceImpl implements ProjectService {
           }
         }
         if(nginxFrontProjectDirectory.isEmpty()) {
-          throw new IllegalArgumentException("ProjectServiceImpl.upsert nginxconfi 존재하지만 사용하는 prj가 없음");
+          throw new IllegalArgumentException("ProjectServiceImpl.upsert nginxconf 존재하지만 사용하는 prj가 없음");
         }
         StringBuilder nginxPath = new StringBuilder();
         nginxPath.append(filePath).append("/").append(getConfigDto.getGitProjectId()).append("/").append(nginxFrontProjectDirectory);
