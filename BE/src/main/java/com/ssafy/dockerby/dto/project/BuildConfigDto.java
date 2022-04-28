@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -14,7 +13,7 @@ import lombok.Setter;
 public class BuildConfigDto {
 
   @NotNull
-  private String frameworkName;
+  private Long frameworkId;
 
   @NotNull
   private String name;

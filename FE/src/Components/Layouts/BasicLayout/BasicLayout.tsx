@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Navbar from 'Components/UI/Organisms/Navbar/Navbar';
 import Setting from 'Components/Pages/Setting/Setting';
 import Detail from 'Components/Pages/Detail/Detail';
+import BuildDetail from 'Components/Pages/BuildDetail/BuildDetail';
 
 export default function BasicLayout() {
   return (
@@ -16,6 +17,9 @@ export default function BasicLayout() {
       >
         <Navbar />
         <Switch>
+          <Route path="/builddetail">
+            <BuildDetail />
+          </Route>
           <Route path="/detail">
             <Detail />
           </Route>

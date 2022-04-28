@@ -1,7 +1,5 @@
 package com.ssafy.dockerby.core.docker.dto;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,26 +42,33 @@ public class DockerContainerConfig {
   private boolean useNginx;
 
   public enum FrameworkType {
-    SpringBoot, Vue, React, Django, MySQL
-  }
+    None(0), SpringBoot(1), Vue(2), React(3), Django(4), MySQL(5);
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    DockerContainerConfig that = (DockerContainerConfig) o;
-    return framework == that.framework && version.equals(that.version) && Objects.equals(
-        type, that.type) && Objects.equals(properties, that.properties) && projectDirectory.equals(
-        that.projectDirectory);
-  }
+    private final int value;
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(framework, version, type, properties, projectDirectory);
+    private FrameworkType(int value) {
+      this.value = value;
+    }
+
+    public String toString() {
+      return String.valueOf(this.value);
+    }
+
+    public static FrameworkType from(int value) {
+      if (value == FrameworkType.SpringBoot.ordinal()) {
+        return FrameworkType.SpringBoot;
+      } else if (value == FrameworkType.Vue.ordinal()) {
+        return FrameworkType.Vue;
+      } else if (value == FrameworkType.React.ordinal()) {
+        return FrameworkType.React;
+      } else if (value == FrameworkType.Django.ordinal()) {
+        return FrameworkType.Django;
+      } else if (value == FrameworkType.MySQL.ordinal()) {
+        return FrameworkType.MySQL;
+      } else {
+        return FrameworkType.None;
+      }
+    }
   }
 
   public static class DockerContainerConfigBuilder {
