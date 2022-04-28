@@ -513,7 +513,7 @@ public class ProjectServiceImpl implements ProjectService {
       }
       //성공 로그 출력
       log.info("getFrameworkVersion request success");
-      return FrameworkVersionResponseDto.from(versions, buildTools);
+      return FrameworkVersionResponseDto.from(type.getLanguage().getName(),versions, buildTools);
     } catch (Exception error) {
       //실패 로그 출력
       log.error("getFrameworkVersion request failed {} {}", error.getCause(), error.getMessage());

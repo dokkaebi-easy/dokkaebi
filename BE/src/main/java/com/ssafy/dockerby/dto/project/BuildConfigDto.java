@@ -4,6 +4,8 @@ import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.sun.istack.NotNull;
 import java.io.ObjectInputFilter.Config;
 import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,13 +18,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BuildConfigDto {
 
-  @NotNull
+  @Positive
   private Long frameworkId;
 
-  @NotNull
+  @NotBlank
   private String name;
 
-  @NotNull
+  @NotBlank
   private String version;
 
   // Optional
