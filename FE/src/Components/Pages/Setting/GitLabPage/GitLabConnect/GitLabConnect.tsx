@@ -80,16 +80,17 @@ export default function GitLabConnect({ gitData }: GitProps) {
         <Paper sx={{ padding: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>name</Typography>
+              <Typography>Name</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                label="name"
+                label="Name"
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="name"
+                disabled
+                placeholder="Name"
                 defaultValue={name}
                 onChange={handleNameChange}
               />
@@ -110,13 +111,13 @@ export default function GitLabConnect({ gitData }: GitProps) {
               />
             </Grid>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
-              <Typography>Credentials</Typography>
+              <Typography>Access Token</Typography>
             </Grid>
             <Grid item xs={10}>
               <Stack direction="row" spacing={2} alignItems="center">
                 <SelectItem
                   defaultValue={accessTokenId}
-                  label="Credentials"
+                  label="Access Token"
                   Items={accessTokenIds}
                   Click={handleItemClickProps}
                 />

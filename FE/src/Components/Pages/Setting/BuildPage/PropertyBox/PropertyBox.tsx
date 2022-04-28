@@ -14,7 +14,7 @@ interface PropertyProps {
   DelClick: (index: number) => void;
 }
 
-const PropertyItem = ['publish', 'volume', 'env'];
+const PropertyItem = ['publish', 'volume'];
 
 export default function PropertyBox({
   value,
@@ -87,7 +87,10 @@ export default function PropertyBox({
           startIcon={<DeleteIcon />}
           size="small"
           onClick={handleDelClick}
-          sx={{ color: 'black', borderColor: 'black' }}
+          sx={{
+            color: 'red',
+            borderColor: 'red',
+          }}
         >
           Delete
         </Button>

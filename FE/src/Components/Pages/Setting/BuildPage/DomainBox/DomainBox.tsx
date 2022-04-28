@@ -51,7 +51,10 @@ export default function DomainBox({
           startIcon={<DeleteIcon />}
           size="small"
           onClick={handleDelClick}
-          sx={{ color: 'black', borderColor: 'black' }}
+          sx={{
+            color: 'red',
+            borderColor: 'red',
+          }}
         >
           Delete
         </Button>
