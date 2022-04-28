@@ -72,21 +72,12 @@ export default function SideNavibar() {
             </Link>
           </ListItem>
           <ListItem disablePadding>
-            <Link
-              to="/builddetail"
-              style={{
-                color: 'white',
-                textDecoration: 'none',
-                width: '100%',
-              }}
-            >
-              <ListItemButton>
-                <ListItemIcon>
-                  <DashboardIcon sx={{ color: 'white' }} />
-                </ListItemIcon>
-                <ListItemText primary="Build Detail 임시" />
-              </ListItemButton>
-            </Link>
+            <ListItemButton>
+              <ListItemIcon>
+                <DashboardIcon sx={{ color: 'white' }} />
+              </ListItemIcon>
+              <ListItemText primary="Menu1" />
+            </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton>
