@@ -38,7 +38,7 @@ public class DockerNginxConfig {
     private String location;
     private String url;
 
-    public boolean isBlank() {
+    public boolean checkBlank() {
       return location.isBlank() && url.isBlank();
     }
 

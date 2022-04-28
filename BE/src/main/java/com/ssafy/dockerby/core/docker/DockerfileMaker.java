@@ -55,9 +55,9 @@ public class DockerfileMaker {
     sb.append("FROM ").append(config.getVersion()).append('\n');
     sb.append("COPY --from=builder ");
     if (config.getType().equals("Gradle")) {
-      sb.append(((config.getBuildPath() == null) ? "/build/libs" : config.getBuildPath()) + "/*.jar");
+      sb.append(((config.getBuildPath().isBlank()) ? "/build/libs" : config.getBuildPath()) + "/*.jar");
     } else if (config.getType().equals("Maven")) {
-      sb.append(((config.getBuildPath() == null) ? "/target" : config.getBuildPath()) + "/*.jar");
+      sb.append(((config.getBuildPath().isBlank()) ? "/target" : config.getBuildPath()) + "/*.jar");
     }
     sb.append(" app.jar").append('\n');
     sb.append("ENTRYPOINT [\"java\", \"-jar\", \"./app.jar\"]");
@@ -76,7 +76,7 @@ public class DockerfileMaker {
     sb.append("FROM ").append("nginx:1.18.0").append('\n');
     sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf\n");
     sb.append("COPY --from=builder ");
-    sb.append((config.getBuildPath() == null) ? "/build" : config.getBuildPath())
+    sb.append((config.getBuildPath().isBlank()) ? "/build" : config.getBuildPath())
         .append(" /usr/share/nginx/html\n");
     sb.append("EXPOSE ").append("3000").append('\n');
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
@@ -95,7 +95,7 @@ public class DockerfileMaker {
     sb.append("FROM ").append("nginx:1.18.0").append('\n');
     sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf\n");
     sb.append("COPY --from=builder ");
-    sb.append((config.getBuildPath() == null) ? "/dist" : config.getBuildPath())
+    sb.append((config.getBuildPath().isBlank()) ? "/dist" : config.getBuildPath())
       .append(" /usr/share/nginx/html\n");
     sb.append("EXPOSE ").append("3000").append('\n');
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
@@ -130,7 +130,7 @@ public class DockerfileMaker {
 
   private String getDestPath(String projectDirectory) {
     StringBuilder path = new StringBuilder();
-    path.append(rootDir).append("/").append(projectDirectory);
+    path.append(rootDir).append(projectDirectory);
     return path.toString();
   }
 
