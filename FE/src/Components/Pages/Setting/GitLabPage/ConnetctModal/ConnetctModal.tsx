@@ -49,6 +49,7 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
       .post('/api/git/token', parameters)
       .then((res) => {
         Change(res.data);
+        Close();
       })
       .catch((err) => {
         console.log(err);
