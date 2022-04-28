@@ -43,7 +43,7 @@ export default function MDTable() {
 
     const params = { projectId };
     axios
-      .post('/api/project/build', { params })
+      .post('/api/project/build', null, { params })
       .then(() => {
         setLoading(false);
       })

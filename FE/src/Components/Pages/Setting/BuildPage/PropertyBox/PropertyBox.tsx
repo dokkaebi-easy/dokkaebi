@@ -14,7 +14,7 @@ interface PropertyProps {
   DelClick: (index: number) => void;
 }
 
-const PropertyItem = ['publish', 'volume', 'evn'];
+const PropertyItem = ['publish', 'volume', 'env'];
 
 export default function PropertyBox({
   value,

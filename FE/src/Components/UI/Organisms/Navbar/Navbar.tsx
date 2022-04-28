@@ -8,10 +8,11 @@ import axios from 'axios';
 
 export default function Navbar() {
   const [pageName, setPageName] = useState('');
-  const location = useLocation();
   const [open, setOpen] = useState(false);
 
+  const location = useLocation();
   const loginInfo = window.localStorage.getItem('login');
+
   const logout = () => {
     window.localStorage.removeItem('login');
     axios.post(`/api/user/auth/signout`).then().catch();
