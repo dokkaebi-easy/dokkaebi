@@ -11,6 +11,8 @@ import ProjectDatas, {
   Project,
 } from 'Components/MDClass/ProjectData/ProjectData';
 import { v4 as uuid } from 'uuid';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,11 +34,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-interface TableProps {
-  rows: Project[];
-}
+export default function MDTable() {
+  const [projects, setProject] = useState<Project[]>([]);
 
-export default function MDTable({ rows }: TableProps) {
+  useEffect(() => {
+    axios.get('/api/project/all').then((res) => {
+      const data = res.data as Project[];
+      setProject([...data]);
+    });
+  }, []);
+
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -51,21 +58,66 @@ export default function MDTable({ rows }: TableProps) {
             <StyledTableCell align="right">최근 소요 시간</StyledTableCell>
           </TableRow>
         </TableHead>
-        {rows ? (
+        {projects ? (
           <TableBody>
-            {rows.map((row) => (
+            {projects.map((row) => (
               <StyledTableRow key={uuid()}>
                 <StyledTableCell align="center">
-                  {row.projectId}
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.projectId}
+                  </Link>
                 </StyledTableCell>
-                <StyledTableCell component="th" scope="row">
-                  {row.projectName}
+                <StyledTableCell align="center" component="th" scope="row">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.projectName}
+                  </Link>
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
-                <StyledTableCell align="right">{row.state}</StyledTableCell>
+                <StyledTableCell align="center">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <Link
+                    to={`/detail/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
+                  >
+                    {row.state}
+                  </Link>
+                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

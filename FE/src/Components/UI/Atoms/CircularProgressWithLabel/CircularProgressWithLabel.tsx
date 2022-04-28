@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import CircularProgress from '@mui/material/CircularProgress';
 
 interface ProgressProps {
-  value: number;
+  value: string;
   propsColor: number;
 }
 
@@ -52,7 +52,11 @@ export default function CircularProgressWithLabel({
           height={300}
         />
 
-        <Box sx={styleBox} width="80%" height="80%">
+        <Box
+          sx={{ ...styleBox, backgroundColor: 'rgb(240, 240,240)' }}
+          width="80%"
+          height="80%"
+        >
           <Typography variant="caption" component="div" color="text.secondary">
             {value}
           </Typography>
