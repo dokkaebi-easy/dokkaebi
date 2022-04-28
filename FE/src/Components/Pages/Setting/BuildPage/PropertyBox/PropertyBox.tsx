@@ -60,7 +60,7 @@ export default function PropertyBox({
       <Grid item>
         <Typography>Data1</Typography>
         <TextField
-          id="outlined-basic"
+          id="outlined-basic1"
           label="Data1"
           variant="outlined"
           size="small"
@@ -73,7 +73,7 @@ export default function PropertyBox({
       <Grid item>
         <Typography>Data2</Typography>
         <TextField
-          id="outlined-basic"
+          id="outlined-basic2"
           label="Data2"
           variant="outlined"
           size="small"

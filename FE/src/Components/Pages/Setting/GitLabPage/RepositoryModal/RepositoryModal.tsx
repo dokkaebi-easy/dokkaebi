@@ -95,18 +95,20 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
           <Typography>Password</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            id="outlined-basic1"
             label="Password"
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
             placeholder="Password"
+            type="password"
+            autoComplete="current-password"
             onChange={handlePassWordChange}
           />
           <Typography>UserName</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            id="outlined-basic3"
             label="UserName"
             variant="outlined"
             size="small"

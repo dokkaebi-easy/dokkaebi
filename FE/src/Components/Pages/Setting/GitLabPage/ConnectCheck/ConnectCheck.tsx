@@ -70,7 +70,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
               <TextField
                 fullWidth
                 disabled
-                id="outlined-basic"
+                id="outlined-basic1"
                 variant="outlined"
                 size="small"
                 value={secretToken}
