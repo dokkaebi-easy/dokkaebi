@@ -4,6 +4,9 @@ import GitData, { Git } from 'Components/MDClass/GitData/GitData';
 import NginxData, { Nginx } from 'Components/MDClass/NginxData/NginxData';
 
 interface SettingData {
+  projectId: number;
+  setProjectId: (id: number) => void;
+
   projectName: string;
   setProjectName: (name: string) => void;
 
@@ -18,6 +21,11 @@ interface SettingData {
 }
 
 export const useStore = create<SettingData>((set) => ({
+  projectId: 0,
+  setProjectId: (id) =>
+    set(() => ({
+      projectId: id,
+    })),
   projectName: '',
   setProjectName: (name) =>
     set(() => ({

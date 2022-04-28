@@ -154,7 +154,7 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <TextField
                 fullWidth
                 disabled={!https}
-                id="outlined-basic"
+                id="outlined-basic1"
                 label="SSL Certificate"
                 variant="outlined"
                 size="small"
@@ -171,7 +171,7 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <TextField
                 fullWidth
                 disabled={!https}
-                id="outlined-basic"
+                id="outlined-basic2"
                 label="SSL Certificate Key"
                 variant="outlined"
                 size="small"
@@ -189,7 +189,7 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <TextField
                 fullWidth
                 disabled={!https}
-                id="outlined-basic"
+                id="outlined-basic3"
                 label="SSL Path"
                 variant="outlined"
                 size="small"

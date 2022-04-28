@@ -7,13 +7,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ProjectDatas, {
-  Project,
-} from 'Components/MDClass/ProjectData/ProjectData';
+import { Project } from 'Components/MDClass/ProjectData/ProjectData';
 import { v4 as uuid } from 'uuid';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -47,10 +44,10 @@ export default function MDTable() {
     const params = { projectId };
     axios
       .post('/api/project/build', { params })
-      .then((res) => {
+      .then(() => {
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setLoading(false);
       });
   };

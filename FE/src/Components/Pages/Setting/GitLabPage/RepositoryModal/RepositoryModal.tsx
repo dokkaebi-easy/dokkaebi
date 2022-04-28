@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -7,9 +7,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
-import ResponseIdNameData, {
-  ResponseIdName,
-} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
+import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface modalSwitch {
   open: boolean;
@@ -97,18 +95,20 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
           <Typography>Password</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            id="outlined-basic1"
             label="Password"
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
             placeholder="Password"
+            type="password"
+            autoComplete="current-password"
             onChange={handlePassWordChange}
           />
           <Typography>UserName</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            id="outlined-basic3"
             label="UserName"
             variant="outlined"
             size="small"
