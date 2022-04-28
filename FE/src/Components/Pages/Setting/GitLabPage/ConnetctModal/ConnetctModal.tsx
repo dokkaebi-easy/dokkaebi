@@ -101,10 +101,20 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
             onChange={handleApiTokenChange}
           />
           <Stack mt={3} direction="row" justifyContent="flex-end" spacing={2}>
-            <Button variant="outlined" size="small" onClick={handleSaveClick}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleSaveClick}
+              sx={{ color: 'black', borderColor: 'black' }}
+            >
               Save
             </Button>
-            <Button variant="outlined" size="small" onClick={handleCloseClick}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleCloseClick}
+              sx={{ color: 'black', borderColor: 'black' }}
+            >
               Cancel
             </Button>
           </Stack>

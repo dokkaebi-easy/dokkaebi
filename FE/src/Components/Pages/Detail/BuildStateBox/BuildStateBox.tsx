@@ -27,7 +27,7 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
                 color: 'white',
               }}
             >
-              <Typography align="center">#{buildState.buildStateId}</Typography>
+              <Typography align="center">#{buildState.buildNumber}</Typography>
             </Paper>
             <Paper
               elevation={3}

@@ -30,7 +30,7 @@ export default function BasicLayout() {
   }, []);
 
   return (
-    <Box sx={{ fontFamily: 'Jua, sans-serif' }}>
+    <Box>
       <Box
         style={
           open
