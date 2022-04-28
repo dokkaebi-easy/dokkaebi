@@ -18,7 +18,6 @@ export default function ProjectNameBox() {
       <TextField
         onChange={handleChange}
         fullWidth
-        id="outlined-basic1"
         label="Project Name"
         variant="outlined"
         size="small"

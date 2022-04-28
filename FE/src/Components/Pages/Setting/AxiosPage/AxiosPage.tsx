@@ -43,7 +43,7 @@ export default function AxiosPage() {
   };
 
   useEffect(() => {
-    if (nextPage === 'error') {
+    if (nextPage === 'success') {
       setTimeout(() => {
         history.push('/');
       }, 1000);

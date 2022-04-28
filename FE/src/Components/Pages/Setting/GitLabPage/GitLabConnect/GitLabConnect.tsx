@@ -85,7 +85,6 @@ export default function GitLabConnect({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic1"
                 label="name"
                 variant="outlined"
                 size="small"
@@ -101,7 +100,6 @@ export default function GitLabConnect({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic2"
                 label="Host URL"
                 variant="outlined"
                 size="small"

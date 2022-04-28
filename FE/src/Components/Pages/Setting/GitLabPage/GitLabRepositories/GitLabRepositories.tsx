@@ -97,7 +97,6 @@ export default function GitLabRepositories({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic1"
                 label="Project ID"
                 variant="outlined"
                 size="small"
@@ -116,7 +115,6 @@ export default function GitLabRepositories({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic2"
                 label="Repository URL"
                 variant="outlined"
                 size="small"
@@ -154,12 +152,11 @@ export default function GitLabRepositories({ gitData }: GitProps) {
               </Stack>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Branch Specifier</Typography>
+              <Typography>Branch Name</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic3"
                 label="Branch Specifier"
                 variant="outlined"
                 size="small"

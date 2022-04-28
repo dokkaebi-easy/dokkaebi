@@ -154,7 +154,6 @@ export default function BuildBasicBox({
             <Typography>별칭</Typography>
             <TextField
               defaultValue={name}
-              id="outlined-basic1"
               label="Name"
               variant="outlined"
               size="small"
@@ -206,7 +205,6 @@ export default function BuildBasicBox({
           <Grid item>
             <Typography>File Dir</Typography>
             <TextField
-              id="outlined-basic2"
               label="Dir"
               variant="outlined"
               size="small"
@@ -219,7 +217,6 @@ export default function BuildBasicBox({
           <Grid item>
             <Typography>Build Path</Typography>
             <TextField
-              id="outlined-basic3"
               label="Dir"
               variant="outlined"
               size="small"

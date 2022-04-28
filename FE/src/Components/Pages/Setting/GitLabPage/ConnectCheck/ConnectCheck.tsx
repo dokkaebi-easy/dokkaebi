@@ -57,7 +57,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
             background: 'linear-gradient(195deg, #666, #191919)',
           }}
         >
-          Connect Check
+          Connetion Check
         </Paper>
       </Box>
       <Box>
@@ -70,7 +70,6 @@ export default function ConnectCheck({ gitData }: GitProps) {
               <TextField
                 fullWidth
                 disabled
-                id="outlined-basic1"
                 variant="outlined"
                 size="small"
                 value={secretToken}
