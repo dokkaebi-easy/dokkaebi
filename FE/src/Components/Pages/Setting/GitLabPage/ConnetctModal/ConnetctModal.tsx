@@ -81,7 +81,7 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <Typography>ID</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            id="outlined-basic1"
             label="ID"
             variant="outlined"
             size="small"
@@ -92,7 +92,7 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <Typography>API Token</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            id="outlined-basic2"
             label="API Token"
             variant="outlined"
             size="small"

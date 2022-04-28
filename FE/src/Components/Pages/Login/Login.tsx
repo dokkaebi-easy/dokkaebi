@@ -8,9 +8,8 @@ import LoginIcon from '@mui/icons-material/Login';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
-import { api } from '../../../api/index';
+import { Link, useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 interface Message {
   message: string;
@@ -31,22 +30,25 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-function Login() {
+export default function Login() {
+  const history = useHistory();
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
-    const loginData = JSON.stringify({
+    const loginData = {
       principal: data.get('id'),
       credential: data.get('password'),
-    });
+    };
 
-    api
-      .post(`user/auth/signin`, loginData, { withCredentials: true })
+    axios
+      .post(`/api/user/auth/signin`, loginData, { withCredentials: true })
       .then((res) => {
         const datas = res.data as Message;
         if (datas.status === 'Success') {
           window.localStorage.setItem('login', 'true');
-          window.location.href = '/';
+          history.push('/');
         }
       })
       .catch((error) => {
@@ -127,4 +129,3 @@ function Login() {
     </ThemeProvider>
   );
 }
-export default Login;

@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import MDTable from 'Components/UI/Atoms/MDTable/MDTable';
 import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import CreateIcon from '@mui/icons-material/Create';
 import { Link } from 'react-router-dom';
@@ -12,12 +10,14 @@ import GitData from 'Components/MDClass/GitData/GitData';
 import NginxData from 'Components/MDClass/NginxData/NginxData';
 
 export default function Home() {
+  const cleanProjectId = useStore((state) => state.setProjectId);
   const cleanProjecttName = useStore((state) => state.setProjectName);
   const cleanBuildConfigs = useStore((state) => state.setBuildConfigs);
   const cleanGitConfig = useStore((state) => state.setGitConfig);
   const cleanNginxConfig = useStore((state) => state.setNginxConfig);
 
   const handleCreateClick = () => {
+    cleanProjectId(0);
     cleanProjecttName('');
     cleanBuildConfigs([new BuildData()]);
     cleanGitConfig(new GitData());

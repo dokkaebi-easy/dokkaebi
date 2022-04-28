@@ -25,7 +25,7 @@ export default function DomainBox({ value, index, domainValue }: NginxProps) {
       <Grid item xs={10}>
         <TextField
           fullWidth
-          id="outlined-basic"
+          id="outlined-basic1"
           label="Project Name"
           variant="outlined"
           size="small"
