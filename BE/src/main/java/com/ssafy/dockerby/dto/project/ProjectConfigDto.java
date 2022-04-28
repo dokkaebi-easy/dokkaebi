@@ -2,6 +2,8 @@ package com.ssafy.dockerby.dto.project;
 
 import com.sun.istack.NotNull;
 import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import lombok.*;
 
 @Getter
@@ -11,7 +13,7 @@ public class ProjectConfigDto {
 
   private Long projectId;
 
-  @NotNull
+  @NotBlank
   private String projectName;
 
   private List<BuildConfigDto> buildConfigs;
