@@ -1,12 +1,15 @@
 package com.ssafy.dockerby.dto.project;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ssafy.dockerby.entity.project.enums.StateType;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,6 +21,13 @@ public class BuildDetailResponseDto {
 
   @NotNull
   private String projectName;
+
+  @NotNull
+  private Long projectId;
+
+  @NotNull
+  @Enumerated(value = EnumType.STRING)
+  private StateType stateType;
 
   @NotNull
   private Long buildNumber;
