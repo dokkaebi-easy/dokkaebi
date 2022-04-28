@@ -7,11 +7,14 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
+import ResponseIdNameData, {
+  ResponseIdName,
+} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface modalSwitch {
   open: boolean;
   Close: () => void;
-  Change: () => void;
+  Change: (data: ResponseIdName[]) => void;
 }
 
 const style = {
@@ -51,12 +54,11 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
     axios
       .post('/api/git/account', data)
       .then((res) => {
-        console.log(res.data);
+        Change(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    Change();
   };
 
   const handleCloseClick = () => {

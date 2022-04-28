@@ -22,4 +22,8 @@ public class NginxConfigDto {
   public static NginxConfigDto from(DockerNginxConfig nginx) {
     return new NginxConfigDto(nginx.getDomains(), nginx.getLocations(), nginx.isHttps(), nginx.getHttpsOption());
   }
+
+  public boolean isNotUse() {
+    return domains.isEmpty() && locations.isEmpty() && !https;
+  }
 }
