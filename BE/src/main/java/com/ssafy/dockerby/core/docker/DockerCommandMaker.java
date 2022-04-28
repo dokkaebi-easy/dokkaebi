@@ -1,6 +1,5 @@
 package com.ssafy.dockerby.core.docker;
 
-import com.ssafy.dockerby.core.docker.dto.ContainerConfig;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import java.util.List;
 import java.util.Map;
