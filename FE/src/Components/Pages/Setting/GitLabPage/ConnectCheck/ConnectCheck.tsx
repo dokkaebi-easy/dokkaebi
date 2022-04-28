@@ -11,6 +11,7 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { v4 as uuid } from 'uuid';
 import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
+import FormHelperText from '@mui/material/FormHelperText';
 
 interface GitProps {
   gitData: Git;
@@ -32,7 +33,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
 
   const handleTestConnectionClick = () => {
     const data = {
-      accessToken: 'string',
+      accessTokenId: gitData.accessTokenId,
       branchName: gitData.branchName,
       hostUrl: gitData.hostUrl,
       projectId: gitData.gitProjectId,
@@ -57,7 +58,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
             background: 'linear-gradient(195deg, #666, #191919)',
           }}
         >
-          Connect Check
+          Connetion Check
         </Paper>
       </Box>
       <Box>
@@ -70,17 +71,25 @@ export default function ConnectCheck({ gitData }: GitProps) {
               <TextField
                 fullWidth
                 disabled
-                id="outlined-basic"
                 variant="outlined"
                 size="small"
                 value={secretToken}
                 sx={{ my: 1 }}
               />
+              <FormHelperText id="component-helper-text">
+                (※ 다른 곳에 저장해두세요.)
+              </FormHelperText>
             </Grid>
             <Grid item xs={6} sx={{ my: 'auto' }}>
-              <Typography sx={{ color: 'red' }}>
-                {testConnectionWord ? `Result : ${testConnectionWord} ` : ''}
-              </Typography>
+              {testConnectionWord.length > 10 ? (
+                <Typography sx={{ color: 'red' }}>
+                  {testConnectionWord ? `Result : ${testConnectionWord} ` : ''}
+                </Typography>
+              ) : (
+                <Typography sx={{ color: 'green' }}>
+                  {testConnectionWord ? `Result : ${testConnectionWord} ` : ''}
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={6} sx={{ my: 'auto' }}>
               <Stack direction="row" justifyContent="flex-end" spacing={2}>

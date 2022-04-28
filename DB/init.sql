@@ -216,10 +216,10 @@ CREATE TABLE `dockerby`.`run` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (1,"java");
-INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (2,"python");
-INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (3,"node");
-INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (4,"mysql");
+INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (1,"Java");
+INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (2,"Python");
+INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (3,"Node");
+INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (4,"MySQL");
 
 INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (1,"SpringBoot",1);
 INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (2,"Vue",3);

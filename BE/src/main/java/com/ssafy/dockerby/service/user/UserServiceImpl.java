@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public void UserServiceImpl() throws IOException {
-        this.authKey = FileManager.loadFile("", "AuthKey");
+        this.authKey = FileManager.loadFile("/home/conf", "AuthKey");
     }
 
     @Override

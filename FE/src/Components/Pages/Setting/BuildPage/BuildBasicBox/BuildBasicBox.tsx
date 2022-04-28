@@ -19,6 +19,7 @@ import { useStore } from 'Components/Store/DropDownStore/DropDownStore';
 import BuildProperty from '../BuildPropertyBox/BuildPropertyBox';
 
 interface VersionTypeAxois {
+  name: string;
   buildTool: string[];
   frameworkVersion: string[];
 }
@@ -47,6 +48,7 @@ export default function BuildBasicBox({
   const [type, setType] = useState(buildData.type);
 
   const [framAndLibs, setFramAndLibs] = useState<string[]>([]);
+  const [versionName, setVersionName] = useState('');
   const [versions, setVersions] = useState<string[]>([buildData.version]);
   const [types, setTypes] = useState<string[]>([buildData.type]);
 
@@ -93,9 +95,10 @@ export default function BuildBasicBox({
       .get('/api/project/frameworkVersion', { params })
       .then((res) => {
         const data = res.data as VersionTypeAxois;
+
+        setVersionName(data.name);
         setVersion('');
         setType('');
-
         setVersions([...data.frameworkVersion]);
         setTypes([...data.buildTool]);
       })
@@ -131,6 +134,7 @@ export default function BuildBasicBox({
         .get('/api/project/frameworkVersion', { params })
         .then((res) => {
           const data = res.data as VersionTypeAxois;
+          setVersionName(data.name);
           setVersions([...data.frameworkVersion]);
           setTypes([...data.buildTool]);
         })
@@ -148,13 +152,12 @@ export default function BuildBasicBox({
 
   return (
     <Box>
-      <Paper sx={{ padding: 3 }}>
+      <Paper sx={{ marginY: 1, padding: 3 }}>
         <Grid container spacing={2}>
           <Grid item>
-            <Typography>Name</Typography>
+            <Typography>별칭</Typography>
             <TextField
               defaultValue={name}
-              id="outlined-basic"
               label="Name"
               variant="outlined"
               size="small"
@@ -174,7 +177,7 @@ export default function BuildBasicBox({
             />
           </Grid>
           <Grid item>
-            <Typography>Version</Typography>
+            <Typography>{versionName} Version</Typography>
             <SelectItem
               defaultValue={version}
               label="Versions"
@@ -206,7 +209,6 @@ export default function BuildBasicBox({
           <Grid item>
             <Typography>File Dir</Typography>
             <TextField
-              id="outlined-basic"
               label="Dir"
               variant="outlined"
               size="small"
@@ -219,7 +221,6 @@ export default function BuildBasicBox({
           <Grid item>
             <Typography>Build Path</Typography>
             <TextField
-              id="outlined-basic"
               label="Dir"
               variant="outlined"
               size="small"
@@ -230,7 +231,7 @@ export default function BuildBasicBox({
             />
           </Grid>
         </Grid>
-        <Stack direction="row" spacing={2}>
+        {/* <Stack direction="row" spacing={2}>
           <Button
             variant="outlined"
             startIcon={<ArrowDropDownIcon />}
@@ -239,17 +240,22 @@ export default function BuildBasicBox({
           >
             Property
           </Button>
+
+        </Stack> */}
+        <BuildProperty buildValue={buildData} />
+        <Box sx={{ display: 'flex', justifyContent: 'end' }}>
           <Button
             variant="outlined"
             startIcon={<DeleteIcon />}
-            size="small"
             onClick={handleDelOnClick}
-            sx={{ color: 'black', borderColor: 'black' }}
+            sx={{
+              color: 'red',
+              borderColor: 'red',
+            }}
           >
             Delete
           </Button>
-        </Stack>
-        <BuildProperty buildValue={buildData} />
+        </Box>
       </Paper>
     </Box>
   );

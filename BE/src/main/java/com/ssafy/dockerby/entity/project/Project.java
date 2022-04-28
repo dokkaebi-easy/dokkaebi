@@ -44,19 +44,19 @@ public class Project extends BaseEntity {
   private StateType stateType = StateType.valueOf("Waiting");
 
 //연관관계 매핑
-  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
   private List<ProjectConfig> projectConfigs = new ArrayList<>();
 
-  @OneToOne(mappedBy = "project", fetch = FetchType.LAZY)
+  @OneToOne(mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
   private GitlabConfig gitConfig;
 
   // History 매핑
-  @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
   @Builder.Default
   private List<ConfigHistory> histories = new ArrayList<>();
 
-  @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY, orphanRemoval = true)
   @Builder.Default
   private List<BuildState> buildStates = new ArrayList<>();
 

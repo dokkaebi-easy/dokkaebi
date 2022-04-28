@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -11,7 +10,8 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const linestyle = {
   height: '1px',
@@ -19,6 +19,14 @@ const linestyle = {
     'linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff, rgba(255, 255, 255, 0))',
 };
 export default function SideNavibar() {
+  const [pageName, setPageName] = useState('');
+  const location = useLocation();
+
+  useEffect(() => {
+    const name = location.pathname.split('/');
+    setPageName(name[1]);
+  }, [location]);
+
   return (
     <Paper
       sx={{
@@ -65,28 +73,38 @@ export default function SideNavibar() {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <SettingsIcon sx={{ color: 'white' }} />
+                  <DashboardIcon sx={{ color: 'white' }} />
                 </ListItemIcon>
                 <ListItemText primary="Build Create" />
               </ListItemButton>
             </Link>
           </ListItem>
-          <ListItem disablePadding>
+          {pageName === 'detail' ? (
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <SettingsIcon sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Edit" />
+              </ListItemButton>
+            </ListItem>
+          ) : null}
+          {/* <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <DashboardIcon sx={{ color: 'white' }} />
+                <SettingsIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               <ListItemText primary="Menu1" />
             </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
+          </ListItem> */}
+          {/* <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <DashboardCustomizeIcon sx={{ color: 'white' }} />
               </ListItemIcon>
               <ListItemText primary="Menu2" />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Box>
     </Paper>

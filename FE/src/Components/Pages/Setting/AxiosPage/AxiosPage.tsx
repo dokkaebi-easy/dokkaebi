@@ -1,35 +1,26 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStore } from 'Components/Store/SettingStore/SettingStore';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import Typography from '@mui/material/Typography';
+import { useHistory } from 'react-router';
 
 interface PropertyAxios {
   first: string;
   second: string;
 }
 
-interface buildConfigAxios {
-  frameworkName: string;
-  name: string;
-  version: string;
-  type: string;
-  projectDirectory: string;
-  buildPath: string;
-  env: PropertyAxios[];
-  publish: PropertyAxios[];
-  volume: PropertyAxios[];
-}
-
 export default function AxiosPage() {
+  const projectId = useStore((state) => state.projectId);
   const projectName = useStore((state) => state.projectName);
   const buildConfigs = useStore((state) => state.buildConfigs);
   const gitConfig = useStore((state) => state.gitConfig);
   const nginxConfig = useStore((state) => state.nginxConfig);
 
   const [nextPage, setNextPage] = useState('');
+  const history = useHistory();
 
   const handleClick = () => {
     const data = {
@@ -37,11 +28,12 @@ export default function AxiosPage() {
       gitConfig,
       nginxConfig,
       projectName,
+      projectId,
     };
 
     axios
       .post('/api/project', data)
-      .then((res) => {
+      .then(() => {
         setNextPage('success');
       })
       .catch((error) => {
@@ -49,6 +41,14 @@ export default function AxiosPage() {
         setNextPage('error');
       });
   };
+
+  useEffect(() => {
+    if (nextPage === 'success') {
+      setTimeout(() => {
+        history.push('/');
+      }, 1000);
+    }
+  }, [nextPage]);
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Box>

@@ -42,6 +42,16 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
     setLocations([...nginxValue.locations]);
   };
 
+  const handleDomainDelClickProps = (index: number) => {
+    nginxValue.domains.splice(index, 1);
+    setDomains([...nginxValue.domains]);
+  };
+
+  const handleLocationDelClickProps = (index: number) => {
+    nginxValue.locations.splice(index, 1);
+    setLocations([...nginxValue.locations]);
+  };
+
   const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setHttps(event.target.checked);
     nginxValue.https = event.target.checked;
@@ -102,6 +112,7 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
                     value={value}
                     index={index}
                     domainValue={nginxValue.domains}
+                    DelClick={handleDomainDelClickProps}
                   />
                 );
               })}
@@ -110,7 +121,7 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
                   onClick={handleDomainAddClick}
                   variant="outlined"
                   startIcon={<AddIcon />}
-                  sx={{ color: 'black', borderColor: 'black' }}
+                  sx={{ marginRight: 3, color: 'black', borderColor: 'black' }}
                 >
                   Domain Add
                 </Button>
@@ -122,6 +133,8 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
                   <Proxypass
                     key={uuid()}
                     value={value}
+                    index={index}
+                    DelClick={handleLocationDelClickProps}
                     locationData={nginxValue.locations[index]}
                   />
                 );
@@ -132,7 +145,11 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <Typography align="center">HTTPS</Typography>
             </Grid>
             <Grid item xs={1}>
-              <Checkbox checked={https} onChange={handleCheckBoxChange} />
+              <Checkbox
+                disabled
+                checked={https}
+                onChange={handleCheckBoxChange}
+              />
             </Grid>
             <Grid item xs={9}>
               <Box sx={{ display: 'flex', justifyContent: 'end' }}>
@@ -140,7 +157,7 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
                   onClick={handleProxyPassAddClick}
                   variant="outlined"
                   startIcon={<AddIcon />}
-                  sx={{ color: 'black', borderColor: 'black' }}
+                  sx={{ marginRight: 3, color: 'black', borderColor: 'black' }}
                 >
                   Proxypass Add
                 </Button>
@@ -154,7 +171,6 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <TextField
                 fullWidth
                 disabled={!https}
-                id="outlined-basic"
                 label="SSL Certificate"
                 variant="outlined"
                 size="small"
@@ -171,7 +187,6 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <TextField
                 fullWidth
                 disabled={!https}
-                id="outlined-basic"
                 label="SSL Certificate Key"
                 variant="outlined"
                 size="small"
@@ -189,7 +204,6 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
               <TextField
                 fullWidth
                 disabled={!https}
-                id="outlined-basic"
                 label="SSL Path"
                 variant="outlined"
                 size="small"

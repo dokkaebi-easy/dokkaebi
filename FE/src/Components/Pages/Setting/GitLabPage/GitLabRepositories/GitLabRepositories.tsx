@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -13,9 +13,7 @@ import RepositoryModal from 'Components/Pages/Setting/GitLabPage/RepositoryModal
 import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
 import { useStore } from 'Components/Store/DropDownStore/DropDownStore';
-import ResponseIdNameData, {
-  ResponseIdName,
-} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
+import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface GitProps {
   gitData: Git;
@@ -99,7 +97,6 @@ export default function GitLabRepositories({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic"
                 label="Project ID"
                 variant="outlined"
                 size="small"
@@ -118,7 +115,6 @@ export default function GitLabRepositories({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic"
                 label="Repository URL"
                 variant="outlined"
                 size="small"
@@ -129,13 +125,13 @@ export default function GitLabRepositories({ gitData }: GitProps) {
               />
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Credentials</Typography>
+              <Typography>Access Token</Typography>
             </Grid>
             <Grid item xs={10}>
               <Stack direction="row" spacing={2} alignItems="center">
                 <SelectItem
                   defaultValue={account}
-                  label="Credentials"
+                  label="Access Token"
                   Items={accounts}
                   Click={handleItemClickProps}
                 />
@@ -156,12 +152,11 @@ export default function GitLabRepositories({ gitData }: GitProps) {
               </Stack>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Branch Specifier</Typography>
+              <Typography>Branch Name</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                id="outlined-basic"
                 label="Branch Specifier"
                 variant="outlined"
                 size="small"

@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Navbar from 'Components/UI/Organisms/Navbar/Navbar';
 import Setting from 'Components/Pages/Setting/Setting';
 import Detail from 'Components/Pages/Detail/Detail';
-import BuildDetail from 'Components/Pages/BuildDetail/BuildDetail';
+import StateDetail from 'Components/Pages/StateDetail/StateDetail';
 import { useHistory } from 'react-router';
 
 const transitionStyle = {
@@ -63,7 +63,7 @@ export default function BasicLayout() {
         <Navbar />
         <Switch>
           <Route path="/state/:id/:name">
-            <BuildDetail />
+            <StateDetail />
           </Route>
           <Route path="/detail/:projectId">
             <Detail />

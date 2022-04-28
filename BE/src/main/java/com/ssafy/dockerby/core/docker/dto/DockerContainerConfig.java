@@ -40,7 +40,7 @@ public class DockerContainerConfig {
 
   private boolean useNginx;
 
-  public boolean isBuildPossible() {
+  public boolean buildPossible() {
     return !(framework == FrameworkType.None || framework == FrameworkType.Django);
   }
 

@@ -55,9 +55,9 @@ public class DockerfileMaker {
     sb.append("FROM ").append(config.getVersion()).append('\n');
     sb.append("COPY --from=builder ");
     if (config.getType().equals("Gradle")) {
-      sb.append(((config.getBuildPath() == null) ? "/build/libs" : config.getBuildPath()) + "/*.jar");
+      sb.append(((config.getBuildPath().isBlank()) ? "/build/libs" : config.getBuildPath()) + "/*.jar");
     } else if (config.getType().equals("Maven")) {
-      sb.append(((config.getBuildPath() == null) ? "/target" : config.getBuildPath()) + "/*.jar");
+      sb.append(((config.getBuildPath().isBlank()) ? "/target" : config.getBuildPath()) + "/*.jar");
     }
     sb.append(" app.jar").append('\n');
     sb.append("ENTRYPOINT [\"java\", \"-jar\", \"./app.jar\"]");
@@ -76,7 +76,7 @@ public class DockerfileMaker {
     sb.append("FROM ").append("nginx:1.18.0").append('\n');
     sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf\n");
     sb.append("COPY --from=builder ");
-    sb.append((config.getBuildPath() == null) ? "/build" : config.getBuildPath())
+    sb.append((config.getBuildPath().isBlank()) ? "/build" : config.getBuildPath())
         .append(" /usr/share/nginx/html\n");
     sb.append("EXPOSE ").append("3000").append('\n');
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
@@ -95,7 +95,7 @@ public class DockerfileMaker {
     sb.append("FROM ").append("nginx:1.18.0").append('\n');
     sb.append("COPY ./default.conf /etc/nginx/conf.d/default.conf\n");
     sb.append("COPY --from=builder ");
-    sb.append((config.getBuildPath() == null) ? "/dist" : config.getBuildPath())
+    sb.append((config.getBuildPath().isBlank()) ? "/dist" : config.getBuildPath())
       .append(" /usr/share/nginx/html\n");
     sb.append("EXPOSE ").append("3000").append('\n');
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
@@ -106,25 +106,23 @@ public class DockerfileMaker {
   private void makeDjangoDockerfile(DockerContainerConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
-    sb.append("RUN ").append("pip install django").append('\n');
 
     sb.append("WORKDIR ").append("/usr/src/app").append('\n');
 
     sb.append("ENV ").append("PYTHONDONTWRITEBYTECODE 1").append('\n');
     sb.append("ENV ").append("PYTHONUNBUFFERED 1").append('\n');
 
+    sb.append("COPY ./requirements.txt /usr/src/app").append('\n');
+
     sb.append("RUN ").append("pip install --upgrade pip").append('\n');
-    sb.append("RUN ").append("pip freeze > requirements.txt").append('\n');
-
-    sb.append("COPY ./requirements.txt /usr/src/app");
-
-    sb.append("RUN ").append("pip install -r requirements.txt").append('\n');
 
     sb.append("COPY ").append(". /usr/src/app").append('\n');
 
-    sb.append("EXPOSE ").append("8000").append('\n');
+    sb.append("RUN ").append("apk update").append('\n');
+    sb.append("RUN ").append("apk add make automake gcc g++ subversion python3-dev").append('\n');
 
-    sb.append("RUN ").append("python manage.py migrate").append('\n');
+    sb.append("RUN ").append("pip install -r requirements.txt").append('\n');
+
     sb.append("CMD [\"python\", \"manage.py\", \"runserver\", \"0.0.0.0:8000\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
@@ -132,7 +130,7 @@ public class DockerfileMaker {
 
   private String getDestPath(String projectDirectory) {
     StringBuilder path = new StringBuilder();
-    path.append(rootDir).append("/").append(projectDirectory);
+    path.append(rootDir).append(projectDirectory);
     return path.toString();
   }
 

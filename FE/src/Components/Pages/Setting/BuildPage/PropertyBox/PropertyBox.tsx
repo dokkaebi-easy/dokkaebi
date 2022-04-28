@@ -14,7 +14,7 @@ interface PropertyProps {
   DelClick: (index: number) => void;
 }
 
-const PropertyItem = ['publish', 'volume', 'evn'];
+const PropertyItem = ['publish', 'volume'];
 
 export default function PropertyBox({
   value,
@@ -60,7 +60,6 @@ export default function PropertyBox({
       <Grid item>
         <Typography>Data1</Typography>
         <TextField
-          id="outlined-basic"
           label="Data1"
           variant="outlined"
           size="small"
@@ -73,7 +72,6 @@ export default function PropertyBox({
       <Grid item>
         <Typography>Data2</Typography>
         <TextField
-          id="outlined-basic"
           label="Data2"
           variant="outlined"
           size="small"
@@ -89,7 +87,10 @@ export default function PropertyBox({
           startIcon={<DeleteIcon />}
           size="small"
           onClick={handleDelClick}
-          sx={{ color: 'black', borderColor: 'black' }}
+          sx={{
+            color: 'red',
+            borderColor: 'red',
+          }}
         >
           Delete
         </Button>

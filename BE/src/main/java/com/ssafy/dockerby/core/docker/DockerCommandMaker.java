@@ -22,7 +22,7 @@ public class DockerCommandMaker {
     // TODO : Image tag를 latest로 하는 것은 권장되지 않습니다.
     sb.append("docker build -t ")
         .append(config.getName()).append(":latest")
-        .append(' ').append(projectPath).append("/").append(config.getProjectDirectory());
+        .append(' ').append(projectPath).append(config.getProjectDirectory());
     return sb.toString();
   }
 

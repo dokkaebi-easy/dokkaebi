@@ -30,25 +30,43 @@ const style = {
 };
 
 export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
-  const [id, setId] = useState('');
+  const [errorId, setErrorId] = useState(false);
+  const [errorToken, setErrorToken] = useState(false);
+  const [name, setName] = useState('');
   const [apiToken, setApiToken] = useState('');
 
   const handleIdChange = (event: any) => {
-    setId(event.target.value);
+    setName(event.target.value);
   };
   const handleApiTokenChange = (event: any) => {
     setApiToken(event.target.value);
   };
 
   const handleSaveClick = () => {
+    if (!name || !apiToken) {
+      if (!name) {
+        setErrorId(true);
+        setTimeout(() => setErrorId(false), 1000);
+      }
+      if (!apiToken) {
+        setErrorToken(true);
+        setTimeout(() => setErrorToken(false), 1000);
+      }
+
+      return;
+    }
+
     const parameters = {
-      name: id,
+      name,
       accessToken: apiToken,
     };
     axios
       .post('/api/git/token', parameters)
       .then((res) => {
         Change(res.data);
+        setName('');
+        setApiToken('');
+        Close();
       })
       .catch((err) => {
         console.log(err);
@@ -56,6 +74,8 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
   };
 
   const handleCloseClick = () => {
+    setName('');
+    setApiToken('');
     Close();
   };
 
@@ -78,21 +98,23 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <Typography id="modal-modal-description" sx={{ my: 2 }}>
             GitLab API Token
           </Typography>
-          <Typography>ID</Typography>
+          <Typography>Name</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
-            label="ID"
+            error={errorId}
+            helperText={errorId ? '아이디를 적어주어주세요' : ''}
+            label="Name"
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
-            placeholder="ID"
+            placeholder="Name"
             onChange={handleIdChange}
           />
           <Typography>API Token</Typography>
           <TextField
             fullWidth
-            id="outlined-basic"
+            error={errorToken}
+            helperText={errorToken ? '토큰을 적어주어주세요' : ''}
             label="API Token"
             variant="outlined"
             size="small"
