@@ -106,25 +106,23 @@ public class DockerfileMaker {
   private void makeDjangoDockerfile(DockerContainerConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
-    sb.append("RUN ").append("pip install django").append('\n');
 
     sb.append("WORKDIR ").append("/usr/src/app").append('\n');
 
     sb.append("ENV ").append("PYTHONDONTWRITEBYTECODE 1").append('\n');
     sb.append("ENV ").append("PYTHONUNBUFFERED 1").append('\n');
 
-    sb.append("RUN ").append("pip install --upgrade pip").append('\n');
-    sb.append("RUN ").append("pip freeze > requirements.txt").append('\n');
-
     sb.append("COPY ./requirements.txt /usr/src/app");
 
-    sb.append("RUN ").append("pip install -r requirements.txt").append('\n');
+    sb.append("RUN ").append("pip install --upgrade pip").append('\n');
 
     sb.append("COPY ").append(". /usr/src/app").append('\n');
 
-    sb.append("EXPOSE ").append("8000").append('\n');
+    sb.append("RUN ").append("apk update").append('\n');
+    sb.append("RUN ").append("apk add make automake gcc g++ subversion python3-dev").append('\n');
 
-    sb.append("RUN ").append("python manage.py migrate").append('\n');
+    sb.append("RUN ").append("pip install -r requirements.txt").append('\n');
+
     sb.append("CMD [\"python\", \"manage.py\", \"runserver\", \"0.0.0.0:8000\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());

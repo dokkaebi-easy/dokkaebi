@@ -37,6 +37,10 @@ public class DockerNginxConfig {
   public static class ProxyLocation {
     private String location;
     private String url;
+
+    public boolean isBlank() {
+      return location.isBlank() && url.isBlank();
+    }
   }
 
   @Getter

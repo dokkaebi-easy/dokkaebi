@@ -45,7 +45,7 @@ public class ProjectController {
 
   @ApiOperation(value = "프로젝트 생성", notes = "프로젝트를 생성한다.")
   @PostMapping
-  public ResponseEntity upsertProject(HttpServletRequest request,@RequestBody ProjectConfigDto projectConfigDto) throws NotFoundException, IOException {
+  public ResponseEntity upsertProject(HttpServletRequest request,@Valid @RequestBody ProjectConfigDto projectConfigDto) throws NotFoundException, IOException {
     //요청 로그출력
     log.info("project create request");
     log.info("Request Project : {}", projectConfigDto.getProjectName());

@@ -513,7 +513,7 @@ public class ProjectServiceImpl implements ProjectService {
       }
       //성공 로그 출력
       log.info("getFrameworkVersion request success");
-      return FrameworkVersionResponseDto.from(versions, buildTools);
+      return FrameworkVersionResponseDto.from(type.getLanguage().getName(),versions, buildTools);
     } catch (Exception error) {
       //실패 로그 출력
       log.error("getFrameworkVersion request failed {} {}", error.getCause(), error.getMessage());
@@ -650,13 +650,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     String stateType="";
-    if("Pull".equals(buildDetailRequestDto.getName())){
+    if("Pull".equals(buildDetailRequestDto.getName().toString())){
       stateType=buildState.getPull().getStateType().toString();
     }
-    else if("Build".equals(buildDetailRequestDto.getName())){
+    else if("Build".equals(buildDetailRequestDto.getName().toString())){
       stateType=buildState.getBuild().getStateType().toString();
     }
-    else if("Run".equals(buildDetailRequestDto.getName())){
+    else if("Run".equals(buildDetailRequestDto.getName().toString())){
       stateType=buildState.getRun().getStateType().toString();
     }
 
