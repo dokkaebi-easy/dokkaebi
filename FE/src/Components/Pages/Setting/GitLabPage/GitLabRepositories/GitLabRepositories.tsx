@@ -154,7 +154,7 @@ export default function GitLabRepositories({ gitData }: GitProps) {
               </Stack>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Branch Specifier</Typography>
+              <Typography>Branch Name</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
