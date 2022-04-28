@@ -53,6 +53,7 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
       .post('/api/git/account', data)
       .then((res) => {
         Change(res.data);
+        Close();
       })
       .catch((err) => {
         console.log(err);
