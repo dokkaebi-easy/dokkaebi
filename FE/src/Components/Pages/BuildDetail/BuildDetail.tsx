@@ -9,22 +9,19 @@ import { AiOutlineGitlab } from 'react-icons/ai';
 import styled from '@emotion/styled';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
-import { useLocation } from 'react-router-dom';
-import { api } from '../../../api/index';
+import { useLocation, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 export default function BuildDetail() {
   const [detailData, setDetailData] = useState<any>('');
   const location = useLocation();
+  const params = useParams();
 
   useEffect(() => {
-    const apiData = JSON.stringify(location.state);
-    api.post(`/project/build/detail`, apiData).then((res) => {
-      const detailDate = res.data;
-      setDetailData(detailDate);
+    axios.post(`/api/project/build/detail`, params).then((res) => {
+      setDetailData(res.data);
     });
-  }, [location]);
-  console.log(location);
-  console.log(detailData);
+  }, []);
 
   return (
     <Box
