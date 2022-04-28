@@ -20,6 +20,8 @@ public class GitConfigDto {
   private String branchName;    // branchSpecifier
 
   public static GitConfigDto from(GitlabConfig config) {
+    if(config == null)
+      return from();
     return new GitConfigDto(
         config.getName(),
         config.getHostUrl(),
@@ -30,6 +32,9 @@ public class GitConfigDto {
         config.getSecretToken(),
         config.getBranchName()
     );
+  }
 
+  public static GitConfigDto from() {
+    return new GitConfigDto("","",0L,0L,0L,"","","");
   }
 }

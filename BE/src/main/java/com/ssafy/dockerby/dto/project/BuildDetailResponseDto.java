@@ -2,16 +2,16 @@ package com.ssafy.dockerby.dto.project;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.dockerby.entity.project.enums.StateType;
-import com.sun.istack.NotNull;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.lang.Nullable;
-
-import javax.persistence.Column;
+import java.time.LocalDateTime;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.time.LocalDateTime;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 @Getter
 @Builder
@@ -37,7 +37,7 @@ public class BuildDetailResponseDto {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
   private LocalDateTime registDate;
 
-  @Nullable
+  @NotNull
   private GitInfo gitInfo;
 
   @NotNull
@@ -47,13 +47,28 @@ public class BuildDetailResponseDto {
   @Builder
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  public static class GitInfo{
+  public static class GitInfo {
 
-    private String username;
+    @Builder.Default
+    private String username = "";
 
-    private String gitRepositoryUrl;
+    @Builder.Default
+    private String gitRepositoryUrl = "";
 
-    private String gitBranch;
+    @Builder.Default
+    private String gitBranch = "";
+
+  }
+
+  public static class BuildDetailResponseDtoBuilder {
+
+    public BuildDetailResponseDtoBuilder gitInfo(GitInfo gitInfo) {
+      if (gitInfo == null) {
+        this.gitInfo = GitInfo.builder().build();
+      }
+      this.gitInfo = gitInfo;
+      return this;
+    }
   }
 
 }
