@@ -14,7 +14,15 @@ export default function GitLabPage() {
   return (
     <Box>
       <Box position="relative" sx={{ top: 20, left: 10 }}>
-        <Paper sx={{ padding: 1, textAlign: 'center', width: 200 }}>
+        <Paper
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            width: 200,
+            color: ' white',
+            background: 'linear-gradient(195deg, #666, #191919)',
+          }}
+        >
           <Typography variant="h5">GitLab Setting</Typography>
         </Paper>
       </Box>

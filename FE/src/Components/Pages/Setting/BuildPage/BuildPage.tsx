@@ -32,7 +32,15 @@ export default function BuildPage() {
   return (
     <Box>
       <Box position="relative" sx={{ top: 20, left: 10 }}>
-        <Paper sx={{ padding: 1, textAlign: 'center', width: 200 }}>
+        <Paper
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            width: 200,
+            color: ' white',
+            background: 'linear-gradient(195deg, #666, #191919)',
+          }}
+        >
           <Typography variant="h5">Build Setting</Typography>
         </Paper>
       </Box>
@@ -54,6 +62,7 @@ export default function BuildPage() {
                 onClick={handleAddClick}
                 variant="outlined"
                 startIcon={<AddIcon />}
+                sx={{ color: 'black', borderColor: 'black' }}
               >
                 Add
               </Button>

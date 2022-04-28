@@ -9,14 +9,14 @@ export interface HttpsOption {
 }
 
 export interface Nginx {
-  domainUrl: string;
+  domains: string[];
   locations: Locations[];
   httpsOption: HttpsOption;
   https: boolean;
 }
 
 export default class NginxData {
-  public domainUrl: string;
+  public domains: string[];
 
   public locations: Locations[];
 
@@ -25,7 +25,7 @@ export default class NginxData {
   public https: false;
 
   constructor() {
-    this.domainUrl = '';
+    this.domains = [''];
     this.locations = [new LocationsData()];
     this.httpsOption = {
       sslCertificate: '',

@@ -13,6 +13,9 @@ import ProjectDatas, {
 import { v4 as uuid } from 'uuid';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,6 +39,21 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function MDTable() {
   const [projects, setProject] = useState<Project[]>([]);
+  const [loading, setLoading] = React.useState(false);
+
+  const handleClick = (projectId: number) => {
+    setLoading(true);
+
+    const params = { projectId };
+    axios
+      .post('/api/project/build', { params })
+      .then((res) => {
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     axios.get('/api/project/all').then((res) => {
@@ -49,6 +67,7 @@ export default function MDTable() {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
+            <StyledTableCell align="center">빌드 실행</StyledTableCell>
             <StyledTableCell align="center">Project ID</StyledTableCell>
             <StyledTableCell align="center">Name</StyledTableCell>
             <StyledTableCell align="center">S</StyledTableCell>
@@ -62,6 +81,19 @@ export default function MDTable() {
           <TableBody>
             {projects.map((row) => (
               <StyledTableRow key={uuid()}>
+                <StyledTableCell align="center">
+                  <LoadingButton
+                    size="small"
+                    sx={{
+                      background: 'linear-gradient(195deg, #42424a, #191919)',
+                    }}
+                    onClick={() => handleClick(row.projectId)}
+                    loading={loading}
+                    variant={loading ? 'outlined' : 'contained'}
+                    disabled={loading}
+                    startIcon={<PlayArrowIcon />}
+                  />
+                </StyledTableCell>
                 <StyledTableCell align="center">
                   <Link
                     to={`/detail/${row.projectId}`}
