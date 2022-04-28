@@ -105,7 +105,7 @@ public class ProjectServiceImpl implements ProjectService {
             () -> new NotFoundException("ProjectServiceImpl.configByProjectName : " + projectId));
 
     StringBuilder filePath = new StringBuilder();
-    filePath.append(rootPath).append("/").append(projectId).append("/").append(configPath);
+    filePath.append(rootPath).append("/").append(project.getProjectName()).append("/").append(configPath);
 
 
     List<DockerContainerConfig> configs = loadConfigFiles(filePath.toString(),
@@ -649,8 +649,21 @@ public class ProjectServiceImpl implements ProjectService {
           .build();
     }
 
+    String stateType="";
+    if("Pull".equals(buildDetailRequestDto.getName())){
+      stateType=buildState.getPull().getStateType().toString();
+    }
+    else if("Build".equals(buildDetailRequestDto.getName())){
+      stateType=buildState.getBuild().getStateType().toString();
+    }
+    else if("Run".equals(buildDetailRequestDto.getName())){
+      stateType=buildState.getRun().getStateType().toString();
+    }
+
     BuildDetailResponseDto buildDetailResponseDto = BuildDetailResponseDto.builder()
         .projectName(buildState.getProject().getProjectName())
+        .projectId(buildState.getProject().getId())
+        .stateType(StateType.valueOf(stateType))
         .buildNumber(buildState.getBuildNumber())
         .registDate(buildState.getRegistDate())
         .gitInfo(gitInfo)
