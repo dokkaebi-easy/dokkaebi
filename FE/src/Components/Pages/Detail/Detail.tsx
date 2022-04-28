@@ -85,7 +85,6 @@ export default function Detail() {
         <Stack mt={5} spacing={2} direction="row" justifyContent="flex-end">
           <Button
             variant="contained"
-            onClick={handleEditClick}
             sx={{ background: 'linear-gradient(195deg, #ee6666, #ff2222)' }}
           >
             Del
