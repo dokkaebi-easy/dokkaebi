@@ -34,7 +34,6 @@ export default function NginxBasicBox({ nginxValue }: NginxProps) {
   const handleDomainAddClick = () => {
     nginxValue.domains.push('');
     setDomains([...nginxValue.domains]);
-    console.log(nginxValue.domains);
   };
 
   const handleProxyPassAddClick = () => {

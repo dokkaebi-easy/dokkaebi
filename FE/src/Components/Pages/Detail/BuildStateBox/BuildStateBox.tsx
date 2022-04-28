@@ -2,53 +2,17 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-
 import Grid from '@mui/material/Grid';
 import BuildStateData, {
   BuildState,
 } from 'Components/MDClass/BuildStateData/BuildStateData';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface BuildStateProps {
   buildState: BuildState;
 }
 
 export default function BuildStateBox({ buildState }: BuildStateProps) {
-  const { buildStateId, state } = buildState;
-  console.log(buildStateId);
-  const history = useHistory();
-
-  const linkPull: any = () => {
-    history.push({
-      pathname: '/builddetail',
-      state: {
-        id: buildStateId,
-        name: 'Pull',
-        state: state.pull,
-      },
-    });
-  };
-
-  const linkBuild: any = () => {
-    history.push({
-      pathname: '/builddetail',
-      state: {
-        buildStateId,
-        buildType: 'Build',
-      },
-    });
-  };
-
-  const linkRun: any = () => {
-    history.push({
-      pathname: '/builddetail',
-      state: {
-        buildStateId,
-        buildType: 'Run',
-      },
-    });
-  };
-
   return (
     <Box my={3}>
       <Paper sx={{ backgroundColor: 'rgb(240, 240,240)', padding: 1 }}>
@@ -74,24 +38,41 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
           </Grid>
           <Grid item xs={8}>
             <Grid container spacing={1}>
-              <Grid item xs={4} onClick={linkPull}>
-                <Paper sx={{ padding: 5, borderRadius: 3 }}>
-                  <Typography align="center">
-                    {buildState.state.pull}
-                  </Typography>
-                </Paper>
+              <Grid item xs={4}>
+                <Link
+                  to={`/state/${buildState.buildStateId}/Pull`}
+                  style={{ color: 'black', textDecoration: 'none' }}
+                >
+                  <Paper sx={{ padding: 5, borderRadius: 3 }}>
+                    <Typography align="center">
+                      {buildState.state.pull}
+                    </Typography>
+                  </Paper>
+                </Link>
               </Grid>
-              <Grid item xs={4} onClick={linkBuild}>
-                <Paper sx={{ padding: 5, borderRadius: 3 }}>
-                  <Typography align="center">
-                    {buildState.state.build}
-                  </Typography>
-                </Paper>
+              <Grid item xs={4}>
+                <Link
+                  to={`/state/${buildState.buildStateId}/Build`}
+                  style={{ color: 'black', textDecoration: 'none' }}
+                >
+                  <Paper sx={{ padding: 5, borderRadius: 3 }}>
+                    <Typography align="center">
+                      {buildState.state.build}
+                    </Typography>
+                  </Paper>
+                </Link>
               </Grid>
-              <Grid item xs={4} onClick={linkRun}>
-                <Paper sx={{ padding: 5, borderRadius: 3 }}>
-                  <Typography align="center">{buildState.state.run}</Typography>
-                </Paper>
+              <Grid item xs={4}>
+                <Link
+                  to={`/state/${buildState.buildStateId}/Run`}
+                  style={{ color: 'black', textDecoration: 'none' }}
+                >
+                  <Paper sx={{ padding: 5, borderRadius: 3 }}>
+                    <Typography align="center">
+                      {buildState.state.run}
+                    </Typography>
+                  </Paper>
+                </Link>
               </Grid>
             </Grid>
           </Grid>
