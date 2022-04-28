@@ -25,17 +25,17 @@ export default function Detail() {
   const [runColor, setRunColor] = useState(200);
   const [buildColor, setBuildColor] = useState(500);
 
-  // useEffect(() => {
-  // axios
-  // .get('/api/project/build/total', { params })
-  // .then((res) => {
-  // setBuildStates([...res.data]);
-  // })
-  // .catch((err) => {
-  // console.log(err);
-  // });
-  // }, []);
-
+  useEffect(() => {
+    axios
+      .get('/api/project/build/total', { params })
+      .then((res) => {
+        setBuildStates([...res.data]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  console.log(buildStates);
   return (
     <Box
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
