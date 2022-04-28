@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class UserController {
 
     @ApiOperation(value = "회원가입", notes = "회원가입을 한다")
     @PostMapping( "/signup")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody SignupDto signupDto)
+    public ResponseEntity<UserResponseDto> signup(@Valid @RequestBody SignupDto signupDto)
         throws IOException, UserDefindedException {
         log.info("signup API received ID: {}",signupDto.getPrincipal());
 

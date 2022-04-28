@@ -29,7 +29,6 @@
 //      .settingJson("{project : 123asd , projectUrl : http://localhost:8080 }")
 //      .build();
 //
-////TODO / TEST : 테스트 쪽에서 디비 쓰는방법을 알아보자!!
 //
 //  @Test
 //  public void 프로젝트_생성_success_test() throws UserDefindedException, IOException {
