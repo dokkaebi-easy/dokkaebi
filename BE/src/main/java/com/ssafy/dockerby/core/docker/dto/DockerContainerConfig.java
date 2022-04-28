@@ -40,6 +40,10 @@ public class DockerContainerConfig {
 
   private boolean useNginx;
 
+  public boolean isBuildPossible() {
+    return !(framework == FrameworkType.None || framework == FrameworkType.Django);
+  }
+
   public enum FrameworkType {
     None(0), SpringBoot(1), Vue(2), React(3), Django(4), MySQL(5);
 
