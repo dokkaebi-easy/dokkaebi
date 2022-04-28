@@ -34,7 +34,6 @@ export default function ProxypassBox({ value, locationData }: ProxyProps) {
         <Grid item xs={10}>
           <TextField
             fullWidth
-            id="outlined-basic1"
             label="Proxy pass Path"
             variant="outlined"
             size="small"
@@ -49,7 +48,6 @@ export default function ProxypassBox({ value, locationData }: ProxyProps) {
         <Grid item xs={10}>
           <TextField
             fullWidth
-            id="outlined-basic2"
             label="Proxy pass URL"
             variant="outlined"
             size="small"
