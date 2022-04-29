@@ -48,15 +48,15 @@ public class Project extends BaseEntity {
   @Builder.Default
   private List<ProjectConfig> projectConfigs = new ArrayList<>();
 
-  @OneToOne(mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToOne(mappedBy = "project", fetch = FetchType.LAZY)
   private GitlabConfig gitConfig;
 
   // History 매핑
-  @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
   @Builder.Default
   private List<ConfigHistory> histories = new ArrayList<>();
 
-  @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
   @Builder.Default
   private List<BuildState> buildStates = new ArrayList<>();
 
