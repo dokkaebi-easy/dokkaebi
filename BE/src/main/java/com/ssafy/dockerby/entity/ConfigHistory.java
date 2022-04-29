@@ -30,7 +30,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class ConfigHistory {
 
     @Id
-    @Column(name = "history_id")
+    @Column(name = "config_history_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
