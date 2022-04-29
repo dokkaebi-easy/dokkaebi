@@ -44,7 +44,7 @@ public class Project extends BaseEntity {
   private StateType stateType = StateType.valueOf("Waiting");
 
 //연관관계 매핑
-  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
   @Builder.Default
   private List<ProjectConfig> projectConfigs = new ArrayList<>();
 

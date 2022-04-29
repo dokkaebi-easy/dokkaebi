@@ -224,8 +224,9 @@ INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (4,"MySQL");
 INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (1,"SpringBoot",1);
 INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (2,"Vue",3);
 INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (3,"React",3);
-INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (4,"Django",2);
-INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (5,"MySQL",4);
+INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (4,"Next",3);
+INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (5,"Django",2);
+INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (6,"MySQL",4);
 
 INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Gradle",1);
 INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Maven",1);

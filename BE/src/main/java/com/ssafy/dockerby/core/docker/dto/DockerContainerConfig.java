@@ -45,7 +45,7 @@ public class DockerContainerConfig {
   }
 
   public enum FrameworkType {
-    None(0), SpringBoot(1), Vue(2), React(3), Django(4), MySQL(5);
+    None(0), SpringBoot(1), Vue(2), React(3), Next(4), Django(5), MySQL(6);
 
     private final int value;
 
