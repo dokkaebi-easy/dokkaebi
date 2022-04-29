@@ -148,6 +148,6 @@ public class DockerfileMaker {
   }
 
   private void saveDockerFile(String pjtDir, String sb) throws IOException {
-      FileManager.saveFile(pjtDir, "dockerfile", sb);
+      FileManager.saveFile(pjtDir, "Dockerfile", sb);
   }
 }

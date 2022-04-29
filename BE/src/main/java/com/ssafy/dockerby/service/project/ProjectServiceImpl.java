@@ -111,7 +111,6 @@ public class ProjectServiceImpl implements ProjectService {
     List<DockerContainerConfig> configs = loadConfigFiles(filePath.toString(),
         project.getProjectConfigs(), DockerContainerConfig.class);
 
-    GitlabConfig gitlabConfig = gitlabService.config(project.getId()).get();
     NginxConfigDto nginxConfigDto = null;
     for (DockerContainerConfig config : configs) {
       if (config.isUseNginx()) {
@@ -139,7 +138,7 @@ public class ProjectServiceImpl implements ProjectService {
       buildConfigs.add(BuildConfigDto.from(config, version.getInputVersion(), properties));
     }
     return ProjectConfigDto.of(projectId, project.getProjectName(), buildConfigs,
-        GitConfigDto.from(gitlabConfig), nginxConfigDto);
+        GitConfigDto.from(project.getGitConfig()), nginxConfigDto);
 
 
   }
@@ -181,21 +180,21 @@ public class ProjectServiceImpl implements ProjectService {
     List<ProjectConfig> configs = new ArrayList<>();
     buildConfigs.forEach(config -> configs.add(ProjectConfig.from(config.getName())));
 
-    project.getProjectConfigs().clear();
-    project.getProjectConfigs().addAll(configs);
+    project.addProjectConfigs(configs);
 
+    StringBuilder filePath = new StringBuilder();
+    filePath.append(rootPath + "/" + project.getProjectName());
+
+    StringBuilder configFilePath = new StringBuilder();
+    configFilePath.append(filePath).append("/").append(configPath);
+
+    upsertConfigFile(configFilePath.toString(), buildConfigs);
     log.info("GitConfigDto project ID : {}", project.getId());
     GitConfigDto getConfigDto = projectConfigDto.getGitConfig();
-    if (getConfigDto != null) {
+    if (!getConfigDto.checkEmpty()) {
       gitlabService.config(project.getId())
           .map(config -> gitlabService.updateConfig(project, getConfigDto))
           .orElseGet(() -> gitlabService.createConfig(project, getConfigDto));
-
-      StringBuilder filePath = new StringBuilder();
-      filePath.append(rootPath + "/" + project.getProjectName());
-
-      StringBuilder configFilePath = new StringBuilder();
-      configFilePath.append(filePath).append("/").append(configPath);
 
       StringBuilder repositoryPath = new StringBuilder();
       repositoryPath.append(filePath).append("/").append(getConfigDto.getGitProjectId());
@@ -214,16 +213,16 @@ public class ProjectServiceImpl implements ProjectService {
           new StringBuilder().append(filePath).append("/").append(logPath).toString(), "Clone", 0,
           cloneCommand);
 
-      upsertConfigFile(configFilePath.toString(), buildConfigs);
+
       DockerAdapter dockerAdapter = new DockerAdapter(
           new StringBuilder().append(filePath).append("/").append(getConfigDto.getGitProjectId())
               .toString(), project.getProjectName());
 
-      List<DockerContainerConfig> dockerConfigs = loadConfigFiles(
-          new StringBuilder().append(filePath).append("/").append(configPath).toString(), configs,
-          DockerContainerConfig.class);
-      dockerAdapter.saveDockerfiles(dockerConfigs);
-
+      try {
+        dockerAdapter.saveDockerfiles(buildConfigs);
+      } catch (Exception e) {
+        log.error("docker file not making {} DockerAdapter({})",project.getProjectName());
+      }
       if (!projectConfigDto.getNginxConfig().isNotUse()) {
         String nginxFrontProjectDirectory = "";
         for (DockerContainerConfig config : buildConfigs) {
