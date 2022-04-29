@@ -74,8 +74,9 @@ public class Project extends BaseEntity {
   }
 
   public void addProjectConfigs(List<ProjectConfig> configs) {
-    this.projectConfigs = configs;
     configs.forEach(config -> config.setProject(this));
+    this.projectConfigs.clear();
+    this.projectConfigs.addAll(configs);
   }
 
   public void addProjectConfig(ProjectConfig config) {
