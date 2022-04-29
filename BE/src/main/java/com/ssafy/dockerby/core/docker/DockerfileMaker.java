@@ -33,12 +33,25 @@ public class DockerfileMaker {
       case React:
         makeReactWithNginxDockerFile(config);
         break;
+      case Next:
+        makeNextDockerfile(config);
+        break;
       case MySQL:
         // MySQL은 dockerfile 없이 docker run으로 바로 진행
         break;
       default:
         throw new IllegalArgumentException("makeDockerFile : " + config.getFramework() + "Error");
     }
+  }
+
+  private void makeNextDockerfile(DockerContainerConfig config) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    sb.append("FROM ").append(config.getVersion()).append('\n');
+    sb.append("COPY . . \n");
+    sb.append("RUN ").append("npm install").append('\n');
+    sb.append("RUN ").append("npm run build").append('\n');
+    sb.append("CMD [\"npm\", \"run\", \"start\"]");
+    saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
   }
 
   private void makeSpringBootDockerfile(DockerContainerConfig config) throws IOException {

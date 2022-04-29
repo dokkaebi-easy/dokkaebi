@@ -181,7 +181,8 @@ public class ProjectServiceImpl implements ProjectService {
     List<ProjectConfig> configs = new ArrayList<>();
     buildConfigs.forEach(config -> configs.add(ProjectConfig.from(config.getName())));
 
-    project.addProjectConfigs(configs);
+    project.getProjectConfigs().clear();
+    project.getProjectConfigs().addAll(configs);
 
     log.info("GitConfigDto project ID : {}", project.getId());
     GitConfigDto getConfigDto = projectConfigDto.getGitConfig();
@@ -197,7 +198,7 @@ public class ProjectServiceImpl implements ProjectService {
       configFilePath.append(filePath).append("/").append(configPath);
 
       StringBuilder repositoryPath = new StringBuilder();
-      repositoryPath.append(filePath).append(getConfigDto.getGitProjectId());
+      repositoryPath.append(filePath).append("/").append(getConfigDto.getGitProjectId());
 
       // Git clone
 
