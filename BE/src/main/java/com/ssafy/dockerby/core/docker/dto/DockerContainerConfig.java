@@ -64,6 +64,8 @@ public class DockerContainerConfig {
         return FrameworkType.Vue;
       } else if (value == FrameworkType.React.ordinal()) {
         return FrameworkType.React;
+      } else if (value == FrameworkType.Next.ordinal()) {
+        return FrameworkType.Next;
       } else if (value == FrameworkType.Django.ordinal()) {
         return FrameworkType.Django;
       } else if (value == FrameworkType.MySQL.ordinal()) {
@@ -87,6 +89,7 @@ public class DockerContainerConfig {
       useNginx = false;
       return this;
     }
+
   }
 
   public void convertVersion(String docekerHubVersion) {
