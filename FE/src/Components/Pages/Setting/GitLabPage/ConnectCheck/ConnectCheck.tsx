@@ -40,7 +40,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
       repositoryUrl: gitData.repositoryUrl,
     };
 
-    axios.post('api/git/testConnection', data).then((res) => {
+    axios.post('/api/git/testConnection', data).then((res) => {
       const word = res.data as TestConnectionAxios;
       setTestConnectionWord(word.status);
     });

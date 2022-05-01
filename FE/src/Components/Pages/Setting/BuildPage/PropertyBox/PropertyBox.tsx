@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -51,7 +51,7 @@ export default function PropertyBox({
       <Grid item>
         <Typography>Property</Typography>
         <SelectItem
-          defaultValue={value.property}
+          defaultValue={property}
           label="Property"
           Items={PropertyItem}
           Change={handlePropsPropertyChange}

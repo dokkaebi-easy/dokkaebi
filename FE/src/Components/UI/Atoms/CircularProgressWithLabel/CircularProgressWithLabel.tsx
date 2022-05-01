@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
-import CircularProgress from '@mui/material/CircularProgress';
 
 interface ProgressProps {
   value: string;
-  propsColor: number;
 }
 
 const styleBox = {
@@ -23,11 +20,7 @@ const styleBox = {
   borderRadius: 100,
 };
 
-export default function CircularProgressWithLabel({
-  value,
-  propsColor,
-}: ProgressProps) {
-  const [color, setColor] = useState(propsColor);
+export default function CircularProgressWithLabel({ value }: ProgressProps) {
   return (
     <Box
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}

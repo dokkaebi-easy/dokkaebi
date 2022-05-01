@@ -1,7 +1,5 @@
 import create from 'zustand';
-import ResponseIdNameData, {
-  ResponseIdName,
-} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
+import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface DropdownData {
   framworkandLib: ResponseIdName[];

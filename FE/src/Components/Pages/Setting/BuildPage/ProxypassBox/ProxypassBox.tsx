@@ -5,9 +5,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
-import LocationsData, {
-  Locations,
-} from 'Components/MDClass/LocationsData/LocationsData';
+import { Locations } from 'Components/MDClass/LocationsData/LocationsData';
 
 interface ProxyProps {
   value: Locations;

@@ -27,7 +27,10 @@ export default function Home() {
     <Box sx={{ marginTop: 5 }}>
       <MDTable />
       <Stack mt={2} direction="row" justifyContent="flex-end" spacing={2}>
-        <Link to="/setting" style={{ color: 'white', textDecoration: 'none' }}>
+        <Link
+          to="/setting/0"
+          style={{ color: 'white', textDecoration: 'none' }}
+        >
           <Button
             sx={{
               background: 'linear-gradient(195deg, #666, #191919)',
