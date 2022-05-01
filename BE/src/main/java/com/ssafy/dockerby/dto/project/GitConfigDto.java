@@ -19,6 +19,9 @@ public class GitConfigDto {
   private String secretToken;
   private String branchName;    // branchSpecifier
 
+  public boolean checkEmpty() {
+    return hostUrl.isBlank() && accessTokenId ==0 && accountId == 0 && gitProjectId == 0 && repositoryUrl.isBlank() && secretToken.isBlank() && branchName.isBlank();
+  }
   public static GitConfigDto from(GitlabConfig config) {
     if(config == null)
       return from();

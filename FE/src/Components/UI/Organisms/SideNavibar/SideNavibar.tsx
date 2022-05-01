@@ -6,9 +6,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import InboxIcon from '@mui/icons-material/Inbox';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -42,18 +40,24 @@ export default function SideNavibar() {
     >
       <Box sx={{ color: 'white', textAlign: 'center' }}>
         <List>
-          <ListItem disablePadding>
+          <ListItem disablePadding alignItems="center">
             <Link
               to="/"
               style={{
                 color: 'white',
                 textDecoration: 'none',
-                width: '100%',
+                width: '90%',
+                margin: 'auto',
               }}
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <InboxIcon sx={{ color: 'white' }} />
+                  <img
+                    src="/assets/dockerby.svg"
+                    width="40"
+                    height="40"
+                    alt=""
+                  />
                 </ListItemIcon>
                 <ListItemText primary="Dockerby" />
               </ListItemButton>
@@ -68,7 +72,11 @@ export default function SideNavibar() {
               style={{
                 color: 'white',
                 textDecoration: 'none',
-                width: '100%',
+                width: '90%',
+                margin: '0 auto',
+                marginTop: 3,
+                background: 'linear-gradient(45deg, #757F9A, #D7DDE8)',
+                borderRadius: 5,
               }}
             >
               <ListItemButton>
@@ -80,7 +88,18 @@ export default function SideNavibar() {
             </Link>
           </ListItem>
           {pageName === 'detail' ? (
-            <ListItem disablePadding>
+            <ListItem
+              disablePadding
+              style={{
+                color: 'white',
+                textDecoration: 'none',
+                width: '90%',
+                margin: '0 auto',
+                marginTop: 3,
+                background: 'linear-gradient(45deg, #757F9A, #D7DDE8)',
+                borderRadius: 5,
+              }}
+            >
               <ListItemButton>
                 <ListItemIcon>
                   <SettingsIcon sx={{ color: 'white' }} />

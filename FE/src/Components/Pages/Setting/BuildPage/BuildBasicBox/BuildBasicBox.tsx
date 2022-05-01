@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import FormHelperText from '@mui/material/FormHelperText';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Build } from 'Components/MDClass/BuildData/BuildData';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
-import ResponseIdNameData, {
-  ResponseIdName,
-} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
+import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 import { useStore } from 'Components/Store/DropDownStore/DropDownStore';
 import BuildProperty from '../BuildPropertyBox/BuildPropertyBox';
 
@@ -102,9 +98,7 @@ export default function BuildBasicBox({
         setVersions([...data.frameworkVersion]);
         setTypes([...data.buildTool]);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch();
   };
 
   useEffect(() => {
@@ -124,9 +118,7 @@ export default function BuildBasicBox({
           return value.name;
         });
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch();
 
     if (frameworkId !== -1) {
       const params = { typeId: frameworkId };
@@ -138,9 +130,7 @@ export default function BuildBasicBox({
           setVersions([...data.frameworkVersion]);
           setTypes([...data.buildTool]);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch();
     }
 
     return () => {

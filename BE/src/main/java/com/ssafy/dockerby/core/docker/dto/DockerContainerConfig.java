@@ -45,7 +45,7 @@ public class DockerContainerConfig {
   }
 
   public enum FrameworkType {
-    None(0), SpringBoot(1), Vue(2), React(3), Django(4), MySQL(5);
+    None(0), SpringBoot(1), Vue(2), React(3), Next(4), Django(5), MySQL(6);
 
     private final int value;
 
@@ -64,6 +64,8 @@ public class DockerContainerConfig {
         return FrameworkType.Vue;
       } else if (value == FrameworkType.React.ordinal()) {
         return FrameworkType.React;
+      } else if (value == FrameworkType.Next.ordinal()) {
+        return FrameworkType.Next;
       } else if (value == FrameworkType.Django.ordinal()) {
         return FrameworkType.Django;
       } else if (value == FrameworkType.MySQL.ordinal()) {
@@ -87,6 +89,7 @@ public class DockerContainerConfig {
       useNginx = false;
       return this;
     }
+
   }
 
   public void convertVersion(String docekerHubVersion) {
