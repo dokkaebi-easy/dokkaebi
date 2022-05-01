@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import { v4 as uuid } from 'uuid';
@@ -17,7 +15,7 @@ export default function BuildPage() {
   const buildConfigs = useStore((state) => state.buildConfigs);
   const setBuildConfigs = useStore((state) => state.setBuildConfigs);
   const nginxConfig = useStore((state) => state.nginxConfig);
-  const setNginxConfig = useStore((state) => state.setNginxConfig);
+  // const setNginxConfig = useStore((state) => state.setNginxConfig);
 
   const handlePropsDelClick = (index: number) => {
     buildConfigs.splice(index, 1);

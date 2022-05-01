@@ -68,7 +68,7 @@ export default function BasicLayout() {
           <Route path="/detail/:projectId">
             <Detail />
           </Route>
-          <Route path="/setting">
+          <Route path="/setting/:projectId">
             <Setting />
           </Route>
           <Route path="/">

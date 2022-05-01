@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -7,9 +7,25 @@ import Button from '@mui/material/Button';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import Paper from '@mui/material/Paper';
-import BuildPage from './BuildPage/BuildPage';
-import GitLabPage from './GitLabPage/GitLabPage';
+import axios from 'axios';
+
+import { useParams, useHistory, Link } from 'react-router-dom';
+
+import { useStore } from 'Components/Store/SettingStore/SettingStore';
+import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
+import GitData, { Git } from 'Components/MDClass/GitData/GitData';
+import NginxData, { Nginx } from 'Components/MDClass/NginxData/NginxData';
 import AxiosPage from './AxiosPage/AxiosPage';
+import GitLabPage from './GitLabPage/GitLabPage';
+import BuildPage from './BuildPage/BuildPage';
+
+interface ProjectConfigInfo {
+  buildConfigs: Build[];
+  gitConfig: Git;
+  nginxConfig: Nginx;
+  projectId: number;
+  projectName: string;
+}
 
 const steps = ['Build Settings', 'GitLab Setting', 'Make Project'];
 
@@ -18,6 +34,13 @@ export default function Setting() {
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
   }>({});
+
+  const setProjectId = useStore((state) => state.setProjectId);
+  const setProjectName = useStore((state) => state.setProjectName);
+  const setBuildConfigs = useStore((state) => state.setBuildConfigs);
+  const setGitConfig = useStore((state) => state.setGitConfig);
+  const setNginxConfig = useStore((state) => state.setNginxConfig);
+  const params = useParams();
 
   const totalSteps = () => {
     return steps.length;
@@ -64,6 +87,26 @@ export default function Setting() {
     setActiveStep(0);
     setCompleted({});
   };
+
+  useEffect(() => {
+    const projectId = Object.values(params)[0];
+
+    if (projectId === '0') {
+      return;
+    }
+    axios.get(`/api/project/config/${projectId}`).then((res) => {
+      const data = res.data as ProjectConfigInfo;
+
+      if (data.projectId) setProjectId(data.projectId);
+      if (data.projectName) setProjectName(data.projectName);
+      if (data.buildConfigs) setBuildConfigs([...data.buildConfigs]);
+      else setBuildConfigs([new BuildData()]);
+      if (data.gitConfig) setGitConfig(data.gitConfig);
+      else setGitConfig(new GitData());
+      if (data.nginxConfig) setNginxConfig(data.nginxConfig);
+      else setNginxConfig(new NginxData());
+    });
+  }, []);
 
   return (
     <Box mt={3} sx={{ width: '100%' }}>

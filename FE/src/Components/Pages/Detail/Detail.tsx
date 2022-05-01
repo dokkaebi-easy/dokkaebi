@@ -1,67 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import CircularProgressWithLabel from 'Components/UI/Atoms/CircularProgressWithLabel/CircularProgressWithLabel';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
-import { useParams, useHistory } from 'react-router-dom';
-import BuildStateData, {
-  BuildState,
-} from 'Components/MDClass/BuildStateData/BuildStateData';
+import { useParams, useHistory, Link } from 'react-router-dom';
+import { BuildState } from 'Components/MDClass/BuildStateData/BuildStateData';
 import BuildStateBox from 'Components/Pages/Detail/BuildStateBox/BuildStateBox';
 import { v4 as uuid } from 'uuid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { useStore } from 'Components/Store/SettingStore/SettingStore';
-import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
-import GitData, { Git } from 'Components/MDClass/GitData/GitData';
-import NginxData, { Nginx } from 'Components/MDClass/NginxData/NginxData';
-
-interface ProjectConfigInfo {
-  buildConfigs: Build[];
-  gitConfig: Git;
-  nginxConfig: Nginx;
-  projectId: number;
-  projectName: string;
-}
 
 export default function Detail() {
-  const setProjectId = useStore((state) => state.setProjectId);
-  const setProjectName = useStore((state) => state.setProjectName);
-  const setBuildConfigs = useStore((state) => state.setBuildConfigs);
-  const setGitConfig = useStore((state) => state.setGitConfig);
-  const setNginxConfig = useStore((state) => state.setNginxConfig);
-
   const [buildStates, setBuildStates] = useState<BuildState[]>([]);
   const [progress, setProgress] = useState('진행중... (미완성)');
-  const [pullColor, setPullColor] = useState(100);
-  const [runColor, setRunColor] = useState(200);
-  const [buildColor, setBuildColor] = useState(500);
 
   const history = useHistory();
   const params = useParams();
 
   const handleBackClick = () => {
     history.push(`/`);
-  };
-
-  const handleEditClick = () => {
-    const projectId = Object.values(params)[0];
-    axios.get(`/api/project/config/${projectId}`).then((res) => {
-      const data = res.data as ProjectConfigInfo;
-      console.log(data);
-
-      if (data.projectId) setProjectId(data.projectId);
-      if (data.projectName) setProjectName(data.projectName);
-      if (data.buildConfigs) setBuildConfigs([...data.buildConfigs]);
-      else setBuildConfigs([new BuildData()]);
-      if (data.gitConfig) setGitConfig(data.gitConfig);
-      else setGitConfig(new GitData());
-      if (data.nginxConfig) setNginxConfig(data.nginxConfig);
-      else setNginxConfig(new NginxData());
-    });
-    history.push(`/setting`);
   };
 
   useEffect(() => {
@@ -72,9 +31,9 @@ export default function Detail() {
         data.reverse();
         setBuildStates([...data]);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch();
+
+    setProgress('진행중... (미완성)');
   }, []);
 
   return (
@@ -89,14 +48,14 @@ export default function Detail() {
           >
             Del
           </Button>
-          <Button
-            variant="contained"
-            onClick={handleEditClick}
-            sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
-          >
-            Edit
-          </Button>
-
+          <Link to={`/setting/${Object.values(params)[0]}`}>
+            <Button
+              variant="contained"
+              sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+            >
+              Edit
+            </Button>
+          </Link>
           <Button
             variant="contained"
             onClick={handleBackClick}
@@ -115,10 +74,7 @@ export default function Detail() {
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <CircularProgressWithLabel
-              value={progress}
-              propsColor={pullColor}
-            />
+            <CircularProgressWithLabel value={progress} />
             <Typography
               sx={{ textWeight: 3 }}
               mt={2}
@@ -129,10 +85,7 @@ export default function Detail() {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            <CircularProgressWithLabel
-              value={progress}
-              propsColor={buildColor}
-            />
+            <CircularProgressWithLabel value={progress} />
             <Typography
               sx={{ textWeight: 3 }}
               mt={2}
@@ -143,7 +96,7 @@ export default function Detail() {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            <CircularProgressWithLabel value={progress} propsColor={runColor} />
+            <CircularProgressWithLabel value={progress} />
             <Typography
               sx={{ textWeight: 3 }}
               mt={2}

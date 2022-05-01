@@ -49,7 +49,7 @@ export default function GitLabConnect({ gitData }: GitProps) {
   };
 
   useEffect(() => {
-    axios.get('api/git/tokens').then((res) => {
+    axios.get('/api/git/tokens').then((res) => {
       const data = res.data as ResponseIdName[];
       const arr = data.map((value) => value.name);
       setAccessTokenIds([...arr]);
