@@ -116,7 +116,7 @@ public class ProjectController {
   }
 
   @ApiOperation(value = "프로젝트 상세", notes = "프로젝트 상세 내역을 가져온다.")
-  @PostMapping("/build/detail")
+  @GetMapping("/build/detail")
   public ResponseEntity<BuildDetailResponseDto> buildDetail(Long buildStateId)
       throws NotFoundException {
     //요청 로그 출력
