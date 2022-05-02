@@ -104,6 +104,7 @@ public class ProjectController {
     return ResponseEntity.ok(projectService.getFrameworkVersion(typeId));
   }
 
+
   @ApiOperation(value = "프로젝트 전체 빌드 상황", notes = "프로젝트 전체 빌드 상황을 가져온다.")
   @GetMapping("/build/total")
   public ResponseEntity<List<BuildTotalResponseDto>> buildTotal(Long projectId) throws NotFoundException {

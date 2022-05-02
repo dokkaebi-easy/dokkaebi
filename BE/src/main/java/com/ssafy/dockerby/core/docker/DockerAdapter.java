@@ -55,7 +55,7 @@ public class DockerAdapter {
     return commands;
   }
 
-  public List<String> getRemoveCommands(List<DockerbyConfig> configs) {
+  public List<String> getRemoveCommands(List<? extends DockerbyConfig> configs) {
     List<String> commands = new ArrayList<>();
 
     configs.forEach(config -> commands.add(remove(config)));
@@ -63,7 +63,7 @@ public class DockerAdapter {
     return commands;
   }
 
-  public List<String> getRunCommands(List<DockerbyConfig> configs) {
+  public List<String> getRunCommands(List<? extends DockerbyConfig> configs) {
     List<String> commands = new ArrayList<>();
     commands.add(network());
 

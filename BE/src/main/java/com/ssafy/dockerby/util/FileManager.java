@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +43,17 @@ public class FileManager {
 
   }
 
+  public static <T> List<T> loadJsonFileToList(String filePath, String fileName, Class<T> type)
+      throws IOException {
+    log.info("start load Json: {} {} {}", filePath, fileName, type.toString());
+    ObjectMapper mapper = new ObjectMapper();
+    File file = new File(makePath(filePath, "/", fileName));
+    if (file.exists())
+      return Arrays.asList(mapper.readValue(file, type));
+    log.error("not found {}", fileName);
+    throw new FileNotFoundException();
+
+  }
 
   //String type 문자열 파일 저장
   public static void saveFile(String filePath, String fileName, String str)
