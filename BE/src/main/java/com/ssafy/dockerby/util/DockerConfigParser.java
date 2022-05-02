@@ -13,9 +13,14 @@ import java.util.List;
 public class DockerConfigParser {
 
   public DbConfig DbConverter(String name, String framework, String dockerVersion,
-      List<DockerbyProperty> properties, String dumpLocation) {
+      List<DockerbyProperty> properties, String dumpLocation, String projectName) {
 
-    return new DbConfig(name, framework, dockerVersion, properties, dumpLocation);
+    DbConfig dbConfig = new DbConfig(name, framework, dockerVersion, properties, dumpLocation);
+    if(!dumpLocation.isBlank()) {
+      String volumePath = PathParser.volumePath(projectName, dumpLocation).toString();
+      dbConfig.addProperty(new DockerbyProperty("volume", volumePath, dumpLocation));
+    }
+    return dbConfig;
   }
 
   public BuildConfig buildConverter(String name, String framework, String dockerVersion,
@@ -29,7 +34,7 @@ public class DockerConfigParser {
         dto.getHttpsOption(), 50);
   }
 
-  public List<DockerbyProperty> propertiesConverter (List<ConfigProperty> properties) {
+  public List<DockerbyProperty> dockerbyProperties(List<ConfigProperty> properties) {
     List<DockerbyProperty> newProperties = new ArrayList<>();
     for (ConfigProperty property : properties) {
       newProperties.add(new DockerbyProperty(property.getProperty(), property.getData(),
@@ -38,10 +43,18 @@ public class DockerConfigParser {
     return newProperties;
   }
 
-  public List<DockerbyProperty> propertyConverter(ConfigProperty property) {
+  public List<DockerbyProperty> dockerbyProperty(ConfigProperty property) {
     List<DockerbyProperty> newProperties = new ArrayList<>();
     newProperties.add(new DockerbyProperty(property.getProperty(), property.getData(),
         property.getData()));
+    return newProperties;
+  }
+
+  public List<ConfigProperty> configProperties(List<DockerbyProperty> properties) {
+    List<ConfigProperty> newProperties = new ArrayList<>();
+    for (DockerbyProperty property : properties) {
+      newProperties.add(ConfigProperty.of(property.getType(), property.getHost()));
+    }
     return newProperties;
   }
 
@@ -56,7 +69,7 @@ public class DockerConfigParser {
       }
 
       configs.add(new BuildConfig(dto.getName(), null, null,
-          propertiesConverter(dto.getProperties()), dto.getProjectDirectory(),
+          dockerbyProperties(dto.getProperties()), dto.getProjectDirectory(),
           dto.getBuildPath(), dto.getType()));
 
     }
