@@ -49,13 +49,6 @@ CREATE TABLE `dockerby`.`gitlab_access_token` (
   `access_token` VARCHAR(255) NULL,
   PRIMARY KEY (`gitlab_access_token_id`));
 
-CREATE TABLE `dockerby`.`gitlab_account` (
-  `gitlab_account_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(255) NULL,
-  `password` VARCHAR(255) NULL,
-  `username` VARCHAR(255) NULL,
-  PRIMARY KEY (`gitlab_account_id`));
-
 CREATE TABLE `dockerby`.`project` (
   `project_id` BIGINT NOT NULL AUTO_INCREMENT,
   `project_name` VARCHAR(255) NOT NULL,
@@ -63,18 +56,6 @@ CREATE TABLE `dockerby`.`project` (
   `regist_date` DATETIME NULL,
   `last_modified_date` DATETIME NULL,
   PRIMARY KEY (`project_id`));
-
-CREATE TABLE `dockerby`.`project_config` (
-  `project_config_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `file_name` VARCHAR(255) NOT NULL,
-  `project_id` BIGINT NULL,
-  PRIMARY KEY (`project_config_id`),
-  INDEX `fk-project-project_config_idx` (`project_id` ASC),
-  CONSTRAINT `fk-project-project_config`
-    FOREIGN KEY (`project_id`)
-    REFERENCES `dockerby`.`project` (`project_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
 
 CREATE TABLE `dockerby`.`gitlab_config` (
   `gitlab_config_id` BIGINT NOT NULL AUTO_INCREMENT,

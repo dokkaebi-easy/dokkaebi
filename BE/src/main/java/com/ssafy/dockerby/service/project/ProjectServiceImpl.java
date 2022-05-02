@@ -3,19 +3,25 @@ package com.ssafy.dockerby.service.project;
 import com.ssafy.dockerby.core.docker.DockerAdapter;
 import com.ssafy.dockerby.core.docker.EtcConfigMaker;
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
-import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig;
+import com.ssafy.dockerby.core.docker.vo.docker.BuildConfig;
+import com.ssafy.dockerby.core.docker.vo.docker.DbConfig;
+import com.ssafy.dockerby.core.docker.vo.docker.DockerbyConfig;
+import com.ssafy.dockerby.core.docker.vo.docker.DockerbyProperty;
+import com.ssafy.dockerby.core.docker.vo.nginx.NginxConfig;
 import com.ssafy.dockerby.core.gitlab.GitlabAdapter;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabCloneDto;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.core.util.CommandInterpreter;
+import com.ssafy.dockerby.core.util.ConfigParser;
 import com.ssafy.dockerby.dto.project.BuildConfigDto;
-import com.ssafy.dockerby.dto.project.BuildConfigDto.ConfigProperty;
 import com.ssafy.dockerby.dto.project.BuildDetailRequestDto;
 import com.ssafy.dockerby.dto.project.BuildDetailResponseDto;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
 import com.ssafy.dockerby.dto.project.ConfigHistoryListResponseDto;
-import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
-import com.ssafy.dockerby.dto.project.FrameworkVersionResponseDto;
+import com.ssafy.dockerby.dto.project.ConfigProperty;
+import com.ssafy.dockerby.dto.project.DBConfigDto;
+import com.ssafy.dockerby.dto.project.framework.FrameworkTypeResponseDto;
+import com.ssafy.dockerby.dto.project.framework.FrameworkVersionResponseDto;
 import com.ssafy.dockerby.dto.project.GitConfigDto;
 import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectConfigDto;
@@ -28,11 +34,9 @@ import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.core.FrameworkType;
 import com.ssafy.dockerby.entity.core.Version;
 import com.ssafy.dockerby.entity.git.GitlabAccessToken;
-import com.ssafy.dockerby.entity.git.GitlabConfig;
 import com.ssafy.dockerby.entity.git.WebhookHistory;
 import com.ssafy.dockerby.entity.project.BuildState;
 import com.ssafy.dockerby.entity.project.Project;
-import com.ssafy.dockerby.entity.project.ProjectConfig;
 import com.ssafy.dockerby.entity.project.enums.StateType;
 import com.ssafy.dockerby.entity.project.states.Build;
 import com.ssafy.dockerby.entity.project.states.Pull;
@@ -47,8 +51,9 @@ import com.ssafy.dockerby.repository.project.PullRepository;
 import com.ssafy.dockerby.repository.project.RunRepository;
 import com.ssafy.dockerby.repository.user.UserRepository;
 import com.ssafy.dockerby.service.git.GitlabService;
-import com.ssafy.dockerby.util.ConfigParser;
+import com.ssafy.dockerby.util.DockerConfigParser;
 import com.ssafy.dockerby.util.FileManager;
+import com.ssafy.dockerby.util.PathParser;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javassist.NotFoundException;
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -85,12 +91,13 @@ public class ProjectServiceImpl implements ProjectService {
   private final UserRepository userRepository;
   private final GitlabService gitlabService;
 
-  @Value("${dockerby.rootPath}")
-  private String rootPath;
-  @Value("${dockerby.configPath}")
-  private String configPath;
-  @Value("${dockerby.logPath}")
-  private String logPath;
+  private Map<Long, FrameworkType> frameworkTypes;
+
+  @PostConstruct
+  private void setFrameworkType() {
+    frameworkTypes = new HashMap<>();
+    frameworkTypeRepository.findAll().forEach(type -> frameworkTypes.put(type.getId(), type));
+  }
 
   @Override
   public Optional<Project> findProjectByName(String name) {
@@ -114,8 +121,8 @@ public class ProjectServiceImpl implements ProjectService {
     NginxConfigDto nginxConfigDto = null;
     for (DockerContainerConfig config : configs) {
       if (config.isUseNginx()) {
-        nginxConfigDto = NginxConfigDto.from(loadConfigFilesByfileName(filePath.toString(), "nginx",
-            DockerNginxConfig.class));
+        nginxConfigDto = (loadConfigFilesByfileName(filePath.toString(), "nginx",
+            NginxConfigDto.class));
         break;
       }
 
@@ -123,22 +130,27 @@ public class ProjectServiceImpl implements ProjectService {
 
     List<BuildConfigDto> buildConfigs = new ArrayList<>();
     for (DockerContainerConfig config : configs) {
-      Version version = frameworkTypeRepository.findById(
-              Long.valueOf(config.getFramework().ordinal()))
-          .orElseThrow(() -> new NotFoundException(
-              "ProjectServiceImpl.configByProjectName : FrameworkType does not exist : "
-                  + config.getFramework()))
-          .getLanguage().findVersionByDocker(config.getVersion())
-          .orElseThrow(() -> new NotFoundException(
-              "ProjectServiceImpl.configByProjectName : FrameworkType does not exist : "
-                  + config.getVersion()));
+      if (frameworkTypes.containsKey(config.)) {
+        Version version = frameworkTypeRepository.findById(
+                Long.valueOf(config.getFramework().ordinal()))
+            .orElseThrow(() -> new NotFoundException(
+                "ProjectServiceImpl.configByProjectName : FrameworkType does not exist : "
+                    + config.getFramework()))
+            .getLanguage().findVersionByDocker(config.getVersion())
+            .orElseThrow(() -> new NotFoundException(
+                "ProjectServiceImpl.configByProjectName : FrameworkType does not exist : "
+                    + config.getVersion()));
+      }
 
       List<ConfigProperty> properties = ConfigParser.dockerContainerPropertyToConfigProperty(
           config.getProperties());
       buildConfigs.add(BuildConfigDto.from(config, version.getInputVersion(), properties));
     }
+
+    List<DBConfigDto> dbConfigDtos = new ArrayList<>();
+    // TODO
     return ProjectConfigDto.of(projectId, project.getProjectName(), buildConfigs,
-        GitConfigDto.from(project.getGitConfig()), nginxConfigDto);
+        GitConfigDto.from(project.getGitConfig()), nginxConfigDto, dbConfigDtos);
 
 
   }
@@ -159,125 +171,124 @@ public class ProjectServiceImpl implements ProjectService {
       result.put(project, "create");
     }
 
-    // 빌드 환경설정 Convert
-    List<DockerContainerConfig> buildConfigs = ConfigParser.getBuildConfig(projectConfigDto);
+    String projectPath = PathParser.projectPath(projectConfigDto.getProjectName()).toString();
+    String logPath = PathParser.logPath(projectConfigDto.getProjectName()).toString();
+    String configPath = PathParser.configPath(projectConfigDto.getProjectName()).toString();
+    String repositoryPath = PathParser.repositoryPath(projectConfigDto.getProjectName(),projectConfigDto.getProjectId()).toString();
 
-    for (DockerContainerConfig dockerConfig : buildConfigs) {
-      FrameworkType frameworkType = frameworkTypeRepository.findById(
-              (long) dockerConfig.getFramework().ordinal())
-          .orElseThrow(() -> new NotFoundException(
-              "ProjectServiceImpl.upsert frameworkType : " + (long) dockerConfig.getFramework()
-                  .ordinal()));
-      dockerConfig.convertVersion(
-          frameworkType.getLanguage().findVersionByInput(dockerConfig.getVersion())
-              .orElseThrow(() -> new NotFoundException(
-                  "ProjectServiceImpl.upsert version does not exists."
-                      + (long) dockerConfig.getFramework().ordinal()))
-              .getDockerVersion());
+    // config, git clone 지우고 다시 저장
+    FileUtils.deleteDirectory(new File(configPath));
+    FileUtils.deleteDirectory(new File(repositoryPath));
+
+    DockerConfigParser dockerConfigParser = new DockerConfigParser();
+
+    // 빌드 환경설정 Convert
+    List<BuildConfig> buildConfigs = new ArrayList<>();
+    for (BuildConfigDto buildConfigDto : projectConfigDto.getBuildConfigs()) {
+      if (!frameworkTypes.containsKey(buildConfigDto.getFrameworkId())) {
+        throw new IllegalArgumentException(String.valueOf(buildConfigDto.getFrameworkId()));
+      }
+      FrameworkType framework = frameworkTypes.get(buildConfigDto.getFrameworkId());
+      Version version = framework.getLanguage().findVersionByInput(buildConfigDto.getVersion())
+          .orElseThrow(() -> new IllegalArgumentException(buildConfigDto.getVersion()));
+      buildConfigs.add(
+          dockerConfigParser.buildConverter(buildConfigDto.getName(), framework.getFrameworkName(),
+              version.getDockerVersion(),
+              dockerConfigParser.propertiesConverter(buildConfigDto.getProperties()),
+              buildConfigDto.getProjectDirectory(), buildConfigDto.getBuildPath(),
+              buildConfigDto.getType()));
     }
 
-    // Build config 내역을 ProjectConfig Table에 등록
-    List<ProjectConfig> configs = new ArrayList<>();
-    buildConfigs.forEach(config -> configs.add(ProjectConfig.from(config.getName())));
+    // 빌드 환경설정 파일 저장
+    FileManager.saveJsonFile(configPath,"build",buildConfigs);
 
-    project.addProjectConfigs(configs);
-
-    StringBuilder filePath = new StringBuilder();
-    filePath.append(rootPath + "/" + project.getProjectName());
-
-    StringBuilder configFilePath = new StringBuilder();
-    configFilePath.append(filePath).append("/").append(configPath);
-
-    upsertConfigFile(configFilePath.toString(), buildConfigs);
+    // Git cofig upsert
     log.info("GitConfigDto project ID : {}", project.getId());
     GitConfigDto getConfigDto = projectConfigDto.getGitConfig();
-    if (!getConfigDto.checkEmpty()) {
-      gitlabService.config(project.getId())
-          .map(config -> gitlabService.updateConfig(project, getConfigDto))
-          .orElseGet(() -> gitlabService.createConfig(project, getConfigDto));
+    gitlabService.config(project.getId())
+        .map(config -> gitlabService.updateConfig(project, getConfigDto))
+        .orElseGet(() -> gitlabService.createConfig(project, getConfigDto));
 
-      StringBuilder repositoryPath = new StringBuilder();
-      repositoryPath.append(filePath).append("/").append(getConfigDto.getGitProjectId());
+    // git clone
+    GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
 
-      // Git clone
+    String cloneCommand = GitlabAdapter.getCloneCommand(
+        GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
+            getConfigDto.getBranchName(), getConfigDto.getGitProjectId()));
 
-      FileUtils.deleteDirectory(new File(repositoryPath.toString()));
+    CommandInterpreter.runDestPath(projectPath, logPath, "Clone", 0, cloneCommand);
 
-      GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
+    DockerAdapter dockerAdapter = new DockerAdapter(projectPath, projectConfigDto.getProjectName());
 
-      String cloneCommand = GitlabAdapter.getCloneCommand(
-          GitlabCloneDto.of(token.getAccessToken(), getConfigDto.getRepositoryUrl(),
-              getConfigDto.getBranchName(), getConfigDto.getGitProjectId()));
-
-      CommandInterpreter.runDestPath(filePath.toString(),
-          new StringBuilder().append(filePath).append("/").append(logPath).toString(), "Clone", 0,
-          cloneCommand);
-
-
-      DockerAdapter dockerAdapter = new DockerAdapter(
-          new StringBuilder().append(filePath).append("/").append(getConfigDto.getGitProjectId())
-              .toString(), project.getProjectName());
-
-      try {
-        dockerAdapter.saveDockerfiles(buildConfigs);
-      } catch (Exception e) {
-        log.error("docker file not making {} DockerAdapter({})",project.getProjectName());
-      }
-      if (!projectConfigDto.getNginxConfig().isNotUse()) {
-        String nginxFrontProjectDirectory = "";
-        for (DockerContainerConfig config : buildConfigs) {
-          if (config.isUseNginx()) {
-            nginxFrontProjectDirectory = config.getProjectDirectory();
-            break;
-          }
-        }
-        if (nginxFrontProjectDirectory.isEmpty()) {
-          throw new IllegalArgumentException(
-              "ProjectServiceImpl.upsert nginxconf 존재하지만 사용하는 prj가 없음");
-        }
-        StringBuilder nginxPath = new StringBuilder();
-        nginxPath.append(filePath).append("/").append(getConfigDto.getGitProjectId())
-            .append(nginxFrontProjectDirectory);
-        EtcConfigMaker.nginxConfig(nginxPath.toString(),
-            DockerNginxConfig.from(projectConfigDto.getNginxConfig()));
-        EtcConfigMaker.saveDockerNginxConfig(configFilePath.toString(),
-            projectConfigDto.getNginxConfig());
-      }
+    // dockerfile save
+    try {
+      dockerAdapter.saveDockerfiles(buildConfigs);
+    } catch (Exception e) {
+      log.error("docker file not making {} DockerAdapter({})", project.getProjectName());
     }
+
+    // NGINX config
+    NginxConfig nginxConfig = dockerConfigParser.nginxConverter(projectConfigDto.getNginxConfig());
+    if (!nginxConfig.isEmpty()) {
+      String defaultConfPath = "";
+      for (BuildConfig buildConfig : buildConfigs) {
+        if (buildConfig.useNginx()) {
+          defaultConfPath = buildConfig.getProjectDirectory();
+          buildConfig.addProperty(new DockerbyProperty("publish", "80", "80"));
+          if (nginxConfig.isHttps()) {
+            buildConfig.addProperty(new DockerbyProperty("publish", "443", "443"));
+          }
+          break;
+        }
+      }
+
+      if (defaultConfPath.isEmpty()) {
+        throw new IllegalArgumentException("NGINX ERROR");
+      }
+
+      EtcConfigMaker.nginxConfig(
+          PathParser.configPath(projectConfigDto.getProjectName()).append("/")
+              .append(defaultConfPath).toString(), nginxConfig);
+      EtcConfigMaker.saveDockerNginxConfig(configPath, nginxConfig);
+    }
+
+    // DB condig
+    List<DbConfig> dbConfigs = new ArrayList<>();
+    for (DBConfigDto dbConfigDto : projectConfigDto.getDbConfigs()) {
+      if (dbConfigDto.getName().isBlank()) {
+        continue;
+      }
+      if (dbConfigDto.getFrameworkId() == -1) {
+        continue;
+      }
+      if (dbConfigDto.getPort().isBlank()) {
+        continue;
+      }
+      if (dbConfigDto.getVersion().isBlank()) {
+        continue;
+      }
+      if (!frameworkTypes.containsKey(dbConfigDto.getFrameworkId())) {
+        continue;
+      }
+      FrameworkType framework = frameworkTypes.get(dbConfigDto.getFrameworkId());
+      Version version = framework.getLanguage().findVersionByInput(dbConfigDto.getVersion())
+          .orElseThrow(() -> new IllegalArgumentException("DB CONFIG VERSION ERROR"));
+
+      List<DockerbyProperty> list = new ArrayList<>();
+      for (ConfigProperty property : dbConfigDto.getProperties()) {
+        if (property.isEmpty()) {
+          continue;
+        }
+        list.add(new DockerbyProperty("environment", property.getProperty(), property.getData()));
+      }
+      dbConfigs.add(
+          dockerConfigParser.DbConverter(dbConfigDto.getName(), framework.getFrameworkName(),
+              version.getDockerVersion(), list, dbConfigDto.getDumpLocation()));
+    }
+    if(!dbConfigs.isEmpty())
+      FileManager.saveJsonFile(configPath,"db",dbConfigs);
 
     return result;
-  }
-
-  /**
-   * Project build config를 json 형태로 저장 내부적으로 projects/{projectName}/jsonData으로 경로를 지정한다. 파일 이름은
-   * build하는 configName이다.
-   *
-   * @param filePath     환경 설정 파일 저장 위치
-   * @param buildConfigs FE로부터 입력받은 빌드 환경설정 dto
-   */
-  private void upsertConfigFile(String filePath, List<DockerContainerConfig> buildConfigs) {
-    buildConfigs.forEach(config -> {
-      try {
-        FileManager.saveJsonFile(filePath, config.getName(), config);
-      } catch (IOException e) {
-        log.error("", e);
-      }
-    });
-  }
-
-  private <T> List<T> loadConfigFiles(String filePath,
-      List<ProjectConfig> configs, Class<T> type)
-      throws IOException {
-    List<T> results = new ArrayList<>();
-
-    for (ProjectConfig config : configs) {
-      results.add(
-          FileManager.loadJsonFile(
-              filePath,
-              config.getFileName(),
-              type));
-    }
-    return results;
   }
 
   private <T> T loadConfigFilesByfileName(String filePath,

@@ -1,7 +1,7 @@
 package com.ssafy.dockerby.core.docker;
 
-import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig;
 import com.ssafy.dockerby.core.docker.etcMaker.NginxConfigMaker;
+import com.ssafy.dockerby.core.docker.vo.nginx.NginxConfig;
 import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
@@ -20,23 +20,25 @@ public class EtcConfigMaker {
    * HTTPS 옵션을 활성화 했을 때와 하지 않았을 때를 분리한다.
    * 기본으로 HTTP : 80 포트, HTTPS : 443 포트를 이용한다.
    * @param filePath default.conf를 저장할 위치 경로 (root 추천)
-   * @param dockerNginxConfig nginx 환경 설정 dto
+   * @param nginxConfig nginx 환경 설정 dto
    * @throws IOException {@link FileManager} 에서 던지는 예외
    */
-  public static void nginxConfig(String filePath, DockerNginxConfig dockerNginxConfig) throws IOException {
-    String config = "";
-    if(dockerNginxConfig.isHttps())
-      config = nginxConfigMaker.httpsConfig(dockerNginxConfig);
+  public static void nginxConfig(String filePath, NginxConfig nginxConfig) throws IOException {
+    if(nginxConfig.isEmpty())
+      return;
+
+    String config;
+    if(nginxConfig.isHttps())
+      config = nginxConfigMaker.httpsConfig(nginxConfig);
     else
-      config = nginxConfigMaker.defaultConfig(dockerNginxConfig);
+      config = nginxConfigMaker.defaultConfig(nginxConfig);
 
     FileManager.saveFile(filePath,"default.conf",config);
 
   }
 
-  public static void saveDockerNginxConfig(String filePath, NginxConfigDto configDto)
+  public static void saveDockerNginxConfig(String filePath, NginxConfig config)
       throws IOException {
-    DockerNginxConfig config = DockerNginxConfig.from(configDto);
     FileManager.saveJsonFile(filePath,"nginx",config);
   }
 }

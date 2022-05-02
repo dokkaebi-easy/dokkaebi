@@ -2,7 +2,6 @@ package com.ssafy.dockerby.dto.project;
 
 import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.sun.istack.NotNull;
-import java.io.ObjectInputFilter.Config;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -51,16 +50,16 @@ public class BuildConfigDto {
 
   }
 
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  @AllArgsConstructor(access = AccessLevel.PRIVATE)
-  public static class ConfigProperty {
-    private String property;
-    private String first;
-    private String second;
-
-    public static ConfigProperty of(String property, String first, String second) {
-      return new ConfigProperty(property,first,second);
-    }
+  @Override
+  public String toString() {
+    return "BuildConfigDto{" +
+        "frameworkId=" + frameworkId +
+        ", name='" + name + '\'' +
+        ", version='" + version + '\'' +
+        ", type='" + type + '\'' +
+        ", projectDirectory='" + projectDirectory + '\'' +
+        ", buildPath='" + buildPath + '\'' +
+        ", properties=" + properties +
+        '}';
   }
 }

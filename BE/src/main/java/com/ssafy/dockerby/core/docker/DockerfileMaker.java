@@ -1,6 +1,6 @@
 package com.ssafy.dockerby.core.docker;
 
-import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
+import com.ssafy.dockerby.core.docker.vo.docker.BuildConfig;
 import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,32 +19,26 @@ public class DockerfileMaker {
    * MySQL은 Dockerfile을 생성하지 않아 바로 break 된다.
    * @param config : Framework/Library 환경설정 값
    */
-  public void make(DockerContainerConfig config) throws IOException {
-    switch (config.getFramework()) {
-      case Vue:
+  public void make(BuildConfig config) throws IOException {
+    String framework = config.getFramework();
+    if(framework.equals("Vue")) {
+      if(config.getType().equals("yes"))
         makeVueWithNginxDockerFile(config);
-        break;
-      case SpringBoot:
-        makeSpringBootDockerfile(config);
-        break;
-      case Django:
-        makeDjangoDockerfile(config);
-        break;
-      case React:
+    } else if (framework.equals("React")) {
+      if(config.getType().equals("yes"))
         makeReactWithNginxDockerFile(config);
-        break;
-      case Next:
-        makeNextDockerfile(config);
-        break;
-      case MySQL:
-        // MySQL은 dockerfile 없이 docker run으로 바로 진행
-        break;
-      default:
-        throw new IllegalArgumentException("makeDockerFile : " + config.getFramework() + "Error");
+    } else if (framework.equals("Next")) {
+      makeNextDockerfile(config);
+    } else if (framework.equals("Django")) {
+      makeDjangoDockerfile(config);
+    } else if (framework.equals("SpringBoot")) {
+      makeSpringBootDockerfile(config);
+    } else {
+      throw new IllegalArgumentException(framework);
     }
   }
 
-  private void makeNextDockerfile(DockerContainerConfig config) throws IOException {
+  private void makeNextDockerfile(BuildConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append('\n');
     sb.append("COPY . . \n");
@@ -54,7 +48,7 @@ public class DockerfileMaker {
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
   }
 
-  private void makeSpringBootDockerfile(DockerContainerConfig config) throws IOException {
+  private void makeSpringBootDockerfile(BuildConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
@@ -78,7 +72,7 @@ public class DockerfileMaker {
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
   }
 
-  private void makeReactWithNginxDockerFile(DockerContainerConfig config) throws IOException {
+  private void makeReactWithNginxDockerFile(BuildConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
@@ -91,13 +85,13 @@ public class DockerfileMaker {
     sb.append("COPY --from=builder ");
     sb.append((config.getBuildPath().isBlank()) ? "/build" : config.getBuildPath())
         .append(" /usr/share/nginx/html\n");
-    sb.append("EXPOSE ").append("3000").append('\n');
+    // TODO EXPOSE 제거 확인
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
   }
 
-  private void makeVueWithNginxDockerFile(DockerContainerConfig config) throws IOException {
+  private void makeVueWithNginxDockerFile(BuildConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
@@ -116,7 +110,7 @@ public class DockerfileMaker {
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
   }
 
-  private void makeDjangoDockerfile(DockerContainerConfig config) throws IOException {
+  private void makeDjangoDockerfile(BuildConfig config) throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
 

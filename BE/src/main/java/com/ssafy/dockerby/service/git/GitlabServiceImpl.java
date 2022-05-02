@@ -34,14 +34,10 @@ public class GitlabServiceImpl implements GitlabService {
   public GitlabConfig createConfig(Project project, GitConfigDto configDto) {
     GitlabConfig config = GitlabConfig.from(configDto);
 
-    GitlabAccount account = accountRepository.findById(configDto.getAccountId())
-        .orElseThrow(() -> new NotFoundException());
-
     GitlabAccessToken token = tokenRepository.findById(configDto.getAccessTokenId())
         .orElseThrow(()-> new NotFoundException());
 
     config.setProject(project);
-    config.setAccount(account);
     config.setToken(token);
 
     configRepository.save(config);
@@ -55,12 +51,6 @@ public class GitlabServiceImpl implements GitlabService {
         .orElseThrow(() -> new NotFoundException());
 
     config.update(configDto);
-
-    if(config.getAccount().getId() != configDto.getAccountId()) {
-      GitlabAccount newAccount = accountRepository.findById(configDto.getAccountId())
-          .orElseThrow(() -> new NotFoundException());
-      config.setAccount(newAccount);
-    }
 
     if(config.getToken().getId() != configDto.getAccessTokenId()) {
       GitlabAccessToken newToken = tokenRepository.findById(configDto.getAccessTokenId())

@@ -1,4 +1,4 @@
-package com.ssafy.dockerby.dto.project;
+package com.ssafy.dockerby.dto.project.framework;
 
 import com.ssafy.dockerby.entity.core.FrameworkType;
 import com.sun.istack.NotNull;

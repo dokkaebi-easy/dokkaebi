@@ -36,7 +36,7 @@ public class DockerContainerConfig {
   private String buildPath;
 
   // Build 속성 들 (port, volume, env, buildPath...)
-  private Map<String, List<String>> properties;
+  private Map<String, List<PropertyValue>> properties;
 
   private boolean useNginx;
 
@@ -94,5 +94,23 @@ public class DockerContainerConfig {
 
   public void convertVersion(String docekerHubVersion) {
     this.version = docekerHubVersion;
+  }
+
+  @Getter
+  @AllArgsConstructor
+  public static class PropertyValue {
+    private final String host;
+    private final String container;
+
+    public String getPropertyCommand(String propertyType) {
+      if(propertyType.equals("publish"))
+        return new StringBuilder().append("-p ").append(host).append(":").append(container).toString();
+      else if (propertyType.equals("volume"))
+        return new StringBuilder().append("-v ").append(host).append(":").append(container).toString();
+      else if (propertyType.equals("env"))
+        return new StringBuilder().append("-e ").append(host).append("=").append(container).toString();
+      else
+        throw new IllegalArgumentException();
+    }
   }
 }
