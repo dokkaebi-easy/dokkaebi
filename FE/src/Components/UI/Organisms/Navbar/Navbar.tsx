@@ -56,6 +56,9 @@ export default function Navbar() {
       }
     >
       <Toolbar>
+        <Link to="/">
+          <img src="/assets/dockerby.svg" width="80" height="80" alt="" />
+        </Link>
         <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
           {pageName}
         </Typography>

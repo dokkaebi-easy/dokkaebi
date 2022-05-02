@@ -134,7 +134,10 @@ CREATE TABLE `dockerby`.`build_history` (
 CREATE TABLE `dockerby`.`build_state` (
   `build_state_id` BIGINT NOT NULL AUTO_INCREMENT,
   `build_number` INT NULL,
+  `build_type` VARCHAR(60) NULL,
+  `state_type` VARCHAR(60) NULL,
   `regist_date` DATETIME NULL,
+  `last_modified_date` DATETIME NULL,
   `project_id` BIGINT NULL,
   PRIMARY KEY (`build_state_id`),
   INDEX `fk-project-build_state_idx` (`project_id` ASC),
@@ -161,41 +164,7 @@ CREATE TABLE `dockerby`.`webhook_history` (
     ON UPDATE NO ACTION
 );
 
-CREATE TABLE `dockerby`.`pull` (
-  `pull_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `state_type` VARCHAR(60) NULL,
-  `build_state_id` BIGINT NULL,
-  PRIMARY KEY (`pull_id`),
-  INDEX `fk-build_state-pull_idx` (`build_state_id` ASC),
-  CONSTRAINT `fk-build_state-pull`
-    FOREIGN KEY (`build_state_id`)
-    REFERENCES `dockerby`.`build_state` (`build_state_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
 
-CREATE TABLE `dockerby`.`build` (
-  `build_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `state_type` VARCHAR(60) NULL,
-  `build_state_id` BIGINT NULL,
-  PRIMARY KEY (`build_id`),
-  INDEX `fk-build_state-build_idx` (`build_state_id` ASC),
-  CONSTRAINT `fk-build_state-build`
-    FOREIGN KEY (`build_state_id`)
-    REFERENCES `dockerby`.`build_state` (`build_state_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-
-CREATE TABLE `dockerby`.`run` (
-  `run_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `state_type` VARCHAR(60) NULL,
-  `build_state_id` BIGINT NULL,
-  PRIMARY KEY (`run_id`),
-  INDEX `fk-build_state-run_idx` (`build_state_id` ASC),
-  CONSTRAINT `fk-build_state-run`
-    FOREIGN KEY (`build_state_id`)
-    REFERENCES `dockerby`.`build_state` (`build_state_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
 
 INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (1,"Java");
 INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (2,"Python");

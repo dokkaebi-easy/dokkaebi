@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -7,9 +7,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
-import ResponseIdNameData, {
-  ResponseIdName,
-} from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
+import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface modalSwitch {
   open: boolean;
@@ -68,8 +66,8 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
         setApiToken('');
         Close();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
       });
   };
 

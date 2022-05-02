@@ -20,7 +20,7 @@ interface GitProps {
 }
 
 export default function GitLabRepositories({ gitData }: GitProps) {
-  const dropDownItems = useStore((state) => state.account);
+  // const dropDownItems = useStore((state) => state.account);
   const setDropDownItems = useStore((state) => state.setAccount);
 
   const [projectID, setProjectID] = useState(gitData.gitProjectId);

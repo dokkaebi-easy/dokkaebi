@@ -8,7 +8,7 @@ import { AiOutlineGitlab } from 'react-icons/ai';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { useLocation, useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 interface GitInfo {
@@ -37,7 +37,7 @@ export default function StateDetail() {
     registDate: '',
     stateType: '',
   });
-  const location = useLocation();
+  // const location = useLocation();
   const params = useParams();
   const history = useHistory();
 

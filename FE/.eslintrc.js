@@ -27,6 +27,7 @@ module.exports = {
     'jsx-a11y/no-noninteractive-element-interactions': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
     // 인수 재 설정
+    '@typescript-eslint/no-explicit-any': 'off',
     'no-param-reassign': 0,
     'react/jsx-props-no-spreading': 'off',
   },
