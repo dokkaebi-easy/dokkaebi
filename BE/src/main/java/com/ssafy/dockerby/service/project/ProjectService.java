@@ -20,19 +20,30 @@ public interface ProjectService {
   Map<Project, String> upsert(ProjectConfigDto projectConfigDto)
       throws NotFoundException,IOException;
 
+  boolean projectIsFailed(Long projectId) throws NotFoundException;
+
   void build(Long ProjectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
 
+  void pullStart(Long projectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
+
+  void buildStart(Long projectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
+
+  void runStart(Long projectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
+
+  void updateProjectDone(Long projectId) throws NotFoundException;
 
   List<FrameworkTypeResponseDto> getFrameworkType();
 
   FrameworkVersionResponseDto getFrameworkVersion(Long typeId)
       throws NotFoundException;
 
-  List<ProjectListResponseDto> projectList() throws NotFoundException, UserDefindedException;
-
   List<BuildTotalResponseDto> buildTotal(Long projectId)
+    throws NotFoundException;
+
+  BuildDetailResponseDto buildDetail(Long buildStateId)
       throws NotFoundException;
 
-  BuildDetailResponseDto buildDetail(BuildDetailRequestDto buildDetailRequestDto)
-      throws IOException, NotFoundException;
+  List<ProjectListResponseDto> projectList() throws NotFoundException, UserDefindedException;
+
+
 }

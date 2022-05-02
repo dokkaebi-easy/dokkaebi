@@ -30,7 +30,8 @@ public class BuildState extends BaseEntity {
 
   @Enumerated(value = EnumType.STRING)
   private BuildType buildType;
-@Enumerated(value = EnumType.STRING)
+
+  @Enumerated(value = EnumType.STRING)
   private StateType stateType;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -57,7 +58,6 @@ public class BuildState extends BaseEntity {
   public void setWebhookHistory(WebhookHistory history) {
     this.webhookHistory = history;
   }
-
 
   @Override
   public String toString() {
