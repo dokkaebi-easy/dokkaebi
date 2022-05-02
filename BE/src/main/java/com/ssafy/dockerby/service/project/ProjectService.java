@@ -3,7 +3,6 @@ package com.ssafy.dockerby.service.project;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.dto.project.*;
-import com.ssafy.dockerby.entity.project.BuildState;
 import com.ssafy.dockerby.entity.project.Project;
 import javassist.NotFoundException;
 import java.io.IOException;
@@ -21,20 +20,30 @@ public interface ProjectService {
   Map<Project, String> upsert(ProjectConfigDto projectConfigDto)
       throws NotFoundException,IOException;
 
-  BuildState build(Long ProjectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
+  boolean projectIsFailed(Long projectId) throws NotFoundException;
 
-  StateResponseDto checkState(StateRequestDto stateRequestDto) throws NotFoundException;
+  void build(Long ProjectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
+
+  void pullStart(Long projectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
+
+  void buildStart(Long projectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
+
+  void runStart(Long projectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
+
+  void updateProjectDone(Long projectId) throws NotFoundException;
 
   List<FrameworkTypeResponseDto> getFrameworkType();
 
   FrameworkVersionResponseDto getFrameworkVersion(Long typeId)
       throws NotFoundException;
 
-  List<ProjectListResponseDto> projectList() throws NotFoundException, UserDefindedException;
-
   List<BuildTotalResponseDto> buildTotal(Long projectId)
+    throws NotFoundException;
+
+  BuildDetailResponseDto buildDetail(Long buildStateId)
       throws NotFoundException;
 
-  BuildDetailResponseDto buildDetail(BuildDetailRequestDto buildDetailRequestDto)
-      throws IOException, NotFoundException;
+  List<ProjectListResponseDto> projectList() throws NotFoundException, UserDefindedException;
+
+
 }
