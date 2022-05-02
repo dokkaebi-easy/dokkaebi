@@ -106,17 +106,7 @@ public class ProjectController {
 
     return ResponseEntity.ok(projectService.getFrameworkVersion(typeId));
   }
-  @ApiOperation(value = "프로젝트 빌드 상황", notes = "해당 프로젝트 타입의 빌드 상태를 반환 한다.")
-  @PostMapping("/build/refresh")
-  public ResponseEntity<StateResponseDto> buildUpdateState(@RequestBody StateRequestDto stateRequestDto ) throws NotFoundException {
-    //요청 로그 출력
-    log.info("buildUpdateState API request received {}",stateRequestDto.toString());
 
-    //프로젝트 state 저장 stateResponse 반환
-    StateResponseDto stateResponseDto = projectService.checkState(stateRequestDto);
-
-    return ResponseEntity.ok(stateResponseDto);
-  }
   @ApiOperation(value = "프로젝트 전체 빌드 상황", notes = "프로젝트 전체 빌드 상황을 가져온다.")
   @GetMapping("/build/total")
   public ResponseEntity<List<BuildTotalResponseDto>> buildTotal(Long projectId) throws NotFoundException {

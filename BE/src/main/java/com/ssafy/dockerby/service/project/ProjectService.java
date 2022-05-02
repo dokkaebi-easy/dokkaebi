@@ -3,7 +3,6 @@ package com.ssafy.dockerby.service.project;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.dto.project.*;
-import com.ssafy.dockerby.entity.project.BuildState;
 import com.ssafy.dockerby.entity.project.Project;
 import javassist.NotFoundException;
 import java.io.IOException;
@@ -21,9 +20,8 @@ public interface ProjectService {
   Map<Project, String> upsert(ProjectConfigDto projectConfigDto)
       throws NotFoundException,IOException;
 
-  BuildState build(Long ProjectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
+  void build(Long ProjectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
 
-  StateResponseDto checkState(StateRequestDto stateRequestDto) throws NotFoundException;
 
   List<FrameworkTypeResponseDto> getFrameworkType();
 

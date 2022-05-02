@@ -21,30 +21,22 @@ import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
 import com.ssafy.dockerby.dto.project.StateDto;
-import com.ssafy.dockerby.dto.project.StateRequestDto;
-import com.ssafy.dockerby.dto.project.StateResponseDto;
 import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.core.FrameworkType;
 import com.ssafy.dockerby.entity.core.Version;
 import com.ssafy.dockerby.entity.git.GitlabAccessToken;
-import com.ssafy.dockerby.entity.git.GitlabConfig;
 import com.ssafy.dockerby.entity.git.WebhookHistory;
 import com.ssafy.dockerby.entity.project.BuildState;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.entity.project.ProjectConfig;
+import com.ssafy.dockerby.entity.project.enums.BuildType;
 import com.ssafy.dockerby.entity.project.enums.StateType;
-import com.ssafy.dockerby.entity.project.states.Build;
-import com.ssafy.dockerby.entity.project.states.Pull;
-import com.ssafy.dockerby.entity.project.states.Run;
 import com.ssafy.dockerby.entity.user.User;
-import com.ssafy.dockerby.repository.project.BuildRepository;
 import com.ssafy.dockerby.repository.project.BuildStateRepository;
 import com.ssafy.dockerby.repository.project.ConfigHistoryRepository;
 import com.ssafy.dockerby.repository.project.FrameworkTypeRepository;
 import com.ssafy.dockerby.repository.project.ProjectRepository;
-import com.ssafy.dockerby.repository.project.PullRepository;
-import com.ssafy.dockerby.repository.project.RunRepository;
 import com.ssafy.dockerby.repository.user.UserRepository;
 import com.ssafy.dockerby.service.git.GitlabService;
 import com.ssafy.dockerby.util.ConfigParser;
@@ -58,6 +50,7 @@ import java.util.Map;
 import java.util.Optional;
 import javassist.NotFoundException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -65,6 +58,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -77,9 +71,6 @@ public class ProjectServiceImpl implements ProjectService {
   private final EntityManager em;
   private final ProjectRepository projectRepository;
   private final BuildStateRepository buildStateRepository;
-  private final PullRepository pullRepository;
-  private final BuildRepository buildRepository;
-  private final RunRepository runRepository;
   private final FrameworkTypeRepository frameworkTypeRepository;
   private final ConfigHistoryRepository configHistoryRepository;
   private final UserRepository userRepository;
@@ -288,28 +279,53 @@ public class ProjectServiceImpl implements ProjectService {
     return result;
   }
 
-  private BuildState createBuildState(Project project) {
-    BuildState buildState = BuildState.from();
-    buildState.setProject(project);
-    buildState.setBuildNumber(
-        Long.valueOf(buildStateRepository.findAllByProjectId(project.getId()).size()));
+  private List<BuildState> createBuildState(Project project,GitlabWebHookDto webHookDto) {
+    List<BuildState> buildStates = new ArrayList<>();
+    Long buildNumber = Long.valueOf(buildStateRepository.findAllByProjectIdOrderByBuildNumberAsc(project.getId()).size()/3);
 
-    Pull pull = Pull.from();
-    Build build = Build.from();
-    Run run = Run.from();
+    BuildState buildState = BuildState.builder()
+      .project(project)
+      .buildNumber(buildNumber)
+      .buildType(BuildType.valueOf("Pull"))
+      .stateType(StateType.valueOf("Waiting"))
+      .build();
+    if (webHookDto != null) {
+      WebhookHistory webhookHistory = WebhookHistory.of(webHookDto);
+      webhookHistory.setBuildState(buildState);
+      buildState.setWebhookHistory(webhookHistory);
+    }
 
-    pull.updateBuildState(buildState);
-    build.updateBuildState(buildState);
-    run.updateBuildState(buildState);
+    buildStateRepository.save(buildState);
+    buildStates.add(buildState);
 
-    buildState.setState(pull, build, run);
+    BuildState buildState1 = BuildState.builder()
+      .project(project)
+      .buildNumber(buildNumber)
+      .buildType(BuildType.valueOf("Build"))
+      .stateType(StateType.valueOf("Waiting"))
+      .build();
 
-    return buildState;
+    buildStateRepository.save(buildState1);
+    buildStates.add(buildState1);
+
+    BuildState buildState2 = BuildState.builder()
+      .project(project)
+      .buildNumber(buildNumber)
+      .buildType(BuildType.valueOf("Run"))
+      .stateType(StateType.valueOf("Waiting"))
+      .build();
+
+    buildStateRepository.save(buildState2);
+    buildStates.add(buildState2);
+
+    return buildStates;
   }
 
   @Override
-  public BuildState build(Long projectId, GitlabWebHookDto webHookDto)
+  public void build(Long projectId, GitlabWebHookDto webHookDto)
       throws NotFoundException, IOException {
+    //수동 commit을 위한 transaction 추가
+    EntityTransaction transaction = em.getTransaction();
     //빌드 시작 로그 출력
     log.info("build start in service part");
 
@@ -319,14 +335,10 @@ public class ProjectServiceImpl implements ProjectService {
     //프로젝트 상태 진행중으로 변경
     project.updateState(StateType.Processing);
 
-    BuildState buildState = createBuildState(project);
+    List<BuildState> buildStates = createBuildState(project,webHookDto);
 
-    if (webHookDto != null) {
-      WebhookHistory webhookHistory = WebhookHistory.of(webHookDto);
-      webhookHistory.setBuildState(buildState);
-    }
+    em.persist(project);
 
-    em.flush();
 
     // 경로
     StringBuilder filePath = new StringBuilder();
@@ -346,10 +358,10 @@ public class ProjectServiceImpl implements ProjectService {
     List<DockerContainerConfig> configs = loadConfigFiles(configFilePath.toString(),
         project.getProjectConfigs(), DockerContainerConfig.class);
 
-    int buildNumber = Integer.parseInt(buildState.getBuildNumber().toString());
+    int buildNumber = Integer.parseInt(buildStates.get(0).getBuildNumber().toString());
     //Pull start
     try { // pull 트라이
-      if (buildState.getWebhookHistory() != null) {
+      if (buildStates.get(0).getWebhookHistory() != null) {
         List<String> commands = new ArrayList<>();
         commands.add(GitlabAdapter.getPullCommand(webHookDto.getDefaultBranch()));
         CommandInterpreter.runDestPath(repositoryPath.toString(), logFilePath.toString(), "Pull",
@@ -358,22 +370,23 @@ public class ProjectServiceImpl implements ProjectService {
         dockerAdapter.saveDockerfiles(configs);
       }
       // pull 완료 build 진행중 update
-      buildState.getPull().updateStateType("Done");
-      buildState.getBuild().updateStateType("Processing");
+      buildStates.get(0).updateStateType("Done");
+      buildStates.get(1).updateStateType("Processing");
+
 
       //dirtyCheck 후 flush
-      em.flush();
-
+      em.persist(buildStates);
+      transaction.commit();
       //성공 로그 출력
-      log.info(" Pull Done : {}", buildState.getPull().toString());
+      log.info(" Pull Done : {}", buildStates.get(0).toString());
     } catch (Exception e) { // state failed 넣기
       //pullState failed 입력
-      buildState.getPull().updateStateType("Failed");
+      buildStates.get(0).updateStateType("Failed");
       project.updateState(StateType.Failed);
       log.info("update state to Failed");
 
-      //dirtyCheck 후 flush
-      em.flush();
+      em.persist(buildStates);
+      transaction.commit();
 
       //에러 로그 출력
       log.error("Pull failed {} {}", e.getCause(), e.getMessage());
@@ -387,21 +400,23 @@ public class ProjectServiceImpl implements ProjectService {
       CommandInterpreter.run(logFilePath.toString(), "Build", buildNumber, buildCommands);
 
       // state Done 넣기
-      buildState.getBuild().updateStateType("Done");
-      buildState.getRun().updateStateType("Processing");
+      buildStates.get(1).updateStateType("Done");
+      buildStates.get(2).updateStateType("Processing");
 
       //dirtyCheck 후 flush
-      em.flush();
+      em.persist(buildStates);
+      transaction.commit();
 
       //성공 로그 출력
-      log.info("Build Done : {}", buildState.getBuild().toString());
+      log.info("Build Done : {}", buildStates.get(1).toString());
     } catch (Exception e) { // state failed 넣기
       //buildState failed 입력
-      buildState.getBuild().updateStateType("Failed");
+      buildStates.get(1).updateStateType("Failed");
       project.updateState(StateType.Failed);
 
       //dirtyCheck 후 flush
-      em.flush();
+      em.persist(buildStates);
+      transaction.commit();
 
       //에러 로그 출력
       log.error("Build failed {} ", e);
@@ -418,20 +433,22 @@ public class ProjectServiceImpl implements ProjectService {
       List<String> buildCommands = dockerAdapter.getRunCommands(configs);
       CommandInterpreter.run(logFilePath.toString(), "Run", buildNumber, buildCommands);
       // state Done 넣기
-      buildState.getRun().updateStateType("Done");
+      buildStates.get(2).updateStateType("Done");
 
       //dirtyCheck 후 flush
-      em.flush();
+      em.persist(buildStates);
+      transaction.commit();
 
       //성공 로그 출력
-      log.info("Run Done : {}", buildState.getRun().toString());
+      log.info("Run Done : {}", buildStates.get(2).toString());
     } catch (Exception e) { // state failed 넣기
       //dockerRunState failed 입력
-      buildState.getRun().updateStateType("Failed");
+      buildStates.get(2).updateStateType("Failed");
       project.updateState(StateType.Failed);
 
       //dirtyCheck 후 flush
-      em.flush();
+      em.persist(buildStates);
+      transaction.commit();
 
       //에러 로그 출력
       log.error("Run failed {} {}", e.getCause(), e.getMessage());
@@ -444,43 +461,9 @@ public class ProjectServiceImpl implements ProjectService {
     project.updateState(StateType.Done);
 
     //dirtyCheck 후 flush
-    em.flush();
-
-    return buildState;
+    em.persist(buildStates);
+    transaction.commit();
   }
-
-  @Override
-  public StateResponseDto checkState(StateRequestDto stateRequestDto)
-      throws NotFoundException {
-
-    //StateRequest 에서 받은 projectId로 DB 탐색
-    BuildState buildState = buildStateRepository.findByProjectId(
-            stateRequestDto.getProjectId())
-        .orElseThrow(() -> new NotFoundException(
-            "ProjectServiceImpl.checkState : " + stateRequestDto.getProjectId()));
-    //state initialize
-    String state = "";
-
-    //buildType 에 따라서 각각의 state 입력
-    if ("Pull".equals(stateRequestDto.getBuildType().toString())) {
-      state = buildState.getPull().getStateType().toString();
-    } else if ("Build".equals(stateRequestDto.getBuildType().toString())) {
-      state = buildState.getBuild().getStateType().toString();
-    } else if ("Run".equals(stateRequestDto.getBuildType().toString())) {
-      state = buildState.getRun().getStateType().toString();
-    }
-
-    //성공 로그 출력
-    log.info("ProjectService checkState success state : {}", state);
-
-    //state 를 넣은 response 반환환
-    return StateResponseDto.builder()
-        .projectId(stateRequestDto.getProjectId())
-        .buildType(stateRequestDto.getBuildType())
-        .stateType(StateType.valueOf(state))
-        .build();
-  }
-
 
   @Override
   public List<FrameworkTypeResponseDto> getFrameworkType() {
@@ -582,41 +565,48 @@ public class ProjectServiceImpl implements ProjectService {
     List<BuildTotalResponseDto> responseDtos = new ArrayList<>();
 
     //해당 projectId의 buildState List로 받음
-    List<BuildState> buildStates = buildStateRepository.findAllByProjectId(projectId);
+    List<BuildState> buildStates = buildStateRepository.findAllByProjectIdOrderByBuildNumberAsc(projectId); // sort따로 지정하기 라스트 보장x
 
     //입력 시작 로그 출력
     log.info("buildState insert start  buildStateSize : {}", buildStates.size());
 
-    //각각의 buildState에 대해 추출후 입력
-    for (BuildState buildState : buildStates) {
-      //각 state 들을 찾아옴
-      Pull pull = pullRepository.findByBuildStateId(buildState.getId())
-          .orElseThrow(() -> new NotFoundException(
-              "ProjectServiceImpl.buildTotal does not exist pull. buildState : "
-                  + buildState.getId()));
-      Build build = buildRepository.findByBuildStateId(buildState.getId())
-          .orElseThrow(() -> new NotFoundException(
-              "ProjectServiceImpl.buildTotal does not exist build. buildState : "
-                  + buildState.getId()));
-      Run run = runRepository.findByBuildStateId(buildState.getId())
-          .orElseThrow(() -> new NotFoundException(
-              "ProjectServiceImpl.buildTotal does not exist run. buildState : "
-                  + buildState.getId()));
+    int counter=0;
 
-      StateDto stateDto = StateDto.builder()
-          .pull(pull.getStateType())
-          .build(build.getStateType())
-          .run(run.getStateType())
+    String pullStateType="";
+    String buildStateType="";
+    String runStateType="";
+
+    //각각의 buildState에 대해 추출후 입력
+    for (BuildState buildState : buildStates) { // 3개 세트
+
+      if("Pull".equals(buildState.getBuildType().toString())){
+        pullStateType=buildState.getStateType().toString();
+      }
+      else if("Build".equals(buildState.getBuildType().toString())){
+        buildStateType=buildState.getStateType().toString();
+      }
+      else if("Run".equals(buildState.getBuildType().toString())){
+        runStateType=buildState.getStateType().toString();
+      }
+
+      if(counter==2){
+        StateDto stateDto = StateDto.builder()
+          .pull(StateType.valueOf(pullStateType))
+          .build(StateType.valueOf(buildStateType))
+          .run(StateType.valueOf(runStateType))
           .build();
 
-      BuildTotalResponseDto buildTotalResponseDto = BuildTotalResponseDto.builder()
+        BuildTotalResponseDto buildTotalResponseDto = BuildTotalResponseDto.builder()
           .buildStateId(buildState.getId())
           .buildNumber(buildState.getBuildNumber())
           .state(stateDto)
           .build();
 
-      //완성된 buildTotalResponseDto를 저장
-      responseDtos.add(buildTotalResponseDto);
+        //완성된 buildTotalResponseDto를 저장
+        responseDtos.add(buildTotalResponseDto);
+        counter=0;
+      }
+      counter++;
     }
 
     //완료 로그 출력
@@ -663,14 +653,7 @@ public class ProjectServiceImpl implements ProjectService {
           .build();
     }
 
-    String stateType = "";
-    if ("Pull".equals(buildDetailRequestDto.getName().toString())) {
-      stateType = buildState.getPull().getStateType().toString();
-    } else if ("Build".equals(buildDetailRequestDto.getName().toString())) {
-      stateType = buildState.getBuild().getStateType().toString();
-    } else if ("Run".equals(buildDetailRequestDto.getName().toString())) {
-      stateType = buildState.getRun().getStateType().toString();
-    }
+    String stateType = buildState.getStateType().toString();
 
     BuildDetailResponseDto buildDetailResponseDto = BuildDetailResponseDto.builder()
         .projectName(buildState.getProject().getProjectName())
