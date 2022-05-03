@@ -54,7 +54,7 @@ public class SettingConfigServiceImpl implements
         .forEach(buildTool -> buildTools.add(buildTool.getBuildToolName()));
 
     FrameworkVersionResponseDto result = FrameworkVersionResponseDto.from(
-        settingConfig.getSettingConfigName(), versions, buildTools);
+        settingConfig.getLanguage().getLanguageName(), versions, buildTools);
     log.info("frameworkVersion.response {}", result);
 
     return result;
