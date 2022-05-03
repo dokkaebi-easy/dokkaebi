@@ -10,18 +10,22 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class FrameworkType {
+public class SettingConfig {
 
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "framework_type_id")
+  @Column(name = "setting_config_id")
   private Long id;
 
-  private String frameworkName;
+  private String settingConfigName;
+
+  private String groupCode;
+
+  private String option;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "language_id")
   private Language language;
 
-  @OneToMany(mappedBy = "frameworkType")
+  @OneToMany(mappedBy = "settingConfig")
   private List<BuildTool> buildTools = new ArrayList<>();
 }
