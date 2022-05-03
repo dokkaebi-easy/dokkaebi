@@ -21,4 +21,13 @@ public class DbConfig extends DockerbyConfig {
     return dumpLocation;
   }
 
+  public String returnPort() {
+    for (DockerbyProperty property : this.getProperties()) {
+      if ("publish".equals(property.getType())) {
+        return property.getHost();
+      }
+    }
+    return "";
+  }
+
 }

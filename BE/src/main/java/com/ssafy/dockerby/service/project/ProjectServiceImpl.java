@@ -82,13 +82,13 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public Optional<Project> findProjectByName(String name) {
-    log.info("findProjectByName Start : projectName = {} ",name);
+    log.info("findProjectByName Start : projectName = {} ", name);
     return projectRepository.findOneByProjectName(name);
   }
 
   @Override
   public ProjectConfigDto findConfigById(Long projectId) throws NotFoundException, IOException {
-    log.info("findConfigById Start : projectID = {} ",projectId);
+    log.info("findConfigById Start : projectID = {} ", projectId);
 
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
@@ -147,6 +147,7 @@ public class ProjectServiceImpl implements ProjectService {
               .frameworkId(framework.getId())
               .version(version.getInputVersion())
               .properties(dockerConfigParser.configProperties(config.getProperties()))
+              .port(config.returnPort())
               .build());
     }
 
@@ -157,7 +158,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public Map<Project, String> upsert(ProjectConfigDto projectConfigDto)
       throws NotFoundException, IOException {
-    log.info("upsert Start : projectConfigDto = {} ",projectConfigDto.getProjectName());
+    log.info("upsert Start : projectConfigDto = {} ", projectConfigDto.getProjectName());
 
     Map<Project, String> result = new HashMap<>();
     Project project;
@@ -166,12 +167,12 @@ public class ProjectServiceImpl implements ProjectService {
           .orElseThrow(() -> new NotFoundException(
               "upsert user not found id " + projectConfigDto.getProjectId()));
       //프로젝트 Id가 있을 시 Update
-      log.info("upsert : projectUpdate = {} ",project.getProjectName());
+      log.info("upsert : projectUpdate = {} ", project.getProjectName());
       result.put(project, "update");
     } else {
       project = projectRepository.save(Project.from(projectConfigDto));
       //프로젝트 Id가 없을 시 Create
-      log.info("upsert : projectCreate = {} ",project.getProjectName());
+      log.info("upsert : projectCreate = {} ", project.getProjectName());
       result.put(project, "create");
     }
 
@@ -282,11 +283,10 @@ public class ProjectServiceImpl implements ProjectService {
         if (property.checkEmpty()) {
           continue;
         }
-        if (property.getProperty().equals("publish")) {
-          list.add(new DockerbyProperty("publish", property.getData(), property.getData()));
-        } else {
-          list.add(new DockerbyProperty("environment", property.getProperty(), property.getData()));
-        }
+        list.add(new DockerbyProperty("environment", property.getProperty(), property.getData()));
+      }
+      if (!dbConfigDto.getPort().isBlank()) {
+        list.add(new DockerbyProperty("publish", dbConfigDto.getPort(), dbConfigDto.getPort()));
       }
 
       String dbConfigPath = pathParser.dockerbyConfigPath().toString();
@@ -311,12 +311,14 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   private void createBuildState(Project project, GitlabWebHookDto webHookDto) {
-    log.info("createBuildState Start : project.getName = {} ",project.getProjectName());
+    log.info("createBuildState Start : project.getName = {} ", project.getProjectName());
 
     List<BuildState> buildStates = new ArrayList<>();
 
     // 첫수 1부터 시작
-    Long buildNumber = Long.valueOf((buildStateRepository.findAllByProjectIdOrderByBuildNumberDesc(project.getId()).size()/3)+1);
+    Long buildNumber = Long.valueOf(
+        (buildStateRepository.findAllByProjectIdOrderByBuildNumberDesc(project.getId()).size() / 3)
+            + 1);
 
     BuildState buildState = BuildState.builder()
         .project(project)
@@ -359,17 +361,16 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public boolean projectIsFailed(Long projectId) throws NotFoundException {
-    log.info("projectIsFailed Start : projectId = {} ",projectId);
+    log.info("projectIsFailed Start : projectId = {} ", projectId);
 
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
             () -> new NotFoundException("ProjectSerivceImpl.projectIsFailed : " + projectId));
     //프로젝트가 실패상태이면 ture 반환
-    if("Failed".equals(project.getStateType().toString())) {
+    if ("Failed".equals(project.getStateType().toString())) {
       log.info("projectIsFailed : return true");
       return true;
-    }
-    else {
+    } else {
       log.info("projectIsFailed : return false");
       return false;
     }
@@ -377,8 +378,8 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public void build(Long projectId, GitlabWebHookDto webHookDto)
-    throws NotFoundException, IOException {
-    log.info("build Start : projectId = {} ",projectId);
+      throws NotFoundException, IOException {
+    log.info("build Start : projectId = {} ", projectId);
 
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectSerivceImpl.build : " + projectId));
@@ -386,7 +387,7 @@ public class ProjectServiceImpl implements ProjectService {
     //프로젝트 상태 진행중으로 변경
     project.updateState(StateType.Processing);
 
-    log.info("build : updateState project.getStateType = {} ",project.getStateType());
+    log.info("build : updateState project.getStateType = {} ", project.getStateType());
 
     createBuildState(project, webHookDto);
 
@@ -398,7 +399,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public void pullStart(Long projectId, GitlabWebHookDto webHookDto)
       throws NotFoundException, IOException {
-    log.info("pullStart Start : projectId = {} ",projectId);
+    log.info("pullStart Start : projectId = {} ", projectId);
 
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.pullStart : " + projectId));
@@ -444,7 +445,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public void buildStart(Long projectId, GitlabWebHookDto webHookDto)
       throws NotFoundException, IOException {
-    log.info("buildStart Start : projectId = {} ",projectId);
+    log.info("buildStart Start : projectId = {} ", projectId);
 
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.buildStart : " + projectId));
@@ -493,7 +494,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public void runStart(Long projectId, GitlabWebHookDto webHookDto)
       throws NotFoundException, IOException {
-    log.info("runStart Start: projectId = {} ",projectId);
+    log.info("runStart Start: projectId = {} ", projectId);
 
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.runStart : " + projectId));
@@ -562,21 +563,21 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public void updateProjectDone(Long projectId) throws NotFoundException {
-    log.info("updateProjectDone Start : projectId = {} ",projectId);
+    log.info("updateProjectDone Start : projectId = {} ", projectId);
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
             () -> new NotFoundException("ProjectSerivceImpl.updateProjectDone : " + projectId));
 
     project.updateState(StateType.valueOf("Done"));
 
-    log.info("updateProject Done : projectId = {} ",project.getStateType());
+    log.info("updateProject Done : projectId = {} ", project.getStateType());
     em.flush();
   }
 
   //history 저장
   public void createConfigHistory(HttpServletRequest request, Project project, String msg)
       throws NotFoundException {
-    log.info("createConfigHistory Start : projectName = {} ",project.getProjectName());
+    log.info("createConfigHistory Start : projectName = {} ", project.getProjectName());
     //세션 정보 가져오기
     HttpSession session = request.getSession();
     UserDetailDto userDetailDto = (UserDetailDto) session.getAttribute("user");
@@ -595,7 +596,7 @@ public class ProjectServiceImpl implements ProjectService {
         .build();
 
     log.info("history save {} to {} detail-{}", history.getUser().getName(),
-      history.getProject().getProjectName(), history.getMsg());
+        history.getProject().getProjectName(), history.getMsg());
 
     configHistoryRepository.save(history);
     log.info("createConfigHistory Done");
@@ -691,7 +692,7 @@ public class ProjectServiceImpl implements ProjectService {
       consoleLog.append(FileManager.loadFile(logPath, fileName));
       log.info("buildDetail : lodeFile Success");
     } catch (Exception error) {
-      log.error("buildDetail : There is no console file : {}",error);
+      log.error("buildDetail : There is no console file : {}", error);
       consoleLog.append("There is no console file !!");
     }
 
