@@ -4,14 +4,9 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import Stack from '@mui/material/Stack';
 import FormHelperText from '@mui/material/FormHelperText';
-import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
-import RepositoryModal from 'Components/Pages/Setting/GitPage/RepositoryModal/RepositoryModal';
-import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
+import { Git } from 'Components/MDClass/GitData/GitData';
 import { useDropdownStore } from 'Components/Store/DropDownStore/DropDownStore';
 import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
@@ -20,23 +15,9 @@ interface GitProps {
 }
 
 export default function GitLabRepositories({ gitData }: GitProps) {
-  // const dropDownItems = useDropdownStore((state) => state.account);
-  const setDropDownItems = useDropdownStore((state) => state.setAccount);
-
   const [projectID, setProjectID] = useState(gitData.gitProjectId);
   const [repositoryURL, setRepositoryURL] = useState(gitData.repositoryUrl);
   const [branchName, setBranchName] = useState(gitData.branchName);
-  const [account, setAccount] = useState('');
-  const [accounts, setAccounts] = useState<string[]>([]);
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleItemClickProps = (index: number) => {
-    setAccount(accounts[index]);
-    gitData.accountId = index + 1;
-  };
 
   const handleProjectIDChange = (event: any) => {
     setProjectID(event.target.value);
@@ -52,26 +33,6 @@ export default function GitLabRepositories({ gitData }: GitProps) {
     setBranchName(event.target.value);
     gitData.branchName = event.target.value;
   };
-
-  const handleAxiosProps = (data: ResponseIdName[]) => {
-    const arr = data.map((value) => value.name);
-    setAccounts([...arr]);
-    setAccount(arr[gitData.accountId - 1]);
-  };
-
-  useEffect(() => {
-    axios.get('/api/git/accounts').then((res) => {
-      const data = res.data as ResponseIdName[];
-      setDropDownItems([...data]);
-      const arr = data.map((value) => value.name);
-      setAccounts([...arr]);
-      setAccount(arr[gitData.accountId - 1]);
-    });
-
-    return () => {
-      setAccounts([]);
-    };
-  }, []);
 
   return (
     <Box my={3}>

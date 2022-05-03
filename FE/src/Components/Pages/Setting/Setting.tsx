@@ -52,7 +52,8 @@ export default function Setting() {
   const setGitConfig = useSettingStore((state) => state.setGitConfig);
   const setNginxConfig = useSettingStore((state) => state.setNginxConfig);
 
-  const setFrameworkName = useDropdownStore((state) => state.setFramworkandLib);
+  const setFrameworkItems = useDropdownStore((state) => state.setFramwork);
+  const setDBItems = useDropdownStore((state) => state.setDB);
 
   const params = useParams();
 
@@ -109,9 +110,13 @@ export default function Setting() {
       .get('/api/project/frameworkType')
       .then((res) => {
         const data = res.data as ResponseIdName[];
-        setFrameworkName([...data]);
+        setFrameworkItems([...data]);
       })
       .catch();
+
+    axios.get('/api/project/dbType').then((res) => {
+      setDBItems(res.data);
+    });
 
     if (projectId === '0') {
       return;

@@ -4,7 +4,8 @@ spring:
       matching-strategy: ant_path_matcher
   profiles:
     include: eth
-
+  session:
+    store-type: jdbc
   sql:
     init:
       mode: never
@@ -17,14 +18,16 @@ spring:
     defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.MariaDB103Dialect
 
-logging.level:
-  org.hibernate.SQL: debug
-  org.hibernate.type: trace
+#logging.level:
+#  org.hibernate.SQL: debug
+#  org.hibernate.type: trace
 
 uploadPath:
   path: "./fileData/"
 
 dockerby:
-  rootPath: "projects"
-  configPath: "jsonData"
-  logPath : "log"
+  rootPath: "/projects"
+  configPath: "config"
+  logPath: "log"
+  volumePath: "/var/dockerby"
+  dockerbyConfigPath : "/home/conf"

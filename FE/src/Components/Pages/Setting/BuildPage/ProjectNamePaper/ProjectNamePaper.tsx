@@ -12,7 +12,6 @@ export default function ProjectNamePaper() {
   const setProjectName = useSettingStore((state) => state.setProjectName);
 
   const handleChange = (event: any) => {
-    console.log(event.target.value);
     setProjectName(event.target.value);
   };
 

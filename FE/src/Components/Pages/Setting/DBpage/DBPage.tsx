@@ -4,22 +4,22 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { v4 as uuid } from 'uuid';
-import BuildData from 'Components/MDClass/BuildData/BuildData';
+import DBData from 'Components/MDClass/DBData/DBData';
 import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 import DBPaper from './DBPaper/DBPaper';
 
 export default function DBpage() {
-  const buildConfigs = useSettingStore((state) => state.buildConfigs);
-  const setBuildConfigs = useSettingStore((state) => state.setBuildConfigs);
+  const dbConfigs = useSettingStore((state) => state.dbConfigs);
+  const setDBConfigs = useSettingStore((state) => state.setDBConfigs);
 
   const handlePropsDelClick = (index: number) => {
-    buildConfigs.splice(index, 1);
-    setBuildConfigs([...buildConfigs]);
+    dbConfigs.splice(index, 1);
+    setDBConfigs([...dbConfigs]);
   };
 
   const handleAddClick = () => {
-    const data = new BuildData();
-    setBuildConfigs([...buildConfigs, data]);
+    const data = new DBData();
+    setDBConfigs([...dbConfigs, data]);
   };
 
   return (
@@ -50,11 +50,11 @@ export default function DBpage() {
             </Button>
           </Box>
           <Box sx={{ my: 3 }}>
-            {buildConfigs.map((value, index) => (
+            {dbConfigs.map((value, index) => (
               <DBPaper
                 key={uuid()}
                 index={index}
-                buildData={value}
+                dbData={value}
                 DelClick={handlePropsDelClick}
               />
             ))}

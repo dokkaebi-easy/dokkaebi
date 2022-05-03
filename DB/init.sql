@@ -3,16 +3,18 @@ CREATE DATABASE `dockerby`;
 
 CREATE TABLE `dockerby`.`language` (
   `language_id` BIGINT NOT NULL,
-  `name` VARCHAR(60) NOT NULL,
+  `language_name` VARCHAR(60) NOT NULL,
   PRIMARY KEY (`language_id`));
 
-CREATE TABLE `dockerby`.`framework_type` (
-  `framework_type_id` BIGINT NOT NULL,
-  `framework_name` VARCHAR(60) NOT NULL,
+CREATE TABLE `dockerby`.`setting_config` (
+  `setting_config_id` BIGINT NOT NULL,
   `language_id` BIGINT NULL,
-  PRIMARY KEY (`framework_type_id`),
-  INDEX `fk-language-framework_type_idx` (`language_id` ASC),
-  CONSTRAINT `fk-language-framework_type`
+  `setting_config_name` VARCHAR(60) NOT NULL,
+  `group_code` VARCHAR(255) NOT NULL,
+  `option` VARCHAR(255) NULL,
+  PRIMARY KEY (`setting_config_id`),
+  INDEX `fk-language-setting_config_idx` (`language_id` ASC),
+  CONSTRAINT `fk-language-setting_config`
     FOREIGN KEY (`language_id`)
     REFERENCES `dockerby`.`language` (`language_id`)
     ON DELETE NO ACTION
@@ -20,9 +22,9 @@ CREATE TABLE `dockerby`.`framework_type` (
 
 CREATE TABLE `dockerby`.`version` (
   `version_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `language_id` BIGINT NULL,
   `input_version` VARCHAR(45) NOT NULL,
   `docker_version` VARCHAR(45) NOT NULL,
-  `language_id` BIGINT NULL,
   PRIMARY KEY (`version_id`),
   INDEX `fk-language_id-version_idx` (`language_id` ASC),
   CONSTRAINT `fk-language_id-version`
@@ -33,13 +35,13 @@ CREATE TABLE `dockerby`.`version` (
 
 CREATE TABLE `dockerby`.`build_tool` (
   `build_tool_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `framework_type_id` BIGINT NULL,
+  `build_tool_name` VARCHAR(45) NOT NULL,
+  `setting_config_id` BIGINT NULL,
   PRIMARY KEY (`build_tool_id`),
-  INDEX `fk-framework_type-build_tool_idx` (`framework_type_id` ASC),
-  CONSTRAINT `fk-framework_type-build_tool`
-    FOREIGN KEY (`framework_type_id`)
-    REFERENCES `dockerby`.`framework_type` (`framework_type_id`)
+  INDEX `fk-setting_config-build_tool_idx` (`setting_config_id` ASC),
+  CONSTRAINT `fk-setting_config-build_tool`
+    FOREIGN KEY (`setting_config_id`)
+    REFERENCES `dockerby`.`setting_config` (`setting_config_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -49,13 +51,6 @@ CREATE TABLE `dockerby`.`gitlab_access_token` (
   `access_token` VARCHAR(255) NULL,
   PRIMARY KEY (`gitlab_access_token_id`));
 
-CREATE TABLE `dockerby`.`gitlab_account` (
-  `gitlab_account_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(255) NULL,
-  `password` VARCHAR(255) NULL,
-  `username` VARCHAR(255) NULL,
-  PRIMARY KEY (`gitlab_account_id`));
-
 CREATE TABLE `dockerby`.`project` (
   `project_id` BIGINT NOT NULL AUTO_INCREMENT,
   `project_name` VARCHAR(255) NOT NULL,
@@ -64,41 +59,21 @@ CREATE TABLE `dockerby`.`project` (
   `last_modified_date` DATETIME NULL,
   PRIMARY KEY (`project_id`));
 
-CREATE TABLE `dockerby`.`project_config` (
-  `project_config_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `file_name` VARCHAR(255) NOT NULL,
-  `project_id` BIGINT NULL,
-  PRIMARY KEY (`project_config_id`),
-  INDEX `fk-project-project_config_idx` (`project_id` ASC),
-  CONSTRAINT `fk-project-project_config`
-    FOREIGN KEY (`project_id`)
-    REFERENCES `dockerby`.`project` (`project_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-
 CREATE TABLE `dockerby`.`gitlab_config` (
   `gitlab_config_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
   `host_url` VARCHAR(255) NOT NULL,
   `secret_token` VARCHAR(255) NOT NULL,
   `repository_url` VARCHAR(255) NOT NULL,
   `branch_name` VARCHAR(255) NOT NULL,
   `git_project_id` BIGINT NULL,
-  `gitlab_account_id` BIGINT NULL,
   `gitlab_access_token_id` BIGINT NULL,
   `project_id` BIGINT NULL,
   PRIMARY KEY (`gitlab_config_id`),
-  INDEX `fk-gitlab_account-gitlab_config_idx` (`gitlab_account_id` ASC),
   INDEX `fk-gitlab_access_token-gitlab_config_idx` (`gitlab_access_token_id` ASC),
   INDEX `fk-project-gitlab_config_idx` (`project_id` ASC),
   CONSTRAINT `fk-gitlab_access_token-gitlab_config`
     FOREIGN KEY (`gitlab_access_token_id`)
     REFERENCES `dockerby`.`gitlab_access_token` (`gitlab_access_token_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk-gitlab_account-gitlab_config`
-    FOREIGN KEY (`gitlab_account_id`)
-    REFERENCES `dockerby`.`gitlab_account` (`gitlab_account_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk-project-gitlab_config`
@@ -153,7 +128,10 @@ CREATE TABLE `dockerby`.`build_history` (
 CREATE TABLE `dockerby`.`build_state` (
   `build_state_id` BIGINT NOT NULL AUTO_INCREMENT,
   `build_number` INT NULL,
+  `build_type` VARCHAR(60) NULL,
+  `state_type` VARCHAR(60) NULL,
   `regist_date` DATETIME NULL,
+  `last_modified_date` DATETIME NULL,
   `project_id` BIGINT NULL,
   PRIMARY KEY (`build_state_id`),
   INDEX `fk-project-build_state_idx` (`project_id` ASC),
@@ -180,58 +158,54 @@ CREATE TABLE `dockerby`.`webhook_history` (
     ON UPDATE NO ACTION
 );
 
-CREATE TABLE `dockerby`.`pull` (
-  `pull_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `state_type` VARCHAR(60) NULL,
-  `build_state_id` BIGINT NULL,
-  PRIMARY KEY (`pull_id`),
-  INDEX `fk-build_state-pull_idx` (`build_state_id` ASC),
-  CONSTRAINT `fk-build_state-pull`
-    FOREIGN KEY (`build_state_id`)
-    REFERENCES `dockerby`.`build_state` (`build_state_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+CREATE TABLE `dockerby`.`SPRING_SESSION`(
+    PRIMARY_ID CHAR(36) NOT NULL,
+    SESSION_ID CHAR(36) NOT NULL,
+    CREATION_TIME BIGINT NOT NULL,
+    LAST_ACCESS_TIME BIGINT NOT NULL,
+    MAX_INACTIVE_INTERVAL INT NOT NULL,
+    EXPIRY_TIME BIGINT NOT NULL,
+    PRINCIPAL_NAME VARCHAR(100),
+    CONSTRAINT SPRING_SESSION_PK PRIMARY KEY (PRIMARY_ID)
+);
 
-CREATE TABLE `dockerby`.`build` (
-  `build_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `state_type` VARCHAR(60) NULL,
-  `build_state_id` BIGINT NULL,
-  PRIMARY KEY (`build_id`),
-  INDEX `fk-build_state-build_idx` (`build_state_id` ASC),
-  CONSTRAINT `fk-build_state-build`
-    FOREIGN KEY (`build_state_id`)
-    REFERENCES `dockerby`.`build_state` (`build_state_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+CREATE UNIQUE INDEX SPRING_SESSION_IX1 ON `dockerby`.`SPRING_SESSION` (SESSION_ID);
+CREATE INDEX SPRING_SESSION_IX2 ON `dockerby`.`SPRING_SESSION` (EXPIRY_TIME);
+CREATE INDEX SPRING_SESSION_IX3 ON `dockerby`.`SPRING_SESSION` (PRINCIPAL_NAME);
 
-CREATE TABLE `dockerby`.`run` (
-  `run_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `state_type` VARCHAR(60) NULL,
-  `build_state_id` BIGINT NULL,
-  PRIMARY KEY (`run_id`),
-  INDEX `fk-build_state-run_idx` (`build_state_id` ASC),
-  CONSTRAINT `fk-build_state-run`
-    FOREIGN KEY (`build_state_id`)
-    REFERENCES `dockerby`.`build_state` (`build_state_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+CREATE TABLE `dockerby`.`SPRING_SESSION_ATTRIBUTES` (
+    SESSION_PRIMARY_ID CHAR(36) NOT NULL,
+    ATTRIBUTE_NAME VARCHAR(200) NOT NULL,
+    ATTRIBUTE_BYTES BLOB  NOT NULL,
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY (SESSION_PRIMARY_ID, ATTRIBUTE_NAME),
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (SESSION_PRIMARY_ID) REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
+);
 
-INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (1,"Java");
-INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (2,"Python");
-INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (3,"Node");
-INSERT INTO `dockerby`.`language`(`language_id`,`name`) VALUES (4,"MySQL");
 
-INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (1,"SpringBoot",1);
-INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (2,"Vue",3);
-INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (3,"React",3);
-INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (4,"Next",3);
-INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (5,"Django",2);
-INSERT INTO `dockerby`.`framework_type`(`framework_type_id`,`framework_name`,`language_id`) VALUES (6,"MySQL",4);
 
-INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Gradle",1);
-INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Maven",1);
-INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Yes",2);
-INSERT INTO `dockerby`.`build_tool`(`name`,`framework_type_id`) VALUES ("Yes",3);
+INSERT INTO `dockerby`.`language`(`language_id`,`language_name`) VALUES (1,"Java");
+INSERT INTO `dockerby`.`language`(`language_id`,`language_name`) VALUES (2,"Python");
+INSERT INTO `dockerby`.`language`(`language_id`,`language_name`) VALUES (3,"Node");
+INSERT INTO `dockerby`.`language`(`language_id`,`language_name`) VALUES (4,"MySQL");
+INSERT INTO `dockerby`.`language`(`language_id`,`language_name`) VALUES (5,"Mongo");
+-- INSERT INTO `dockerby`.`language`(`language_id`,`language_name`) VALUES (6,"Redis");
+INSERT INTO `dockerby`.`language`(`language_id`,`language_name`) VALUES (7,"mariadb");
+
+INSERT INTO `dockerby`.`setting_config`(`setting_config_id`,`setting_config_name`,`group_code`,`option`,`language_id`) VALUES (1,"SpringBoot","Framework",null,1);
+INSERT INTO `dockerby`.`setting_config`(`setting_config_id`,`setting_config_name`,`group_code`,`option`,`language_id`) VALUES (2,"Vue","Framework",null,3);
+INSERT INTO `dockerby`.`setting_config`(`setting_config_id`,`setting_config_name`,`group_code`,`option`,`language_id`) VALUES (3,"React","Framework",null,3);
+INSERT INTO `dockerby`.`setting_config`(`setting_config_id`,`setting_config_name`,`group_code`,`option`,`language_id`) VALUES (4,"Next","Framework",null,3);
+INSERT INTO `dockerby`.`setting_config`(`setting_config_id`,`setting_config_name`,`group_code`,`option`,`language_id`) VALUES (5,"Django","Framework",null,2);
+
+INSERT INTO `dockerby`.`setting_config`(`setting_config_id`,`setting_config_name`,`group_code`,`option`,`language_id`) VALUES (6,"MySQL","Dbms","mysql",4);
+INSERT INTO `dockerby`.`setting_config`(`setting_config_id`,`setting_config_name`,`group_code`,`option`,`language_id`) VALUES (7,"Mongo","Dbms","mongo",5);
+-- INSERT INTO `dockerby`.`setting_config`(`setting_config_id`,`setting_config_name`,`group_code`,`option`,`language_id`) VALUES (8,"Redis","Dbms",null,6);
+INSERT INTO `dockerby`.`setting_config`(`setting_config_id`,`setting_config_name`,`group_code`,`option`,`language_id`) VALUES (9,"mariadb","Dbms","maria",7);
+
+INSERT INTO `dockerby`.`build_tool`(`build_tool_name`,`setting_config_id`) VALUES ("Gradle",1);
+INSERT INTO `dockerby`.`build_tool`(`build_tool_name`,`setting_config_id`) VALUES ("Maven",1);
+INSERT INTO `dockerby`.`build_tool`(`build_tool_name`,`setting_config_id`) VALUES ("Yes",2);
+INSERT INTO `dockerby`.`build_tool`(`build_tool_name`,`setting_config_id`) VALUES ("Yes",3);
 
 INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("7","openjdk:7-jdk",1);
 INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("8","openjdk:8-jdk",1);
@@ -263,3 +237,22 @@ INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`)
 INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("5.6","mysql:5.6",4);
 INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("5.7","mysql:5.7",4);
 INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("8.0","mysql:8.0",4);
+
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("4.0","mongo:4.0",5);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("4.2","mongo:4.2",5);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("4.4","mongo:4.4",5);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("5.0","mongo:5.0",5);
+
+-- INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("5.0","redis:5.0",6);
+-- INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("6.0","redis:6.0",6);
+-- INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("6.2","redis:6.2",6);
+-- INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("7.0","redis:7.0",6);
+
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10","mariadb:10",7);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10.1","mariadb:10.1",7);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10.2","mariadb:10.2",7);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10.3","mariadb:10.3",7);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10.4","mariadb:10.4",7);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10.5","mariadb:10.5",7);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10.6","mariadb:10.6",7);
+INSERT INTO `dockerby`.`version`(`input_version`,`docker_version`,`language_id`) VALUES ("10.7","mariadb:10.7",7);

@@ -25,21 +25,24 @@ interface buildProps {
 }
 
 export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
-  const framAndLibsDatas = useDropdownStore((state) => state.framworkandLib);
+  const frameworkItems = useDropdownStore((state) => state.framwork);
 
   const [name, setName] = useState(buildData.name);
   const [fileDir, setFileDir] = useState(buildData.projectDirectory);
   const [buildPath, setBuildPath] = useState(buildData.buildPath);
-  const [frameworkId, setFrameworkId] = useState(buildData.frameworkId);
 
-  const [frameworkName, setFrameworkName] = useState('');
+  const [framework, setFramework] = useState('');
+  const [versionName, setVersionName] = useState('');
   const [version, setVersion] = useState(buildData.version);
   const [type, setType] = useState(buildData.type);
 
-  const [framAndLibs, setFramAndLibs] = useState<string[]>([]);
-  const [versionName, setVersionName] = useState('');
-  const [versions, setVersions] = useState<string[]>([]);
-  const [types, setTypes] = useState<string[]>([]);
+  const [frameworks, setFrameworks] = useState<string[]>([]);
+  const [versions, setVersions] = buildData.version
+    ? useState<string[]>([buildData.version])
+    : useState<string[]>([]);
+  const [types, setTypes] = buildData.type
+    ? useState<string[]>([buildData.type])
+    : useState<string[]>([]);
 
   const handleNameOnChange = (event: any) => {
     setName(event.target.value);
@@ -59,8 +62,8 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
     DelClick(index);
   };
 
-  const handlePropsFLChange = (event: string) => {
-    setFrameworkName(event);
+  const handlePropsFrameworkChange = (event: string) => {
+    setFramework(event);
     buildData.version = '';
     setVersion('');
     buildData.type = '';
@@ -75,9 +78,8 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
     setType(event);
     buildData.type = event;
   };
-  const handleFrameworkClickProps = (index: number) => {
-    setFrameworkId(framAndLibsDatas[index].id);
-    buildData.frameworkId = framAndLibsDatas[index].id;
+  const handlePropsFrameworkClick = (index: number) => {
+    buildData.frameworkId = frameworkItems[index].id;
 
     const params = { typeId: buildData.frameworkId };
     axios
@@ -95,14 +97,14 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
   };
 
   useEffect(() => {
-    const data = framAndLibsDatas.map((value) => {
-      if (value.id === buildData.frameworkId) setFrameworkName(value.name);
+    const data = frameworkItems.map((value) => {
+      if (value.id === buildData.frameworkId) setFramework(value.name);
       return value.name;
     });
-    setFramAndLibs(data);
+    setFrameworks(data);
 
-    if (buildData.frameworkId !== -1) {
-      const params = { typeId: frameworkId };
+    if (buildData.frameworkId !== 0) {
+      const params = { typeId: buildData.frameworkId };
       axios
         .get('/api/project/frameworkVersion', { params })
         .then((res) => {
@@ -115,11 +117,11 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
     }
 
     return () => {
-      setFramAndLibs([]);
+      setFrameworks([]);
       setVersions([]);
       setTypes([]);
     };
-  }, []);
+  }, [frameworkItems]);
 
   return (
     <Box>
@@ -140,11 +142,11 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         <Grid item xs={2}>
           <Typography>Framework</Typography>
           <SelectItem
-            defaultValue={frameworkName}
+            defaultValue={framework}
             label="Framework/ Library"
-            Items={framAndLibs}
-            Change={handlePropsFLChange}
-            Click={handleFrameworkClickProps}
+            Items={frameworks}
+            Change={handlePropsFrameworkChange}
+            Click={handlePropsFrameworkClick}
           />
         </Grid>
         <Grid item xs={2}>
@@ -158,7 +160,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         </Grid>
         <Grid item xs={2}>
           <Typography>
-            {frameworkName === 'Vue' || frameworkName === 'React'
+            {framework === 'Vue' || framework === 'React'
               ? 'Nginx Use'
               : 'Type'}
           </Typography>
@@ -168,7 +170,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
             Items={types}
             Change={handlePropsTypeChange}
           />
-          {frameworkName === 'Vue' || frameworkName === 'React' ? (
+          {framework === 'Vue' || framework === 'React' ? (
             <FormHelperText id="component-helper-text">
               (※ Yes는 하나만)
             </FormHelperText>

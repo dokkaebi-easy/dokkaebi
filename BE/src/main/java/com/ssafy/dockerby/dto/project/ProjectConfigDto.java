@@ -22,9 +22,21 @@ public class ProjectConfigDto {
 
   private NginxConfigDto nginxConfig;
 
+  private List<DBConfigDto> dbConfigs;
+
   public static ProjectConfigDto of(Long projectId, String projectName, List<BuildConfigDto> buildConfigs,
-      GitConfigDto gitConfig, NginxConfigDto nginxConfigDto) {
-    return new ProjectConfigDto(projectId, projectName, buildConfigs, gitConfig, nginxConfigDto);
+      GitConfigDto gitConfig, NginxConfigDto nginxConfigDto, List<DBConfigDto> dbConfigs) {
+    return new ProjectConfigDto(projectId, projectName, buildConfigs, gitConfig, nginxConfigDto, dbConfigs);
   }
 
+  @Override
+  public String toString() {
+    return "ProjectConfigDto{" +
+      "projectId=" + projectId +
+      ", projectName='" + projectName + '\'' +
+      ", buildConfigs=" + buildConfigs +
+      ", gitConfig=" + gitConfig +
+      ", nginxConfig=" + nginxConfig +
+      '}';
+  }
 }

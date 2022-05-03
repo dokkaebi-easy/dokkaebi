@@ -18,6 +18,7 @@ export default function AxiosPage() {
   const buildConfigs = useSettingStore((state) => state.buildConfigs);
   const gitConfig = useSettingStore((state) => state.gitConfig);
   const nginxConfig = useSettingStore((state) => state.nginxConfig);
+  const dbConfigs = useSettingStore((state) => state.dbConfigs);
 
   const [nextPage, setNextPage] = useState('');
   const history = useHistory();
@@ -25,12 +26,14 @@ export default function AxiosPage() {
   const handleClick = () => {
     const data = {
       buildConfigs,
+      dbConfigs,
       gitConfig,
       nginxConfig,
       projectName,
       projectId,
     };
 
+    console.log(data);
     axios
       .post('/api/project', data)
       .then(() => {

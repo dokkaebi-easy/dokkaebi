@@ -1,13 +1,17 @@
 package com.ssafy.dockerby.core.docker.etcMaker;
 
-import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig;
-import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig.HttpsOption;
-import com.ssafy.dockerby.core.docker.dto.DockerNginxConfig.ProxyLocation;
+import com.ssafy.dockerby.core.docker.vo.nginx.NginxConfig;
+import com.ssafy.dockerby.core.docker.vo.nginx.NginxHttpsOption;
+import com.ssafy.dockerby.core.docker.vo.nginx.NginxProxyLocation;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
+@Slf4j
 public class NginxConfigMaker {
 
-  public String defaultConfig(DockerNginxConfig config) {
+  public String defaultConfig(NginxConfig config) {
+    log.info("defaultConfig Start");
     StringBuilder sb = new StringBuilder();
     sb.append(serverTagStart())
         .append(http())
@@ -22,10 +26,11 @@ public class NginxConfigMaker {
     return sb.toString();
   }
 
-  public String httpsConfig(DockerNginxConfig config) {
+  public String httpsConfig(NginxConfig config) {
+    log.info("httpsConfig Start");
     StringBuilder sb = new StringBuilder();
     sb.append(serverTagStart())
-        .append(https(config.getHttpsOption()))
+        .append(https(config.getNginxHttpsOption()))
         .append(serverName(config.getDomains()))
         .append(index())
         .append(defaultLocation());
@@ -44,13 +49,15 @@ public class NginxConfigMaker {
   }
 
   private String http() {
+    log.info("http Start");
     StringBuilder sb = new StringBuilder();
     sb.append("    listen 80;\n")
         .append("    listen [::]:80;\n");
     return sb.toString();
   }
 
-  private String https(HttpsOption option) {
+  private String https(NginxHttpsOption option) {
+    log.info("https Start");
     StringBuilder sb = new StringBuilder();
     sb.append("    listen 443 ssl;\n")
         .append("    listen [::]:443 ssl;\n")
@@ -61,17 +68,20 @@ public class NginxConfigMaker {
   }
 
   private String clientMaxBodySize(int size) {
+    log.info("clientMaxBodySize Start");
     return "    client_max_body_size " + size + "M;\n";
   }
 
   private String index() {
+    log.info("index Start");
     return "    index index.html index.htm index.nginx-debian.html;\n";
   }
 
-  private String addLocations(List<ProxyLocation> locations) {
+  private String addLocations(List<NginxProxyLocation> locations) {
+    log.info("addLocations Start");
     StringBuilder sb = new StringBuilder();
-    for (ProxyLocation location : locations) {
-      if (!location.checkBlank()) {
+    for (NginxProxyLocation location : locations) {
+      if (!location.checkEmpty()) {
         sb.append(addLocation(location));
       }
     }
@@ -79,6 +89,7 @@ public class NginxConfigMaker {
   }
 
   private String defaultLocation() {
+    log.info("defaultLocation Start");
     StringBuilder sb = new StringBuilder();
     sb.append("    location / {\n")
         .append("        error_page 405 =200 $uri;\n")
@@ -88,7 +99,8 @@ public class NginxConfigMaker {
     return sb.toString();
   }
 
-  private String addLocation(ProxyLocation location) {
+  private String addLocation(NginxProxyLocation location) {
+    log.info("addLocation Start");
     StringBuilder sb = new StringBuilder();
     sb.append("    location ")
         .append(location.getLocation()).append(" {\n")
@@ -113,20 +125,24 @@ public class NginxConfigMaker {
    * https를 사용할 때 80번 포트의 요청은 443 요청으로 HTTP 301
    */
   private String httpMoved() {
+    log.info("httpMoved Start");
     StringBuilder sb = new StringBuilder();
     sb.append("    return       301 https://$host$request_uri;\n}");
     return sb.toString();
   }
 
   private String serverTagStart() {
+    log.info("serverTagStart Start");
     return "server {\n";
   }
 
   private String serverTagEnd() {
+    log.info("serverTagEnd Start");
     return "}\n";
   }
 
   private String serverName(List<String> domains) {
+    log.info("serverName Start");
     StringBuilder sb = new StringBuilder();
     sb.append("    server_name ");
     domains.forEach(domain -> sb.append(domain).append(' '));

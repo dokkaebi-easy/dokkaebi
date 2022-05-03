@@ -19,9 +19,10 @@ public class CustomLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) {
+        log.info("logout Start");
         HttpSession session = request.getSession();
         //세션 무효화
         session.invalidate();
-        log.info("Logout Successful");
+        log.info("logout Done");
     }
 }

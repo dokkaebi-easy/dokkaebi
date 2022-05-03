@@ -1,4 +1,7 @@
-import PropertyData, { Property } from '../PropertyData/PropertyData';
+export interface BuildProperty {
+  property: string;
+  data: string;
+}
 
 export interface Build {
   frameworkId: number;
@@ -7,7 +10,7 @@ export interface Build {
   type: string;
   projectDirectory: string;
   buildPath: string;
-  properties: Property[];
+  properties: BuildProperty[];
 }
 
 export default class BuildData {
@@ -23,15 +26,15 @@ export default class BuildData {
 
   public buildPath: string;
 
-  public properties: Property[];
+  public properties: BuildProperty[];
 
   constructor() {
-    this.frameworkId = -1;
+    this.frameworkId = 0;
     this.name = '';
     this.version = '';
     this.type = '';
     this.projectDirectory = '';
     this.buildPath = '';
-    this.properties = [new PropertyData()];
+    this.properties = [];
   }
 }

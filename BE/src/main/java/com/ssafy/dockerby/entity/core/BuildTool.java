@@ -23,9 +23,9 @@ public class BuildTool {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String name;
+  private String buildToolName;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "framework_type_id")
-  private FrameworkType frameworkType;
+  @JoinColumn(name = "setting_config_id")
+  private SettingConfig settingConfig;
 }

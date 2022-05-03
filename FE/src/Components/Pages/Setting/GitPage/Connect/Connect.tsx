@@ -7,7 +7,6 @@ import TextField from '@mui/material/TextField';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import Stack from '@mui/material/Stack';
 import ConnetctModal from 'Components/Pages/Setting/GitPage/ConnetctModal/ConnetctModal';
 import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
@@ -18,7 +17,6 @@ interface GitProps {
 }
 
 export default function GitLabConnect({ gitData }: GitProps) {
-  const [name, setName] = useState(gitData.name);
   const [hostURL, setHostURL] = useState(gitData.hostUrl);
   const [accessTokenId, setAccessTokenId] = useState('');
   const [accessTokenIds, setAccessTokenIds] = useState<string[]>([]);

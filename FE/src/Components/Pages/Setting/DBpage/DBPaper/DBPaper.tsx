@@ -1,122 +1,132 @@
 import { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
+import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Box from '@mui/material/Box';
-import FormHelperText from '@mui/material/FormHelperText';
-import { Build } from 'Components/MDClass/BuildData/BuildData';
-import axios from 'axios';
+import { DB } from 'Components/MDClass/DBData/DBData';
 import { useDropdownStore } from 'Components/Store/DropDownStore/DropDownStore';
+import { v4 as uuid } from 'uuid';
+import axios from 'axios';
 
 interface VersionTypeAxois {
-  name: string;
-  buildTool: string[];
-  frameworkVersion: string[];
+  dbVersion: string[];
+  properties: string[];
 }
 
 interface buildProps {
   index: number;
-  buildData: Build;
+  dbData: DB;
   DelClick: (value: number) => void;
 }
 
-export default function DBPaper({ index, buildData, DelClick }: buildProps) {
-  const framAndLibsDatas = useDropdownStore((state) => state.framworkandLib);
+export default function DBPaper({ index, dbData, DelClick }: buildProps) {
+  const dbItems = useDropdownStore((state) => state.db);
 
-  const [name, setName] = useState(buildData.name);
-  const [fileDir, setFileDir] = useState(buildData.projectDirectory);
-  const [buildPath, setBuildPath] = useState(buildData.buildPath);
-  const [frameworkId, setFrameworkId] = useState(buildData.frameworkId);
+  const [port, setPort] = useState(dbData.port);
+  const [name, setName] = useState(dbData.name);
+  const [version, setVersion] = useState(dbData.version);
+  const [dumpLocation, setDumpLocation] = useState(dbData.dumpLocation);
 
-  const [frameworkName, setFrameworkName] = useState('');
-  const [version, setVersion] = useState(buildData.version);
-  const [type, setType] = useState(buildData.type);
-
-  const [framAndLibs, setFramAndLibs] = useState<string[]>([]);
-  const [versionName, setVersionName] = useState('');
-  const [versions, setVersions] = useState<string[]>([]);
-  const [types, setTypes] = useState<string[]>([]);
+  const [db, setDB] = useState('');
+  const [dbs, setDBs] = useState<string[]>([]);
+  const [versions, setVersions] = dbData.version
+    ? useState<string[]>([dbData.version])
+    : useState<string[]>([]);
+  const [properties, setProperties] = useState<string[]>(
+    dbData.properties.map((value) => value.property),
+  );
+  const [propertiesData, setPropertiesData] = useState<string[]>(
+    dbData.properties.map((value) => value.data),
+  );
 
   const handleNameOnChange = (event: any) => {
     setName(event.target.value);
-    buildData.name = event.target.value;
+    dbData.name = event.target.value;
   };
 
-  const handleFileDirOnChange = (event: any) => {
-    setFileDir(event.target.value);
-    buildData.projectDirectory = event.target.value;
+  const handlePortOnChange = (event: any) => {
+    setPort(event.target.value);
+    dbData.port = event.target.value;
   };
-  const handlebuildPathOnChange = (event: any) => {
-    setBuildPath(event.target.value);
-    buildData.buildPath = event.target.value;
+  const handleDumpLocationOnChange = (event: any) => {
+    setDumpLocation(event.target.value);
+    dbData.dumpLocation = event.target.value;
   };
 
   const handleDelOnClick = () => {
     DelClick(index);
   };
 
-  const handlePropsFLChange = (event: string) => {
-    setFrameworkName(event);
-    buildData.version = '';
+  const handlePropsDBChange = (event: string) => {
+    setDB(event);
+    dbData.version = '';
     setVersion('');
-    buildData.type = '';
-    setType('');
   };
 
   const handlePropsVersionChange = (event: string) => {
     setVersion(event);
-    buildData.version = event;
+    dbData.version = event;
   };
-  const handlePropsTypeChange = (event: string) => {
-    setType(event);
-    buildData.type = event;
-  };
-  const handleFrameworkClickProps = (index: number) => {
-    setFrameworkId(framAndLibsDatas[index].id);
-    buildData.frameworkId = framAndLibsDatas[index].id;
 
-    const params = { typeId: buildData.frameworkId };
+  const handlePropsDBClick = (index: number) => {
+    dbData.frameworkId = dbItems[index].id;
+
+    const params = { typeId: dbData.frameworkId };
     axios
-      .get('/api/project/frameworkVersion', { params })
+      .get('/api/project/dbVersion', { params })
       .then((res) => {
         const data = res.data as VersionTypeAxois;
 
-        setVersionName(data.name);
         setVersion('');
-        setType('');
-        setVersions([...data.frameworkVersion]);
-        setTypes([...data.buildTool]);
+        setVersions([...data.dbVersion]);
+        setProperties([...data.properties]);
+        setPropertiesData(data.properties.map(() => ''));
+        dbData.properties = data.properties.map((value) => {
+          return {
+            data: '',
+            property: value,
+          };
+        });
       })
       .catch();
   };
 
   useEffect(() => {
-    const data = framAndLibsDatas.map((value) => {
-      if (value.id === buildData.frameworkId) setFrameworkName(value.name);
+    const data = dbItems.map((value) => {
+      if (value.id === dbData.frameworkId) setDB(value.name);
       return value.name;
     });
-    setFramAndLibs(data);
+    setDBs(data);
 
-    if (buildData.frameworkId !== -1) {
-      const params = { typeId: frameworkId };
+    if (dbData.frameworkId !== 0) {
+      const params = { typeId: dbData.frameworkId };
       axios
-        .get('/api/project/frameworkVersion', { params })
+        .get('/api/project/dbVersion', { params })
         .then((res) => {
           const data = res.data as VersionTypeAxois;
-          setVersionName(data.name);
-          setVersions([...data.frameworkVersion]);
-          setTypes([...data.buildTool]);
+          setVersions([...data.dbVersion]);
+
+          if (!dbData.properties.length) {
+            setProperties([...data.properties]);
+            setPropertiesData(data.properties.map(() => ''));
+            dbData.properties = data.properties.map((value) => {
+              return {
+                data: '',
+                property: value,
+              };
+            });
+          }
         })
         .catch();
     }
 
     return () => {
-      setFramAndLibs([]);
+      setDBs([]);
       setVersions([]);
-      setTypes([]);
+      setProperties([]);
     };
   }, []);
 
@@ -136,18 +146,18 @@ export default function DBPaper({ index, buildData, DelClick }: buildProps) {
             onChange={handleNameOnChange}
           />
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={3}>
           <Typography>DB</Typography>
           <SelectItem
-            defaultValue={frameworkName}
+            defaultValue={db}
             label="Framework/ Library"
-            Items={framAndLibs}
-            Change={handlePropsFLChange}
-            Click={handleFrameworkClickProps}
+            Items={dbs}
+            Change={handlePropsDBChange}
+            Click={handlePropsDBClick}
           />
         </Grid>
-        <Grid item xs={2}>
-          <Typography>{versionName} Version</Typography>
+        <Grid item xs={3}>
+          <Typography>Version</Typography>
           <SelectItem
             defaultValue={version}
             label="Versions"
@@ -155,53 +165,55 @@ export default function DBPaper({ index, buildData, DelClick }: buildProps) {
             Change={handlePropsVersionChange}
           />
         </Grid>
-        <Grid item xs={2}>
-          <Typography>
-            {frameworkName === 'Vue' || frameworkName === 'React'
-              ? 'Nginx Use'
-              : 'Type'}
-          </Typography>
-          <SelectItem
-            defaultValue={type}
-            label="Types"
-            Items={types}
-            Change={handlePropsTypeChange}
-          />
-          {frameworkName === 'Vue' || frameworkName === 'React' ? (
-            <FormHelperText id="component-helper-text">
-              (※ Yes는 하나만)
-            </FormHelperText>
-          ) : (
-            <Box />
-          )}
-        </Grid>
         <Grid item xs={12}>
           <Box />
           <Typography>Port</Typography>
           <TextField
-            label="Dir"
+            label="Port"
             fullWidth
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
-            placeholder="Dir"
-            defaultValue={fileDir}
-            onChange={handleFileDirOnChange}
+            placeholder="Port"
+            defaultValue={port}
+            onChange={handlePortOnChange}
           />
         </Grid>
         <Grid item xs={12}>
           <Typography>Dump File Dir</Typography>
           <TextField
-            label="Dir"
+            label="Dump File Dir"
             fullWidth
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
-            placeholder="Dir"
-            defaultValue={buildPath}
-            onChange={handlebuildPathOnChange}
+            placeholder="Dump File Dir"
+            defaultValue={dumpLocation}
+            onChange={handleDumpLocationOnChange}
           />
         </Grid>
+        {properties.map((value, idx) => {
+          return (
+            <Grid item xs={12} key={uuid()}>
+              <Typography>{value}</Typography>
+              <TextField
+                label={value}
+                fullWidth
+                variant="outlined"
+                size="small"
+                sx={{ my: 1 }}
+                placeholder={value}
+                defaultValue={
+                  dbData.properties[idx].data ? dbData.properties[idx].data : ''
+                }
+                onChange={(event: any) => {
+                  propertiesData[idx] = event.target.value;
+                  dbData.properties[idx].data = event.target.value;
+                }}
+              />
+            </Grid>
+          );
+        })}
         <Grid item xs={2}>
           <Button
             variant="outlined"
