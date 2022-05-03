@@ -46,8 +46,7 @@ export default function StateDetail() {
   };
 
   useEffect(() => {
-    const data = { ...params };
-    axios.post(`/api/project/build/detail`, data).then((res) => {
+    axios.get(`/api/project/build/detail`, { params }).then((res) => {
       setStateData(res.data);
     });
   }, []);
@@ -70,7 +69,7 @@ export default function StateDetail() {
         </Grid>
         <Grid item display="flex">
           <Typography mt={3} variant="h3" sx={{ marginLeft: 15 }}>
-            빌드{' '}
+            빌드
             <Box
               sx={{
                 display: 'inline',
@@ -82,6 +81,7 @@ export default function StateDetail() {
             >
               #{stateData.buildNumber}
             </Box>
+            {stateData.registDate}
           </Typography>
         </Grid>
 

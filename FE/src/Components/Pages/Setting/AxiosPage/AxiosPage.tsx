@@ -7,11 +7,6 @@ import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import { useHistory } from 'react-router';
 
-interface PropertyAxios {
-  first: string;
-  second: string;
-}
-
 export default function AxiosPage() {
   const projectId = useSettingStore((state) => state.projectId);
   const projectName = useSettingStore((state) => state.projectName);
@@ -32,8 +27,6 @@ export default function AxiosPage() {
       projectName,
       projectId,
     };
-
-    console.log(data);
     axios
       .post('/api/project', data)
       .then(() => {
@@ -52,6 +45,7 @@ export default function AxiosPage() {
       }, 1000);
     }
   }, [nextPage]);
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Box>

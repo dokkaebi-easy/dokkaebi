@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -47,8 +48,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/user/**", "/swagger-ui.html/**", "/configuration/**",
                 "/swagger-resources/**", "/v2/api-docs", "/webjars/**",
                 "/webjars/springfox-swagger-ui/*.{js,css}").permitAll() // 모두 허용
-            .anyRequest().authenticated(); // 그 외의 요청은 인증된 사용자만 허용
-
+//            .anyRequest().authenticated(); // 그 외의 요청은 인증된 사용자만 허용
+            .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .anyRequest().permitAll()
+;
         //로그인 기능
         http.formLogin().disable();
         // 새로구현한 Filter를 UsernamePasswordAuthenticationFilter layer에 삽입

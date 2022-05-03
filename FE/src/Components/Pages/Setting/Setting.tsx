@@ -14,6 +14,7 @@ import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseId
 import { useDropdownStore } from 'Components/Store/DropDownStore/DropDownStore';
 import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
+import DBData, { DB } from 'Components/MDClass/DBData/DBData';
 import GitData, { Git } from 'Components/MDClass/GitData/GitData';
 import NginxData, { Nginx } from 'Components/MDClass/NginxData/NginxData';
 import ProjectNamePaper from './BuildPage/ProjectNamePaper/ProjectNamePaper';
@@ -26,6 +27,7 @@ import DBpage from './DBpage/DBPage';
 
 interface ProjectConfigInfo {
   buildConfigs: Build[];
+  dbConfigs: DB[];
   gitConfig: Git;
   nginxConfig: Nginx;
   projectId: number;
@@ -49,6 +51,7 @@ export default function Setting() {
   const setProjectId = useSettingStore((state) => state.setProjectId);
   const setProjectName = useSettingStore((state) => state.setProjectName);
   const setBuildConfigs = useSettingStore((state) => state.setBuildConfigs);
+  const setDBConfigs = useSettingStore((state) => state.setDBConfigs);
   const setGitConfig = useSettingStore((state) => state.setGitConfig);
   const setNginxConfig = useSettingStore((state) => state.setNginxConfig);
 
@@ -128,6 +131,8 @@ export default function Setting() {
       if (data.projectName) setProjectName(data.projectName);
       if (data.buildConfigs) setBuildConfigs([...data.buildConfigs]);
       else setBuildConfigs([new BuildData()]);
+      if (data.dbConfigs) setDBConfigs([...data.dbConfigs]);
+      else setDBConfigs([new DBData()]);
       if (data.gitConfig) setGitConfig(data.gitConfig);
       else setGitConfig(new GitData());
       if (data.nginxConfig) setNginxConfig(data.nginxConfig);
