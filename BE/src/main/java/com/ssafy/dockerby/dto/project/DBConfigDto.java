@@ -1,6 +1,5 @@
 package com.ssafy.dockerby.dto.project;
 
-import com.sun.istack.NotNull;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -14,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class BuildConfigDto {
+public class DBConfigDto {
 
   @Positive
   private Long frameworkId;
@@ -25,26 +24,11 @@ public class BuildConfigDto {
   @NotBlank
   private String version;
 
-  // Optional
-  private String type;
+  @NotBlank
+  private String port;
 
-  @NotNull
-  private String projectDirectory;
-
-  private String buildPath;
+  private String dumpLocation;
 
   private List<ConfigProperty> properties;
 
-  @Override
-  public String toString() {
-    return "BuildConfigDto{" +
-        "frameworkId=" + frameworkId +
-        ", name='" + name + '\'' +
-        ", version='" + version + '\'' +
-        ", type='" + type + '\'' +
-        ", projectDirectory='" + projectDirectory + '\'' +
-        ", buildPath='" + buildPath + '\'' +
-        ", properties=" + properties +
-        '}';
-  }
 }

@@ -3,6 +3,8 @@ package com.ssafy.dockerby.service.project;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.dto.project.*;
+import com.ssafy.dockerby.dto.project.framework.FrameworkTypeResponseDto;
+import com.ssafy.dockerby.dto.project.framework.FrameworkVersionResponseDto;
 import com.ssafy.dockerby.entity.project.Project;
 import javassist.NotFoundException;
 import java.io.IOException;

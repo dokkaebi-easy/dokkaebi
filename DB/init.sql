@@ -49,13 +49,6 @@ CREATE TABLE `dockerby`.`gitlab_access_token` (
   `access_token` VARCHAR(255) NULL,
   PRIMARY KEY (`gitlab_access_token_id`));
 
-CREATE TABLE `dockerby`.`gitlab_account` (
-  `gitlab_account_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(255) NULL,
-  `password` VARCHAR(255) NULL,
-  `username` VARCHAR(255) NULL,
-  PRIMARY KEY (`gitlab_account_id`));
-
 CREATE TABLE `dockerby`.`project` (
   `project_id` BIGINT NOT NULL AUTO_INCREMENT,
   `project_name` VARCHAR(255) NOT NULL,
@@ -64,41 +57,21 @@ CREATE TABLE `dockerby`.`project` (
   `last_modified_date` DATETIME NULL,
   PRIMARY KEY (`project_id`));
 
-CREATE TABLE `dockerby`.`project_config` (
-  `project_config_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `file_name` VARCHAR(255) NOT NULL,
-  `project_id` BIGINT NULL,
-  PRIMARY KEY (`project_config_id`),
-  INDEX `fk-project-project_config_idx` (`project_id` ASC),
-  CONSTRAINT `fk-project-project_config`
-    FOREIGN KEY (`project_id`)
-    REFERENCES `dockerby`.`project` (`project_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-
 CREATE TABLE `dockerby`.`gitlab_config` (
   `gitlab_config_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
   `host_url` VARCHAR(255) NOT NULL,
   `secret_token` VARCHAR(255) NOT NULL,
   `repository_url` VARCHAR(255) NOT NULL,
   `branch_name` VARCHAR(255) NOT NULL,
   `git_project_id` BIGINT NULL,
-  `gitlab_account_id` BIGINT NULL,
   `gitlab_access_token_id` BIGINT NULL,
   `project_id` BIGINT NULL,
   PRIMARY KEY (`gitlab_config_id`),
-  INDEX `fk-gitlab_account-gitlab_config_idx` (`gitlab_account_id` ASC),
   INDEX `fk-gitlab_access_token-gitlab_config_idx` (`gitlab_access_token_id` ASC),
   INDEX `fk-project-gitlab_config_idx` (`project_id` ASC),
   CONSTRAINT `fk-gitlab_access_token-gitlab_config`
     FOREIGN KEY (`gitlab_access_token_id`)
     REFERENCES `dockerby`.`gitlab_access_token` (`gitlab_access_token_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk-gitlab_account-gitlab_config`
-    FOREIGN KEY (`gitlab_account_id`)
-    REFERENCES `dockerby`.`gitlab_account` (`gitlab_account_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk-project-gitlab_config`

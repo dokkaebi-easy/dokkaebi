@@ -6,8 +6,8 @@ import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.dto.project.BuildDetailResponseDto;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
 import com.ssafy.dockerby.dto.project.ConfigHistoryListResponseDto;
-import com.ssafy.dockerby.dto.project.FrameworkTypeResponseDto;
-import com.ssafy.dockerby.dto.project.FrameworkVersionResponseDto;
+import com.ssafy.dockerby.dto.project.framework.FrameworkTypeResponseDto;
+import com.ssafy.dockerby.dto.project.framework.FrameworkVersionResponseDto;
 import com.ssafy.dockerby.dto.project.ProjectConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
 import com.ssafy.dockerby.entity.project.Project;
@@ -104,6 +104,7 @@ public class ProjectController {
     return ResponseEntity.ok(projectService.getFrameworkVersion(typeId));
   }
 
+
   @ApiOperation(value = "프로젝트 전체 빌드 상황", notes = "프로젝트 전체 빌드 상황을 가져온다.")
   @GetMapping("/build/total")
   public ResponseEntity<List<BuildTotalResponseDto>> buildTotal(Long projectId) throws NotFoundException {
@@ -155,7 +156,7 @@ public class ProjectController {
     Project project = projectService.findProjectByName(projectName)
         .orElseThrow(() -> new NotFoundException("Webhook projectName : "+projectName));
 
-    if(!project.getGitConfig().getSecretToken().equals(token))
+    if(!token.equals(project.getGitConfig().getSecretToken()))
       throw new IllegalArgumentException("Unauthorized secret token "+token);
 
     log.debug("ProjectController.Webhook : X-Gitlab-Toke : {} / " , token,params);
