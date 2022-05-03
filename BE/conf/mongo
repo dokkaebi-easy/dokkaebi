@@ -1,0 +1,1 @@
+{"properties":["MONGO_INITDB_ROOT_USERNAME","MONGO_INITDB_ROOT_PASSWORD"],"volume":"/data/db","init":"/docker-entrypoint-initdb.d"}

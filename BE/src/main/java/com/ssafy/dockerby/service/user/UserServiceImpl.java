@@ -58,8 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDetailDto signin(SigninDto signinDto) {
-        log.info("signin Start");
-        UserDetailDto userDetailDto = (UserDetailDto) loadUserByUsername(signinDto.getPrincipal());
+        UserDetailDto userDetailDto = loadUserByUsername(signinDto.getPrincipal());
 
         String reqPassword = signinDto.getCredential();
 
@@ -96,7 +95,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String pricipal) throws UsernameNotFoundException {
+    public UserDetailDto loadUserByUsername(String pricipal) throws UsernameNotFoundException {
         log.info("loadUserByUsername Start : received name = {}",pricipal);
         Optional<User> user = userRepository.findByPrincipal(pricipal);
         if (!user.isPresent()) {
