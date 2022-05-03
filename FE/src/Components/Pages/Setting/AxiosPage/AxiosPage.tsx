@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
-import { useStore } from 'Components/Store/SettingStore/SettingStore';
+import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import axios from 'axios';
@@ -13,11 +13,12 @@ interface PropertyAxios {
 }
 
 export default function AxiosPage() {
-  const projectId = useStore((state) => state.projectId);
-  const projectName = useStore((state) => state.projectName);
-  const buildConfigs = useStore((state) => state.buildConfigs);
-  const gitConfig = useStore((state) => state.gitConfig);
-  const nginxConfig = useStore((state) => state.nginxConfig);
+  const projectId = useSettingStore((state) => state.projectId);
+  const projectName = useSettingStore((state) => state.projectName);
+  const buildConfigs = useSettingStore((state) => state.buildConfigs);
+  const gitConfig = useSettingStore((state) => state.gitConfig);
+  const nginxConfig = useSettingStore((state) => state.nginxConfig);
+  const dbConfigs = useSettingStore((state) => state.dbConfigs);
 
   const [nextPage, setNextPage] = useState('');
   const history = useHistory();
@@ -25,12 +26,14 @@ export default function AxiosPage() {
   const handleClick = () => {
     const data = {
       buildConfigs,
+      dbConfigs,
       gitConfig,
       nginxConfig,
       projectName,
       projectId,
     };
 
+    console.log(data);
     axios
       .post('/api/project', data)
       .then(() => {

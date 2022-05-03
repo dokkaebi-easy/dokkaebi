@@ -3,10 +3,8 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import PropertyData, {
-  Property,
-} from 'Components/MDClass/PropertyData/PropertyData';
-import { Build } from 'Components/MDClass/BuildData/BuildData';
+import { BuildProperty, Build } from 'Components/MDClass/BuildData/BuildData';
+
 import { v4 as uuid } from 'uuid';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
@@ -17,10 +15,10 @@ interface PropertyProps {
   buildValue: Build;
 }
 
-export default function BuildPropertyBox({ buildValue }: PropertyProps) {
-  const [hidden, setHidden] = useState(true);
+export default function PropertyPaper({ buildValue }: PropertyProps) {
+  const [hidden, setHidden] = useState(false);
 
-  const [propertyDatas, setPropertyDatas] = useState<Property[]>(
+  const [propertyDatas, setPropertyDatas] = useState<BuildProperty[]>(
     buildValue.properties,
   );
 
@@ -28,9 +26,12 @@ export default function BuildPropertyBox({ buildValue }: PropertyProps) {
     setHidden((cur) => !cur);
   };
   const handleOnClick = () => {
-    const newData = new PropertyData();
+    const newData: BuildProperty = { property: '', data: '' };
     setPropertyDatas((cur) => [...cur, newData]);
-    buildValue.properties = [...buildValue.properties, new PropertyData()];
+    buildValue.properties = [
+      ...buildValue.properties,
+      { property: '', data: '' },
+    ];
   };
 
   const handleDelClickProps = (index: number) => {

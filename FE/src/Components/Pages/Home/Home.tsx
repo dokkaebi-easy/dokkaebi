@@ -4,17 +4,17 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import CreateIcon from '@mui/icons-material/Create';
 import { Link } from 'react-router-dom';
-import { useStore } from 'Components/Store/SettingStore/SettingStore';
+import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 import BuildData from 'Components/MDClass/BuildData/BuildData';
 import GitData from 'Components/MDClass/GitData/GitData';
 import NginxData from 'Components/MDClass/NginxData/NginxData';
 
 export default function Home() {
-  const cleanProjectId = useStore((state) => state.setProjectId);
-  const cleanProjecttName = useStore((state) => state.setProjectName);
-  const cleanBuildConfigs = useStore((state) => state.setBuildConfigs);
-  const cleanGitConfig = useStore((state) => state.setGitConfig);
-  const cleanNginxConfig = useStore((state) => state.setNginxConfig);
+  const cleanProjectId = useSettingStore((state) => state.setProjectId);
+  const cleanProjecttName = useSettingStore((state) => state.setProjectName);
+  const cleanBuildConfigs = useSettingStore((state) => state.setBuildConfigs);
+  const cleanGitConfig = useSettingStore((state) => state.setGitConfig);
+  const cleanNginxConfig = useSettingStore((state) => state.setNginxConfig);
 
   const handleCreateClick = () => {
     cleanProjectId(0);

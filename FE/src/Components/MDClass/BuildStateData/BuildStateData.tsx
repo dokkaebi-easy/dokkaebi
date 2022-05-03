@@ -21,13 +21,13 @@ export default class BuildStateData {
   public state: State;
 
   constructor() {
-    this.buildNumber = 1;
-    this.buildStateId = 1;
-    this.registDate = 'yyyy-MM-dd';
+    this.buildNumber = 0;
+    this.buildStateId = 0;
+    this.registDate = '';
     this.state = {
-      build: 'Processing',
-      pull: 'Processing',
-      run: 'Processing',
+      build: '',
+      pull: '',
+      run: '',
     };
   }
 }

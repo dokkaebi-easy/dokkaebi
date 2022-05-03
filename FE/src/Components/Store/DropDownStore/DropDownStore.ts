@@ -2,8 +2,11 @@ import create from 'zustand';
 import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface DropdownData {
-  framworkandLib: ResponseIdName[];
-  setFramworkandLib: (data: ResponseIdName[]) => void;
+  framwork: ResponseIdName[];
+  setFramwork: (data: ResponseIdName[]) => void;
+
+  db: ResponseIdName[];
+  setDB: (data: ResponseIdName[]) => void;
 
   account: ResponseIdName[];
   setAccount: (data: ResponseIdName[]) => void;
@@ -12,9 +15,12 @@ interface DropdownData {
   setAccessToken: (data: ResponseIdName[]) => void;
 }
 
-export const useStore = create<DropdownData>((set) => ({
-  framworkandLib: [],
-  setFramworkandLib: (data) => set(() => ({ framworkandLib: data })),
+export const useDropdownStore = create<DropdownData>((set) => ({
+  framwork: [],
+  setFramwork: (data) => set(() => ({ framwork: data })),
+
+  db: [],
+  setDB: (data) => set(() => ({ db: data })),
 
   account: [],
   setAccount: (data) => set(() => ({ account: data })),

@@ -2,14 +2,13 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import GitLabConnect from 'Components/Pages/Setting/GitLabPage/GitLabConnect/GitLabConnect';
-import GitLabRepositories from 'Components/Pages/Setting/GitLabPage/GitLabRepositories/GitLabRepositories';
-import { useStore } from 'Components/Store/SettingStore/SettingStore';
+import GitLabConnect from 'Components/Pages/Setting/GitPage/Connect/Connect';
+import GitLabRepositories from 'Components/Pages/Setting/GitPage/Repositories/Repositories';
+import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 import ConnectCheck from './ConnectCheck/ConnectCheck';
 
 export default function GitLabPage() {
-  const gitConfig = useStore((state) => state.gitConfig);
-  // const setGitConfig = useStore((state) => state.setGitConfig);
+  const gitConfig = useSettingStore((state) => state.gitConfig);
 
   return (
     <Box>
@@ -23,13 +22,13 @@ export default function GitLabPage() {
             background: 'linear-gradient(195deg, #666, #191919)',
           }}
         >
-          <Typography variant="h5">GitLab Setting</Typography>
+          <Typography variant="h5">Git Setting</Typography>
         </Paper>
       </Box>
       <Box>
         <Paper sx={{ padding: 3 }}>
-          <GitLabRepositories gitData={gitConfig} />
           <GitLabConnect gitData={gitConfig} />
+          <GitLabRepositories gitData={gitConfig} />
           <ConnectCheck gitData={gitConfig} />
         </Paper>
       </Box>

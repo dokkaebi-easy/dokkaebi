@@ -7,8 +7,7 @@ import TextField from '@mui/material/TextField';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import Stack from '@mui/material/Stack';
-import ConnetctModal from 'Components/Pages/Setting/GitLabPage/ConnetctModal/ConnetctModal';
+import ConnetctModal from 'Components/Pages/Setting/GitPage/ConnetctModal/ConnetctModal';
 import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
 import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
@@ -18,7 +17,6 @@ interface GitProps {
 }
 
 export default function GitLabConnect({ gitData }: GitProps) {
-  const [name, setName] = useState(gitData.name);
   const [hostURL, setHostURL] = useState(gitData.hostUrl);
   const [accessTokenId, setAccessTokenId] = useState('');
   const [accessTokenIds, setAccessTokenIds] = useState<string[]>([]);
@@ -30,11 +28,6 @@ export default function GitLabConnect({ gitData }: GitProps) {
   const handleItemClickProps = (index: number) => {
     setAccessTokenId(accessTokenIds[index]);
     gitData.accessTokenId = index + 1;
-  };
-
-  const handleNameChange = (event: any) => {
-    setName(event.target.value);
-    gitData.name = event.target.value;
   };
 
   const handleHostURLChange = (event: any) => {
@@ -79,22 +72,6 @@ export default function GitLabConnect({ gitData }: GitProps) {
       <Box>
         <Paper sx={{ padding: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Name</Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <TextField
-                fullWidth
-                label="Name"
-                variant="outlined"
-                size="small"
-                sx={{ my: 1 }}
-                disabled
-                placeholder="Name"
-                defaultValue={name}
-                onChange={handleNameChange}
-              />
-            </Grid>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
               <Typography>Host URL</Typography>
             </Grid>
@@ -113,29 +90,29 @@ export default function GitLabConnect({ gitData }: GitProps) {
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
               <Typography>Access Token</Typography>
             </Grid>
-            <Grid item xs={10}>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <SelectItem
-                  defaultValue={accessTokenId}
-                  label="Access Token"
-                  Items={accessTokenIds}
-                  Click={handleItemClickProps}
-                />
-                <Button
-                  variant="outlined"
-                  startIcon={<AddIcon />}
-                  size="small"
-                  onClick={handleOpen}
-                  sx={{ color: 'black', borderColor: 'black' }}
-                >
-                  Add
-                </Button>
-                <ConnetctModal
-                  open={open}
-                  Close={handleClose}
-                  Change={handleAxiosProps}
-                />
-              </Stack>
+            <Grid item xs={5}>
+              <SelectItem
+                defaultValue={accessTokenId}
+                label="Access Token"
+                Items={accessTokenIds}
+                Click={handleItemClickProps}
+              />
+            </Grid>
+            <Grid item xs={2} sx={{ marginBottom: 1, marginTop: 'auto' }}>
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                size="small"
+                onClick={handleOpen}
+                sx={{ color: 'black', borderColor: 'black' }}
+              >
+                Add
+              </Button>
+              <ConnetctModal
+                open={open}
+                Close={handleClose}
+                Change={handleAxiosProps}
+              />
             </Grid>
           </Grid>
         </Paper>

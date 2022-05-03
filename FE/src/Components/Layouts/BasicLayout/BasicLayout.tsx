@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Home from 'Components/Pages/Home/Home';
-import SideNavibar from 'Components/UI/Organisms/SideNavibar/SideNavibar';
-import Box from '@mui/material/Box';
-import Navbar from 'Components/UI/Organisms/Navbar/Navbar';
-import Setting from 'Components/Pages/Setting/Setting';
-import Detail from 'Components/Pages/Detail/Detail';
-import StateDetail from 'Components/Pages/StateDetail/StateDetail';
 import { useHistory } from 'react-router';
+import Box from '@mui/material/Box';
+import SideNavibar from 'Components/UI/Organisms/SideNavibar/SideNavibar';
+import Navbar from 'Components/UI/Organisms/Navbar/Navbar';
+
+const HomePage = lazy(() => import('Components/Pages/Home/Home'));
+const DetailPage = lazy(() => import('Components/Pages/Detail/Detail'));
+const SettingPage = lazy(() => import('Components/Pages/Setting/Setting'));
+const StateDetailPage = lazy(
+  () => import('Components/Pages/StateDetail/StateDetail'),
+);
 
 const transitionStyle = {
   transitionDuration: '0.2s',
@@ -25,8 +28,16 @@ export default function BasicLayout() {
 
   window.addEventListener('resize', handleMiniSidenav);
 
+  const getCookie = () => {
+    const cookieData = document.cookie.split(';');
+    if (cookieData.indexOf('key=true')) {
+      return true;
+    }
+    return false;
+  };
+
   useEffect(() => {
-    if (window.localStorage.getItem('login') === null) {
+    if (!getCookie()) {
       history.push('/login');
     }
     return () => {
@@ -61,20 +72,14 @@ export default function BasicLayout() {
         }
       >
         <Navbar />
-        <Switch>
-          <Route path="/state/:id/:name">
-            <StateDetail />
-          </Route>
-          <Route path="/detail/:projectId">
-            <Detail />
-          </Route>
-          <Route path="/setting/:projectId">
-            <Setting />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
+        <Suspense fallback={<div>로딩 중...</div>}>
+          <Switch>
+            <Route path="/state/:id/:name" component={StateDetailPage} exact />
+            <Route path="/detail/:projectId" component={DetailPage} exact />
+            <Route path="/setting/:projectId" component={SettingPage} exact />
+            <Route path="/" component={HomePage} exact />
+          </Switch>
+        </Suspense>
       </Box>
     </Box>
   );

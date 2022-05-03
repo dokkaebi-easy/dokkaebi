@@ -5,11 +5,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
 import TextField from '@mui/material/TextField';
-import { Property } from 'Components/MDClass/PropertyData/PropertyData';
+import { BuildProperty } from 'Components/MDClass/BuildData/BuildData';
 
 interface PropertyProps {
-  value: Property;
-  buildValue: Property;
+  value: BuildProperty;
+  buildValue: BuildProperty;
   index: number;
   DelClick: (index: number) => void;
 }
@@ -23,8 +23,7 @@ export default function PropertyBox({
   DelClick,
 }: PropertyProps) {
   const [property, setProperty] = useState(value.property);
-  const [firstData, setFirstData] = useState(value.first);
-  const [secondData, setSecondData] = useState(value.second);
+  const [Data, setData] = useState(value.data);
 
   const handlePropsPropertyChange = (event: string) => {
     setProperty(event);
@@ -32,14 +31,9 @@ export default function PropertyBox({
     buildValue.property = event;
   };
   const handleFirstDataChange = (event: any) => {
-    setFirstData(event.target.value);
-    value.first = event.target.value;
-    buildValue.first = event.target.value;
-  };
-  const handleSecondDataChange = (event: any) => {
-    setSecondData(event.target.value);
-    value.second = event.target.value;
-    buildValue.second = event.target.value;
+    setData(event.target.value);
+    value.data = event.target.value;
+    buildValue.data = event.target.value;
   };
 
   const handleDelClick = () => {
@@ -47,8 +41,8 @@ export default function PropertyBox({
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item>
+    <Grid container spacing={1}>
+      <Grid item xs={2}>
         <Typography>Property</Typography>
         <SelectItem
           defaultValue={property}
@@ -57,31 +51,20 @@ export default function PropertyBox({
           Change={handlePropsPropertyChange}
         />
       </Grid>
-      <Grid item>
-        <Typography>Data1</Typography>
+      <Grid item xs={10}>
+        <Typography>Data</Typography>
         <TextField
-          label="Data1"
+          fullWidth
+          label="Data"
           variant="outlined"
           size="small"
           sx={{ my: 1 }}
-          placeholder="Data1"
-          defaultValue={firstData}
+          placeholder="Data"
+          defaultValue={Data}
           onChange={handleFirstDataChange}
         />
       </Grid>
-      <Grid item>
-        <Typography>Data2</Typography>
-        <TextField
-          label="Data2"
-          variant="outlined"
-          size="small"
-          sx={{ my: 1 }}
-          placeholder="Data2"
-          defaultValue={secondData}
-          onChange={handleSecondDataChange}
-        />
-      </Grid>
-      <Grid item sx={{ marginBottom: 1, marginTop: 'auto' }}>
+      <Grid item mb={2}>
         <Button
           variant="outlined"
           startIcon={<DeleteIcon />}

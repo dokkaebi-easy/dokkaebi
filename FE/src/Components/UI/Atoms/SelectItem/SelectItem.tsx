@@ -38,14 +38,13 @@ export default function SelectItem({
 
   return (
     <Box>
-      <FormControl sx={{ my: 1, minWidth: 120 }} size="small">
+      <FormControl sx={{ my: 1, minWidth: 120 }} fullWidth size="small">
         <InputLabel id="demo-simple-select-autowidth-label">{label}</InputLabel>
         <Select
           labelId="demo-simple-select-autowidth-label"
           id="demo-simple-select-autowidth"
           value={value}
           onChange={handleChange}
-          autoWidth
           label={label}
         >
           <MenuItem value="">
