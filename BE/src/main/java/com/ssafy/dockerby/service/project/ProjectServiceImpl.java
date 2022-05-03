@@ -150,6 +150,7 @@ public class ProjectServiceImpl implements ProjectService {
               .frameworkId(framework.getId())
               .version(version.getInputVersion())
               .properties(dockerConfigParser.configProperties(config.getProperties()))
+              .port(config.returnPort())
               .build());
     }
 
@@ -291,6 +292,8 @@ public class ProjectServiceImpl implements ProjectService {
           list.add(new DockerbyProperty("environment", property.getProperty(), property.getData()));
         }
       }
+      if(!dbConfigDto.getPort().isBlank())
+        list.add(new DockerbyProperty("publish", dbConfigDto.getPort(), dbConfigDto.getPort()));
 
       String dbConfigPath = pathParser.dockerbyConfigPath().toString();
       DbPropertyConfigDto dbPropertyConfigDto = FileManager.loadJsonFile(dbConfigPath,
