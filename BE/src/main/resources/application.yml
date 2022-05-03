@@ -4,6 +4,8 @@ spring:
       matching-strategy: ant_path_matcher
   profiles:
     include: eth
+  session:
+    store-type: jdbc
 
   sql:
     init:

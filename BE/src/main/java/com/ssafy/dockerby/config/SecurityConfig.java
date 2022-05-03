@@ -1,13 +1,24 @@
 package com.ssafy.dockerby.config;
 
+import com.ssafy.dockerby.dto.user.UserDetailDto;
+import com.ssafy.dockerby.security.CustomAuthenticationFailureHandler;
+import com.ssafy.dockerby.security.CustomAuthenticationProvider;
+import com.ssafy.dockerby.security.CustomAuthenticationSuccessHandler;
 import com.ssafy.dockerby.security.CustomLogoutHandler;
 import com.ssafy.dockerby.security.CustomLogoutSuccessHandler;
+import com.ssafy.dockerby.security.CustomUsernamePasswordAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
@@ -18,7 +29,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+    private final CustomAuthenticationProvider customAuthenticationProvider;
     private final CustomLogoutHandler customLogoutHandler;
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
@@ -33,12 +46,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .requestMatchers(request -> CorsUtils.isPreFlightRequest(request)).permitAll()
             .antMatchers("/api/user/**", "/swagger-ui.html/**", "/configuration/**",
                 "/swagger-resources/**", "/v2/api-docs", "/webjars/**",
-                "/webjars/springfox-swagger-ui/*.{js,css}").permitAll()
-            .anyRequest().permitAll();
+                "/webjars/springfox-swagger-ui/*.{js,css}").permitAll() // 모두 허용
+            .anyRequest().authenticated(); // 그 외의 요청은 인증된 사용자만 허용
 
-        //로그인 form
-        http
-            .formLogin().disable();
+        //로그인 기능
+        http.formLogin().disable();
+        // 새로구현한 Filter를 UsernamePasswordAuthenticationFilter layer에 삽입
+        http.addFilterAt(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // 로그아웃 처리
         http.logout()
@@ -54,6 +68,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .maxSessionsPreventsLogin(true)// 동시로그인 설정
         ;
     }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(customAuthenticationProvider);
+    }
+
+    @Override
+    // js, css, image 설정은 보안 설정의 영향 밖에 있도록 만들어주는 설정.
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
     // CORS 허용 적용
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -67,6 +91,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    protected CustomUsernamePasswordAuthenticationFilter getAuthenticationFilter() {
+        CustomUsernamePasswordAuthenticationFilter authFilter = new CustomUsernamePasswordAuthenticationFilter();
+        try {
+            authFilter.setFilterProcessesUrl("/api/user/auth/signin");
+            authFilter.setAuthenticationManager(this.authenticationManagerBean());
+            authFilter.setUsernameParameter("principal");
+            authFilter.setPasswordParameter("credential");
+            authFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
+            authFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return authFilter;
     }
 
 }
