@@ -2,10 +2,8 @@ package com.ssafy.dockerby.security;
 
 import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.service.user.UserService;
-import com.ssafy.dockerby.service.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
