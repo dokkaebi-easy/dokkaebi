@@ -49,11 +49,8 @@ import com.ssafy.dockerby.util.FileManager;
 import com.ssafy.dockerby.util.PathParser;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
 import javassist.NotFoundException;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
@@ -437,16 +434,11 @@ public class ProjectServiceImpl implements ProjectService {
       buildStates.get(2).updateStateType("Failed");
       project.updateState(StateType.Failed);
 
-      log.info("pullStart : update state to Failed");
-
       em.flush();
-
-      //에러 로그 출력
       log.error("pullStart : Pull failed {}", e);
+      throw e;
     }
-
     log.info("pullStart Done");
-    em.flush();
   }
 
   @Override
@@ -491,9 +483,9 @@ public class ProjectServiceImpl implements ProjectService {
       buildStates.get(1).updateStateType("Failed");
       project.updateState(StateType.Failed);
 
-      log.error("buildStart : Build Failed {} ", e);
-
       em.flush();
+      log.error("buildStart : Build Failed {} ", e);
+      throw e;
     }
     log.info("buildStart Done");
   }
@@ -561,11 +553,9 @@ public class ProjectServiceImpl implements ProjectService {
       buildStates.get(0).updateStateType("Failed");
       project.updateState(StateType.Failed);
 
-      //dirtyCheck 후 flush
       em.flush();
-
-      //에러 로그 출력
       log.error("runStart : Run Failed {}", e);
+      throw e;
     }
     log.info("runStart Done");
   }
@@ -659,6 +649,7 @@ public class ProjectServiceImpl implements ProjectService {
       buildTotalDetailDtos.add(buildTotalDetailDto);
 
       if (counter == 3) { // 3개씩 List 에 담아주기
+        buildTotalDetailDtos.sort(Comparator.comparingLong(BuildTotalDetailDto::getBuildStateId));
         BuildTotalResponseDto buildTotalResponseDto = BuildTotalResponseDto.builder()
             .buildNumber(buildState.getBuildNumber())
             .buildTotalDetailDtos(buildTotalDetailDtos)
