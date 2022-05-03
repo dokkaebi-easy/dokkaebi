@@ -225,6 +225,7 @@ public class ProjectServiceImpl implements ProjectService {
     // dockerfile save
     try {
       dockerAdapter.saveDockerfiles(buildConfigs);
+      CommandInterpreter.run(projectPath,"Clone",0,dockerAdapter.createNetwork());
     } catch (Exception e) {
       log.error("docker file not making {} DockerAdapter({})", project.getProjectName());
     }

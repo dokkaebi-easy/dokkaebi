@@ -69,8 +69,8 @@ public class DockerfileMaker {
     } else if ("Maven".equals(config.getType())) {
       sb.append(((config.getBuildPath().isBlank()) ? "/target" : config.getBuildPath()) + "/*.jar");
     }
-    sb.append(" ./app.jar").append('\n');
-    sb.append("ENTRYPOINT [\"java\", \"-jar\", \"./app.jar\"]");
+    sb.append(" /app.jar").append('\n');
+    sb.append("ENTRYPOINT [\"java\", \"-jar\", \"/app.jar\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
     log.info("makeSpringBootDockerfile Done");

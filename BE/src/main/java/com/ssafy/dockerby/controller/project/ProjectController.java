@@ -195,7 +195,12 @@ public class ProjectController {
       throw new IllegalArgumentException("Unauthorized secret token "+token);
 
     log.debug("ProjectController.Webhook : X-Gitlab-Toke : {} / " , token,params);
-    projectService.build(project.getId(),webHookDto);
+
+    //프로젝트 기본 설정 시작
+    projectService.build(project.getId(), webHookDto);
+    projectService.pullStart(project.getId(), webHookDto);
+    projectService.buildStart(project.getId(), webHookDto);
+    projectService.runStart(project.getId(), webHookDto);
 
     log.info("API Response null");
     return ResponseEntity.ok(null);

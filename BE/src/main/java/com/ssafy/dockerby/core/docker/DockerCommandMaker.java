@@ -30,17 +30,19 @@ public class DockerCommandMaker {
   }
 
   public String runWithVersion(DockerbyConfig config) {
-    log.info("run Start {}",config);
+    log.info("run Start {}", config);
     StringBuilder sb = new StringBuilder();
     sb.append("docker run -d --name ")
         .append(projectName).append('-').append(config.getName()).append(' ');
 
-    for(String command : config.propertyCommands()) {
+    for (String command : config.propertyCommands()) {
       sb.append(command).append(' ');
     }
 
-    if(this.networkBridge != null)
-      sb.append(" --network ").append(this.networkBridge);
+    if (this.networkBridge == null) {
+      setBridge();
+    }
+    sb.append(" --network ").append(this.networkBridge);
 
     sb.append(' ').append(config.getVersion());
 
@@ -49,17 +51,19 @@ public class DockerCommandMaker {
   }
 
   public String run(DockerbyConfig config) {
-    log.info("run Start {}",config);
+    log.info("run Start {}", config);
     StringBuilder sb = new StringBuilder();
     sb.append("docker run -d --name ")
         .append(projectName).append('-').append(config.getName()).append(' ');
 
-    for(String command : config.propertyCommands()) {
+    for (String command : config.propertyCommands()) {
       sb.append(command).append(' ');
     }
 
-    if(this.networkBridge != null)
-      sb.append(" --network ").append(this.networkBridge);
+    if (this.networkBridge == null) {
+      setBridge();
+    }
+    sb.append(" --network ").append(this.networkBridge);
 
     // TODO : Image tag를 latest로 하는 것은 권장되지 않습니다.
     sb.append(' ').append(config.getName()).append(":latest");
@@ -70,18 +74,24 @@ public class DockerCommandMaker {
 
   public String removeBridge() {
     log.info("removeBridge Start");
-    if(this.networkBridge == null)
+    if (this.networkBridge == null) {
       this.networkBridge = projectName + "_bridge";
+    }
     log.info("removeBridge Done");
     return "docker network rm " + this.networkBridge;
   }
 
   public String addBridge() {
     log.info("addBridge Start");
-    if(this.networkBridge == null)
+    if (this.networkBridge == null) {
       this.networkBridge = projectName + "_bridge";
+    }
     log.info("addBridge Done");
     return "docker network create " + this.networkBridge;
+  }
+
+  private void setBridge() {
+    this.networkBridge = projectName + "_bridge";
   }
 
   public String removeContainer(DockerbyConfig config) {

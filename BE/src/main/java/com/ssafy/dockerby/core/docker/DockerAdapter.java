@@ -79,7 +79,6 @@ public class DockerAdapter {
   public List<String> getRunCommands(List<? extends DockerbyConfig> configs) {
     log.info("getRunCommands Start");
     List<String> commands = new ArrayList<>();
-    commands.add(network());
 
     configs.forEach(config -> commands.add(run(config)));
 
@@ -90,12 +89,15 @@ public class DockerAdapter {
   public List<String> getRunCommandsWithVersion(List <? extends DockerbyConfig> configs) {
     log.info("getRunCommands Start");
     List<String> commands = new ArrayList<>();
-    commands.add(network());
 
     configs.forEach(config -> commands.add(runWithVersion(config)));
 
     log.info("getRunCommands Done");
     return commands;
+  }
+
+  public String createNetwork() {
+    return network();
   }
 
 }
