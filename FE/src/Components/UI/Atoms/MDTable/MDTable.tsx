@@ -57,6 +57,10 @@ export default function MDTable() {
       const data = res.data as Project[];
       setProject([...data]);
     });
+
+    return () => {
+      setProject([]);
+    };
   }, []);
 
   return (
@@ -68,10 +72,9 @@ export default function MDTable() {
             <StyledTableCell align="center">Project ID</StyledTableCell>
             <StyledTableCell align="center">Name</StyledTableCell>
             <StyledTableCell align="center">S</StyledTableCell>
-            <StyledTableCell align="center">W </StyledTableCell>
-            <StyledTableCell align="right">최근성공</StyledTableCell>
-            <StyledTableCell align="right">최근 실패</StyledTableCell>
-            <StyledTableCell align="right">최근 소요 시간</StyledTableCell>
+            <StyledTableCell align="center">최근성공</StyledTableCell>
+            <StyledTableCell align="center">최근 실패</StyledTableCell>
+            <StyledTableCell align="center">최근 소요 시간</StyledTableCell>
           </TableRow>
         </TableHead>
         {projects ? (
@@ -115,6 +118,7 @@ export default function MDTable() {
                     진행중... (미완성)
                   </Link>
                 </StyledTableCell>
+
                 <StyledTableCell align="center">
                   <Link
                     to={`/detail/${row.projectId}`}
@@ -123,7 +127,7 @@ export default function MDTable() {
                     진행중... (미완성)
                   </Link>
                 </StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell align="center">
                   <Link
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
@@ -131,15 +135,7 @@ export default function MDTable() {
                     진행중... (미완성)
                   </Link>
                 </StyledTableCell>
-                <StyledTableCell align="right">
-                  <Link
-                    to={`/detail/${row.projectId}`}
-                    style={{ color: 'black', textDecoration: 'none' }}
-                  >
-                    진행중... (미완성)
-                  </Link>
-                </StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell align="center">
                   <Link
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
