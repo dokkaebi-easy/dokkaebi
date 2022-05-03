@@ -25,6 +25,9 @@ public class PathParser {
   @Value("${dockerby.volumePath}")
   private String volume;
 
+  @Value("${dockerby.dockerbyConfigPath}")
+  private String dockerbyConfig;
+
   public StringBuilder rootPath() {
     StringBuilder sb = new StringBuilder();
     return sb.append(root);
@@ -47,6 +50,14 @@ public class PathParser {
   }
 
   public StringBuilder volumePath(String projectName, String volumePath) {
-    return new StringBuilder(volume).append("/").append(projectName).append("/").append(volumePath);
+    return volumePath().append("/").append(projectName).append("/").append(volumePath);
+  }
+
+  public StringBuilder volumePath() {
+    return new StringBuilder(volume);
+  }
+
+  public StringBuilder dockerbyConfigPath() {
+    return new StringBuilder(dockerbyConfig);
   }
 }

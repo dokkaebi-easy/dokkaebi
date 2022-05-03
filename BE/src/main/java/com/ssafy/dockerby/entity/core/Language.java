@@ -24,7 +24,7 @@ public class Language {
   @Column(name = "language_id")
   private Long id;
 
-  private String name;
+  private String languageName;
 
   @OneToMany(mappedBy = "language")
   private List<Version> versions = new ArrayList<>();

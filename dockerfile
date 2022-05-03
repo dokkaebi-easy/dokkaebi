@@ -24,7 +24,9 @@ RUN apt update &&  apt install -y mariadb-server-10.5 \
      && apt install -y nginx
 
 COPY ./install.sh /home/conf/install.sh
+COPY ./conf /home/conf
 COPY ./DB /home/conf/db
+
 
 # install NGINX
 COPY ./default.conf /etc/nginx/sites-enabled/default
