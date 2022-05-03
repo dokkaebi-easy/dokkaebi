@@ -47,8 +47,8 @@ export default function PropertyBox({
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item>
+    <Grid container spacing={1}>
+      <Grid item xs={2}>
         <Typography>Property</Typography>
         <SelectItem
           defaultValue={property}
@@ -57,31 +57,20 @@ export default function PropertyBox({
           Change={handlePropsPropertyChange}
         />
       </Grid>
-      <Grid item>
-        <Typography>Data1</Typography>
+      <Grid item xs={10}>
+        <Typography>Data</Typography>
         <TextField
-          label="Data1"
+          fullWidth
+          label="Data"
           variant="outlined"
           size="small"
           sx={{ my: 1 }}
-          placeholder="Data1"
+          placeholder="Data"
           defaultValue={firstData}
           onChange={handleFirstDataChange}
         />
       </Grid>
-      <Grid item>
-        <Typography>Data2</Typography>
-        <TextField
-          label="Data2"
-          variant="outlined"
-          size="small"
-          sx={{ my: 1 }}
-          placeholder="Data2"
-          defaultValue={secondData}
-          onChange={handleSecondDataChange}
-        />
-      </Grid>
-      <Grid item sx={{ marginBottom: 1, marginTop: 'auto' }}>
+      <Grid item mb={2}>
         <Button
           variant="outlined"
           startIcon={<DeleteIcon />}

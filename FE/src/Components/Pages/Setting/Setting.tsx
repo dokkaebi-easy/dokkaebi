@@ -9,15 +9,20 @@ import TabPanel from '@mui/lab/TabPanel';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
 
-import { useParams, useHistory, Link } from 'react-router-dom';
-
-import { useStore } from 'Components/Store/SettingStore/SettingStore';
+import { useParams } from 'react-router-dom';
+import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
+import { useDropdownStore } from 'Components/Store/DropDownStore/DropDownStore';
+import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 import BuildData, { Build } from 'Components/MDClass/BuildData/BuildData';
 import GitData, { Git } from 'Components/MDClass/GitData/GitData';
 import NginxData, { Nginx } from 'Components/MDClass/NginxData/NginxData';
+import ProjectNamePaper from './BuildPage/ProjectNamePaper/ProjectNamePaper';
+import NginxPage from './NginxPage/NginxPage';
+
 import AxiosPage from './AxiosPage/AxiosPage';
-import GitLabPage from './GitLabPage/GitLabPage';
+import GitLabPage from './GitPage/GitPage';
 import BuildPage from './BuildPage/BuildPage';
+import DBpage from './DBpage/DBPage';
 
 interface ProjectConfigInfo {
   buildConfigs: Build[];
@@ -27,7 +32,13 @@ interface ProjectConfigInfo {
   projectName: string;
 }
 
-const steps = ['Build Settings', 'GitLab Setting', 'Make Project'];
+const steps = [
+  'FE/BE Settings',
+  'DB Setting',
+  'NginX Setting',
+  'Git Setting',
+  'Make Project',
+];
 
 export default function Setting() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -35,11 +46,14 @@ export default function Setting() {
     [k: number]: boolean;
   }>({});
 
-  const setProjectId = useStore((state) => state.setProjectId);
-  const setProjectName = useStore((state) => state.setProjectName);
-  const setBuildConfigs = useStore((state) => state.setBuildConfigs);
-  const setGitConfig = useStore((state) => state.setGitConfig);
-  const setNginxConfig = useStore((state) => state.setNginxConfig);
+  const setProjectId = useSettingStore((state) => state.setProjectId);
+  const setProjectName = useSettingStore((state) => state.setProjectName);
+  const setBuildConfigs = useSettingStore((state) => state.setBuildConfigs);
+  const setGitConfig = useSettingStore((state) => state.setGitConfig);
+  const setNginxConfig = useSettingStore((state) => state.setNginxConfig);
+
+  const setFrameworkName = useDropdownStore((state) => state.setFramworkandLib);
+
   const params = useParams();
 
   const totalSteps = () => {
@@ -90,6 +104,14 @@ export default function Setting() {
 
   useEffect(() => {
     const projectId = Object.values(params)[0];
+
+    axios
+      .get('/api/project/frameworkType')
+      .then((res) => {
+        const data = res.data as ResponseIdName[];
+        setFrameworkName([...data]);
+      })
+      .catch();
 
     if (projectId === '0') {
       return;
@@ -150,12 +172,19 @@ export default function Setting() {
               <TabContext value={String(activeStep)}>
                 <Box sx={{ mx: 3, borderBottom: 1, borderColor: 'divider' }} />
                 <TabPanel value="0">
+                  <ProjectNamePaper />
                   <BuildPage />
                 </TabPanel>
                 <TabPanel value="1">
-                  <GitLabPage />
+                  <DBpage />
                 </TabPanel>
                 <TabPanel value="2">
+                  <NginxPage />
+                </TabPanel>
+                <TabPanel value="3">
+                  <GitLabPage />
+                </TabPanel>
+                <TabPanel value="4">
                   <AxiosPage />
                 </TabPanel>
               </TabContext>

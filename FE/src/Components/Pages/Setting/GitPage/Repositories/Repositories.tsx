@@ -9,10 +9,10 @@ import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import FormHelperText from '@mui/material/FormHelperText';
 import SelectItem from 'Components/UI/Atoms/SelectItem/SelectItem';
-import RepositoryModal from 'Components/Pages/Setting/GitLabPage/RepositoryModal/RepositoryModal';
+import RepositoryModal from 'Components/Pages/Setting/GitPage/RepositoryModal/RepositoryModal';
 import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
-import { useStore } from 'Components/Store/DropDownStore/DropDownStore';
+import { useDropdownStore } from 'Components/Store/DropDownStore/DropDownStore';
 import { ResponseIdName } from 'Components/MDClass/ResponseIdNameData/ResponseIdNameData';
 
 interface GitProps {
@@ -20,8 +20,8 @@ interface GitProps {
 }
 
 export default function GitLabRepositories({ gitData }: GitProps) {
-  // const dropDownItems = useStore((state) => state.account);
-  const setDropDownItems = useStore((state) => state.setAccount);
+  // const dropDownItems = useDropdownStore((state) => state.account);
+  const setDropDownItems = useDropdownStore((state) => state.setAccount);
 
   const [projectID, setProjectID] = useState(gitData.gitProjectId);
   const [repositoryURL, setRepositoryURL] = useState(gitData.repositoryUrl);
@@ -123,33 +123,6 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                 defaultValue={repositoryURL}
                 onChange={handleRepositoryURLChange}
               />
-            </Grid>
-            <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Access Token</Typography>
-            </Grid>
-            <Grid item xs={10}>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <SelectItem
-                  defaultValue={account}
-                  label="Access Token"
-                  Items={accounts}
-                  Click={handleItemClickProps}
-                />
-                <Button
-                  variant="outlined"
-                  startIcon={<AddIcon />}
-                  size="small"
-                  onClick={handleOpen}
-                  sx={{ color: 'black', borderColor: 'black' }}
-                >
-                  Add
-                </Button>
-                <RepositoryModal
-                  open={open}
-                  Close={handleClose}
-                  Change={handleAxiosProps}
-                />
-              </Stack>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
               <Typography>Branch Name</Typography>

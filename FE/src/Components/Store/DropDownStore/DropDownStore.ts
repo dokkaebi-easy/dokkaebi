@@ -12,7 +12,7 @@ interface DropdownData {
   setAccessToken: (data: ResponseIdName[]) => void;
 }
 
-export const useStore = create<DropdownData>((set) => ({
+export const useDropdownStore = create<DropdownData>((set) => ({
   framworkandLib: [],
   setFramworkandLib: (data) => set(() => ({ framworkandLib: data })),
 
