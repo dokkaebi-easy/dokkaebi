@@ -103,11 +103,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     File configDirectory = new File(configPath);
     for (String fileName : configDirectory.list()) {
-      if (fileName.equals("build")) {
+      if ("build".equals(fileName)) {
         buildConfigs = FileManager.loadJsonFileToList(configPath, "build", BuildConfig.class);
-      } else if (fileName.equals("db")) {
+      } else if ("db".equals(fileName)) {
         dbConfigs = FileManager.loadJsonFileToList(configPath, "db", DbConfig.class);
-      } else if (fileName.equals("nginx")) {
+      } else if ("nginx".equals(fileName)) {
         nginxConfig = NginxConfigDto.from(
             FileManager.loadJsonFile(configPath, "nginx", NginxConfig.class));
       }
@@ -482,9 +482,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     File configDirectory = new File(configPath);
     for (String fileName : configDirectory.list()) {
-      if (fileName.equals("build")) {
+      if ("build".equals(fileName)) {
         buildConfigs = FileManager.loadJsonFileToList(configPath, "build", BuildConfig.class);
-      } else if (fileName.equals("db")) {
+      } else if ("db".equals(fileName)) {
         dbConfigs = FileManager.loadJsonFileToList(configPath, "db", DbConfig.class);
       }
     }

@@ -21,17 +21,17 @@ public class DockerfileMaker {
    */
   public void make(BuildConfig config) throws IOException {
     String framework = config.getFramework();
-    if(framework.equals("Vue")) {
-      if(config.getType().equals("yes"))
+    if("Vue".equals(framework)) {
+      if("Yes".equals(config.getType()))
         makeVueWithNginxDockerFile(config);
-    } else if (framework.equals("React")) {
-      if(config.getType().equals("yes"))
+    } else if ("React".equals(framework)) {
+      if("Yes".equals(config.getType()))
         makeReactWithNginxDockerFile(config);
-    } else if (framework.equals("Next")) {
+    } else if ("Next".equals(framework)) {
       makeNextDockerfile(config);
-    } else if (framework.equals("Django")) {
+    } else if ("Django".equals(framework)) {
       makeDjangoDockerfile(config);
-    } else if (framework.equals("SpringBoot")) {
+    } else if ("SpringBoot".equals(framework)) {
       makeSpringBootDockerfile(config);
     } else {
       throw new IllegalArgumentException(framework);
@@ -52,18 +52,18 @@ public class DockerfileMaker {
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
-    if (config.getType().equals("Gradle")) {
+    if ("Gradle".equals(config.getType())) {
       sb.append("RUN ").append("chmod +x ./gradlew").append('\n');
       sb.append("RUN ").append("./gradlew clean build").append('\n');
-    } else if (config.getType().equals("Maven")) {
+    } else if ("Maven".equals(config.getType())) {
       sb.append("RUN ").append("chmod +x ./mvnw").append('\n');
       sb.append("RUN ").append("./mvnw clean package").append('\n');
     }
     sb.append("FROM ").append(config.getVersion()).append('\n');
     sb.append("COPY --from=builder ");
-    if (config.getType().equals("Gradle")) {
+    if ("Gradle".equals(config.getType())) {
       sb.append(((config.getBuildPath().isBlank()) ? "/build/libs" : config.getBuildPath()) + "/*.jar");
-    } else if (config.getType().equals("Maven")) {
+    } else if ("Maven".equals(config.getType())) {
       sb.append(((config.getBuildPath().isBlank()) ? "/target" : config.getBuildPath()) + "/*.jar");
     }
     sb.append(" ./app.jar").append('\n');

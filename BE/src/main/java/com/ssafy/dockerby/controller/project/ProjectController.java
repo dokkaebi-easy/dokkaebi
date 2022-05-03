@@ -156,7 +156,7 @@ public class ProjectController {
     Project project = projectService.findProjectByName(projectName)
         .orElseThrow(() -> new NotFoundException("Webhook projectName : "+projectName));
 
-    if(!project.getGitConfig().getSecretToken().equals(token))
+    if(!token.equals(project.getGitConfig().getSecretToken()))
       throw new IllegalArgumentException("Unauthorized secret token "+token);
 
     log.debug("ProjectController.Webhook : X-Gitlab-Toke : {} / " , token,params);

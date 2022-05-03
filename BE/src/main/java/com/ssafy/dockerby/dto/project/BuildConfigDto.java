@@ -1,6 +1,5 @@
 package com.ssafy.dockerby.dto.project;
 
-import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.sun.istack.NotNull;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -35,20 +34,6 @@ public class BuildConfigDto {
   private String buildPath;
 
   private List<ConfigProperty> properties;
-
-  public static BuildConfigDto from(DockerContainerConfig config, String inputVersion, List<ConfigProperty> properties) {
-
-    return BuildConfigDto.builder()
-        .frameworkId(Long.valueOf(config.getFramework().ordinal()))
-        .name(config.getName())
-        .type(config.getType())
-        .projectDirectory(config.getProjectDirectory())
-        .buildPath(config.getBuildPath())
-        .version(inputVersion)
-        .properties(properties)
-        .build();
-
-  }
 
   @Override
   public String toString() {

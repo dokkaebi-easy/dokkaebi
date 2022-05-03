@@ -15,11 +15,11 @@ public class DockerbyProperty {
   }
 
   public String command() {
-    if(type.equals("publish")) {
+    if("publish".equals(type)) {
       return new StringBuilder().append("-p ").append(host).append(":").append(container).toString();
-    } else if (type.equals("volume")) {
+    } else if ("volume".equals(type)) {
       return new StringBuilder().append("-v ").append(host).append(":").append(container).toString();
-    } else if (type.equals("environment")) {
+    } else if ("environment".equals(type)) {
       return new StringBuilder().append("-e ").append(host).append("=").append(container)
           .toString();
     } else {

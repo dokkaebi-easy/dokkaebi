@@ -70,7 +70,7 @@ public class DockerConfigParser {
       if (dto.getName().isBlank()) {
         continue;
       }
-      if (dto.getFrameworkId() == -1) {
+      if (dto.getFrameworkId() == 0) {
         continue;
       }
 
