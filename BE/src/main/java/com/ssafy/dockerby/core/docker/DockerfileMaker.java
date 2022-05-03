@@ -134,8 +134,8 @@ public class DockerfileMaker {
 
     sb.append("COPY ").append(". /usr/src/app").append('\n');
 
-    sb.append("RUN ").append("apk update").append('\n');
-    sb.append("RUN ").append("apk add make automake gcc g++ subversion python3-dev").append('\n');
+    sb.append("RUN ").append("apt update").append('\n');
+    sb.append("RUN ").append("apt add make automake gcc g++ subversion python3-dev").append('\n');
 
     sb.append("RUN ").append("pip install -r requirements.txt").append('\n');
 
