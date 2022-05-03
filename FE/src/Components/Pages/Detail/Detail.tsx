@@ -24,16 +24,25 @@ export default function Detail() {
   };
 
   useEffect(() => {
-    axios
-      .get('/api/project/build/total', { params })
-      .then((res) => {
-        const data = res.data as BuildState[];
-        data.reverse();
-        setBuildStates([...data]);
-      })
-      .catch();
+    const interval = setInterval(
+      () =>
+        axios
+          .get('/api/project/build/total', { params })
+          .then((res) => {
+            const data = res.data as BuildState[];
+            data.reverse();
+            setBuildStates([...data]);
+          })
+          .catch(),
+      1000,
+    );
 
     setProgress('진행중... (미완성)');
+
+    return () => {
+      clearInterval(interval);
+      setBuildStates([]);
+    };
   }, []);
 
   return (
