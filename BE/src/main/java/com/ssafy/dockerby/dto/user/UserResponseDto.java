@@ -32,4 +32,12 @@ public class UserResponseDto {
             .build();
     }
 
+    @Override
+    public String toString() {
+        return "UserResponseDto{" +
+          "principal='" + principal + '\'' +
+          ", name='" + name + '\'' +
+          ", state='" + state + '\'' +
+          '}';
+    }
 }

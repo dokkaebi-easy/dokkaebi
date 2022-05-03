@@ -3,7 +3,6 @@ package com.ssafy.dockerby.controller.user;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.user.SigninDto;
 import com.ssafy.dockerby.dto.user.SignupDto;
-import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.dto.user.UserResponseDto;
 import com.ssafy.dockerby.service.user.UserServiceImpl;
 import io.swagger.annotations.Api;
@@ -11,8 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +31,11 @@ public class UserController {
     @PostMapping( "/signup")
     public ResponseEntity<UserResponseDto> signup(@Valid @RequestBody SignupDto signupDto)
         throws IOException, UserDefindedException {
-        log.info("signup API received ID: {}",signupDto.getPrincipal());
+        log.info("API Request received : received ID = {}",signupDto.getPrincipal());
 
         UserResponseDto userResponseDto = userService.signup(signupDto);
+
+        log.info("API Response return : Response = {}",userResponseDto.toString());
         return ResponseEntity.ok(userResponseDto);
     }
 
@@ -57,45 +56,40 @@ public class UserController {
     @ApiIgnore//swagger에서 hidden 시키는 어노테이션
     @GetMapping("/signout/success")
     public ResponseEntity signoutSuccess() {
-        log.info("Logout Successful");
+        log.info("API Request received : Logout Success");
+
         Map<String, Object> map = new HashMap<>();
         map.put("status", "Success");
         map.put("message", "Logout Successful");
+        log.info("API Response return");
         return new ResponseEntity(map, HttpStatus.OK);
     }
 
     @ApiOperation(value = "아이디 중복체크", notes = "사용 가능한 아이디는 true, 중복된 아이디는 false를 반환")
     @PostMapping("/duplicate/id")
-    public ResponseEntity duplicatepPrincipal(@RequestParam String id)
+    public ResponseEntity duplicatePrincipal(@RequestParam String id)
         throws UserDefindedException {
-        log.info("duplicatepPrincipal API received ID: {}",id);
+        log.info("API Request received : received Id = {}",id);
         Map<String, Object> map = new HashMap<>();
         String state = userService.duplicatePrincipalCheck(id) ? "Success" : "Fail";
 
         map.put("state", state);
+
+        log.info("API Response return : Response = {}",state);
         return new ResponseEntity(map, HttpStatus.OK);
     }
 
     @ApiOperation(value = "이름 중복체크", notes = "사용 가능한 이름은 true, 중복된 이름은 false를 반환")
     @PostMapping("/duplicate/name")
     public ResponseEntity duplicateName(@RequestParam String name) throws UserDefindedException {
-        log.info("duplicatepPrincipal API received name: {}",name);
+        log.info("API Request received : received name = {}",name);
 
         Map<String, Object> map = new HashMap<>();
         String state = userService.duplicateNameCheck(name) ? "Success" : "Fail";
 
         map.put("state", state);
-        return new ResponseEntity(map, HttpStatus.OK);
-    }
-    @PostMapping("/login/check")
-    public ResponseEntity loginCheck(HttpServletRequest request) {
-        //요청 로그출력
-        HttpSession session = request.getSession();
-        UserDetailDto userDetailDto = (UserDetailDto) session.getAttribute("user");
-        log.info("session UserCheck Pricipal : {} ", userDetailDto.getUsername());
-        Map<String, Object> map = new HashMap<>();
 
-        map.put("name",  userDetailDto.getUsername());
+        log.info("API Response return : Response = {}",state);
         return new ResponseEntity(map, HttpStatus.OK);
     }
 

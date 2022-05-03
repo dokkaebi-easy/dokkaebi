@@ -16,14 +16,17 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler{
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
-        Authentication authentication) throws IOException, ServletException {
+        Authentication authentication) throws IOException {
+        log.info("onLogoutSuccess Start : authentication = {} ",authentication);
         if (authentication != null && authentication.getDetails() != null) {
             try {
                 request.getSession().invalidate();
+                log.info("onLogoutSuccess : logout Success");
             } catch (Exception e) {
-                log.error("logout Error : {}, {}",e.getMessage(),e.getCause());
+                log.error("onLogoutSuccess : logout Failed : {}",e);
             }
         }
+        log.info("onLogoutSuccess Done");
         response.setStatus(HttpServletResponse.SC_OK);
         response.sendRedirect("/api/user/signout/success");
     }
