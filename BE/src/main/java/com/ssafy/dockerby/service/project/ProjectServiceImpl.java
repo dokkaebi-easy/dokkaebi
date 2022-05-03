@@ -650,6 +650,7 @@ public class ProjectServiceImpl implements ProjectService {
         buildTotalDetailDtos.sort(Comparator.comparingLong(BuildTotalDetailDto::getBuildStateId));
         BuildTotalResponseDto buildTotalResponseDto = BuildTotalResponseDto.builder()
             .buildNumber(buildState.getBuildNumber())
+            .registDate(buildTotalDetailDtos.get(0).getRegistDate())
             .buildTotalDetailDtos(buildTotalDetailDtos)
             .build();
 
