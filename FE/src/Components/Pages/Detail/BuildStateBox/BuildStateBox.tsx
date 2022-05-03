@@ -33,9 +33,7 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
               elevation={3}
               sx={{ margin: 1, width: '50%', borderRadius: 3, padding: 3 }}
             >
-              <Typography>
-                {buildState.buildTotalDetailDtos[0].registDate}
-              </Typography>
+              <Typography>{buildState.registDate}</Typography>
             </Paper>
           </Grid>
           <Grid item xs={8}>
@@ -54,7 +52,7 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
               </Grid>
               <Grid item xs={4}>
                 <Link
-                  to={`/state/${buildState.buildTotalDetailDtos[0].buildStateId}`}
+                  to={`/state/${buildState.buildTotalDetailDtos[1].buildStateId}`}
                   style={{ color: 'black', textDecoration: 'none' }}
                 >
                   <Paper sx={{ padding: 5, borderRadius: 3 }}>
