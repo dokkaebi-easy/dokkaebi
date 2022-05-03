@@ -3,7 +3,6 @@ package com.ssafy.dockerby.controller.user;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.dto.user.SigninDto;
 import com.ssafy.dockerby.dto.user.SignupDto;
-import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.dto.user.UserResponseDto;
 import com.ssafy.dockerby.service.user.UserServiceImpl;
 import io.swagger.annotations.Api;
@@ -11,8 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -93,17 +90,6 @@ public class UserController {
         map.put("state", state);
 
         log.info("API Response return : Response = {}",state);
-        return new ResponseEntity(map, HttpStatus.OK);
-    }
-    @PostMapping("/login/check")
-    public ResponseEntity loginCheck(HttpServletRequest request) {
-        //요청 로그출력
-        HttpSession session = request.getSession();
-        UserDetailDto userDetailDto = (UserDetailDto) session.getAttribute("user");
-        log.info("session UserCheck Pricipal : {} ", userDetailDto.getUsername());
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("name",  userDetailDto.getUsername());
         return new ResponseEntity(map, HttpStatus.OK);
     }
 
