@@ -38,7 +38,8 @@ public class CommandInterpreter {
       }
       log.info("run Success");
     } catch (Exception e) {
-      log.info("run Failed : {}", e);
+      log.error("run Failed : {}", e);
+      throw e;
     }
     log.info("run Done");
   }
@@ -92,7 +93,8 @@ public class CommandInterpreter {
       }
       log.info("runDestPath with commands Success");
     } catch (Exception e) {
-      log.info("runDestPath with commands Failed : {}", e);
+      log.error("runDestPath with commands Failed : {}", e);
+      throw e;
     }
     log.info("runDestPath with commands Done");
   }
@@ -122,7 +124,8 @@ public class CommandInterpreter {
       log.info("runDestPath Success");
     }
     catch (Exception e) {
-      log.info("runDestPath Failed : {}", e);
+      log.error("runDestPath Failed : {}", e);
+      throw e;
     }
     log.info("runDestPath Done");
   }

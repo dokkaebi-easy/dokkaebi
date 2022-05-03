@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BuildTotalDetailDto {
+public class BuildTotalDetailDto implements Comparable {
 
   @NotNull
   private Long buildStateId;
@@ -38,4 +38,15 @@ public class BuildTotalDetailDto {
   @Nullable
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime lastModifiedDate;
+
+  public Long getBuildStateIdAsLong(){
+    return this.buildStateId;
+  }
+
+  @Override
+  public int compareTo(Object o) {
+    BuildTotalDetailDto e = (BuildTotalDetailDto) o;
+    return getBuildStateIdAsLong().compareTo(e.getBuildStateIdAsLong());
+  }
+
 }
