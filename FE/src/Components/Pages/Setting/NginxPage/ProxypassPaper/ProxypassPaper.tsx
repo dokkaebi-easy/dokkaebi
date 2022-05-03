@@ -4,9 +4,7 @@ import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import { v4 as uuid } from 'uuid';
-import LocationsData, {
-  Locations,
-} from 'Components/MDClass/LocationsData/LocationsData';
+import { Locations } from 'Components/MDClass/NginxData/NginxData';
 import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 import Proxypass from '../ProxypassBox/ProxypassBox';
 
@@ -18,7 +16,10 @@ export default function ProxypassPaper() {
   );
 
   const handleProxyPassAddClick = () => {
-    const tempLoacations = new LocationsData();
+    const tempLoacations: Locations = {
+      location: '',
+      url: '',
+    };
     nginxConfig.locations.push(tempLoacations);
     setLocations([...nginxConfig.locations]);
   };

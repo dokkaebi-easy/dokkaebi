@@ -1,6 +1,7 @@
-import LocationsData, {
-  Locations,
-} from 'Components/MDClass/LocationsData/LocationsData';
+export interface Locations {
+  location: string;
+  url: string;
+}
 
 export interface HttpsOption {
   sslCertificate: string;
@@ -26,7 +27,7 @@ export default class NginxData {
 
   constructor() {
     this.domains = [''];
-    this.locations = [new LocationsData()];
+    this.locations = [];
     this.httpsOption = {
       sslCertificate: '',
       sslCertificateKey: '',

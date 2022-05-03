@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
-import { Locations } from 'Components/MDClass/LocationsData/LocationsData';
+import { Locations } from 'Components/MDClass/NginxData/NginxData';
 
 interface ProxyProps {
   value: Locations;
