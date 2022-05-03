@@ -16,7 +16,8 @@ import org.apache.commons.exec.PumpStreamHandler;
 public class CommandInterpreter {
 
   public static void run(String path, String logName, int buildNumber, List<String> commands)
-      throws IOException {
+    throws IOException {
+    log.info("run Start : logName = {} , buildNumber = {}", logName, buildNumber);
     StringBuilder sb = new StringBuilder();
     sb.append(path).append('/').append(logName).append('_').append(buildNumber);
     FileManager.checkAndMakeDir(path);
@@ -30,16 +31,21 @@ public class CommandInterpreter {
         fileOutputStream.write('\n');
         executor.setStreamHandler(handler);
         executor.setExitValues(
-            new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
+          new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
         int execute = executor.execute(commandLine);
         fileOutputStream.write('\n');
         fileOutputStream.flush();
       }
+      log.info("run Success");
+    } catch (Exception e) {
+      log.info("run Failed : {}", e);
     }
+    log.info("run Done");
   }
 
+  //요거 안쓰이는중
   public static void run(String path, String logName, int buildNumber, String command)
-      throws IOException {
+    throws IOException {
     StringBuilder sb = new StringBuilder();
     sb.append(path).append('/').append(logName).append('_').append(buildNumber);
     FileManager.checkAndMakeDir(path);
@@ -52,7 +58,7 @@ public class CommandInterpreter {
       fileOutputStream.write('\n');
       executor.setStreamHandler(handler);
       executor.setExitValues(
-          new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
+        new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
       int execute = executor.execute(commandLine);
       fileOutputStream.write('\n');
       fileOutputStream.flush();
@@ -61,8 +67,9 @@ public class CommandInterpreter {
 
 
   public static void runDestPath(String destPath, String logPath, String logName,
-      int buildNumber, List<String> commands)
-      throws IOException {
+                                 int buildNumber, List<String> commands)
+    throws IOException {
+    log.info("runDestPath with commands Start : destPath = {} , logPath = {} , logName = {}", destPath, logPath, logName);
     StringBuilder sb = new StringBuilder();
     sb.append(logPath).append('/').append(logName).append('_').append(buildNumber);
     FileManager.checkAndMakeDir(destPath);
@@ -79,16 +86,21 @@ public class CommandInterpreter {
         executor.setWorkingDirectory(destFile);
         executor.setStreamHandler(handler);
         executor.setExitValues(
-            new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
+          new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
         int execute = executor.execute(commandLine);
         fileOutputStream.flush();
       }
+      log.info("runDestPath with commands Success");
+    } catch (Exception e) {
+      log.info("runDestPath with commands Failed : {}", e);
     }
+    log.info("runDestPath with commands Done");
   }
 
   public static void runDestPath(String destPath, String logPath, String logName,
-      int buildNumber, String command)
-      throws IOException {
+                                 int buildNumber, String command)
+    throws IOException {
+    log.info("runDestPath Start : destPath = {} , logPath = {} , logName = {}", destPath, logPath, logName);
     StringBuilder sb = new StringBuilder();
     sb.append(logPath).append('/').append(logName).append('_').append(buildNumber);
     FileManager.checkAndMakeDir(destPath);
@@ -104,9 +116,14 @@ public class CommandInterpreter {
       executor.setWorkingDirectory(destFile);
       executor.setStreamHandler(handler);
       executor.setExitValues(
-          new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
+        new int[]{0, 1});  // 1 == error 하지만 network_bridge already 1
       int execute = executor.execute(commandLine);
       fileOutputStream.flush();
+      log.info("runDestPath Success");
     }
+    catch (Exception e) {
+      log.info("runDestPath Failed : {}", e);
+    }
+    log.info("runDestPath Done");
   }
 }

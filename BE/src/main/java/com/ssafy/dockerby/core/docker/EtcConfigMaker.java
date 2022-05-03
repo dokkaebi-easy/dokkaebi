@@ -4,6 +4,8 @@ import com.ssafy.dockerby.core.docker.etcMaker.NginxConfigMaker;
 import com.ssafy.dockerby.core.docker.vo.nginx.NginxConfig;
 import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import com.ssafy.dockerby.util.FileManager;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 
 /**
@@ -11,6 +13,7 @@ import java.io.IOException;
  * [지원목록]
  *  NGINX - default.conf
  */
+@Slf4j
 public class EtcConfigMaker {
 
   private static final NginxConfigMaker nginxConfigMaker = new NginxConfigMaker();
@@ -34,11 +37,13 @@ public class EtcConfigMaker {
       config = nginxConfigMaker.defaultConfig(nginxConfig);
 
     FileManager.saveFile(filePath,"default.conf",config);
-
+    log.info("nginxConfig Done");
   }
 
   public static void saveDockerNginxConfig(String filePath, NginxConfig config)
       throws IOException {
+    log.info("saveDockerNginxConfig Start : filePath = {} ",filePath);
     FileManager.saveJsonFile(filePath,"nginx",config);
+    log.info("saveDockerNginxConfig Done");
   }
 }

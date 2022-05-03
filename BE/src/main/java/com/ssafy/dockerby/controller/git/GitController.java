@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Api(tags = {"Git credentials"})
+@Slf4j
 @RestController
 @RequestMapping("/api/git")
 @RequiredArgsConstructor
@@ -34,6 +36,7 @@ public class GitController {
 
   @GetMapping("/tokens")
   public List<GitTokenResponseDto> tokens() {
+    log.info("API Request received");
     return gitlabService.tokens();
   }
 
@@ -41,6 +44,7 @@ public class GitController {
   @PostMapping("/token")
   public List<GitTokenResponseDto> createToken(
       @Validated @RequestBody GitTokenRequestDto requestDto) {
+    log.info("API Request received");
     gitlabService.createToken(requestDto);
     return gitlabService.tokens();
   }
@@ -48,18 +52,21 @@ public class GitController {
   @PatchMapping("/token")
   public List<GitTokenResponseDto> updateToken(
       @Validated @RequestBody GitTokenRequestDto requestDto) {
+    log.info("API Request received");
     gitlabService.updateToken(requestDto);
     return gitlabService.tokens();
   }
 
   @DeleteMapping("/token")
   public List<GitTokenResponseDto> deleteToken(@RequestBody Long id) {
+    log.info("API Request received");
     gitlabService.deleteToken(id);
     return gitlabService.tokens();
   }
 
   @PostMapping("/testConnection")
   public ResponseEntity testConnection(@RequestBody GitTestConfigDto requestDto) {
+    log.info("API Request received : projectId = {}",requestDto.getProjectId());
     GitlabAccessToken token = gitlabService.token(requestDto.getAccessTokenId());
     String firstResponseMessage = GitlabAccess.isProjectToken(requestDto.getHostUrl(), token.getAccessToken());
     String secondResponseMessage = GitlabAccess.isGitlabRepositoryUrl(requestDto.getProjectId(), requestDto.getRepositoryUrl());

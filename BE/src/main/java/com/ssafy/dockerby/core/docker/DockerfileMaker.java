@@ -39,6 +39,7 @@ public class DockerfileMaker {
   }
 
   private void makeNextDockerfile(BuildConfig config) throws IOException {
+    log.info("makeNextDockerfile Start");
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append('\n');
     sb.append("COPY . . \n");
@@ -46,9 +47,11 @@ public class DockerfileMaker {
     sb.append("RUN ").append("npm run build").append('\n');
     sb.append("CMD [\"npm\", \"run\", \"start\"]");
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
+    log.info("makeNextDockerfile Done");
   }
 
   private void makeSpringBootDockerfile(BuildConfig config) throws IOException {
+    log.info("makeSpringBootDockerfile Start");
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
@@ -70,9 +73,11 @@ public class DockerfileMaker {
     sb.append("ENTRYPOINT [\"java\", \"-jar\", \"./app.jar\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
+    log.info("makeSpringBootDockerfile Done");
   }
 
   private void makeReactWithNginxDockerFile(BuildConfig config) throws IOException {
+    log.info("makeReactWithNginxDockerFile Start");
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
@@ -89,9 +94,11 @@ public class DockerfileMaker {
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
+    log.info("makeReactWithNginxDockerFile Done");
   }
 
   private void makeVueWithNginxDockerFile(BuildConfig config) throws IOException {
+    log.info("makeVueWithNginxDockerFile Start");
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
@@ -108,9 +115,11 @@ public class DockerfileMaker {
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
+    log.info("makeVueWithNginxDockerFile Done");
   }
 
   private void makeDjangoDockerfile(BuildConfig config) throws IOException {
+    log.info("makeDjangoDockerfile Start");
     StringBuilder sb = new StringBuilder();
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
 
@@ -133,15 +142,20 @@ public class DockerfileMaker {
     sb.append("CMD [\"python\", \"manage.py\", \"runserver\", \"0.0.0.0:8000\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
+    log.info("makeDjangoDockerfile Done");
   }
 
   private String getDestPath(String projectDirectory) {
+    log.info("getDestPath Start");
     StringBuilder path = new StringBuilder();
     path.append(rootDir).append(projectDirectory);
+    log.info("getDestPath Done : path = {}",path.toString());
     return path.toString();
   }
 
   private void saveDockerFile(String pjtDir, String sb) throws IOException {
+    log.info("saveDockerFile Start");
       FileManager.saveFile(pjtDir, "Dockerfile", sb);
+    log.info("saveDockerFile Done");
   }
 }

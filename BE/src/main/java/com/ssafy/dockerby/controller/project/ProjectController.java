@@ -38,24 +38,22 @@ public class ProjectController {
   @PostMapping
   public ResponseEntity upsertProject(HttpServletRequest request,@Valid @RequestBody ProjectConfigDto projectConfigDto) throws NotFoundException, IOException {
     //요청 로그출력
-    log.info("project create request");
-    log.info("Request Project : {}", projectConfigDto.getProjectName());
-    Map<Project, String> upsertResult = projectService.upsert(projectConfigDto);
+    log.info("API Request received : projectConfigDto = {} ",projectConfigDto.toString());
 
-    log.info("project build start / waiting -> processing");
+    Map<Project, String> upsertResult = projectService.upsert(projectConfigDto);
 
     //히스토리 저장
     try { //유저가 있을때
       for(Project project : upsertResult.keySet())
         projectService.createConfigHistory(request,project,upsertResult.get(project));
     }catch (Exception e){ // 유저가 없을때 //ex)git hook 상황
-      log.error("User information does not exist Exception {} {}",e.getClass(),e.getMessage());
+      log.error("information does not exist Exception {}",e);
     }
 
     Map<String, Object> map = new HashMap<>();
     map.put("status", "Success");
 
-    log.info("PrjoectController.createProject success : {}", projectConfigDto);
+    log.info("done : {}", projectConfigDto);
     return ResponseEntity.ok(map);
   }
 
@@ -63,13 +61,14 @@ public class ProjectController {
   @GetMapping("/config/{projectId}")
   public ResponseEntity projectConfig(@PathVariable Long projectId)
       throws NotFoundException, IOException {
+    log.info("API Request received : projectId = {} ",projectId);
     return ResponseEntity.ok(projectService.findConfigById(projectId));
   }
 
   @ApiOperation(value = "프로젝트 빌드", notes = "프로젝트 빌드를 한다.")
   @PostMapping("/build")
   public ResponseEntity buildProject(Long projectId ) throws IOException, NotFoundException {
-    log.info("buildProject request API received , id : {}",projectId);
+    log.info("API Request received : projectId = {} ",projectId);
 
     //프로젝트 빌드 시작
     projectService.build(projectId, null);
@@ -86,21 +85,22 @@ public class ProjectController {
   @ApiOperation(value = "프레임 워크 타입", notes = "프레임 워크 타입을 반환 해준다.")
   @GetMapping("/frameworkType")
   public ResponseEntity<List<FrameworkTypeResponseDto>> getFrameworkType(){
-    //type 요청 로그 출력
-    log.info("frameworkType API received");
+    log.info("API Request received");
 
     //type list 입력
     List<FrameworkTypeResponseDto> frameworkTypes = projectService.getFrameworkType();
 
     //type list 반환
+    log.info("API Response return");
     return ResponseEntity.ok(frameworkTypes);
   }
   @ApiOperation(value = "프레임 워크 버전", notes = "프레임 워크 타입별 버전을 반환 해준다.")
   @GetMapping("/frameworkVersion")
   public ResponseEntity<FrameworkVersionResponseDto> GetFrameworkVersion(Long typeId) throws NotFoundException {
     //version 요청 로그 출력
-    log.info("frameworkVersion API received typeId: {}",typeId);
+    log.info("API Request received : typeId = {}",typeId);
 
+    log.info("API Response return");
     return ResponseEntity.ok(projectService.getFrameworkVersion(typeId));
   }
 
@@ -108,42 +108,49 @@ public class ProjectController {
   @ApiOperation(value = "프로젝트 전체 빌드 상황", notes = "프로젝트 전체 빌드 상황을 가져온다.")
   @GetMapping("/build/total")
   public ResponseEntity<List<BuildTotalResponseDto>> buildTotal(Long projectId) throws NotFoundException {
+    log.info("API Request received : projectId = {}",projectId);
     // 요청 로그 출력
     log.info("buildTotal API request received {} ", projectId);
 
     List<BuildTotalResponseDto> buildTotalResponseDtos = projectService.buildTotal(projectId);
 
+    log.info("API Response return");
     return ResponseEntity.ok(buildTotalResponseDtos);
   }
 
   @ApiOperation(value = "프로젝트 상세", notes = "프로젝트 상세 내역을 가져온다.")
   @GetMapping("/build/detail")
-  public ResponseEntity<BuildDetailResponseDto> buildDetail(Long buildStateId)
-      throws NotFoundException {
+  public ResponseEntity<BuildDetailResponseDto> buildDetail(Long buildStateId) throws NotFoundException {
+    log.info("API Request received : buildStateId = {}",buildStateId);
     //요청 로그 출력
     log.info("buildDetail API request received {}",buildStateId);
 
     //프로젝트 state 저장 stateResponse 반환
     BuildDetailResponseDto buildDetailResponseDto = projectService.buildDetail(buildStateId);
 
+    log.info("API Response return");
     return ResponseEntity.ok(buildDetailResponseDto);
   }
 
   @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다.")
   @GetMapping("/all")
   public ResponseEntity<List<ProjectListResponseDto>> projects(){
-    log.info("Project all API received");
+    log.info("API Request received");
 
     List<ProjectListResponseDto> projectList = projectService.projectList();
+
+    log.info("API Response return");
     return ResponseEntity.ok(projectList);
   }
 
   @ApiOperation(value = "ConfigHistory 리스트", notes = "ConfigHistory 목록을 가져온다.")
   @GetMapping("/configHistory")
   public ResponseEntity<List<ConfigHistoryListResponseDto>> configHistory() {
-    log.info("configHistory API received");
+    log.info("API Request received");
 
     List<ConfigHistoryListResponseDto> configHistoryList = projectService.historyList();
+
+    log.info("API Response return");
     return ResponseEntity.ok(configHistoryList);
   }
 
@@ -151,6 +158,8 @@ public class ProjectController {
   public ResponseEntity webHook(@PathVariable String projectName,
       @RequestHeader(name = "X-Gitlab-Token") String token,
       @RequestBody Map<String, Object> params) throws NotFoundException, IOException {
+    log.info("API Request received : projectName = {}",projectName);
+
     GitlabWebHookDto webHookDto = GitlabWrapper.wrap(params);
 
     Project project = projectService.findProjectByName(projectName)
@@ -162,6 +171,7 @@ public class ProjectController {
     log.debug("ProjectController.Webhook : X-Gitlab-Toke : {} / " , token,params);
     projectService.build(project.getId(),webHookDto);
 
+    log.info("API Response null");
     return ResponseEntity.ok(null);
   }
 }

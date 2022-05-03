@@ -82,12 +82,14 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public Optional<Project> findProjectByName(String name) {
+    log.info("findProjectByName Start : projectName = {} ",name);
     return projectRepository.findOneByProjectName(name);
   }
 
   @Override
-  public ProjectConfigDto findConfigById(Long projectId)
-      throws NotFoundException, IOException {
+  public ProjectConfigDto findConfigById(Long projectId) throws NotFoundException, IOException {
+    log.info("findConfigById Start : projectID = {} ",projectId);
+
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
             () -> new NotFoundException("ProjectServiceImpl.configByProjectName : " + projectId));
@@ -155,6 +157,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public Map<Project, String> upsert(ProjectConfigDto projectConfigDto)
       throws NotFoundException, IOException {
+    log.info("upsert Start : projectConfigDto = {} ",projectConfigDto.getProjectName());
 
     Map<Project, String> result = new HashMap<>();
     Project project;
@@ -162,9 +165,13 @@ public class ProjectServiceImpl implements ProjectService {
       project = projectRepository.findById(projectConfigDto.getProjectId())
           .orElseThrow(() -> new NotFoundException(
               "upsert user not found id " + projectConfigDto.getProjectId()));
+      //프로젝트 Id가 있을 시 Update
+      log.info("upsert : projectUpdate = {} ",project.getProjectName());
       result.put(project, "update");
     } else {
       project = projectRepository.save(Project.from(projectConfigDto));
+      //프로젝트 Id가 없을 시 Create
+      log.info("upsert : projectCreate = {} ",project.getProjectName());
       result.put(project, "create");
     }
 
@@ -205,6 +212,7 @@ public class ProjectServiceImpl implements ProjectService {
         .orElseGet(() -> gitlabService.createConfig(project, getConfigDto));
 
     // git clone
+    log.info("upsert : GitClone Start");
     GitlabAccessToken token = gitlabService.token(getConfigDto.getAccessTokenId());
 
     String cloneCommand = GitlabAdapter.getCloneCommand(
@@ -288,10 +296,13 @@ public class ProjectServiceImpl implements ProjectService {
       FileManager.saveJsonFile(configPath, "db", dbConfigs);
     }
 
+    log.info("loadConfigFilesByFileName Done");
     return result;
   }
 
   private void createBuildState(Project project, GitlabWebHookDto webHookDto) {
+    log.info("createBuildState Start : project.getName = {} ",project.getProjectName());
+
     List<BuildState> buildStates = new ArrayList<>();
     Long buildNumber = Long.valueOf(
         buildStateRepository.findAllByProjectIdOrderByBuildNumberDesc(project.getId()).size() / 3);
@@ -331,28 +342,32 @@ public class ProjectServiceImpl implements ProjectService {
 
     buildStateRepository.save(buildState2);
     buildStates.add(buildState2);
-
+    log.info("createBuildState Done");
     em.flush();
   }
 
   @Override
   public boolean projectIsFailed(Long projectId) throws NotFoundException {
+    log.info("projectIsFailed Start : projectId = {} ",projectId);
+
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
             () -> new NotFoundException("ProjectSerivceImpl.projectIsFailed : " + projectId));
     //프로젝트가 실패상태이면 ture 반환
-    if ("Failed".equals(project.getStateType().toString())) {
+    if("Failed".equals(project.getStateType().toString())) {
+      log.info("projectIsFailed : return true");
       return true;
-    } else {
+    }
+    else {
+      log.info("projectIsFailed : return false");
       return false;
     }
   }
 
   @Override
   public void build(Long projectId, GitlabWebHookDto webHookDto)
-      throws NotFoundException, IOException {
-    //빌드 시작 로그 출력
-    log.info("build start in service part");
+    throws NotFoundException, IOException {
+    log.info("build Start : projectId = {} ",projectId);
 
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectSerivceImpl.build : " + projectId));
@@ -360,8 +375,11 @@ public class ProjectServiceImpl implements ProjectService {
     //프로젝트 상태 진행중으로 변경
     project.updateState(StateType.Processing);
 
+    log.info("build : updateState project.getStateType = {} ",project.getStateType());
+
     createBuildState(project, webHookDto);
 
+    log.info("build Done");
     em.flush();
   }
 
@@ -369,6 +387,8 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public void pullStart(Long projectId, GitlabWebHookDto webHookDto)
       throws NotFoundException, IOException {
+    log.info("pullStart Start : projectId = {} ",projectId);
+
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.pullStart : " + projectId));
 
@@ -382,7 +402,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     int buildNumber = Integer.parseInt(buildStates.get(0).getBuildNumber().toString());
 
-    //Pull start
+    //Pull Start
     try { // pull 트라이
       if (buildStates.get(2).getWebhookHistory() != null) {
         List<String> commands = new ArrayList<>();
@@ -393,29 +413,32 @@ public class ProjectServiceImpl implements ProjectService {
       buildStates.get(2).updateStateType("Done");
       buildStates.get(1).updateStateType("Processing");
 
+      log.info("pullStart : Pull Success : {}", buildStates.get(0).toString());
+
       //dirtyCheck 후 flush
       em.flush();
 
-      //성공 로그 출력
-      log.info(" Pull Done : {}", buildStates.get(0).toString());
     } catch (Exception e) { // state failed 넣기
       //pullState failed 입력
       buildStates.get(2).updateStateType("Failed");
       project.updateState(StateType.Failed);
-      log.info("update state to Failed");
+
+      log.info("pullStart : update state to Failed");
 
       em.flush();
 
       //에러 로그 출력
-      log.error("Pull failed {}", e);
+      log.error("pullStart : Pull failed {}", e);
     }
+
+    log.info("pullStart Done");
     em.flush();
   }
 
   @Override
   public void buildStart(Long projectId, GitlabWebHookDto webHookDto)
       throws NotFoundException, IOException {
-    //Build start
+    log.info("buildStart Start : projectId = {} ",projectId);
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.buildStart : " + projectId));
 
@@ -447,24 +470,24 @@ public class ProjectServiceImpl implements ProjectService {
       em.flush();
 
       //성공 로그 출력
-      log.info("Build Done : {}", buildStates.get(1).toString());
+      log.info("buildStart : Build Success : {}", buildStates.get(1).toString());
     } catch (Exception e) { // state failed 넣기
       //buildState failed 입력
       buildStates.get(1).updateStateType("Failed");
       project.updateState(StateType.Failed);
 
-      //dirtyCheck 후 flush
-      em.flush();
+      log.error("buildStart : Build Failed {} ", e);
 
-      //에러 로그 출력
-      log.error("Build failed {} ", e);
+      em.flush();
     }
+    log.info("buildStart Done");
   }
 
   @Override
   public void runStart(Long projectId, GitlabWebHookDto webHookDto)
       throws NotFoundException, IOException {
-    //Run start
+    log.info("runStart Start: projectId = {} ",projectId);
+
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.runStart : " + projectId));
 
@@ -515,11 +538,9 @@ public class ProjectServiceImpl implements ProjectService {
       // state Done 넣기
       buildStates.get(0).updateStateType("Done");
 
-      //dirtyCheck 후 flush
-      em.flush();
+      log.info("runStart : Run Success = {} ", buildStates.get(2).toString());
 
-      //성공 로그 출력
-      log.info("Run Done : {}", buildStates.get(2).toString());
+      em.flush();
     } catch (Exception e) { // state failed 넣기
       //dockerRunState failed 입력
       buildStates.get(0).updateStateType("Failed");
@@ -529,24 +550,27 @@ public class ProjectServiceImpl implements ProjectService {
       em.flush();
 
       //에러 로그 출력
-      log.error("Run failed {}", e);
+      log.error("runStart : Run Failed {}", e);
     }
+    log.info("runStart Done");
   }
 
   @Override
   public void updateProjectDone(Long projectId) throws NotFoundException {
+    log.info("updateProjectDone Start : projectId = {} ",projectId);
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
             () -> new NotFoundException("ProjectSerivceImpl.updateProjectDone : " + projectId));
 
     project.updateState(StateType.valueOf("Done"));
 
+    log.info("updateProject Done : projectId = {} ",project.getStateType());
     em.flush();
   }
 
   @Override
   public List<FrameworkTypeResponseDto> getFrameworkType() {
-    log.info("getFrameworkType request received");
+    log.info("getFrameworkType Start");
 
     //frameworkTypes initialized
     List<FrameworkTypeResponseDto> frameworkTypes = new ArrayList<>();
@@ -557,20 +581,20 @@ public class ProjectServiceImpl implements ProjectService {
           frameworkTypes.add(FrameworkTypeResponseDto.from(value)));
 
       //성공 로그 출력
-      log.info("getFrameworkType request success");
+      log.info("getFrameworkType Success");
     } catch (Exception error) {
       //실패 로그 출력
-      log.error("getFrameworkType request failed {} {}", error.getCause(), error.getMessage());
+      log.error("getFrameworkType Failed {}", error);
 
       throw error;
     }
-
-    log.info("getFrameworkType request completed typeSize : {}", frameworkTypes.size());
+    log.info("getFrameworkType Done : typeSize = {}", frameworkTypes.size());
     return frameworkTypes;
   }
 
   @Override
   public FrameworkVersionResponseDto getFrameworkVersion(Long typeId) throws NotFoundException {
+    log.info("getFrameworkVersion Start : typeId = {}",typeId);
 
     try { //framework 가져오기
       //frameworkTypeId 로 framework 가져오기
@@ -587,11 +611,11 @@ public class ProjectServiceImpl implements ProjectService {
         type.getBuildTools().forEach(buildTool -> buildTools.add(buildTool.getName()));
       }
       //성공 로그 출력
-      log.info("getFrameworkVersion request success");
+      log.info("getFrameworkVersion Success");
       return FrameworkVersionResponseDto.from(type.getLanguage().getName(), versions, buildTools);
     } catch (Exception error) {
       //실패 로그 출력
-      log.error("getFrameworkVersion request failed {} {}", error.getCause(), error.getMessage());
+      log.error("getFrameworkVersion Failed {}", error);
       throw error;
     }
   }
@@ -600,10 +624,11 @@ public class ProjectServiceImpl implements ProjectService {
   //history 저장
   public void createConfigHistory(HttpServletRequest request, Project project, String msg)
       throws NotFoundException {
+    log.info("createConfigHistory Start : projectName = {} ",project.getProjectName());
     //세션 정보 가져오기
     HttpSession session = request.getSession();
     UserDetailDto userDetailDto = (UserDetailDto) session.getAttribute("user");
-    log.info("session User Pricipal : {} ", userDetailDto.getUsername());
+    log.info("session User Principal : {} ", userDetailDto.getUsername());
 
     //로그인 유저 탐색
     User user = userRepository.findByPrincipal(userDetailDto.getUsername())
@@ -616,13 +641,16 @@ public class ProjectServiceImpl implements ProjectService {
         .project(project)
         .msg(msg)
         .build();
-    //configHistory 저장
-    configHistoryRepository.save(history);
+
     log.info("history save {} to {} detail-{}", history.getUser().getName(),
-        history.getProject().getProjectName(), history.getMsg());
+      history.getProject().getProjectName(), history.getMsg());
+
+    configHistoryRepository.save(history);
+    log.info("createConfigHistory Done");
   }
 
   public List<ConfigHistoryListResponseDto> historyList() {
+    log.info("historyList Start");
     List<ConfigHistory> configHistories = configHistoryRepository.findAll(
         Sort.by(Sort.Direction.DESC, "registDate"));
     List<ConfigHistoryListResponseDto> resultList = new ArrayList<>();
@@ -633,22 +661,24 @@ public class ProjectServiceImpl implements ProjectService {
       resultList.add(configHistoryListDto);
     }
 
-    log.info("ConfigHistory list size {}", resultList.size());
+    log.info("historyList Done : listSize = {}", resultList.size());
     return resultList;
   }
 
-
   @Override
   public List<BuildTotalResponseDto> buildTotal(Long projectId) throws NotFoundException {
+    log.info("buildTotal Start");
+
     //responseDtos initialized
     List<BuildTotalResponseDto> responseDtos = new ArrayList<>();
     List<BuildTotalDetailDto> buildTotalDetailDtos = new ArrayList<>();
+
     //해당 projectId의 buildState List로 받음
     List<BuildState> buildStates = buildStateRepository.findAllByProjectIdOrderByBuildNumberAsc(
         projectId); // sort따로 지정하기 라스트 보장x
 
     //입력 시작 로그 출력
-    log.info("buildState insert start  buildStateSize : {}", buildStates.size());
+    log.info("buildState insert Start  buildStateSize : {}", buildStates.size());
 
     int counter = 1;
 
@@ -679,26 +709,21 @@ public class ProjectServiceImpl implements ProjectService {
       }
       counter++;
     }
-
-    //완료 로그 출력
-    log.info("buildState insert finished  responseDtoSize : {}", responseDtos.size());
-
-    //responseDtos 리턴
+    log.info("buildTotal Done : responseSize = {}", responseDtos.size());
     return responseDtos;
   }
 
   @Override
   public BuildDetailResponseDto buildDetail(Long buildStateId)
       throws NotFoundException {
-    //요청 로그 출력
-    log.info("buildDetail Service start");
+    log.info("buildDetail Start");
 
     BuildState buildState = buildStateRepository.findById(buildStateId)
         .orElseThrow(() -> new NotFoundException(
             "ProjectServiceImpl.buildDetail : Not found build state "
                 + buildStateId));
 
-    log.info("buildState receive success {}", buildState.getProject().getProjectName());
+    log.info("buildDetail : receive success {}", buildState.getProject().getProjectName());
 
     String logPath = pathParser.logPath(buildState.getProject().getProjectName()).toString();
 
@@ -708,10 +733,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     StringBuilder consoleLog = new StringBuilder();
 
-    //
+    log.info("buildDetail : lodeFile Start");
     try {
       consoleLog.append(FileManager.loadFile(logPath, fileName));
+      log.info("buildDetail : lodeFile Success");
     } catch (Exception error) {
+      log.error("buildDetail : There is no console file : {}",error);
       consoleLog.append("There is no console file !!");
     }
 
@@ -736,13 +763,13 @@ public class ProjectServiceImpl implements ProjectService {
         .consoleLog(consoleLog.toString())
         .build();
 
+    log.info("buildDetail Done");
     return buildDetailResponseDto;
-
   }
 
   @Override
   public List<ProjectListResponseDto> projectList() {
-    log.info("Project List");
+    log.info("ProjectList Start");
     List<Project> projectList = projectRepository.findAll();
 
     List<ProjectListResponseDto> resultList = new ArrayList<>();
@@ -752,7 +779,7 @@ public class ProjectServiceImpl implements ProjectService {
       resultList.add(projectListDto);
     }
 
-    log.info("project list size {}", resultList.size());
+    log.info("ProjectList Done : ListSize {}", resultList.size());
     return resultList;
   }
 }
