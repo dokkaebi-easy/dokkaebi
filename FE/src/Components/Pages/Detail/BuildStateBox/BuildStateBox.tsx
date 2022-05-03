@@ -33,43 +33,45 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
               elevation={3}
               sx={{ margin: 1, width: '50%', borderRadius: 3, padding: 3 }}
             >
-              <Typography>{buildState.registDate}</Typography>
+              <Typography>
+                {buildState.buildTotalDetailDtos[0].registDate}
+              </Typography>
             </Paper>
           </Grid>
           <Grid item xs={8}>
             <Grid container spacing={1}>
               <Grid item xs={4}>
                 <Link
-                  to={`/state/${buildState.buildStateId}/Pull`}
+                  to={`/state/${buildState.buildTotalDetailDtos[0].buildStateId}`}
                   style={{ color: 'black', textDecoration: 'none' }}
                 >
                   <Paper sx={{ padding: 5, borderRadius: 3 }}>
                     <Typography align="center">
-                      {buildState.state.pull}
+                      {buildState.buildTotalDetailDtos[0].stateType}
                     </Typography>
                   </Paper>
                 </Link>
               </Grid>
               <Grid item xs={4}>
                 <Link
-                  to={`/state/${buildState.buildStateId}/Build`}
+                  to={`/state/${buildState.buildTotalDetailDtos[0].buildStateId}`}
                   style={{ color: 'black', textDecoration: 'none' }}
                 >
                   <Paper sx={{ padding: 5, borderRadius: 3 }}>
                     <Typography align="center">
-                      {buildState.state.build}
+                      {buildState.buildTotalDetailDtos[1].stateType}
                     </Typography>
                   </Paper>
                 </Link>
               </Grid>
               <Grid item xs={4}>
                 <Link
-                  to={`/state/${buildState.buildStateId}/Run`}
+                  to={`/state/${buildState.buildTotalDetailDtos[2].buildStateId}`}
                   style={{ color: 'black', textDecoration: 'none' }}
                 >
                   <Paper sx={{ padding: 5, borderRadius: 3 }}>
                     <Typography align="center">
-                      {buildState.state.run}
+                      {buildState.buildTotalDetailDtos[2].stateType}
                     </Typography>
                   </Paper>
                 </Link>

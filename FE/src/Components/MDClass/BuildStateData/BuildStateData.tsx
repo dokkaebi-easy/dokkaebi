@@ -1,33 +1,24 @@
 export interface State {
-  build: string;
-  pull: string;
-  run: string;
+  buildStateId: number;
+  buildNumber: number;
+  buildType: string;
+  stateType: string;
+  registDate: string;
+  lastModifiedDate: string;
 }
 
 export interface BuildState {
   buildNumber: number;
-  buildStateId: number;
-  registDate: string;
-  state: State;
+  buildTotalDetailDtos: State[];
 }
 
 export default class BuildStateData {
   public buildNumber: number;
 
-  public buildStateId: number;
-
-  public registDate: string;
-
-  public state: State;
+  public buildTotalDetailDtos: State[];
 
   constructor() {
     this.buildNumber = 0;
-    this.buildStateId = 0;
-    this.registDate = '';
-    this.state = {
-      build: '',
-      pull: '',
-      run: '',
-    };
+    this.buildTotalDetailDtos = [];
   }
 }

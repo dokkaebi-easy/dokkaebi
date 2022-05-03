@@ -79,7 +79,6 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
       .get('/api/project/dbVersion', { params })
       .then((res) => {
         const data = res.data as VersionTypeAxois;
-
         setVersion('');
         setVersions([...data.dbVersion]);
         setProperties([...data.properties]);
@@ -203,9 +202,7 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
                 size="small"
                 sx={{ my: 1 }}
                 placeholder={value}
-                defaultValue={
-                  dbData.properties[idx].data ? dbData.properties[idx].data : ''
-                }
+                defaultValue={propertiesData[idx] ? propertiesData[idx] : ''}
                 onChange={(event: any) => {
                   propertiesData[idx] = event.target.value;
                   dbData.properties[idx].data = event.target.value;

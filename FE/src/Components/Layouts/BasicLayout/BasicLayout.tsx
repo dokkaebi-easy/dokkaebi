@@ -74,7 +74,11 @@ export default function BasicLayout() {
         <Navbar />
         <Suspense fallback={<div>로딩 중...</div>}>
           <Switch>
-            <Route path="/state/:id/:name" component={StateDetailPage} exact />
+            <Route
+              path="/state/:buildStateId"
+              component={StateDetailPage}
+              exact
+            />
             <Route path="/detail/:projectId" component={DetailPage} exact />
             <Route path="/setting/:projectId" component={SettingPage} exact />
             <Route path="/" component={HomePage} exact />
