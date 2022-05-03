@@ -27,7 +27,6 @@ export default function AxiosPage() {
       projectName,
       projectId,
     };
-    console.log(data);
     axios
       .post('/api/project', data)
       .then(() => {

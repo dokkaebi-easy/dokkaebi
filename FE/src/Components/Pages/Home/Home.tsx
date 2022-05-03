@@ -8,11 +8,13 @@ import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 import BuildData from 'Components/MDClass/BuildData/BuildData';
 import GitData from 'Components/MDClass/GitData/GitData';
 import NginxData from 'Components/MDClass/NginxData/NginxData';
+import DBData from 'Components/MDClass/DBData/DBData';
 
 export default function Home() {
   const cleanProjectId = useSettingStore((state) => state.setProjectId);
   const cleanProjecttName = useSettingStore((state) => state.setProjectName);
   const cleanBuildConfigs = useSettingStore((state) => state.setBuildConfigs);
+  const cleanDBConfigs = useSettingStore((state) => state.setDBConfigs);
   const cleanGitConfig = useSettingStore((state) => state.setGitConfig);
   const cleanNginxConfig = useSettingStore((state) => state.setNginxConfig);
 
@@ -20,6 +22,7 @@ export default function Home() {
     cleanProjectId(0);
     cleanProjecttName('');
     cleanBuildConfigs([new BuildData()]);
+    cleanDBConfigs([new DBData()]);
     cleanGitConfig(new GitData());
     cleanNginxConfig(new NginxData());
   };

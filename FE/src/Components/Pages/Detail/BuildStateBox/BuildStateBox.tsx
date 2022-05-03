@@ -42,7 +42,7 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
             <Grid container spacing={1}>
               <Grid item xs={4}>
                 <Link
-                  to={`/state/${buildState.buildTotalDetailDtos[0].buildStateId}/Pull`}
+                  to={`/state/${buildState.buildTotalDetailDtos[0].buildStateId}`}
                   style={{ color: 'black', textDecoration: 'none' }}
                 >
                   <Paper sx={{ padding: 5, borderRadius: 3 }}>
@@ -54,7 +54,7 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
               </Grid>
               <Grid item xs={4}>
                 <Link
-                  to={`/state/${buildState.buildTotalDetailDtos[0].buildStateId}/Build`}
+                  to={`/state/${buildState.buildTotalDetailDtos[0].buildStateId}`}
                   style={{ color: 'black', textDecoration: 'none' }}
                 >
                   <Paper sx={{ padding: 5, borderRadius: 3 }}>
@@ -66,7 +66,7 @@ export default function BuildStateBox({ buildState }: BuildStateProps) {
               </Grid>
               <Grid item xs={4}>
                 <Link
-                  to={`/state/${buildState.buildTotalDetailDtos[2].buildStateId}/Run`}
+                  to={`/state/${buildState.buildTotalDetailDtos[2].buildStateId}`}
                   style={{ color: 'black', textDecoration: 'none' }}
                 >
                   <Paper sx={{ padding: 5, borderRadius: 3 }}>

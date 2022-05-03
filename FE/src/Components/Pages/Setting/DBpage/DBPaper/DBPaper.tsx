@@ -79,7 +79,6 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
       .get('/api/project/dbVersion', { params })
       .then((res) => {
         const data = res.data as VersionTypeAxois;
-        console.log(data);
         setVersion('');
         setVersions([...data.dbVersion]);
         setProperties([...data.properties]);
