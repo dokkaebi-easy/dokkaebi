@@ -4,6 +4,8 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 
 interface NginxProps {
   value: string;
@@ -29,14 +31,12 @@ export default function DomainBox({
     DelClick(index);
   };
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-        <Typography align="center">Domain URL</Typography>
-      </Grid>
-      <Grid item xs={8}>
+    <Grid container spacing={1}>
+      <Grid item xs={12} sx={{ margin: 'auto auto' }}>
+        <Typography>Domain URL</Typography>
         <TextField
           fullWidth
-          label="Project Name"
+          label="Domain Name"
           variant="outlined"
           size="small"
           sx={{ my: 1 }}
@@ -45,7 +45,7 @@ export default function DomainBox({
           onChange={handleDomainChange}
         />
       </Grid>
-      <Grid item xs={2} sx={{ marginBottom: 1, marginTop: 'auto' }}>
+      <Grid item mb={2}>
         <Button
           variant="outlined"
           startIcon={<DeleteIcon />}

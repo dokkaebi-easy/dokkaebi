@@ -13,6 +13,8 @@ import styled from '@emotion/styled';
 import { unset } from 'lodash';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 interface IFormInput {
   principal: string;
@@ -120,7 +122,13 @@ export default function SignUp() {
 
   return (
     <Container maxWidth="xs">
-      <ContainerDiv>
+      <Stack
+        mt={5}
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+      >
         <Typography className={heading} variant="h3">
           회원가입
         </Typography>
@@ -212,13 +220,7 @@ export default function SignUp() {
             가입하기
           </Button>
         </form>
-      </ContainerDiv>
+      </Stack>
     </Container>
   );
 }
-
-const ContainerDiv = styled.div`
-  width: 400px;
-  margin-top: 32px;
-  margin-bottom: 32px;
-`;

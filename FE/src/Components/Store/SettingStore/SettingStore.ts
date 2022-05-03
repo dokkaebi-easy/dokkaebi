@@ -20,7 +20,7 @@ interface SettingData {
   setNginxConfig: (nginxData: Nginx) => void;
 }
 
-export const useStore = create<SettingData>((set) => ({
+export const useSettingStore = create<SettingData>((set) => ({
   projectId: 0,
   setProjectId: (id) =>
     set(() => ({

@@ -17,8 +17,8 @@ interface PropertyProps {
   buildValue: Build;
 }
 
-export default function BuildPropertyBox({ buildValue }: PropertyProps) {
-  const [hidden, setHidden] = useState(true);
+export default function PropertyPaper({ buildValue }: PropertyProps) {
+  const [hidden, setHidden] = useState(false);
 
   const [propertyDatas, setPropertyDatas] = useState<Property[]>(
     buildValue.properties,

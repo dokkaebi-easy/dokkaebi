@@ -4,11 +4,11 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { v4 as uuid } from 'uuid';
-import BuildPaper from 'Components/Pages/Setting/BuildPage/BuildPaper/BuildPaper';
 import BuildData from 'Components/MDClass/BuildData/BuildData';
 import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
+import DBPaper from './DBPaper/DBPaper';
 
-export default function BuildPage() {
+export default function DBpage() {
   const buildConfigs = useSettingStore((state) => state.buildConfigs);
   const setBuildConfigs = useSettingStore((state) => state.setBuildConfigs);
 
@@ -34,7 +34,7 @@ export default function BuildPage() {
             background: 'linear-gradient(195deg, #666, #191919)',
           }}
         >
-          <Typography variant="h5">FE/BE Setting</Typography>
+          <Typography variant="h5">DB Setting</Typography>
         </Paper>
       </Box>
       <Box>
@@ -46,12 +46,12 @@ export default function BuildPage() {
               startIcon={<AddIcon />}
               sx={{ marginRight: 3, color: 'black', borderColor: 'black' }}
             >
-              FE/BE Add
+              DB Add
             </Button>
           </Box>
           <Box sx={{ my: 3 }}>
             {buildConfigs.map((value, index) => (
-              <BuildPaper
+              <DBPaper
                 key={uuid()}
                 index={index}
                 buildData={value}
