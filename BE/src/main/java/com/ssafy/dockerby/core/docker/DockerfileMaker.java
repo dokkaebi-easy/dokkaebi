@@ -135,7 +135,8 @@ public class DockerfileMaker {
     sb.append("COPY ").append(". /usr/src/app").append('\n');
 
     sb.append("RUN ").append("pip install -r requirements.txt").append('\n');
-
+    sb.append("RUN ").append("python manage.py makemigrations").append('\n');
+    sb.append("RUN ").append("python manage.py migrate").append('\n');
     sb.append("CMD [\"python\", \"manage.py\", \"runserver\", \"0.0.0.0:8000\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
