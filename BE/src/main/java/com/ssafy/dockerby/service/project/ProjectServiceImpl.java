@@ -11,6 +11,7 @@ import com.ssafy.dockerby.core.gitlab.GitlabAdapter;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabCloneDto;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.core.util.CommandInterpreter;
+import com.ssafy.dockerby.dto.framework.DbPropertyConfigDto;
 import com.ssafy.dockerby.dto.project.BuildConfigDto;
 import com.ssafy.dockerby.dto.project.BuildDetailResponseDto;
 import com.ssafy.dockerby.dto.project.BuildTotalDetailDto;
@@ -22,11 +23,13 @@ import com.ssafy.dockerby.dto.project.GitConfigDto;
 import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
+import com.ssafy.dockerby.dto.project.framework.DbTypeResponseDto;
+import com.ssafy.dockerby.dto.project.framework.DbVersionResponseDto;
 import com.ssafy.dockerby.dto.project.framework.FrameworkTypeResponseDto;
 import com.ssafy.dockerby.dto.project.framework.FrameworkVersionResponseDto;
 import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.entity.ConfigHistory;
-import com.ssafy.dockerby.entity.core.FrameworkType;
+import com.ssafy.dockerby.entity.core.SettingConfig;
 import com.ssafy.dockerby.entity.core.Version;
 import com.ssafy.dockerby.entity.git.GitlabAccessToken;
 import com.ssafy.dockerby.entity.git.WebhookHistory;
@@ -37,7 +40,7 @@ import com.ssafy.dockerby.entity.project.enums.StateType;
 import com.ssafy.dockerby.entity.user.User;
 import com.ssafy.dockerby.repository.project.BuildStateRepository;
 import com.ssafy.dockerby.repository.project.ConfigHistoryRepository;
-import com.ssafy.dockerby.repository.project.FrameworkTypeRepository;
+import com.ssafy.dockerby.repository.project.SettingConfigRepository;
 import com.ssafy.dockerby.repository.project.ProjectRepository;
 import com.ssafy.dockerby.repository.user.UserRepository;
 import com.ssafy.dockerby.service.git.GitlabService;
@@ -71,7 +74,7 @@ public class ProjectServiceImpl implements ProjectService {
   private final EntityManager em;
   private final ProjectRepository projectRepository;
   private final BuildStateRepository buildStateRepository;
-  private final FrameworkTypeRepository frameworkTypeRepository;
+  private final SettingConfigRepository settingConfigRepository;
   private final ConfigHistoryRepository configHistoryRepository;
   private final UserRepository userRepository;
   private final GitlabService gitlabService;
@@ -115,7 +118,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     List<BuildConfigDto> buildConfigDtos = new ArrayList<>();
     for (BuildConfig buildConfig : buildConfigs) {
-      FrameworkType framework = frameworkTypeRepository.findByFrameworkName(
+      SettingConfig framework = settingConfigRepository.findBySettingConfigName(
           buildConfig.getFramework()).orElseThrow();
       Version version = framework.getLanguage()
           .findVersionByDocker(buildConfig.getVersion())
@@ -134,7 +137,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     List<DBConfigDto> dbConfigDtos = new ArrayList<>();
     for (DbConfig config : dbConfigs) {
-      FrameworkType framework = frameworkTypeRepository.findByFrameworkName(
+      SettingConfig framework = settingConfigRepository.findBySettingConfigName(
           config.getFramework()).orElseThrow();
       Version version = framework.getLanguage().findVersionByDocker(config.getVersion())
           .orElseThrow(() -> new IllegalArgumentException("dbconfig version miss match"));
@@ -182,12 +185,13 @@ public class ProjectServiceImpl implements ProjectService {
     // 빌드 환경설정 Convert
     List<BuildConfig> buildConfigs = new ArrayList<>();
     for (BuildConfigDto buildConfigDto : projectConfigDto.getBuildConfigs()) {
-      FrameworkType framework = frameworkTypeRepository.findById(
+      SettingConfig framework = settingConfigRepository.findById(
           buildConfigDto.getFrameworkId()).orElseThrow();
       Version version = framework.getLanguage().findVersionByInput(buildConfigDto.getVersion())
           .orElseThrow(() -> new IllegalArgumentException(buildConfigDto.getVersion()));
       buildConfigs.add(
-          dockerConfigParser.buildConverter(buildConfigDto.getName(), framework.getFrameworkName(),
+          dockerConfigParser.buildConverter(buildConfigDto.getName(),
+              framework.getSettingConfigName(),
               version.getDockerVersion(),
               dockerConfigParser.dockerbyProperties(buildConfigDto.getProperties()),
               buildConfigDto.getProjectDirectory(), buildConfigDto.getBuildPath(),
@@ -263,7 +267,7 @@ public class ProjectServiceImpl implements ProjectService {
       if (dbConfigDto.getVersion().isBlank()) {
         continue;
       }
-      FrameworkType framework = frameworkTypeRepository.findById(
+      SettingConfig framework = settingConfigRepository.findById(
           dbConfigDto.getFrameworkId()).orElseThrow();
       Version version = framework.getLanguage().findVersionByInput(dbConfigDto.getVersion())
           .orElseThrow(() -> new IllegalArgumentException("DB CONFIG VERSION ERROR"));
@@ -279,8 +283,17 @@ public class ProjectServiceImpl implements ProjectService {
           list.add(new DockerbyProperty("environment", property.getProperty(), property.getData()));
         }
       }
+
+      String dbConfigPath = pathParser.dockerbyConfigPath().toString();
+      DbPropertyConfigDto dbPropertyConfigDto = FileManager.loadJsonFile(dbConfigPath,
+          framework.getOption(), DbPropertyConfigDto.class);
+
+      list.add(new DockerbyProperty("volume",
+          pathParser.volumePath().append("/").append(framework.getOption()).toString(),
+          dbPropertyConfigDto.getVolume()));
+
       dbConfigs.add(
-          dockerConfigParser.DbConverter(dbConfigDto.getName(), framework.getFrameworkName(),
+          dockerConfigParser.DbConverter(dbConfigDto.getName(), framework.getSettingConfigName(),
               version.getDockerVersion(), list, dbConfigDto.getDumpLocation(),
               project.getProjectName()));
     }
@@ -544,59 +557,6 @@ public class ProjectServiceImpl implements ProjectService {
     em.flush();
   }
 
-  @Override
-  public List<FrameworkTypeResponseDto> getFrameworkType() {
-    log.info("getFrameworkType request received");
-
-    //frameworkTypes initialized
-    List<FrameworkTypeResponseDto> frameworkTypes = new ArrayList<>();
-
-    try {
-      // 모든 FrameworkType을 조회한 뒤 리스트에 담아서 반환
-      frameworkTypeRepository.findAll().forEach(value ->
-          frameworkTypes.add(FrameworkTypeResponseDto.from(value)));
-
-      //성공 로그 출력
-      log.info("getFrameworkType request success");
-    } catch (Exception error) {
-      //실패 로그 출력
-      log.error("getFrameworkType request failed {} {}", error.getCause(), error.getMessage());
-
-      throw error;
-    }
-
-    log.info("getFrameworkType request completed typeSize : {}", frameworkTypes.size());
-    return frameworkTypes;
-  }
-
-  @Override
-  public FrameworkVersionResponseDto getFrameworkVersion(Long typeId) throws NotFoundException {
-
-    try { //framework 가져오기
-      //frameworkTypeId 로 framework 가져오기
-      FrameworkType type = frameworkTypeRepository.findById(typeId)
-          .orElseThrow(
-              () -> new NotFoundException("ProjectServiceImpl.getFrameworkVersion : " + typeId));
-
-      List<String> versions = new ArrayList<>();
-      type.getLanguage().getVersions().forEach(version ->
-          versions.add(version.getInputVersion()));
-
-      List<String> buildTools = new ArrayList<>();
-      if (!type.getBuildTools().isEmpty()) {
-        type.getBuildTools().forEach(buildTool -> buildTools.add(buildTool.getName()));
-      }
-      //성공 로그 출력
-      log.info("getFrameworkVersion request success");
-      return FrameworkVersionResponseDto.from(type.getLanguage().getName(), versions, buildTools);
-    } catch (Exception error) {
-      //실패 로그 출력
-      log.error("getFrameworkVersion request failed {} {}", error.getCause(), error.getMessage());
-      throw error;
-    }
-  }
-
-
   //history 저장
   public void createConfigHistory(HttpServletRequest request, Project project, String msg)
       throws NotFoundException {
@@ -755,4 +715,5 @@ public class ProjectServiceImpl implements ProjectService {
     log.info("project list size {}", resultList.size());
     return resultList;
   }
+
 }
