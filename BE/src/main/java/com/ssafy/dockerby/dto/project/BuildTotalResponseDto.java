@@ -24,5 +24,9 @@ public class BuildTotalResponseDto {
   private Long buildNumber;
 
   @NotNull
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+  private LocalDateTime registDate;
+
+  @NotNull
   private List<BuildTotalDetailDto> buildTotalDetailDtos;
 }
