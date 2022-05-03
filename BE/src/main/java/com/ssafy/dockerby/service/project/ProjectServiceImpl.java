@@ -437,7 +437,6 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
       log.error("pullStart : Pull failed {}", e);
-      throw e;
     }
     log.info("pullStart Done");
   }
@@ -486,7 +485,6 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
       log.error("buildStart : Build Failed {} ", e);
-      throw e;
     }
     log.info("buildStart Done");
   }
@@ -556,7 +554,6 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
       log.error("runStart : Run Failed {}", e);
-      throw e;
     }
     log.info("runStart Done");
   }
