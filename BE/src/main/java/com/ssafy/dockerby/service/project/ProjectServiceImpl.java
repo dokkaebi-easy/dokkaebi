@@ -23,10 +23,6 @@ import com.ssafy.dockerby.dto.project.GitConfigDto;
 import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectConfigDto;
 import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
-import com.ssafy.dockerby.dto.project.framework.DbTypeResponseDto;
-import com.ssafy.dockerby.dto.project.framework.DbVersionResponseDto;
-import com.ssafy.dockerby.dto.project.framework.FrameworkTypeResponseDto;
-import com.ssafy.dockerby.dto.project.framework.FrameworkVersionResponseDto;
 import com.ssafy.dockerby.dto.user.UserDetailDto;
 import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.core.SettingConfig;
@@ -425,11 +421,8 @@ public class ProjectServiceImpl implements ProjectService {
       buildStates.get(2).updateStateType("Done");
       buildStates.get(1).updateStateType("Processing");
 
-      log.info("pullStart : Pull Success : {}", buildStates.get(0).toString());
-
-      //dirtyCheck 후 flush
       em.flush();
-
+      log.info("pullStart : Pull Success : {}", buildStates.get(0).toString());
     } catch (Exception e) { // state failed 넣기
       //pullState failed 입력
       buildStates.get(2).updateStateType("Failed");
@@ -437,6 +430,7 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
       log.error("pullStart : Pull failed {}", e);
+      throw e;
     }
     log.info("pullStart Done");
   }
@@ -473,10 +467,7 @@ public class ProjectServiceImpl implements ProjectService {
       buildStates.get(1).updateStateType("Done");
       buildStates.get(0).updateStateType("Processing");
 
-      //dirtyCheck 후 flush
       em.flush();
-
-      //성공 로그 출력
       log.info("buildStart : Build Success : {}", buildStates.get(1).toString());
     } catch (Exception e) { // state failed 넣기
       //buildState failed 입력
@@ -485,8 +476,8 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
       log.error("buildStart : Build Failed {} ", e);
+      throw e;
     }
-    em.flush();
     log.info("buildStart Done");
   }
 
@@ -545,9 +536,8 @@ public class ProjectServiceImpl implements ProjectService {
       // state Done 넣기
       buildStates.get(0).updateStateType("Done");
 
-      log.info("runStart : Run Success = {} ", buildStates.get(2).toString());
-
       em.flush();
+      log.info("runStart : Run Success = {} ", buildStates.get(2).toString());
     } catch (Exception e) { // state failed 넣기
       //dockerRunState failed 입력
       buildStates.get(0).updateStateType("Failed");
@@ -555,13 +545,13 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
       log.error("runStart : Run Failed {}", e);
+      throw e;
     }
-    em.flush();
     log.info("runStart Done");
   }
 
   @Override
-  public void updateProjectDone(Long projectId) throws NotFoundException {
+  public StateType updateProjectDone(Long projectId) throws NotFoundException {
     log.info("updateProjectDone Start : projectId = {} ", projectId);
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
@@ -571,6 +561,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     log.info("updateProject Done : projectId = {} ", project.getStateType());
     em.flush();
+    return project.getStateType();
   }
 
   //history 저장
