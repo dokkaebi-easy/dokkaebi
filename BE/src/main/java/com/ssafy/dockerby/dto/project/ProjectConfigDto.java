@@ -27,4 +27,14 @@ public class ProjectConfigDto {
     return new ProjectConfigDto(projectId, projectName, buildConfigs, gitConfig, nginxConfigDto);
   }
 
+  @Override
+  public String toString() {
+    return "ProjectConfigDto{" +
+      "projectId=" + projectId +
+      ", projectName='" + projectName + '\'' +
+      ", buildConfigs=" + buildConfigs +
+      ", gitConfig=" + gitConfig +
+      ", nginxConfig=" + nginxConfig +
+      '}';
+  }
 }

@@ -5,14 +5,18 @@ import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig.FrameworkType;
 import com.ssafy.dockerby.dto.project.BuildConfigDto;
 import com.ssafy.dockerby.dto.project.BuildConfigDto.ConfigProperty;
 import com.ssafy.dockerby.dto.project.ProjectConfigDto;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class ConfigParser {
 
   private static Map<String, List<String>> getProperties(BuildConfigDto buildConfigDto) {
+    log.info("getProperties Start : BuildConfigName = {}",buildConfigDto.getName());
     Map<String, List<String>> properties = new HashMap<>();
 
     List<String> publishes = new ArrayList<>();
@@ -33,25 +37,35 @@ public class ConfigParser {
     }
 
     if (!publishes.isEmpty()) {
+      log.info("getProperties : publishes Exist = {}",true);
       properties.put("publish", publishes);
     }
+    else log.info("getProperties : publishes Exist = {}",false);
+
     if (!volumes.isEmpty()) {
+      log.info("getProperties : volumes Exist = {}",true);
       properties.put("volume", volumes);
     }
+    else log.info("getProperties : volumes Exist = {}",false);
+
     if (!envs.isEmpty()) {
+      log.info("getProperties : env Exist = {}",true);
       properties.put("env", envs);
     }
+    else log.info("getProperties : env Exist = {}",false);
 
+    log.info("getProperties Done : properties Size = {}",properties.size());
     return properties;
   }
 
   /**
    * List<{@link BuildConfigDto}>를 {@link DockerContainerConfig}로 변환해준다.
-   * {@link BuildConfigDto#frameworkId}를 {@link FrameworkType}으로 변환한다.
+   * {@link BuildConfigDto#getFrameworkId()}를 {@link FrameworkType}으로 변환한다.
    * @param requestDto
    * @return {@link DockerContainerConfig}
    */
   public static List<DockerContainerConfig> getBuildConfig(ProjectConfigDto requestDto) {
+    log.info("getBuildConfig Start : projectName = {}",requestDto.getProjectName());
     List<DockerContainerConfig> configs = new ArrayList<>();
     requestDto.getBuildConfigs().forEach(config ->
         configs.add(DockerContainerConfig.builder()
@@ -67,6 +81,7 @@ public class ConfigParser {
         ));
 
     if (requestDto.getNginxConfig() != null) {
+      log.info("getBuildConfig : nginxConfig Exist = {}",true);
       for (DockerContainerConfig config : configs) {
         if (config.isUseNginx()) {
           if(!config.getProperties().containsKey("publish"))
@@ -80,12 +95,15 @@ public class ConfigParser {
         }
       }
     }
+    else log.info("getBuildConfig : nginxConfig Exist = {}", false);
 
+    log.info("getBuildConfig Done");
     return configs;
   }
 
   public static List<ConfigProperty> dockerContainerPropertyToConfigProperty(
       Map<String, List<String>> properties) {
+    log.info("dockerContainerPropertyToConfigProperty Start");
       List<ConfigProperty> result = new ArrayList<>();
 
       for(String key : properties.keySet()) {
@@ -96,11 +114,14 @@ public class ConfigParser {
             split = property.split("=");
           else if(key.equals("publish") || key.equals("volume"))
             split = property.split(":");
-          else
+          else {
+            log.info("dockerContainerPropertyToConfigProperty Failed : IllegalArgument = {}",key);
             throw new IllegalArgumentException("dockerContainerPropertyToConfigProperty : "+key);
+          }
           result.add(ConfigProperty.of(key,split[0],split[1]));
         });
       }
+    log.info("dockerContainerPropertyToConfigProperty Done");
     return result;
   }
 
