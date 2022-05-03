@@ -6,7 +6,10 @@ import java.util.List;
 
 public class DbConfig extends DockerbyConfig {
 
-  private final String dumpLocation;
+  private String dumpLocation;
+
+  public DbConfig() {
+  }
 
   public DbConfig(String name, String framework, String version, List<DockerbyProperty> properties,
       String dumpLocation) {

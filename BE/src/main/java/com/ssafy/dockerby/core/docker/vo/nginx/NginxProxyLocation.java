@@ -2,8 +2,11 @@ package com.ssafy.dockerby.core.docker.vo.nginx;
 
 public class NginxProxyLocation {
 
-  private final String location;
-  private final String url;
+  private String location;
+  private String url;
+
+  public NginxProxyLocation() {
+  }
 
   public NginxProxyLocation(String location, String url) {
     this.location = location;
@@ -18,7 +21,7 @@ public class NginxProxyLocation {
     return url;
   }
 
-  public boolean isEmpty() {
+  public boolean checkEmpty() {
     return location.isBlank() && url.isBlank();
   }
 

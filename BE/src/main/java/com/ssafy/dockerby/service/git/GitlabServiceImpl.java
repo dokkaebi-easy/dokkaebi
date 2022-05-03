@@ -1,16 +1,12 @@
 package com.ssafy.dockerby.service.git;
 
-import com.ssafy.dockerby.dto.git.GitAccountRequestDto;
-import com.ssafy.dockerby.dto.git.GitAccountResponseDto;
 import com.ssafy.dockerby.dto.git.GitTokenRequestDto;
 import com.ssafy.dockerby.dto.git.GitTokenResponseDto;
 import com.ssafy.dockerby.dto.project.GitConfigDto;
 import com.ssafy.dockerby.entity.git.GitlabAccessToken;
-import com.ssafy.dockerby.entity.git.GitlabAccount;
 import com.ssafy.dockerby.entity.git.GitlabConfig;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.repository.git.GitlabAccessTokenRepository;
-import com.ssafy.dockerby.repository.git.GitlabAccountRepository;
 import com.ssafy.dockerby.repository.git.GitlabConfigRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +24,6 @@ import org.springframework.stereotype.Service;
 public class GitlabServiceImpl implements GitlabService {
 
   private final GitlabAccessTokenRepository tokenRepository;
-  private final GitlabAccountRepository accountRepository;
   private final GitlabConfigRepository configRepository;
   @Override
   public GitlabConfig createConfig(Project project, GitConfigDto configDto) {
@@ -103,40 +98,6 @@ public class GitlabServiceImpl implements GitlabService {
         .orElseThrow(() -> new NotFoundException());
 
     token.softDelete();
-  }
-
-  @Override
-  public void createAccount(GitAccountRequestDto requestDto) {
-    GitlabAccount account = GitlabAccount.from(requestDto);
-    accountRepository.save(account);
-  }
-
-  @Override
-  public void updateAccount(GitAccountRequestDto requestDto) {
-    GitlabAccount account = accountRepository.findById(requestDto.getId())
-        .orElseThrow(() -> new NotFoundException());
-    account.update(requestDto);
-  }
-
-  @Override
-  public List<GitAccountResponseDto> accounts() {
-    List<GitAccountResponseDto> results = new ArrayList<>();
-    accountRepository.findAllByEmailIsNotNull()
-        .forEach(value -> results.add(GitAccountResponseDto.from(value)));
-    return results;
-  }
-
-  @Override
-  public GitlabAccount account(Long id) {
-    return accountRepository.findById(id)
-        .orElseThrow(() -> new NotFoundException());
-  }
-
-  @Override
-  public void deleteAccount(Long id) {
-    GitlabAccount account = accountRepository.findById(id)
-        .orElseThrow(() -> new NotFoundException());
-    account.softDelete();
   }
 }
 

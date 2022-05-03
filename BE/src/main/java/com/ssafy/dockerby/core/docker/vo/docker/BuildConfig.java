@@ -1,14 +1,21 @@
 package com.ssafy.dockerby.core.docker.vo.docker;
 
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 
 public class BuildConfig extends DockerbyConfig {
 
-  private final String projectDirectory;
+  private String projectDirectory;
 
-  private final String buildPath;
+  private String buildPath;
 
-  private final String type;
+  private String type;
+
+  public BuildConfig() {
+  }
 
   public BuildConfig(String name, String framework, String version, List<DockerbyProperty> properties,
       String projectDirectory, String buildPath, String type) {

@@ -1,9 +1,12 @@
 package com.ssafy.dockerby.core.docker.vo.nginx;
 
 public class NginxHttpsOption {
-  private final String sslCertificate;
-  private final String sslCertificateKey;
-  private final String sslPath;
+  private String sslCertificate;
+  private String sslCertificateKey;
+  private String sslPath;
+
+  public NginxHttpsOption() {
+  }
 
   public NginxHttpsOption(String sslCertificate, String sslCertificateKey, String sslPath) {
     this.sslCertificate = sslCertificate;
@@ -23,7 +26,7 @@ public class NginxHttpsOption {
     return sslPath;
   }
 
-  public boolean isEmpty() {
+  public boolean checkEmpty() {
     return sslCertificate.isBlank() || sslCertificateKey.isBlank() || sslPath.isBlank();
   }
 }

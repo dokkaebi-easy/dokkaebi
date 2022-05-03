@@ -2,13 +2,21 @@ package com.ssafy.dockerby.core.docker.vo.docker;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 
 public class DockerbyConfig {
 
-  private final String framework;
-  private final String version;
-  private final String name;
-  private final List<DockerbyProperty> properties;
+  private String framework;
+  private String version;
+  private String name;
+  private List<DockerbyProperty> properties;
+
+  public DockerbyConfig() {
+  }
 
   DockerbyConfig(String name, String framework, String version, List<DockerbyProperty> properties) {
     this.framework = framework;
