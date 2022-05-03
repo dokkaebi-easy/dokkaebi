@@ -14,6 +14,10 @@ FROM openjdk:11-jdk
 COPY --from=react /build /usr/share/nginx
 COPY --from=react /app.jar /home/conf/app.jar
 
+# FROM openjdk:11-jdk
+# COPY /FE/build /usr/share/nginx
+# COPY /BE/build/libs/*.jar /home/conf/app.jar
+
 RUN apt update &&  apt install -y mariadb-server-10.5 \
     && apt install -y uuid-runtime && apt update \
      && apt install -y git && apt update \

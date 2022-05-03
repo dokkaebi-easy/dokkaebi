@@ -66,7 +66,7 @@ public class DockerfileMaker {
     } else if (config.getType().equals("Maven")) {
       sb.append(((config.getBuildPath().isBlank()) ? "/target" : config.getBuildPath()) + "/*.jar");
     }
-    sb.append(" app.jar").append('\n');
+    sb.append(" ./app.jar").append('\n');
     sb.append("ENTRYPOINT [\"java\", \"-jar\", \"./app.jar\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());

@@ -9,15 +9,21 @@ import com.ssafy.dockerby.dto.project.ConfigProperty;
 import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class DockerConfigParser {
+
+  private PathParser pathParser;
 
   public DbConfig DbConverter(String name, String framework, String dockerVersion,
       List<DockerbyProperty> properties, String dumpLocation, String projectName) {
 
     DbConfig dbConfig = new DbConfig(name, framework, dockerVersion, properties, dumpLocation);
     if(!dumpLocation.isBlank()) {
-      String volumePath = PathParser.volumePath(projectName, dumpLocation).toString();
+      String volumePath = pathParser.volumePath(projectName, dumpLocation).toString();
       dbConfig.addProperty(new DockerbyProperty("volume", volumePath, dumpLocation));
     }
     return dbConfig;

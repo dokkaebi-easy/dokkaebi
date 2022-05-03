@@ -1,9 +1,12 @@
 package com.ssafy.dockerby.core.docker.vo.docker;
 
 public class DockerbyProperty {
-  private final String type;
-  private final String host;
-  private final String container;
+  private String type;
+  private String host;
+  private String container;
+
+  public DockerbyProperty() {
+  }
 
   public DockerbyProperty(String type, String host, String container) {
     this.type = type;
