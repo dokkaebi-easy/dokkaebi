@@ -4,7 +4,8 @@ spring:
       matching-strategy: ant_path_matcher
   profiles:
     include: eth
-
+  session:
+    store-type: jdbc
   sql:
     init:
       mode: never
@@ -29,3 +30,4 @@ dockerby:
   configPath: "config"
   logPath: "log"
   volumePath: "/var/dockerby"
+  dockerbyConfigPath : "/home/conf"

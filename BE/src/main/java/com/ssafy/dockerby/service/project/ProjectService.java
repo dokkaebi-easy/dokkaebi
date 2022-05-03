@@ -3,6 +3,8 @@ package com.ssafy.dockerby.service.project;
 import com.ssafy.dockerby.common.exception.UserDefindedException;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.dto.project.*;
+import com.ssafy.dockerby.dto.project.framework.DbTypeResponseDto;
+import com.ssafy.dockerby.dto.project.framework.DbVersionResponseDto;
 import com.ssafy.dockerby.dto.project.framework.FrameworkTypeResponseDto;
 import com.ssafy.dockerby.dto.project.framework.FrameworkVersionResponseDto;
 import com.ssafy.dockerby.entity.project.Project;
@@ -34,10 +36,6 @@ public interface ProjectService {
 
   void updateProjectDone(Long projectId) throws NotFoundException;
 
-  List<FrameworkTypeResponseDto> getFrameworkType();
-
-  FrameworkVersionResponseDto getFrameworkVersion(Long typeId)
-      throws NotFoundException;
 
   List<BuildTotalResponseDto> buildTotal(Long projectId)
     throws NotFoundException;
@@ -46,6 +44,5 @@ public interface ProjectService {
       throws NotFoundException;
 
   List<ProjectListResponseDto> projectList() throws NotFoundException, UserDefindedException;
-
 
 }

@@ -27,6 +27,7 @@ public class GitlabServiceImpl implements GitlabService {
   private final GitlabConfigRepository configRepository;
   @Override
   public GitlabConfig createConfig(Project project, GitConfigDto configDto) {
+    log.info("createConfig Start : projectName = {} ",project.getProjectName());
     GitlabConfig config = GitlabConfig.from(configDto);
 
     GitlabAccessToken token = tokenRepository.findById(configDto.getAccessTokenId())
@@ -36,12 +37,13 @@ public class GitlabServiceImpl implements GitlabService {
     config.setToken(token);
 
     configRepository.save(config);
-
+    log.info("createConfig Done");
     return config;
   }
 
   @Override
   public GitlabConfig updateConfig(Project project, GitConfigDto configDto) {
+    log.info("updateConfig Start : projectName = {} ",project.getProjectName());
     GitlabConfig config = configRepository.findByProjectId(project.getId())
         .orElseThrow(() -> new NotFoundException());
 
@@ -52,52 +54,65 @@ public class GitlabServiceImpl implements GitlabService {
           .orElseThrow(() -> new NotFoundException());
       config.setToken(newToken);
     }
+    log.info("updateConfig Done");
     return config;
   }
 
   @Override
   public Optional<GitlabConfig> config(Long projectId) {
+    log.info("config Start : projectId = {} ",projectId);
     return configRepository.findByProjectId(projectId);
   }
 
   @Override
-  public void deleteConfig(Long proejctId) {
-    configRepository.deleteById(proejctId);
+  public void deleteConfig(Long projectId) {
+    log.info("deleteConfig Start : projectId = {} ",projectId);
+    configRepository.deleteById(projectId);
+    log.info("deleteConfig Done");
   }
 
   @Override
   public void createToken(GitTokenRequestDto requestDto) {
+    log.info("createToken Start : name = {} ",requestDto.getName());
     GitlabAccessToken token = GitlabAccessToken.from(requestDto);
     tokenRepository.save(token);
+    log.info("createToken Done");
   }
 
   @Override
   public void updateToken(GitTokenRequestDto requestDto) {
+    log.info("updateToken Start : name = {} ",requestDto.getName());
     GitlabAccessToken token = tokenRepository.findById(requestDto.getId())
         .orElseThrow(() -> new NotFoundException());
     token.update(requestDto);
+    log.info("updateToken Done");
   }
 
   @Override
   public List<GitTokenResponseDto> tokens() {
+    log.info("tokens Start ");
     List<GitTokenResponseDto> results = new ArrayList<>();
     tokenRepository.findAllByAccessTokenIsNotNull()
         .forEach(value -> results.add(GitTokenResponseDto.from(value)));
+    log.info("tokens Done");
     return results;
   }
 
   @Override
   public GitlabAccessToken token(Long id) {
+    log.info("token Start");
     return tokenRepository.findById(id)
         .orElseThrow(() -> new NotFoundException());
   }
 
   @Override
   public void deleteToken(Long id) {
+    log.info("deleteToken Start");
     GitlabAccessToken token = tokenRepository.findById(id)
         .orElseThrow(() -> new NotFoundException());
 
     token.softDelete();
+    log.info("deleteToken Done");
   }
 }
 
