@@ -27,18 +27,12 @@ public class GitlabConfig {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "gitlab_config_id")
   private Long id;
-
-  private String name;
   private String hostUrl;
   private String secretToken;
   private String repositoryUrl;
   private String branchName;
 
   private Long gitProjectId;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "gitlab_account_id")
-  GitlabAccount account;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "gitlab_access_token_id")
@@ -48,9 +42,8 @@ public class GitlabConfig {
   @JoinColumn(name = "project_id")
   Project project;
 
-  public static GitlabConfig of(String name, String hostUrl, String secretToken, String repositoryUrl, String branchName, String repositoryName, Long gitProjectId) {
+  public static GitlabConfig of(String hostUrl, String secretToken, String repositoryUrl, String branchName, Long gitProjectId) {
     return new GitlabConfig().builder()
-        .name(name)
         .hostUrl(hostUrl)
         .secretToken(secretToken)
         .repositoryUrl(repositoryUrl)
@@ -61,18 +54,12 @@ public class GitlabConfig {
 
   public static GitlabConfig from(GitConfigDto configDto) {
     return new GitlabConfig().builder()
-        .name(configDto.getName())
         .hostUrl(configDto.getHostUrl())
         .secretToken(configDto.getSecretToken())
         .repositoryUrl(configDto.getRepositoryUrl())
         .branchName(configDto.getBranchName())
         .gitProjectId(configDto.getGitProjectId())
         .build();
-  }
-
-  public void setAccount(GitlabAccount account) {
-    this.account = account;
-    this.account.setConfig(this);
   }
 
   public void setToken(GitlabAccessToken token) {
@@ -86,7 +73,6 @@ public class GitlabConfig {
   }
 
   public void update(GitConfigDto configDto) {
-    this.name = configDto.getName();
     this.hostUrl = configDto.getHostUrl();
     this.secretToken = configDto.getSecretToken();
     this.repositoryUrl = configDto.getRepositoryUrl();
