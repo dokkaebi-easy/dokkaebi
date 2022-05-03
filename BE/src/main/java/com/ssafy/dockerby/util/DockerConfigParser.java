@@ -67,7 +67,7 @@ public class DockerConfigParser {
     log.info("configProperties Start");
     List<ConfigProperty> newProperties = new ArrayList<>();
     for (DockerbyProperty property : properties) {
-      if(!"volume".equals(property.getType()) || !"publish".equals(property.getType()))
+      if(!"volume".equals(property.getType()) && !"publish".equals(property.getType()))
         newProperties.add(ConfigProperty.of(property.getHost(), property.getContainer()));
     }
     return newProperties;

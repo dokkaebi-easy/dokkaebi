@@ -437,7 +437,6 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
       log.error("pullStart : Pull failed {}", e);
-      throw e;
     }
     log.info("pullStart Done");
   }
@@ -486,7 +485,6 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
       log.error("buildStart : Build Failed {} ", e);
-      throw e;
     }
     em.flush();
     log.info("buildStart Done");
@@ -557,7 +555,6 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
       log.error("runStart : Run Failed {}", e);
-      throw e;
     }
     em.flush();
     log.info("runStart Done");
@@ -655,6 +652,7 @@ public class ProjectServiceImpl implements ProjectService {
         buildTotalDetailDtos.sort(Comparator.comparingLong(BuildTotalDetailDto::getBuildStateId));
         BuildTotalResponseDto buildTotalResponseDto = BuildTotalResponseDto.builder()
             .buildNumber(buildState.getBuildNumber())
+            .registDate(buildTotalDetailDtos.get(0).getRegistDate())
             .buildTotalDetailDtos(buildTotalDetailDtos)
             .build();
 
