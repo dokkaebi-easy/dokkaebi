@@ -536,7 +536,7 @@ public class ProjectServiceImpl implements ProjectService {
       }
       List<String> commands = new ArrayList<>();
       if (!dbConfigs.isEmpty()) {
-        commands.addAll(dockerAdapter.getRunCommands(dbConfigs));
+        commands.addAll(dockerAdapter.getRunCommandsWithVersion(dbConfigs));
       }
       if (!buildConfigs.isEmpty()) {
         commands.addAll(dockerAdapter.getRunCommands(buildConfigs));

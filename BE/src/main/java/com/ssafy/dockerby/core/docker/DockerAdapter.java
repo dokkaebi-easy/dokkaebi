@@ -41,6 +41,10 @@ public class DockerAdapter {
     return dockerCommandMaker.run(config);
   }
 
+  private String runWithVersion(DockerbyConfig config) {
+    return dockerCommandMaker.runWithVersion(config);
+  }
+
   private String network() {
     log.info("network Start");
     return dockerCommandMaker.addBridge();
@@ -78,6 +82,17 @@ public class DockerAdapter {
     commands.add(network());
 
     configs.forEach(config -> commands.add(run(config)));
+
+    log.info("getRunCommands Done");
+    return commands;
+  }
+
+  public List<String> getRunCommandsWithVersion(List <? extends DockerbyConfig> configs) {
+    log.info("getRunCommands Start");
+    List<String> commands = new ArrayList<>();
+    commands.add(network());
+
+    configs.forEach(config -> commands.add(runWithVersion(config)));
 
     log.info("getRunCommands Done");
     return commands;

@@ -29,8 +29,27 @@ public class DockerCommandMaker {
     return sb.toString();
   }
 
+  public String runWithVersion(DockerbyConfig config) {
+    log.info("run Start {}",config);
+    StringBuilder sb = new StringBuilder();
+    sb.append("docker run -d --name ")
+        .append(projectName).append('-').append(config.getName()).append(' ');
+
+    for(String command : config.propertyCommands()) {
+      sb.append(command).append(' ');
+    }
+
+    if(this.networkBridge != null)
+      sb.append(" --network ").append(this.networkBridge);
+
+    sb.append(' ').append(config.getVersion());
+
+    log.info("run Done");
+    return sb.toString();
+  }
+
   public String run(DockerbyConfig config) {
-    log.info("run Start");
+    log.info("run Start {}",config);
     StringBuilder sb = new StringBuilder();
     sb.append("docker run -d --name ")
         .append(projectName).append('-').append(config.getName()).append(' ');
