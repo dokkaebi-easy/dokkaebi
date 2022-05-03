@@ -17,7 +17,7 @@ public class ConfigProperty {
     return new ConfigProperty(property, data);
   }
 
-  public boolean isEmpty() {
+  public boolean checkEmpty() {
     return property.isBlank() || data.isBlank();
   }
 }

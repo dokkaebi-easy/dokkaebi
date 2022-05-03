@@ -17,9 +17,9 @@ spring:
     defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.MariaDB103Dialect
 
-logging.level:
-  org.hibernate.SQL: debug
-  org.hibernate.type: trace
+#logging.level:
+#  org.hibernate.SQL: debug
+#  org.hibernate.type: trace
 
 uploadPath:
   path: "./fileData/"
@@ -27,5 +27,5 @@ uploadPath:
 dockerby:
   rootPath: "/projects"
   configPath: "config"
-  logPath : "log"
-  volumePath : "/var/dockerby"
+  logPath: "log"
+  volumePath: "/var/dockerby"

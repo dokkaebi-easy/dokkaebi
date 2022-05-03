@@ -1,6 +1,7 @@
 package com.ssafy.dockerby.util;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * 프로젝트 관련 경로
@@ -9,42 +10,43 @@ import org.springframework.beans.factory.annotation.Value;
  *  Volume 관련 경로
  *  /var/dockerby/{projectName}/{volumeFolderName}
  */
+@Component
 public class PathParser {
 
-  @Value("${dockerby.logPath}")
-  private static String root;
+  @Value("${dockerby.rootPath}")
+  private String root;
+
+  @Value("${dockerby.configPath}")
+  private String config;
 
   @Value("${dockerby.logPath}")
-  private static String config;
-
-  @Value("${dockerby.logPath}")
-  private static String log;
+  private String log;
 
   @Value("${dockerby.volumePath}")
-  private static String volume;
+  private String volume;
 
-  public static StringBuilder rootPath() {
+  public StringBuilder rootPath() {
     StringBuilder sb = new StringBuilder();
     return sb.append(root);
   }
 
-  public static StringBuilder projectPath(String projectName) {
+  public StringBuilder projectPath(String projectName) {
     return rootPath().append("/").append(projectName);
   }
 
-  public static StringBuilder configPath(String projectName) {
+  public StringBuilder configPath(String projectName) {
     return projectPath(projectName).append("/").append(config);
   }
 
-  public static StringBuilder logPath(String projectName) {
+  public StringBuilder logPath(String projectName) {
     return projectPath(projectName).append("/").append(log);
   }
 
-  public static StringBuilder repositoryPath(String projectName, Long projectId) {
+  public StringBuilder repositoryPath(String projectName, Long projectId) {
     return projectPath(projectName).append("/").append(projectId);
   }
 
-  public static StringBuilder volumePath(String projectName, String volumePath) {
+  public StringBuilder volumePath(String projectName, String volumePath) {
     return new StringBuilder(volume).append("/").append(projectName).append("/").append(volumePath);
   }
 }

@@ -27,8 +27,6 @@ public class GitlabConfig {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "gitlab_config_id")
   private Long id;
-
-  private String name;
   private String hostUrl;
   private String secretToken;
   private String repositoryUrl;
@@ -44,9 +42,8 @@ public class GitlabConfig {
   @JoinColumn(name = "project_id")
   Project project;
 
-  public static GitlabConfig of(String name, String hostUrl, String secretToken, String repositoryUrl, String branchName, Long gitProjectId) {
+  public static GitlabConfig of(String hostUrl, String secretToken, String repositoryUrl, String branchName, Long gitProjectId) {
     return new GitlabConfig().builder()
-        .name(name)
         .hostUrl(hostUrl)
         .secretToken(secretToken)
         .repositoryUrl(repositoryUrl)

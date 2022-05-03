@@ -4,12 +4,15 @@ import java.util.List;
 
 public class NginxConfig {
 
-  private final List<String> domains;
-  private final List<NginxProxyLocation> locations;
-  private final boolean https;
-  private final NginxHttpsOption nginxHttpsOption;
+  private List<String> domains;
+  private List<NginxProxyLocation> locations;
+  private boolean https;
+  private NginxHttpsOption nginxHttpsOption;
 
-  private final int maxBodySize;
+  private int maxBodySize = 50;
+
+  public NginxConfig() {
+  }
 
   public NginxConfig(List<String> domains, List<NginxProxyLocation> locations, boolean https,
       NginxHttpsOption nginxHttpsOption, int maxBodySize) {
@@ -41,8 +44,8 @@ public class NginxConfig {
   }
 
   public boolean isEmpty() {
-    return domains.isEmpty() || (isHttps() && !nginxHttpsOption.isEmpty())
-        || (!isHttps() && nginxHttpsOption.isEmpty());
+    return domains.isEmpty() || (isHttps() && !nginxHttpsOption.checkEmpty())
+        || (!isHttps() && nginxHttpsOption.checkEmpty());
   }
 
 

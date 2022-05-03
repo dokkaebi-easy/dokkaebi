@@ -1,5 +1,6 @@
 package com.ssafy.dockerby.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,8 +37,9 @@ public class FileManager {
     log.info("start load Json: {} {} {}", filePath, fileName, type.toString());
     ObjectMapper mapper = new ObjectMapper();
     File file = new File(makePath(filePath, "/", fileName));
-    if (file.exists())
-        return mapper.readValue(file, type);
+    if (file.exists()) {
+      return mapper.readValue(file, type);
+    }
     log.error("not found {}", fileName);
     throw new FileNotFoundException();
 
@@ -48,8 +50,9 @@ public class FileManager {
     log.info("start load Json: {} {} {}", filePath, fileName, type.toString());
     ObjectMapper mapper = new ObjectMapper();
     File file = new File(makePath(filePath, "/", fileName));
-    if (file.exists())
-      return Arrays.asList(mapper.readValue(file, type));
+    if (file.exists()) {
+      return mapper.readValue(file, mapper.getTypeFactory().constructCollectionType(List.class, type));
+    }
     log.error("not found {}", fileName);
     throw new FileNotFoundException();
 
@@ -87,24 +90,27 @@ public class FileManager {
     checkAndMakeDir(filePath);
     String savePath = makePath(filePath, "/", fileName);
     BufferedWriter writer = new BufferedWriter(new FileWriter(savePath));
-    for (String str : strs)
-        writer.append(str + "\n");
+    for (String str : strs) {
+      writer.append(str + "\n");
+    }
     writer.close();
   }
 
   //파일 저장 경로 생성
   private static String makePath(String... strs) {
     StringBuilder savePath = new StringBuilder();
-    for (String str : strs)
-        savePath.append(str);
+    for (String str : strs) {
+      savePath.append(str);
+    }
     return savePath.toString();
   }
 
   public static void checkAndMakeDir(String filePath) {
     //폴더가 없을시 생성
     log.info("start checkAndMakeDir {} {}", filePath);
-    if (!new File(filePath).exists())
-        new File(filePath).mkdirs();
+    if (!new File(filePath).exists()) {
+      new File(filePath).mkdirs();
+    }
     log.info("success make {} directory ", filePath);
   }
 

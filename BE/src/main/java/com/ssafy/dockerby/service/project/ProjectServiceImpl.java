@@ -2,7 +2,6 @@ package com.ssafy.dockerby.service.project;
 
 import com.ssafy.dockerby.core.docker.DockerAdapter;
 import com.ssafy.dockerby.core.docker.EtcConfigMaker;
-import com.ssafy.dockerby.core.docker.dto.DockerContainerConfig;
 import com.ssafy.dockerby.core.docker.vo.docker.BuildConfig;
 import com.ssafy.dockerby.core.docker.vo.docker.DbConfig;
 import com.ssafy.dockerby.core.docker.vo.docker.DockerbyProperty;
@@ -12,7 +11,6 @@ import com.ssafy.dockerby.core.gitlab.GitlabAdapter;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabCloneDto;
 import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.core.util.CommandInterpreter;
-import com.ssafy.dockerby.core.util.ConfigParser;
 import com.ssafy.dockerby.dto.project.BuildConfigDto;
 import com.ssafy.dockerby.dto.project.BuildDetailResponseDto;
 import com.ssafy.dockerby.dto.project.BuildTotalDetailDto;
@@ -54,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javassist.NotFoundException;
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -79,17 +76,9 @@ public class ProjectServiceImpl implements ProjectService {
   private final UserRepository userRepository;
   private final GitlabService gitlabService;
 
-  private Map<Long, FrameworkType> frameworkTypeOfId;
-  private Map<String, FrameworkType> frameworkTypeOfName;
+  private final PathParser pathParser;
 
-  @PostConstruct
-  private void setFrameworkType() {
-    frameworkTypeOfId = new HashMap<>();
-    frameworkTypeRepository.findAll().forEach(type -> {
-      frameworkTypeOfId.put(type.getId(), type);
-      frameworkTypeOfName.put(type.getFrameworkName(), type);
-    });
-  }
+  private final DockerConfigParser dockerConfigParser;
 
   @Override
   public Optional<Project> findProjectByName(String name) {
@@ -103,7 +92,7 @@ public class ProjectServiceImpl implements ProjectService {
         .orElseThrow(
             () -> new NotFoundException("ProjectServiceImpl.configByProjectName : " + projectId));
 
-    String configPath = PathParser.configPath(project.getProjectName()).toString();
+    String configPath = pathParser.configPath(project.getProjectName()).toString();
 
     List<BuildConfig> buildConfigs = new ArrayList<>();
     NginxConfigDto nginxConfig = new NginxConfigDto(new ArrayList<>(), new ArrayList<>(), false,
@@ -124,16 +113,16 @@ public class ProjectServiceImpl implements ProjectService {
       }
     }
 
-    DockerConfigParser dockerConfigParser = new DockerConfigParser();
     List<BuildConfigDto> buildConfigDtos = new ArrayList<>();
     for (BuildConfig buildConfig : buildConfigs) {
-      FrameworkType frameworkType = frameworkTypeOfName.get(buildConfig.getFramework());
-      Version version = frameworkType.getLanguage()
+      FrameworkType framework = frameworkTypeRepository.findByFrameworkName(
+          buildConfig.getFramework()).orElseThrow();
+      Version version = framework.getLanguage()
           .findVersionByDocker(buildConfig.getVersion())
           .orElseThrow(() -> new IllegalArgumentException("Version miss match"));
       buildConfigDtos.add(
           BuildConfigDto.builder()
-              .frameworkId(frameworkTypeOfName.get(buildConfig.getFramework()).getId())
+              .frameworkId(framework.getId())
               .name(buildConfig.getName())
               .projectDirectory(buildConfig.getProjectDirectory())
               .buildPath(buildConfig.getBuildPath())
@@ -145,7 +134,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     List<DBConfigDto> dbConfigDtos = new ArrayList<>();
     for (DbConfig config : dbConfigs) {
-      FrameworkType framework = frameworkTypeOfName.get(config.getFramework());
+      FrameworkType framework = frameworkTypeRepository.findByFrameworkName(
+          config.getFramework()).orElseThrow();
       Version version = framework.getLanguage().findVersionByDocker(config.getVersion())
           .orElseThrow(() -> new IllegalArgumentException("dbconfig version miss match"));
       dbConfigDtos.add(
@@ -178,25 +168,22 @@ public class ProjectServiceImpl implements ProjectService {
       result.put(project, "create");
     }
 
-    String projectPath = PathParser.projectPath(projectConfigDto.getProjectName()).toString();
-    String logPath = PathParser.logPath(projectConfigDto.getProjectName()).toString();
-    String configPath = PathParser.configPath(projectConfigDto.getProjectName()).toString();
-    String repositoryPath = PathParser.repositoryPath(projectConfigDto.getProjectName(),
-        projectConfigDto.getProjectId()).toString();
+    String projectPath = pathParser.projectPath(projectConfigDto.getProjectName()).toString();
+    String logPath = pathParser.logPath(projectConfigDto.getProjectName()).toString();
+    String configPath = pathParser.configPath(projectConfigDto.getProjectName()).toString();
+    String repositoryPath = pathParser.repositoryPath(projectConfigDto.getProjectName(),
+        projectConfigDto.getGitConfig().getGitProjectId()).toString();
 
     // config, git clone 지우고 다시 저장
+
     FileUtils.deleteDirectory(new File(configPath));
     FileUtils.deleteDirectory(new File(repositoryPath));
-
-    DockerConfigParser dockerConfigParser = new DockerConfigParser();
 
     // 빌드 환경설정 Convert
     List<BuildConfig> buildConfigs = new ArrayList<>();
     for (BuildConfigDto buildConfigDto : projectConfigDto.getBuildConfigs()) {
-      if (!frameworkTypeOfId.containsKey(buildConfigDto.getFrameworkId())) {
-        throw new IllegalArgumentException(String.valueOf(buildConfigDto.getFrameworkId()));
-      }
-      FrameworkType framework = frameworkTypeOfId.get(buildConfigDto.getFrameworkId());
+      FrameworkType framework = frameworkTypeRepository.findById(
+          buildConfigDto.getFrameworkId()).orElseThrow();
       Version version = framework.getLanguage().findVersionByInput(buildConfigDto.getVersion())
           .orElseThrow(() -> new IllegalArgumentException(buildConfigDto.getVersion()));
       buildConfigs.add(
@@ -226,7 +213,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     CommandInterpreter.runDestPath(projectPath, logPath, "Clone", 0, cloneCommand);
 
-    DockerAdapter dockerAdapter = new DockerAdapter(projectPath, projectConfigDto.getProjectName());
+    DockerAdapter dockerAdapter = new DockerAdapter(repositoryPath,
+        projectConfigDto.getProjectName());
 
     // dockerfile save
     try {
@@ -255,7 +243,7 @@ public class ProjectServiceImpl implements ProjectService {
       }
 
       EtcConfigMaker.nginxConfig(
-          PathParser.configPath(projectConfigDto.getProjectName()).append("/")
+          pathParser.configPath(projectConfigDto.getProjectName()).append("/")
               .append(defaultConfPath).toString(), nginxConfig);
       EtcConfigMaker.saveDockerNginxConfig(configPath, nginxConfig);
     }
@@ -275,16 +263,14 @@ public class ProjectServiceImpl implements ProjectService {
       if (dbConfigDto.getVersion().isBlank()) {
         continue;
       }
-      if (!frameworkTypeOfId.containsKey(dbConfigDto.getFrameworkId())) {
-        continue;
-      }
-      FrameworkType framework = frameworkTypeOfId.get(dbConfigDto.getFrameworkId());
+      FrameworkType framework = frameworkTypeRepository.findById(
+          dbConfigDto.getFrameworkId()).orElseThrow();
       Version version = framework.getLanguage().findVersionByInput(dbConfigDto.getVersion())
           .orElseThrow(() -> new IllegalArgumentException("DB CONFIG VERSION ERROR"));
 
       List<DockerbyProperty> list = new ArrayList<>();
       for (ConfigProperty property : dbConfigDto.getProperties()) {
-        if (property.isEmpty()) {
+        if (property.checkEmpty()) {
           continue;
         }
         if (property.getProperty().equals("publish")) {
@@ -295,6 +281,8 @@ public class ProjectServiceImpl implements ProjectService {
       }
       dbConfigs.add(
           dockerConfigParser.DbConverter(dbConfigDto.getName(), framework.getFrameworkName(),
+              version.getDockerVersion(), list, dbConfigDto.getDumpLocation(),
+              project.getProjectName()));
               version.getDockerVersion(), list, dbConfigDto.getDumpLocation(),project.getProjectName()));
     }
     if (!dbConfigs.isEmpty()) {
@@ -387,12 +375,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     List<BuildState> buildStates = buildStateRepository.findAllByProjectIdOrderByBuildNumberDesc(
         projectId);
-    // TODO : 겹치는 경로 부분 리팩터링 필요
-    //경로
-    String projectName = project.getProjectName();
-    String projectPath = PathParser.projectPath(projectName).toString();
-    String logPath = PathParser.logPath(projectName).toString();
-    String repositoryPath = PathParser.repositoryPath(projectName, projectId).toString();
+
+    String logPath = pathParser.logPath(project.getProjectName()).toString();
+    String repositoryPath = pathParser.repositoryPath(project.getProjectName(),
+            project.getGitConfig().getGitProjectId())
+        .toString();
 
     int buildNumber = Integer.parseInt(buildStates.get(0).getBuildNumber().toString());
 
@@ -433,10 +420,11 @@ public class ProjectServiceImpl implements ProjectService {
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.buildStart : " + projectId));
 
-    String projectName = project.getProjectName();
-    String logPath = PathParser.logPath(projectName).toString();
-    String configPath = PathParser.configPath(projectName).toString();
-    String repositoryPath = PathParser.repositoryPath(projectName, projectId).toString();
+    String logPath = pathParser.logPath(project.getProjectName()).toString();
+    String configPath = pathParser.configPath(project.getProjectName()).toString();
+    String repositoryPath = pathParser.repositoryPath(project.getProjectName(),
+            project.getGitConfig().getGitProjectId())
+        .toString();
 
     DockerAdapter dockerAdapter = new DockerAdapter(repositoryPath, project.getProjectName());
 
@@ -481,18 +469,26 @@ public class ProjectServiceImpl implements ProjectService {
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.runStart : " + projectId));
 
-    String projectName = project.getProjectName();
-    String projectPath = PathParser.projectPath(projectName).toString();
-    String logPath = PathParser.logPath(projectName).toString();
-    String configPath = PathParser.configPath(projectName).toString();
-    String repositoryPath = PathParser.repositoryPath(projectName, projectId).toString();
+    String logPath = pathParser.logPath(project.getProjectName()).toString();
+    String configPath = pathParser.configPath(project.getProjectName()).toString();
+    String repositoryPath = pathParser.repositoryPath(project.getProjectName(),
+            project.getGitConfig().getGitProjectId())
+        .toString();
 
     DockerAdapter dockerAdapter = new DockerAdapter(repositoryPath, project.getProjectName());
 
-    List<BuildConfig> buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
-        BuildConfig.class);
+    List<BuildConfig> buildConfigs = new ArrayList<>();
 
-    List<DbConfig> dbConfigs = FileManager.loadJsonFileToList(configPath, "db", DbConfig.class);
+    List<DbConfig> dbConfigs = new ArrayList<>();
+
+    File configDirectory = new File(configPath);
+    for (String fileName : configDirectory.list()) {
+      if (fileName.equals("build")) {
+        buildConfigs = FileManager.loadJsonFileToList(configPath, "build", BuildConfig.class);
+      } else if (fileName.equals("db")) {
+        dbConfigs = FileManager.loadJsonFileToList(configPath, "db", DbConfig.class);
+      }
+    }
 
     List<BuildState> buildStates = buildStateRepository.findAllByProjectIdOrderByBuildNumberDesc(
         projectId);
@@ -500,15 +496,22 @@ public class ProjectServiceImpl implements ProjectService {
     int buildNumber = Math.toIntExact(buildStates.get(0).getBuildNumber());
     try { // run 트라이
       if (buildNumber != 1) {
-        CommandInterpreter.run(logPath, "Remove", buildNumber,
-            dockerAdapter.getRemoveCommands(dbConfigs));
-
-        CommandInterpreter.run(logPath, "Remove", buildNumber,
-            dockerAdapter.getRemoveCommands(buildConfigs));
+        if (!dbConfigs.isEmpty()) {
+          CommandInterpreter.run(logPath, "Remove", buildNumber,
+              dockerAdapter.getRemoveCommands(dbConfigs));
+        }
+        if (!buildConfigs.isEmpty()) {
+          CommandInterpreter.run(logPath, "Remove", buildNumber,
+              dockerAdapter.getRemoveCommands(buildConfigs));
+        }
       }
       List<String> commands = new ArrayList<>();
-      commands.addAll(dockerAdapter.getRunCommands(dbConfigs));
-      commands.addAll(dockerAdapter.getRunCommands(buildConfigs));
+      if (!dbConfigs.isEmpty()) {
+        commands.addAll(dockerAdapter.getRunCommands(dbConfigs));
+      }
+      if (!buildConfigs.isEmpty()) {
+        commands.addAll(dockerAdapter.getRunCommands(buildConfigs));
+      }
       CommandInterpreter.run(logPath, "Run", buildNumber, commands);
       // state Done 넣기
       buildStates.get(0).updateStateType("Done");
@@ -698,7 +701,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     log.info("buildState receive success {}", buildState.getProject().getProjectName());
 
-    String logPath = PathParser.logPath(buildState.getProject().getProjectName()).toString();
+    String logPath = pathParser.logPath(buildState.getProject().getProjectName()).toString();
+
     String fileName =
         (buildState.getBuildType().toString()) + "_"
             + buildState.getBuildNumber();//  상태_빌드 넘버
