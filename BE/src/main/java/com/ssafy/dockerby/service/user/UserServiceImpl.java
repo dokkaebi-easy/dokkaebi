@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public void UserServiceImpl() throws IOException {
-        this.authKey = "43767171601a4f8a9e66074767762009MTI1MjI0Cg";
+        this.authKey = FileManager.loadFile("/home/conf", "AuthKey");
     }
 
     @Override
