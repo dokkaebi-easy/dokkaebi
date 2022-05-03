@@ -1,8 +1,6 @@
 package com.ssafy.dockerby.controller.git;
 
 import com.ssafy.dockerby.core.gitlab.GitlabAccess;
-import com.ssafy.dockerby.dto.git.GitAccountRequestDto;
-import com.ssafy.dockerby.dto.git.GitAccountResponseDto;
 import com.ssafy.dockerby.dto.git.GitTokenRequestDto;
 import com.ssafy.dockerby.dto.git.GitTokenResponseDto;
 import com.ssafy.dockerby.dto.project.GitTestConfigDto;
@@ -39,23 +37,12 @@ public class GitController {
     return gitlabService.tokens();
   }
 
-  @GetMapping("/accounts")
-  public List<GitAccountResponseDto> accounts() {
-    return gitlabService.accounts();
-  }
 
   @PostMapping("/token")
   public List<GitTokenResponseDto> createToken(
       @Validated @RequestBody GitTokenRequestDto requestDto) {
     gitlabService.createToken(requestDto);
     return gitlabService.tokens();
-  }
-
-  @PostMapping("/account")
-  public List<GitAccountResponseDto> createAccount(
-      @Validated @RequestBody GitAccountRequestDto requestDto) {
-    gitlabService.createAccount(requestDto);
-    return gitlabService.accounts();
   }
 
   @PatchMapping("/token")
@@ -65,23 +52,10 @@ public class GitController {
     return gitlabService.tokens();
   }
 
-  @PatchMapping("/account")
-  public List<GitAccountResponseDto> updateAccount(
-      @Validated @RequestBody GitAccountRequestDto requestDto) {
-    gitlabService.updateAccount(requestDto);
-    return gitlabService.accounts();
-  }
-
   @DeleteMapping("/token")
   public List<GitTokenResponseDto> deleteToken(@RequestBody Long id) {
     gitlabService.deleteToken(id);
     return gitlabService.tokens();
-  }
-
-  @DeleteMapping("/account")
-  public List<GitAccountResponseDto> deleteAccount(@RequestBody Long id) {
-    gitlabService.deleteAccount(id);
-    return gitlabService.accounts();
   }
 
   @PostMapping("/testConnection")

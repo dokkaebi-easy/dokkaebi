@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface BuildStateRepository extends JpaRepository<BuildState,Long> {
   Optional<BuildState> findByProjectId(Long projectId);
 
-  List<BuildState> findAllByProjectId(Long projectId);
+  List<BuildState> findAllByProjectIdOrderByBuildNumberAsc(Long projectId);
+  List<BuildState> findAllByProjectIdOrderByBuildNumberDesc(Long projectId);
 }
