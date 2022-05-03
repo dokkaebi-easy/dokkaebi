@@ -495,6 +495,7 @@ public class ProjectServiceImpl implements ProjectService {
 
       em.flush();
     }
+    em.flush();
     log.info("buildStart Done");
   }
 
@@ -567,6 +568,7 @@ public class ProjectServiceImpl implements ProjectService {
       //에러 로그 출력
       log.error("runStart : Run Failed {}", e);
     }
+    em.flush();
     log.info("runStart Done");
   }
 
