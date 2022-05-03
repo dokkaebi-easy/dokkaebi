@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DockerConfigParser {
 
-  private final PathParser pathParser;
+  private PathParser pathParser;
 
   public DbConfig DbConverter(String name, String framework, String dockerVersion,
       List<DockerbyProperty> properties, String dumpLocation, String projectName) {
