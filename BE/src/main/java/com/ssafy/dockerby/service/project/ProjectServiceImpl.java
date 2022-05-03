@@ -293,6 +293,7 @@ public class ProjectServiceImpl implements ProjectService {
 
   private void createBuildState(Project project, GitlabWebHookDto webHookDto) {
     List<BuildState> buildStates = new ArrayList<>();
+
     // 첫수 1부터 시작
     Long buildNumber = Long.valueOf((buildStateRepository.findAllByProjectIdOrderByBuildNumberDesc(project.getId()).size()/3)+1);
 
