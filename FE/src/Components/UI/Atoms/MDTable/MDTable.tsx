@@ -13,6 +13,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useRunStore } from 'Components/Store/RunStore/RunStore';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,28 +36,37 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function MDTable() {
+  const setRun = useRunStore((state) => state.setRun);
   const [projects, setProject] = useState<Project[]>([]);
   const [loading, setLoading] = React.useState(false);
 
   const handleClick = (projectId: number) => {
     setLoading(true);
+    setRun(1);
 
     const params = { projectId };
     axios
       .post('/api/project/build', null, { params })
       .then(() => {
         setLoading(false);
+        setRun(0);
       })
       .catch(() => {
         setLoading(false);
+        setRun(2);
       });
   };
 
   useEffect(() => {
-    axios.get('/api/project/all').then((res) => {
-      const data = res.data as Project[];
-      setProject([...data]);
-    });
+    axios
+      .get('/api/project/all')
+      .then((res) => {
+        const data = res.data as Project[];
+        setProject([...data]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     return () => {
       setProject([]);

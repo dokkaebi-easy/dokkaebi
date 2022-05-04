@@ -6,13 +6,20 @@ import CircularProgressWithLabel from 'Components/UI/Atoms/CircularProgressWithL
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
 import { useParams, useHistory, Link } from 'react-router-dom';
-import { BuildState } from 'Components/MDClass/BuildStateData/BuildStateData';
+import {
+  BuildState,
+  State,
+} from 'Components/MDClass/BuildStateData/BuildStateData';
 import BuildStateBox from 'Components/Pages/Detail/BuildStateBox/BuildStateBox';
 import { v4 as uuid } from 'uuid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import { useRunStore } from 'Components/Store/RunStore/RunStore';
 
 export default function Detail() {
+  const run = useRunStore((state) => state.run);
+  const intervals = useRunStore((state) => state.intervals);
+  const setIntervals = useRunStore((state) => state.setIntervals);
   const [buildStates, setBuildStates] = useState<BuildState[]>([]);
   const [progress, setProgress] = useState('진행중... (미완성)');
 
@@ -24,26 +31,37 @@ export default function Detail() {
   };
 
   useEffect(() => {
-    const interval = setInterval(
-      () =>
+    axios
+      .get('/api/project/build/total', { params })
+      .then((res) => {
+        const data = res.data as BuildState[];
+        data.reverse();
+        setBuildStates(data);
+      })
+      .catch();
+
+    if (run === 1) {
+      const interval = setInterval(() => {
         axios
           .get('/api/project/build/total', { params })
           .then((res) => {
             const data = res.data as BuildState[];
             data.reverse();
-            setBuildStates([...data]);
+            setBuildStates(data);
           })
-          .catch(),
-      1000,
-    );
-
+          .catch();
+      }, 1000);
+      setIntervals([...intervals, interval]);
+    } else {
+      intervals.map((value) => clearInterval(value));
+    }
     setProgress('진행중... (미완성)');
 
     return () => {
-      clearInterval(interval);
+      intervals.map((value) => clearInterval(value));
       setBuildStates([]);
     };
-  }, []);
+  }, [run]);
 
   return (
     <Box
@@ -147,7 +165,7 @@ export default function Detail() {
           </Box>
           {buildStates.length ? (
             <>
-              {buildStates.map((value) => {
+              {buildStates.map((value, index) => {
                 return <BuildStateBox key={uuid()} buildState={value} />;
               })}
             </>

@@ -18,12 +18,6 @@ interface Message {
 export default function Login() {
   const history = useHistory();
 
-  const setCookie = () => {
-    const expire = new Date();
-    expire.setTime(expire.getTime() + 1);
-    document.cookie = `key=true;expires=${expire.toUTCString()};path=/`;
-  };
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -38,7 +32,8 @@ export default function Login() {
       .then((res) => {
         const datas = res.data as Message;
         if (datas.status === 'Success') {
-          setCookie();
+          const date = new Date();
+          sessionStorage.setItem('login', date.toString());
           history.push('/');
         }
       })
