@@ -1,6 +1,9 @@
 package com.ssafy.dockerby.security;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,13 +18,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.debug("Authentication Succss");
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(3600);//session 최대 유효시간(초) 설정. 1시간
-        response.sendRedirect("/api/user/signin/success"); //리다이렉트 응답 경로
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", "Success");
+        map.put("message", "Login Successful");
+        String result = objectMapper.writeValueAsString(map);
+
+        response.getWriter().write(result);
     }
 
 }
