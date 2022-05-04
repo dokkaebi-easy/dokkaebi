@@ -18,16 +18,34 @@ import { useRunStore } from 'Components/Store/RunStore/RunStore';
 
 export default function Detail() {
   const run = useRunStore((state) => state.run);
+  const setRun = useRunStore((state) => state.setRun);
   const intervals = useRunStore((state) => state.intervals);
   const setIntervals = useRunStore((state) => state.setIntervals);
   const [buildStates, setBuildStates] = useState<BuildState[]>([]);
   const [progress, setProgress] = useState('진행중... (미완성)');
+  const [loading, setLoading] = useState(false);
 
   const history = useHistory();
   const params = useParams();
 
   const handleBackClick = () => {
     history.push(`/`);
+  };
+
+  const handleBuildClick = () => {
+    setLoading(true);
+    setRun(1);
+
+    axios
+      .post('/api/project/build', null, { params })
+      .then(() => {
+        setLoading(false);
+        setRun(0);
+      })
+      .catch(() => {
+        setLoading(false);
+        setRun(2);
+      });
   };
 
   useEffect(() => {
@@ -40,6 +58,8 @@ export default function Detail() {
       })
       .catch();
 
+    setProgress('진행중... (미완성)');
+
     if (run === 1) {
       const interval = setInterval(() => {
         axios
@@ -47,20 +67,37 @@ export default function Detail() {
           .then((res) => {
             const data = res.data as BuildState[];
             data.reverse();
-            setBuildStates(data);
+            setBuildStates([...data]);
           })
           .catch();
       }, 1000);
       setIntervals([...intervals, interval]);
-    } else {
-      intervals.map((value) => clearInterval(value));
     }
-    setProgress('진행중... (미완성)');
 
     return () => {
-      intervals.map((value) => clearInterval(value));
       setBuildStates([]);
     };
+  }, []);
+
+  useEffect(() => {
+    if (loading && run === 1) {
+      const interval = setInterval(() => {
+        axios
+          .get('/api/project/build/total', { params })
+          .then((res) => {
+            const data = res.data as BuildState[];
+            data.reverse();
+            setBuildStates([...data]);
+          })
+          .catch();
+      }, 1000);
+      setIntervals([...intervals, interval]);
+    }
+    if (run !== 1) {
+      setTimeout(() => {
+        intervals.map((value) => clearInterval(value));
+      }, 2000);
+    }
   }, [run]);
 
   return (
@@ -75,6 +112,15 @@ export default function Detail() {
           >
             Del
           </Button>
+
+          <Button
+            variant="contained"
+            onClick={handleBuildClick}
+            sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+          >
+            Build
+          </Button>
+
           <Link to={`/setting/${Object.values(params)[0]}`}>
             <Button
               variant="contained"
@@ -83,6 +129,7 @@ export default function Detail() {
               Edit
             </Button>
           </Link>
+
           <Button
             variant="contained"
             onClick={handleBackClick}

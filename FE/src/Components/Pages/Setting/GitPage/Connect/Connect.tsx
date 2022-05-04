@@ -78,11 +78,11 @@ export default function GitLabConnect({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                label="Host URL"
+                label="ex) https://lab.ssafy.com/"
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="Host URL"
+                placeholder="ex) https://lab.ssafy.com/"
                 defaultValue={hostURL}
                 onChange={handleHostURLChange}
               />

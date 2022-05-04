@@ -11,4 +11,6 @@ public interface BuildStateRepository extends JpaRepository<BuildState,Long> {
 
   List<BuildState> findAllByProjectIdOrderByBuildNumberAsc(Long projectId);
   List<BuildState> findAllByProjectIdOrderByBuildNumberDesc(Long projectId);
+
+  List<BuildState> findTop3ByProjectIdOrderByIdDesc(Long projectId);
 }
