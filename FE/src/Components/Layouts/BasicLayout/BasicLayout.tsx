@@ -20,6 +20,7 @@ const transitionStyle = {
 export default function BasicLayout() {
   const history = useHistory();
   const [open, setOpen] = useState(true);
+  const loginInfo = sessionStorage.getItem('login');
 
   const handleMiniSidenav = () => {
     if (window.innerWidth > 1200) setOpen(true);
@@ -28,22 +29,14 @@ export default function BasicLayout() {
 
   window.addEventListener('resize', handleMiniSidenav);
 
-  const getCookie = () => {
-    const cookieData = document.cookie.split(';');
-    if (cookieData.indexOf('key=true')) {
-      return true;
-    }
-    return false;
-  };
-
   useEffect(() => {
-    if (!getCookie()) {
+    if (!loginInfo) {
       history.push('/login');
     }
     return () => {
       setOpen(true);
     };
-  }, []);
+  }, [loginInfo]);
 
   return (
     <Box>

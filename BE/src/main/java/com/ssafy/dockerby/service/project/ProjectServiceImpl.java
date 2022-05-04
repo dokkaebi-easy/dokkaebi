@@ -225,7 +225,7 @@ public class ProjectServiceImpl implements ProjectService {
     // dockerfile save
     try {
       dockerAdapter.saveDockerfiles(buildConfigs);
-      CommandInterpreter.run(projectPath,"Clone",0,dockerAdapter.createNetwork());
+      CommandInterpreter.run(projectPath, "Clone", 0, dockerAdapter.createNetwork());
     } catch (Exception e) {
       log.error("docker file not making {} DockerAdapter({})", project.getProjectName());
     }
@@ -340,6 +340,12 @@ public class ProjectServiceImpl implements ProjectService {
         .stateType(StateType.valueOf("Waiting"))
         .build();
 
+    if (webHookDto != null) {
+      WebhookHistory webhookHistory = WebhookHistory.of(webHookDto);
+      webhookHistory.setBuildState(buildState1);
+      buildState1.setWebhookHistory(webhookHistory);
+    }
+
     buildStateRepository.save(buildState1);
     buildStates.add(buildState1);
 
@@ -349,6 +355,12 @@ public class ProjectServiceImpl implements ProjectService {
         .buildType(BuildType.valueOf("Run"))
         .stateType(StateType.valueOf("Waiting"))
         .build();
+
+    if (webHookDto != null) {
+      WebhookHistory webhookHistory = WebhookHistory.of(webHookDto);
+      webhookHistory.setBuildState(buildState2);
+      buildState2.setWebhookHistory(webhookHistory);
+    }
 
     buildStateRepository.save(buildState2);
     buildStates.add(buildState2);
@@ -401,8 +413,7 @@ public class ProjectServiceImpl implements ProjectService {
     Project project = projectRepository.findById(projectId)
         .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.pullStart : " + projectId));
 
-    List<BuildState> buildStates = buildStateRepository.findAllByProjectIdOrderByBuildNumberDesc(
-        projectId);
+    List<BuildState> buildStates = buildStateRepository.findTop3ByProjectIdOrderByIdDesc(projectId);
 
     String logPath = pathParser.logPath(project.getProjectName()).toString();
     String repositoryPath = pathParser.repositoryPath(project.getProjectName(),
@@ -455,8 +466,7 @@ public class ProjectServiceImpl implements ProjectService {
     List<BuildConfig> buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
         BuildConfig.class);
 
-    List<BuildState> buildStates = buildStateRepository.findAllByProjectIdOrderByBuildNumberDesc(
-        projectId);
+    List<BuildState> buildStates = buildStateRepository.findTop3ByProjectIdOrderByIdDesc(projectId);
 
     int buildNumber = Math.toIntExact(buildStates.get(0).getBuildNumber());
 
@@ -511,8 +521,7 @@ public class ProjectServiceImpl implements ProjectService {
       }
     }
 
-    List<BuildState> buildStates = buildStateRepository.findAllByProjectIdOrderByBuildNumberDesc(
-        projectId);
+    List<BuildState> buildStates = buildStateRepository.findTop3ByProjectIdOrderByIdDesc(projectId);
 
     int buildNumber = Math.toIntExact(buildStates.get(0).getBuildNumber());
     try { // run 트라이
