@@ -75,16 +75,14 @@ public class ProjectController {
   public ResponseEntity buildProject(Long projectId ) throws IOException, NotFoundException {
     log.info("API Request received : projectId = {} ",projectId);
 
-    //프로젝트 빌드 시작
+    //프로젝트 기본 설정 시작
     projectService.build(projectId, null);
-    //pull 시작
+    //build 시작
     projectService.pullStart(projectId, null);
-    //프로젝트가 한번이라도 실패했으면 projectService.projectIsFailed(projectId) 가 true 로 바뀜
-    if(!projectService.projectIsFailed(projectId))projectService.buildStart(projectId, null);
-    if(!projectService.projectIsFailed(projectId))projectService.runStart(projectId, null);
-    if(!projectService.projectIsFailed(projectId))projectService.updateProjectDone(projectId);
+    projectService.buildStart(projectId, null);
+    projectService.runStart(projectId, null);
 
-    return ResponseEntity.ok(null);
+    return ResponseEntity.ok(projectService.updateProjectDone(projectId));
   }
 
   @ApiOperation(value = "프레임 워크 타입", notes = "프레임 워크 타입을 반환 해준다.")
@@ -197,7 +195,12 @@ public class ProjectController {
       throw new IllegalArgumentException("Unauthorized secret token "+token);
 
     log.debug("ProjectController.Webhook : X-Gitlab-Toke : {} / " , token,params);
-    projectService.build(project.getId(),webHookDto);
+
+    //프로젝트 기본 설정 시작
+    projectService.build(project.getId(), webHookDto);
+    projectService.pullStart(project.getId(), webHookDto);
+    projectService.buildStart(project.getId(), webHookDto);
+    projectService.runStart(project.getId(), webHookDto);
 
     log.info("API Response null");
     return ResponseEntity.ok(null);

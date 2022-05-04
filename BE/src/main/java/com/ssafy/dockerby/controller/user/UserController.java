@@ -52,19 +52,6 @@ public class UserController {
     }
 
 
-    // security에서 로그아웃 성공시 Redirect하는 api
-    @ApiIgnore//swagger에서 hidden 시키는 어노테이션
-    @GetMapping("/signout/success")
-    public ResponseEntity signoutSuccess() {
-        log.info("API Request received : Logout Success");
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", "Success");
-        map.put("message", "Logout Successful");
-        log.info("API Response return");
-        return new ResponseEntity(map, HttpStatus.OK);
-    }
-
     @ApiOperation(value = "아이디 중복체크", notes = "사용 가능한 아이디는 true, 중복된 아이디는 false를 반환")
     @PostMapping("/duplicate/id")
     public ResponseEntity duplicatePrincipal(@RequestParam String id)
@@ -90,28 +77,6 @@ public class UserController {
         map.put("state", state);
 
         log.info("API Response return : Response = {}",state);
-        return new ResponseEntity(map, HttpStatus.OK);
-    }
-
-    // , security에서 로그인 성공시 Redirect하는 api
-    @ApiIgnore //swagger에서 hidden 시키는 어노테이션
-    @GetMapping("/signin/success")
-    public ResponseEntity loginSuccess() {
-        log.info("Login Successful");
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", "Success");
-        map.put("message", "Login Successful");
-        return new ResponseEntity(map, HttpStatus.OK);
-    }
-
-    // security에서 로그인 실패시 Redirect하는 api
-    @ApiIgnore//swagger에서 hidden 시키는 어노테이션
-    @GetMapping("/signin/fail")
-    public ResponseEntity loginFail() {
-        log.info("Login failed");
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", "Fail");
-        map.put("message", "Login failed");
         return new ResponseEntity(map, HttpStatus.OK);
     }
 

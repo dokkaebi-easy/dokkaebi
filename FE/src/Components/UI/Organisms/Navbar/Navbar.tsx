@@ -11,10 +11,10 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const location = useLocation();
-  const loginInfo = window.localStorage.getItem('login');
+  const loginInfo = sessionStorage.getItem('login');
 
   const logout = () => {
-    window.localStorage.removeItem('login');
+    sessionStorage.removeItem('login');
     axios.post(`/api/user/auth/signout`).then().catch();
   };
 
