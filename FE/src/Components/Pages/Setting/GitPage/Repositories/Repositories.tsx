@@ -91,11 +91,11 @@ export default function GitLabRepositories({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                label="Branch Specifier"
+                label="ex) master"
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="Branch Specifier"
+                placeholder="ex) master"
                 defaultValue={branchName}
                 onChange={handleBranchNameChange}
               />

@@ -182,7 +182,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
           <Box />
           <Typography>Project File Dir</Typography>
           <TextField
-            label="ex) ./FE, /BE"
+            label="ex) /FE , /BE"
             fullWidth
             variant="outlined"
             size="small"
@@ -195,7 +195,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         <Grid item xs={12}>
           <Typography>Build File Path</Typography>
           <TextField
-            label="ex) ./dist, ./build"
+            label="ex) /dist, /build"
             fullWidth
             variant="outlined"
             size="small"
