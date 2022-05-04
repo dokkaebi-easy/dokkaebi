@@ -12,6 +12,7 @@ import { v4 as uuid } from 'uuid';
 import { Git } from 'Components/MDClass/GitData/GitData';
 import axios from 'axios';
 import FormHelperText from '@mui/material/FormHelperText';
+import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 
 interface GitProps {
   gitData: Git;
@@ -22,13 +23,19 @@ interface TestConnectionAxios {
 }
 
 export default function ConnectCheck({ gitData }: GitProps) {
+  const projectName = useSettingStore((state) => state.projectName);
   const [secretToken, setSecretToken] = useState(gitData.secretToken);
+  const [domain, setDomain] = useState('');
   const [testConnectionWord, setTestConnectionWord] = useState('');
 
   const handleCreateClick = () => {
     const token = uuid();
     setSecretToken(token);
     gitData.secretToken = token;
+  };
+
+  const handleDomainChange = (event: any) => {
+    setDomain(event.target.value);
   };
 
   const handleTestConnectionClick = () => {
@@ -65,6 +72,33 @@ export default function ConnectCheck({ gitData }: GitProps) {
         <Paper sx={{ padding: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
+              <Typography>Web Hook URL</Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                size="small"
+                defaultValue={domain}
+                onChange={handleDomainChange}
+                sx={{ my: 1 }}
+              />
+              <FormHelperText id="component-helper-text">
+                (※ 도메인 주소를 적어주세요. ex) http://
+                <span style={{ color: 'red' }}>k6s205.p.ssafy.io:8482</span>
+                /api/project/hook/Dockerby)
+              </FormHelperText>
+            </Grid>
+            <Grid item xs={2} sx={{ my: 'auto' }} />
+
+            <Grid item xs={10} sx={{ my: 'auto' }}>
+              <Typography>
+                {domain
+                  ? `http://${domain}/api/project/hook/${projectName}`
+                  : ''}
+              </Typography>
+            </Grid>
+            <Grid item xs={2} sx={{ marginY: 'auto' }}>
               <Typography>Secret Token</Typography>
             </Grid>
             <Grid item xs={10}>
@@ -80,6 +114,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
                 (※ 다른 곳에 저장해두세요.)
               </FormHelperText>
             </Grid>
+
             <Grid item xs={6} sx={{ my: 'auto' }}>
               {testConnectionWord.length > 10 ? (
                 <Typography sx={{ color: 'red' }}>
