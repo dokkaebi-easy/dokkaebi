@@ -14,6 +14,9 @@ import { Link } from 'react-router-dom';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useRunStore } from 'Components/Store/RunStore/RunStore';
+import Brightness2Icon from '@mui/icons-material/Brightness2';
+import Brightness5Icon from '@mui/icons-material/Brightness5';
+import IconButton from '@mui/material/IconButton';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -125,7 +128,14 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    진행중... (미완성)
+                    <IconButton
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                      sx={{ color: 'black' }}
+                    >
+                      <Brightness5Icon />
+                    </IconButton>
                   </Link>
                 </StyledTableCell>
 
