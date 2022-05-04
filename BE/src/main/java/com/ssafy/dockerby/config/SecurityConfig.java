@@ -48,9 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/user/**", "/swagger-ui.html/**", "/configuration/**",
                 "/swagger-resources/**", "/v2/api-docs", "/webjars/**",
                 "/webjars/springfox-swagger-ui/*.{js,css}").permitAll() // 모두 허용
-//            .anyRequest().authenticated(); // 그 외의 요청은 인증된 사용자만 허용
             .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .anyRequest().permitAll()
+            .anyRequest().authenticated()
 ;
         //로그인 기능
         http.formLogin().disable();
