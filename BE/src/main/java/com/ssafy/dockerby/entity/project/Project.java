@@ -23,10 +23,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Builder
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE `dockerby`.`project` SET `deleted` = true where `project_id` = ?")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 public class Project extends BaseEntity {
@@ -42,6 +46,9 @@ public class Project extends BaseEntity {
   @Enumerated(value = EnumType.STRING)
   @Builder.Default
   private StateType stateType = StateType.valueOf("Waiting");
+
+  @Builder.Default
+  private boolean deleted = false;
 
 //연관관계 매핑
 
