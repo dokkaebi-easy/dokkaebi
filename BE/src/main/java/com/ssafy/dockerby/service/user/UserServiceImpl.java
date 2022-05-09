@@ -11,7 +11,9 @@ import com.ssafy.dockerby.repository.user.UserRepository;
 import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import javax.sql.DataSource;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +119,14 @@ public class UserServiceImpl implements UserService {
             throw new UserDefindedException(ExceptionClass.USER, HttpStatus.BAD_REQUEST,
                 "already registered ID");
         }
+
+        // 비밀번호 정규식 검증
+        if(!Pattern.matches("^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W))(?=.*[!@#$%^*+=-]).{8,16}$",signupDto.getCredential())){
+            log.error("isSignupValidate Failed: Credential mismatch");
+            throw new UserDefindedException(ExceptionClass.USER, HttpStatus.BAD_REQUEST,
+              "This is not a valid SecretKey");
+        }
+
         //인증키 확인
         if (!signupDto.getAuthKey().equals(authKey)) {
             log.error("isSignupValidate Failed: Authentication key mismatch");
