@@ -42,4 +42,5 @@ public interface ProjectService {
 
   List<ProjectListResponseDto> projectList() throws NotFoundException, UserDefindedException;
 
+  void deleteProject(Long projectId);
 }
