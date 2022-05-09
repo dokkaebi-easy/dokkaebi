@@ -74,11 +74,7 @@ export default function HttpsPaper() {
             <Grid item xs={12} sx={{ margin: 'auto auto' }}>
               <Stack direction="row" alignItems="center" spacing={2}>
                 <Typography>HTTPS</Typography>
-                <Checkbox
-                  disabled
-                  checked={https}
-                  onChange={handleCheckBoxChange}
-                />
+                <Checkbox checked={https} onChange={handleCheckBoxChange} />
               </Stack>
             </Grid>
             <Grid item xs={12}>
