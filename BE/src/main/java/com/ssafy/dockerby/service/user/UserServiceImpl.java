@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
         if(!Pattern.matches("^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W))(?=.*[!@#$%^*+=-]).{8,16}$",signupDto.getCredential())){
             log.error("isSignupValidate Failed: Credential mismatch");
             throw new UserDefindedException(ExceptionClass.USER, HttpStatus.BAD_REQUEST,
-              "This is not a valid SecretKey");
+              "Credential validation mismatch");
         }
 
         //인증키 확인
