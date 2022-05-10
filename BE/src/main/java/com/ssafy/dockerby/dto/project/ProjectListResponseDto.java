@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.entity.project.enums.StateType;
 import lombok.*;
+import org.springframework.data.convert.Jsr310Converters;
 import org.springframework.lang.Nullable;
 
+import javax.persistence.Convert;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -33,6 +35,7 @@ public class ProjectListResponseDto {
     private LocalDateTime lastFailDate;
 
     @Nullable
+    @Convert(converter = Jsr310Converters.DurationToStringConverter.class)
     private Duration lastDuration;
 
     public static ProjectListResponseDto from(Project project){
