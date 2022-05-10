@@ -45,6 +45,7 @@ import com.ssafy.dockerby.util.FileManager;
 import com.ssafy.dockerby.util.PathParser;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.*;
 
 import javassist.NotFoundException;
@@ -561,13 +562,15 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public StateType updateProjectDone(Long projectId) throws NotFoundException {
+  public StateType updateProjectDone(Long projectId, Duration duration) throws NotFoundException {
     log.info("updateProjectDone Start : projectId = {} ", projectId);
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
             () -> new NotFoundException("ProjectServiceImpl.updateProjectDone / Project not found / id: " + projectId));
 
     project.updateState(StateType.valueOf("Done"));
+
+    project.updateLastDuration(duration);
 
     log.info("updateProject Done : projectId = {} ", project.getStateType());
     em.flush();
