@@ -44,7 +44,7 @@ public class NginxConfig {
   }
 
   public boolean isEmpty() {
-    return domains.isEmpty() || (isHttps() && !nginxHttpsOption.checkEmpty());
+    return domains.isEmpty();
   }
 
 
