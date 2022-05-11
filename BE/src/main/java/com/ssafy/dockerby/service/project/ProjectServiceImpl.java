@@ -246,6 +246,8 @@ public class ProjectServiceImpl implements ProjectService {
                     buildConfig.addProperty(new DockerbyProperty("publish", "80", "80"));
                     if (nginxConfig.isHttps()) {
                         buildConfig.addProperty(new DockerbyProperty("publish", "443", "443"));
+                        String sslPath = nginxConfig.getNginxHttpsOption().getSslPath();
+                        buildConfig.addProperty(new DockerbyProperty("volume",sslPath,sslPath));
                     }
                     break;
                 }
