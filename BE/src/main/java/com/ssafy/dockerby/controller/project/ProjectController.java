@@ -86,7 +86,7 @@ public class ProjectController {
     projectService.runStart(projectId, null);
 
     LocalDateTime endTime = LocalDateTime.now();
-    Duration duration =  Duration.between(startTime,endTime);
+    String duration = projectService.makeDuration(startTime,endTime);
 
     return ResponseEntity.ok(projectService.updateProjectDone(projectId,duration));
   }
@@ -210,7 +210,7 @@ public class ProjectController {
 
     LocalDateTime endTime=LocalDateTime.now();
 
-    Duration duration =Duration.between(startTime,endTime);
+    String duration =projectService.makeDuration(startTime,endTime);
     log.info("API Response null");
     return ResponseEntity.ok(projectService.updateProjectDone(project.getId(),duration));
   }

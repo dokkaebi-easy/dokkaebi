@@ -8,6 +8,7 @@ import com.ssafy.dockerby.entity.project.enums.StateType;
 import javassist.NotFoundException;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public interface ProjectService {
 
   void runStart(Long projectId, GitlabWebHookDto webHookDto) throws NotFoundException, IOException;
 
-  StateType updateProjectDone(Long projectId, Duration duration) throws NotFoundException;
+  StateType updateProjectDone(Long projectId, String duration) throws NotFoundException;
 
   List<BuildTotalResponseDto> buildTotal(Long projectId)
     throws NotFoundException;
@@ -41,5 +42,7 @@ public interface ProjectService {
       throws NotFoundException;
 
   List<ProjectListResponseDto> projectList() throws NotFoundException, UserDefindedException;
+
+  String makeDuration(LocalDateTime start, LocalDateTime end);
 
 }

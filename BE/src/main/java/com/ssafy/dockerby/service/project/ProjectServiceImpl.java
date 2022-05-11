@@ -46,6 +46,7 @@ import com.ssafy.dockerby.util.PathParser;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import javassist.NotFoundException;
@@ -562,7 +563,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public StateType updateProjectDone(Long projectId, Duration duration) throws NotFoundException {
+  public StateType updateProjectDone(Long projectId, String duration) throws NotFoundException {
     log.info("updateProjectDone Start : projectId = {} ", projectId);
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
@@ -739,6 +740,17 @@ public class ProjectServiceImpl implements ProjectService {
 
     log.info("ProjectList Done : ListSize {}", resultList.size());
     return resultList;
+  }
+
+  @Override
+  public String makeDuration(LocalDateTime start, LocalDateTime end){
+    long time = Duration.between(start,end).getSeconds();
+    String duration="";
+    if(time%60==0) duration = String.valueOf(time/60)+" 분";
+    else if(time<60) duration = String.valueOf(time%60)+" 초";
+    else duration = String.valueOf(time/60)+" 분 "+String.valueOf(time%60)+" 초";
+
+    return duration;
   }
 
 }
