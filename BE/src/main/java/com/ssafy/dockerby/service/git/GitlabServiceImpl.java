@@ -31,7 +31,7 @@ public class GitlabServiceImpl implements GitlabService {
     GitlabConfig config = GitlabConfig.from(configDto);
 
     GitlabAccessToken token = tokenRepository.findById(configDto.getAccessTokenId())
-        .orElseThrow(()-> new NotFoundException());
+        .orElseThrow(()-> new NotFoundException("GitlabAccessToken not found / id: "+configDto.getAccessTokenId()));
 
     config.setProject(project);
     config.setToken(token);
@@ -45,13 +45,13 @@ public class GitlabServiceImpl implements GitlabService {
   public GitlabConfig updateConfig(Project project, GitConfigDto configDto) {
     log.info("updateConfig Start : projectName = {} ",project.getProjectName());
     GitlabConfig config = configRepository.findByProjectId(project.getId())
-        .orElseThrow(() -> new NotFoundException());
+        .orElseThrow(() -> new NotFoundException("GitlabConfig not found"));
 
     config.update(configDto);
 
     if(config.getToken().getId() != configDto.getAccessTokenId()) {
       GitlabAccessToken newToken = tokenRepository.findById(configDto.getAccessTokenId())
-          .orElseThrow(() -> new NotFoundException());
+          .orElseThrow(() -> new NotFoundException("GitlabAccessToken not found / id: "+configDto.getAccessTokenId()));
       config.setToken(newToken);
     }
     log.info("updateConfig Done");
@@ -83,7 +83,7 @@ public class GitlabServiceImpl implements GitlabService {
   public void updateToken(GitTokenRequestDto requestDto) {
     log.info("updateToken Start : name = {} ",requestDto.getName());
     GitlabAccessToken token = tokenRepository.findById(requestDto.getId())
-        .orElseThrow(() -> new NotFoundException());
+        .orElseThrow(() -> new NotFoundException("GitlabAccessToken not found / id: "+requestDto.getId()));
     token.update(requestDto);
     log.info("updateToken Done");
   }
@@ -102,14 +102,14 @@ public class GitlabServiceImpl implements GitlabService {
   public GitlabAccessToken token(Long id) {
     log.info("token Start");
     return tokenRepository.findById(id)
-        .orElseThrow(() -> new NotFoundException());
+        .orElseThrow(() -> new NotFoundException("GitlabAccessToken not found / id: "+id));
   }
 
   @Override
   public void deleteToken(Long id) {
     log.info("deleteToken Start");
     GitlabAccessToken token = tokenRepository.findById(id)
-        .orElseThrow(() -> new NotFoundException());
+        .orElseThrow(() -> new NotFoundException("GitlabAccessToken not found / id: "+id));
 
     token.softDelete();
     log.info("deleteToken Done");
