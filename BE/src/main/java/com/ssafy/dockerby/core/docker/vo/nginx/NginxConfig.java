@@ -43,7 +43,7 @@ public class NginxConfig {
     return maxBodySize;
   }
 
-  public boolean isEmpty() {
+  public boolean checkEmpty() {
     return domains.isEmpty();
   }
 

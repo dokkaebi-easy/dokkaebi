@@ -207,9 +207,6 @@ public class ProjectServiceImpl implements ProjectService {
                     buildConfigDto.getType()));
         }
 
-        // 빌드 환경설정 파일 저장
-        FileManager.saveJsonFile(configPath, "build", buildConfigs);
-
         // Git cofig upsert
         log.info("GitConfigDto project ID : {}", project.getId());
         GitConfigDto getConfigDto = projectConfigDto.getGitConfig();
@@ -241,7 +238,7 @@ public class ProjectServiceImpl implements ProjectService {
         // NGINX config
         NginxConfig nginxConfig = dockerConfigParser.nginxConverter(
             projectConfigDto.getNginxConfig());
-        if (!nginxConfig.isEmpty()) {
+        if (!nginxConfig.checkEmpty()) {
             String defaultConfPath = "";
             for (BuildConfig buildConfig : buildConfigs) {
                 if (buildConfig.useNginx()) {
@@ -263,6 +260,9 @@ public class ProjectServiceImpl implements ProjectService {
                 nginxConfig);
             EtcConfigMaker.saveDockerNginxConfig(configPath, nginxConfig);
         }
+
+        // 빌드 환경설정 파일 저장
+        FileManager.saveJsonFile(configPath, "build", buildConfigs);
 
         // DB condig
         List<DbConfig> dbConfigs = new ArrayList<>();
