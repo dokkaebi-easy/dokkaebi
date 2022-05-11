@@ -47,8 +47,8 @@ public class Project extends BaseEntity {
   private LocalDateTime lastFailDate;
 
   @Nullable
-  @Convert(converter = Jsr310Converters.DurationToStringConverter.class)
-  private Duration lastDuration;
+
+  private String lastDuration;
 
 
 //연관관계 매핑
@@ -80,7 +80,7 @@ public class Project extends BaseEntity {
     return this;
   }
 
-  public void updateLastDuration(Duration duration){
+  public void updateLastDuration(String duration){
     this.lastDuration=duration;
   }
 

@@ -35,8 +35,7 @@ public class ProjectListResponseDto {
     private LocalDateTime lastFailDate;
 
     @Nullable
-    @Convert(converter = Jsr310Converters.DurationToStringConverter.class)
-    private Duration lastDuration;
+    private String lastDuration;
 
     public static ProjectListResponseDto from(Project project){
         if (project == null) {
