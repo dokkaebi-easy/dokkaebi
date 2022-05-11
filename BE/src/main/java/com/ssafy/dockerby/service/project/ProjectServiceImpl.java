@@ -741,9 +741,4 @@ public class ProjectServiceImpl implements ProjectService {
     return resultList;
   }
 
-  @Override
-  public void deleteProject(Long projectId) {
-    projectRepository.deleteById(projectId);
-  }
-
 }

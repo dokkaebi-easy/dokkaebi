@@ -24,8 +24,6 @@ import org.springframework.lang.Nullable;
 @Entity
 @Getter
 @Builder
-@Where(clause = "deleted=false")
-@SQLDelete(sql = "UPDATE `dockerby`.`project` SET `deleted` = true where `project_id` = ?")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 public class Project extends BaseEntity {

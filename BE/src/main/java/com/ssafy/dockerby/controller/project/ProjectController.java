@@ -41,18 +41,6 @@ public class ProjectController {
 
   private final SettingConfigService configService;
 
-  @ApiOperation(value = "프로젝트 삭제")
-  @DeleteMapping("/{projectId}")
-  public ResponseEntity deleteProject(@PathVariable Long projectId) {
-
-    projectService.deleteProject(projectId);
-
-
-    Map<String, Object> map = new HashMap<>();
-    map.put("status", "Success");
-    return ResponseEntity.ok(map);
-  }
-
   @ApiOperation(value = "프로젝트 생성", notes = "프로젝트를 생성한다.")
   @PostMapping
   public ResponseEntity upsertProject(HttpServletRequest request,@Valid @RequestBody ProjectConfigDto projectConfigDto) throws NotFoundException, IOException {
@@ -187,12 +175,10 @@ public class ProjectController {
     return ResponseEntity.ok(projectList);
   }
 
-
   @ApiOperation(value = "ConfigHistory 리스트", notes = "ConfigHistory 목록을 가져온다.")
   @GetMapping("/configHistory")
   public ResponseEntity<List<ConfigHistoryListResponseDto>> configHistory() {
     log.info("API Request received");
-
 
     List<ConfigHistoryListResponseDto> configHistoryList = projectService.historyList();
 
