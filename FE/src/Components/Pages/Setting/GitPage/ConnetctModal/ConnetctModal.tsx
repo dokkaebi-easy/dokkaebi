@@ -100,7 +100,7 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <TextField
             fullWidth
             error={errorId}
-            helperText={errorId ? '아이디를 적어주어주세요' : ''}
+            helperText={errorId ? '아이디를 적어주세요' : ''}
             label="Name"
             variant="outlined"
             size="small"
@@ -112,7 +112,7 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <TextField
             fullWidth
             error={errorToken}
-            helperText={errorToken ? '토큰을 적어주어주세요' : ''}
+            helperText={errorToken ? '토큰을 적어주세요' : ''}
             label="API Token"
             variant="outlined"
             size="small"
