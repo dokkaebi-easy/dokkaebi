@@ -75,8 +75,8 @@ public class Project extends BaseEntity {
 
   public Project updateState(StateType state){
     this.stateType = state;
-    if("Done".equals(state))this.lastSuccessDate = LocalDateTime.now();
-    if("Failed".equals(state))this.lastFailDate = LocalDateTime.now();
+    if("Done".equals(state.toString()))this.lastSuccessDate = LocalDateTime.now();
+    if("Failed".equals(state.toString()))this.lastFailDate = LocalDateTime.now();
     return this;
   }
 
