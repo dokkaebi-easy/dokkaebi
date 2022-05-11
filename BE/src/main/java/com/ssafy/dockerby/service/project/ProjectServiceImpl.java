@@ -780,4 +780,9 @@ public class ProjectServiceImpl implements ProjectService {
         return duration;
     }
 
+  @Override
+  public void deleteProject(Long projectId) {
+    projectRepository.deleteById(projectId);
+  }
+
 }
