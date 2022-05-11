@@ -45,6 +45,7 @@ import com.ssafy.dockerby.util.FileManager;
 import com.ssafy.dockerby.util.PathParser;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.*;
 
 import javassist.NotFoundException;
@@ -114,7 +115,7 @@ public class ProjectServiceImpl implements ProjectService {
     List<BuildConfigDto> buildConfigDtos = new ArrayList<>();
     for (BuildConfig buildConfig : buildConfigs) {
       SettingConfig framework = settingConfigRepository.findBySettingConfigName(
-          buildConfig.getFramework()).orElseThrow();
+          buildConfig.getFramework()).orElseThrow(() -> new NotFoundException("settingConfig not found"));
       Version version = framework.getLanguage()
           .findVersionByDocker(buildConfig.getVersion())
           .orElseThrow(() -> new IllegalArgumentException("Version miss match"));
@@ -161,7 +162,7 @@ public class ProjectServiceImpl implements ProjectService {
     if (projectConfigDto.getProjectId() != 0) {
       project = projectRepository.findById(projectConfigDto.getProjectId())
           .orElseThrow(() -> new NotFoundException(
-              "upsert user not found id " + projectConfigDto.getProjectId()));
+              "upsert user / project not found / id : " + projectConfigDto.getProjectId()));
       //프로젝트 Id가 있을 시 Update
       log.info("upsert : projectUpdate = {} ", project.getProjectName());
       result.put(project, "update");
@@ -187,7 +188,7 @@ public class ProjectServiceImpl implements ProjectService {
     List<BuildConfig> buildConfigs = new ArrayList<>();
     for (BuildConfigDto buildConfigDto : projectConfigDto.getBuildConfigs()) {
       SettingConfig framework = settingConfigRepository.findById(
-          buildConfigDto.getFrameworkId()).orElseThrow();
+          buildConfigDto.getFrameworkId()).orElseThrow(() -> new NotFoundException("SettingConfig not found / id: "+buildConfigDto.getFrameworkId()));
       Version version = framework.getLanguage().findVersionByInput(buildConfigDto.getVersion())
           .orElseThrow(() -> new IllegalArgumentException(buildConfigDto.getVersion()));
       buildConfigs.add(
@@ -411,7 +412,7 @@ public class ProjectServiceImpl implements ProjectService {
     log.info("pullStart Start : projectId = {} ", projectId);
 
     Project project = projectRepository.findById(projectId)
-        .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.pullStart : " + projectId));
+        .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.pullStart /Project not found / id: " + projectId));
 
     List<BuildState> buildStates = buildStateRepository.findTop3ByProjectIdOrderByIdDesc(projectId);
 
@@ -453,7 +454,7 @@ public class ProjectServiceImpl implements ProjectService {
     log.info("buildStart Start : projectId = {} ", projectId);
 
     Project project = projectRepository.findById(projectId)
-        .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.buildStart : " + projectId));
+        .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.buildStart / Project not found / id: " + projectId));
 
     String logPath = pathParser.logPath(project.getProjectName()).toString();
     String configPath = pathParser.configPath(project.getProjectName()).toString();
@@ -498,7 +499,7 @@ public class ProjectServiceImpl implements ProjectService {
     log.info("runStart Start: projectId = {} ", projectId);
 
     Project project = projectRepository.findById(projectId)
-        .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.runStart : " + projectId));
+        .orElseThrow(() -> new NotFoundException("ProjectServiceImpl.runStart / Project not found / id: " + projectId));
 
     String logPath = pathParser.logPath(project.getProjectName()).toString();
     String configPath = pathParser.configPath(project.getProjectName()).toString();
@@ -561,13 +562,15 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public StateType updateProjectDone(Long projectId) throws NotFoundException {
+  public StateType updateProjectDone(Long projectId, Duration duration) throws NotFoundException {
     log.info("updateProjectDone Start : projectId = {} ", projectId);
     Project project = projectRepository.findById(projectId)
         .orElseThrow(
-            () -> new NotFoundException("ProjectSerivceImpl.updateProjectDone : " + projectId));
+            () -> new NotFoundException("ProjectServiceImpl.updateProjectDone / Project not found / id: " + projectId));
 
     project.updateState(StateType.valueOf("Done"));
+
+    project.updateLastDuration(duration);
 
     log.info("updateProject Done : projectId = {} ", project.getStateType());
     em.flush();

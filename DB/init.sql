@@ -1,11 +1,164 @@
 DROP DATABASE IF EXISTS `dockerby`;
 CREATE DATABASE `dockerby`;
 
-CREATE TABLE `dockerby`.`language`
-(
-    `language_id`   BIGINT      NOT NULL,
-    `language_name` VARCHAR(60) NOT NULL,
-    PRIMARY KEY (`language_id`)
+CREATE TABLE `dockerby`.`language` (
+  `language_id` BIGINT NOT NULL,
+  `language_name` VARCHAR(60) NOT NULL,
+  PRIMARY KEY (`language_id`));
+
+CREATE TABLE `dockerby`.`setting_config` (
+  `setting_config_id` BIGINT NOT NULL,
+  `language_id` BIGINT NULL,
+  `setting_config_name` VARCHAR(60) NOT NULL,
+  `group_code` VARCHAR(255) NOT NULL,
+  `option` VARCHAR(255) NULL,
+  PRIMARY KEY (`setting_config_id`),
+  INDEX `fk-language-setting_config_idx` (`language_id` ASC),
+  CONSTRAINT `fk-language-setting_config`
+    FOREIGN KEY (`language_id`)
+    REFERENCES `dockerby`.`language` (`language_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `dockerby`.`version` (
+  `version_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `language_id` BIGINT NULL,
+  `input_version` VARCHAR(45) NOT NULL,
+  `docker_version` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`version_id`),
+  INDEX `fk-language_id-version_idx` (`language_id` ASC),
+  CONSTRAINT `fk-language_id-version`
+    FOREIGN KEY (`language_id`)
+    REFERENCES `dockerby`.`language` (`language_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `dockerby`.`build_tool` (
+  `build_tool_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `build_tool_name` VARCHAR(45) NOT NULL,
+  `setting_config_id` BIGINT NULL,
+  PRIMARY KEY (`build_tool_id`),
+  INDEX `fk-setting_config-build_tool_idx` (`setting_config_id` ASC),
+  CONSTRAINT `fk-setting_config-build_tool`
+    FOREIGN KEY (`setting_config_id`)
+    REFERENCES `dockerby`.`setting_config` (`setting_config_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `dockerby`.`gitlab_access_token` (
+  `gitlab_access_token_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NULL,
+  `access_token` VARCHAR(255) NULL,
+  PRIMARY KEY (`gitlab_access_token_id`));
+
+CREATE TABLE `dockerby`.`project` (
+  `project_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `project_name` VARCHAR(255) NOT NULL,
+  `state_type` VARCHAR(255) NULL,
+  `regist_date` DATETIME NULL,
+  `last_modified_date` DATETIME NULL,
+  `last_success_date` DATETIME NULL,
+  `last_fail_date` DATETIME NULL,
+  `last_duration` VARCHAR(255) NULL,
+  PRIMARY KEY (`project_id`));
+
+CREATE TABLE `dockerby`.`gitlab_config` (
+  `gitlab_config_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `host_url` VARCHAR(255) NOT NULL,
+  `secret_token` VARCHAR(255) NOT NULL,
+  `repository_url` VARCHAR(255) NOT NULL,
+  `branch_name` VARCHAR(255) NOT NULL,
+  `git_project_id` BIGINT NULL,
+  `gitlab_access_token_id` BIGINT NULL,
+  `project_id` BIGINT NULL,
+  PRIMARY KEY (`gitlab_config_id`),
+  INDEX `fk-gitlab_access_token-gitlab_config_idx` (`gitlab_access_token_id` ASC),
+  INDEX `fk-project-gitlab_config_idx` (`project_id` ASC),
+  CONSTRAINT `fk-gitlab_access_token-gitlab_config`
+    FOREIGN KEY (`gitlab_access_token_id`)
+    REFERENCES `dockerby`.`gitlab_access_token` (`gitlab_access_token_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk-project-gitlab_config`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `dockerby`.`project` (`project_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `dockerby`.`user` (
+  `user_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `principal` VARCHAR(60) NOT NULL,
+  `credential` VARCHAR(60) NOT NULL,
+  `name` VARCHAR(60) NOT NULL,
+  `regist_date` DATETIME NULL,
+  `last_modified_date` DATETIME NULL,
+  PRIMARY KEY (`user_id`));
+
+CREATE TABLE `dockerby`.`config_history` (
+  `config_history_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `msg` VARCHAR(255) NULL,
+  `regist_date` DATETIME NULL,
+  `project_id` BIGINT NULL,
+  `user_info_id` BIGINT NULL,
+  PRIMARY KEY (`config_history_id`),
+  INDEX `fk-project-config_history_idx` (`project_id` ASC),
+  INDEX `fk-user-config_history_idx` (`user_info_id` ASC),
+  CONSTRAINT `fk-project-config_history`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `dockerby`.`project` (`project_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk-user-config_history`
+    FOREIGN KEY (`user_info_id`)
+    REFERENCES `dockerby`.`user` (`user_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `dockerby`.`build_history` (
+  `build_history_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `state_type` VARCHAR(60) NULL,
+  `regist_date` DATETIME NULL,
+  `msg` VARCHAR(255) NULL,
+  `project_id` BIGINT NULL,
+  PRIMARY KEY (`build_history_id`),
+  INDEX `fk-project-build_history_idx` (`project_id` ASC),
+  CONSTRAINT `fk-project-build_history`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `dockerby`.`project` (`project_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `dockerby`.`build_state` (
+  `build_state_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `build_number` INT NULL,
+  `build_type` VARCHAR(60) NULL,
+  `state_type` VARCHAR(60) NULL,
+  `regist_date` DATETIME NULL,
+  `last_modified_date` DATETIME NULL,
+  `project_id` BIGINT NULL,
+  PRIMARY KEY (`build_state_id`),
+  INDEX `fk-project-build_state_idx` (`project_id` ASC),
+  CONSTRAINT `fk-project-build_state`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `dockerby`.`project` (`project_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `dockerby`.`webhook_history` (
+  `webhook_history_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `event_kind` VARCHAR(255) NULL,
+  `username` VARCHAR(255) NULL,
+  `git_http_url` VARCHAR(255) NULL,
+  `default_branch` VARCHAR(255) NULL,
+  `repository_name` VARCHAR(255) NULL,
+  `build_state_id` BIGINT NULL,
+  PRIMARY KEY (`webhook_history_id`),
+  INDEX `fk-build_state-webhook_history_idx` (`build_state_id` ASC),
+  CONSTRAINT `fk-build_state-webhook_history`
+    FOREIGN KEY (`build_state_id`)
+    REFERENCES `dockerby`.`build_state` (`build_state_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 );
 
 CREATE TABLE `dockerby`.`setting_config`

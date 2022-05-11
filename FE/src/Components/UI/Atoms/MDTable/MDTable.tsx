@@ -17,6 +17,9 @@ import { useRunStore } from 'Components/Store/RunStore/RunStore';
 import Brightness2Icon from '@mui/icons-material/Brightness2';
 import Brightness5Icon from '@mui/icons-material/Brightness5';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -87,7 +90,8 @@ export default function MDTable() {
             <StyledTableCell align="center">S</StyledTableCell>
             <StyledTableCell align="center">최근성공</StyledTableCell>
             <StyledTableCell align="center">최근 실패</StyledTableCell>
-            <StyledTableCell align="center">최근 소요 시간</StyledTableCell>
+            <StyledTableCell align="center">Edit</StyledTableCell>
+            <StyledTableCell align="center">Del</StyledTableCell>
           </TableRow>
         </TableHead>
         {projects ? (
@@ -134,7 +138,7 @@ export default function MDTable() {
                       component="span"
                       sx={{ color: 'black' }}
                     >
-                      <Brightness5Icon />
+                      <Brightness5Icon sx={{ color: 'red' }} />
                     </IconButton>
                   </Link>
                 </StyledTableCell>
@@ -156,12 +160,26 @@ export default function MDTable() {
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  <Link
-                    to={`/detail/${row.projectId}`}
-                    style={{ color: 'black', textDecoration: 'none' }}
+                  <Button
+                    size="small"
+                    sx={{
+                      background: 'linear-gradient(195deg, #42424a, #191919)',
+                    }}
+                    variant="outlined"
                   >
-                    진행중... (미완성)
-                  </Link>
+                    <EditIcon fontSize="small" sx={{ color: 'white' }} />
+                  </Button>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <Button
+                    size="small"
+                    sx={{
+                      background: 'linear-gradient(195deg, #42424a, #191919)',
+                    }}
+                    variant="outlined"
+                  >
+                    <DeleteIcon fontSize="small" sx={{ color: 'white' }} />
+                  </Button>
                 </StyledTableCell>
               </StyledTableRow>
             ))}

@@ -1,0 +1,12 @@
+.Loader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgb(235, 235, 150), rgb(245, 245, 0));
+  transform-origin: top left;
+  transform: rotate(35deg);
+  filter: blur(30px) drop-shadow(50px 50px 50px rgb(245, 245, 0));
+}

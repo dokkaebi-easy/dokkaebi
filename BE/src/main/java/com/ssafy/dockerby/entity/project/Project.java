@@ -5,26 +5,21 @@ import com.ssafy.dockerby.entity.BaseEntity;
 import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.git.GitlabConfig;
 import com.ssafy.dockerby.entity.project.enums.StateType;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import javax.validation.constraints.Null;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.springframework.data.convert.Jsr310Converters;
+import org.springframework.lang.Nullable;
 
 @Entity
 @Getter
@@ -47,8 +42,16 @@ public class Project extends BaseEntity {
   @Builder.Default
   private StateType stateType = StateType.valueOf("Waiting");
 
-  @Builder.Default
-  private boolean deleted = false;
+  @Nullable
+  private LocalDateTime lastSuccessDate;
+
+  @Nullable
+  private LocalDateTime lastFailDate;
+
+  @Nullable
+  @Convert(converter = Jsr310Converters.DurationToStringConverter.class)
+  private Duration lastDuration;
+
 
 //연관관계 매핑
 
@@ -74,7 +77,13 @@ public class Project extends BaseEntity {
 
   public Project updateState(StateType state){
     this.stateType = state;
+    if("Done".equals(state))this.lastSuccessDate = LocalDateTime.now();
+    if("Failed".equals(state))this.lastFailDate = LocalDateTime.now();
     return this;
+  }
+
+  public void updateLastDuration(Duration duration){
+    this.lastDuration=duration;
   }
 
   public void addBuildState(BuildState buildState){

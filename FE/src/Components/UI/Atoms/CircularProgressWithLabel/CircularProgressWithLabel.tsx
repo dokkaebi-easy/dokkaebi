@@ -1,10 +1,9 @@
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
-
-interface ProgressProps {
-  value: string;
-}
+import { keyframes } from '@emotion/react';
+import { useEffect, useState } from 'react';
+import styles from './CircularProgressWithLabel.module.css';
 
 const styleBox = {
   top: 0,
@@ -20,37 +19,79 @@ const styleBox = {
   borderRadius: 100,
 };
 
+const animate = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+const buildsuccess =
+  'linear-gradient(45deg, rgb(150, 235, 150), rgb(0, 220, 0))';
+const buildfail = 'linear-gradient(45deg, rgb(235, 150, 150), rgb(220, 0, 0))';
+const buildwait = 'rgb(245, 245,245)';
+
+interface ProgressProps {
+  value: string;
+}
+
 export default function CircularProgressWithLabel({ value }: ProgressProps) {
+  const [color, setColor] = useState(buildwait);
+
+  useEffect(() => {
+    if (value === 'Done') {
+      setColor(buildsuccess);
+    } else if (value === 'Failed') {
+      setColor(buildfail);
+    } else {
+      setColor(buildwait);
+    }
+  }, [value]);
   return (
     <Box
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
     >
-      <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-        <Skeleton
-          variant="circular"
-          animation="wave"
-          width={300}
-          height={300}
-          sx={{ opacity: '1' }}
-        />
+      <Box
+        sx={{
+          ...styleBox,
+          position: 'relative',
+          display: 'inline-flex',
+          background: `${color}`,
+          borderRadius: 100,
+        }}
+        width={300}
+        height={300}
+        overflow="hidden"
+      >
+        {value === 'Processing' ? (
+          <Box
+            className={styles.Loader}
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              background: 'transparent ',
+              transformOrigin: 'top left',
+              animation: `${animate} 1.5s linear infinite`,
+            }}
+            width="100%"
+            height="100%"
+          />
+        ) : (
+          <Box />
+        )}
         <Box
           sx={{
             ...styleBox,
-            opacity: '0.5',
-            background: 'linear-gradient(45deg, blueviolet, aquamarine)',
-            stroke: 1,
-            strokeDasharray: 200,
+            backgroundColor: 'rgb(240, 240,240)',
+            // border: '3px dashed rgb(230, 230,230)',
           }}
-          width={300}
-          height={300}
-        />
-
-        <Box
-          sx={{ ...styleBox, backgroundColor: 'rgb(240, 240,240)' }}
-          width="80%"
-          height="80%"
+          width="70%"
+          height="70%"
         >
-          <Typography variant="caption" component="div" color="text.secondary">
+          <Typography color="text.secondary" variant="h5">
             {value}
           </Typography>
         </Box>

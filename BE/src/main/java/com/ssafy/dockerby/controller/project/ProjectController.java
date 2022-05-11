@@ -18,6 +18,8 @@ import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +88,7 @@ public class ProjectController {
   @PostMapping("/build")
   public ResponseEntity buildProject(Long projectId ) throws IOException, NotFoundException {
     log.info("API Request received : projectId = {} ",projectId);
+    LocalDateTime startTime = LocalDateTime.now();
 
     //프로젝트 기본 설정 시작
     projectService.build(projectId, null);
@@ -94,7 +97,10 @@ public class ProjectController {
     projectService.buildStart(projectId, null);
     projectService.runStart(projectId, null);
 
-    return ResponseEntity.ok(projectService.updateProjectDone(projectId));
+    LocalDateTime endTime = LocalDateTime.now();
+    Duration duration =  Duration.between(startTime,endTime);
+
+    return ResponseEntity.ok(projectService.updateProjectDone(projectId,duration));
   }
 
   @ApiOperation(value = "프레임 워크 타입", notes = "프레임 워크 타입을 반환 해준다.")
@@ -199,7 +205,7 @@ public class ProjectController {
       @RequestHeader(name = "X-Gitlab-Token") String token,
       @RequestBody Map<String, Object> params) throws NotFoundException, IOException {
     log.info("API Request received : projectName = {}",projectName);
-
+    LocalDateTime startTime=LocalDateTime.now();
     GitlabWebHookDto webHookDto = GitlabWrapper.wrap(params);
 
     Project project = projectService.findProjectByName(projectName)
@@ -216,7 +222,10 @@ public class ProjectController {
     projectService.buildStart(project.getId(), webHookDto);
     projectService.runStart(project.getId(), webHookDto);
 
+    LocalDateTime endTime=LocalDateTime.now();
+
+    Duration duration =Duration.between(startTime,endTime);
     log.info("API Response null");
-    return ResponseEntity.ok(null);
+    return ResponseEntity.ok(projectService.updateProjectDone(project.getId(),duration));
   }
 }
