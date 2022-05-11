@@ -29,6 +29,7 @@ export default function Detail() {
   const params = useParams();
 
   const handleBuildDelClick = () => {
+    console.log(params);
     axios.delete(`/api/project/${params}`).then(() => {
       history.push(`/`);
     });
@@ -124,7 +125,10 @@ export default function Detail() {
         <Stack mt={5} spacing={2} direction="row" justifyContent="flex-end">
           <Button
             variant="contained"
-            sx={{ background: 'linear-gradient(195deg, #ee6666, #ff2222)' }}
+            sx={{
+              background: 'linear-gradient(195deg, #ee6666, #ff2222)',
+              color: 'white',
+            }}
             onClick={handleBuildDelClick}
           >
             Del
@@ -133,15 +137,24 @@ export default function Detail() {
           <Button
             variant="contained"
             onClick={handleBuildClick}
-            sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+            sx={{
+              background: 'linear-gradient(195deg, #777, #191919)',
+              color: 'white',
+            }}
           >
             Build
           </Button>
 
-          <Link to={`/setting/${Object.values(params)[0]}`}>
+          <Link
+            to={`/setting/${Object.values(params)[0]}`}
+            style={{ color: 'black', textDecoration: 'none' }}
+          >
             <Button
               variant="contained"
-              sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+              sx={{
+                background: 'linear-gradient(195deg, #777, #191919)',
+                color: 'white',
+              }}
             >
               Edit
             </Button>
@@ -150,7 +163,10 @@ export default function Detail() {
           <Button
             variant="contained"
             onClick={handleBackClick}
-            sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+            sx={{
+              background: 'linear-gradient(195deg, #777, #191919)',
+              color: 'white',
+            }}
           >
             Back
           </Button>

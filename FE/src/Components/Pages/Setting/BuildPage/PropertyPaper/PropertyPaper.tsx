@@ -62,7 +62,6 @@ export default function PropertyPaper({ buildValue }: PropertyProps) {
                 variant="outlined"
                 startIcon={<AddIcon />}
                 onClick={handleOnClick}
-                sx={{ color: 'black', borderColor: 'black' }}
               >
                 Property Add
               </Button>
@@ -72,7 +71,6 @@ export default function PropertyPaper({ buildValue }: PropertyProps) {
                 variant="outlined"
                 onClick={handleHiddenClick}
                 startIcon={hidden ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-                sx={{ color: 'black', borderColor: 'black' }}
               >
                 Property Hidden
               </Button>

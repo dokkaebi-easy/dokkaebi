@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import { keyframes } from '@emotion/react';
 import { useEffect, useState } from 'react';
+import Paper from '@mui/material/Paper';
 import styles from './CircularProgressWithLabel.module.css';
 
 const styleBox = {
@@ -85,15 +86,14 @@ export default function CircularProgressWithLabel({ value }: ProgressProps) {
         <Box
           sx={{
             ...styleBox,
-            backgroundColor: 'rgb(240, 240,240)',
+            // backgroundColor: 'rgb(240, 240,240)',
             // border: '3px dashed rgb(230, 230,230)',
+            backgroundColor: 'secondary.main',
           }}
           width="70%"
           height="70%"
         >
-          <Typography color="text.secondary" variant="h5">
-            {value}
-          </Typography>
+          <Typography variant="h5">{value}</Typography>
         </Box>
       </Box>
     </Box>

@@ -20,6 +20,7 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import Typography from '@mui/material/Typography';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -27,7 +28,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    backgroundColor: theme.palette.common.white,
+
+    fontSize: 15,
   },
 }));
 
@@ -103,6 +106,7 @@ export default function MDTable() {
                     size="small"
                     sx={{
                       background: 'linear-gradient(195deg, #42424a, #191919)',
+                      color: 'white',
                     }}
                     onClick={() => handleClick(row.projectId)}
                     loading={loading}
@@ -138,7 +142,11 @@ export default function MDTable() {
                       component="span"
                       sx={{ color: 'black' }}
                     >
-                      <Brightness5Icon sx={{ color: 'red' }} />
+                      {row.state === 'Failed' ? (
+                        <Brightness5Icon sx={{ color: 'red' }} />
+                      ) : (
+                        <Brightness5Icon sx={{ color: 'red' }} />
+                      )}
                     </IconButton>
                   </Link>
                 </StyledTableCell>
@@ -148,7 +156,7 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    진행중... (미완성)
+                    {row.lastSuccessDate}
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="center">
@@ -156,7 +164,7 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    진행중... (미완성)
+                    {row.lastFailDate}
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="center">
@@ -165,7 +173,7 @@ export default function MDTable() {
                     sx={{
                       background: 'linear-gradient(195deg, #42424a, #191919)',
                     }}
-                    variant="outlined"
+                    variant="contained"
                   >
                     <EditIcon fontSize="small" sx={{ color: 'white' }} />
                   </Button>
@@ -176,7 +184,7 @@ export default function MDTable() {
                     sx={{
                       background: 'linear-gradient(195deg, #42424a, #191919)',
                     }}
-                    variant="outlined"
+                    variant="contained"
                   >
                     <DeleteIcon fontSize="small" sx={{ color: 'white' }} />
                   </Button>

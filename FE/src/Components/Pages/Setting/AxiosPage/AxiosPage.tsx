@@ -83,12 +83,7 @@ export default function AxiosPage() {
             justifyContent: 'center',
           }}
         >
-          <Button
-            variant="outlined"
-            size="large"
-            onClick={handleClick}
-            sx={{ color: 'black', borderColor: 'black' }}
-          >
+          <Button variant="outlined" size="large" onClick={handleClick}>
             Save
           </Button>
         </Box>

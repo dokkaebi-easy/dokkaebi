@@ -127,7 +127,7 @@ public class NginxConfigMaker {
   private String httpMoved() {
     log.info("httpMoved Start");
     StringBuilder sb = new StringBuilder();
-    sb.append("    return       301 https://$host$request_uri;\n}");
+    sb.append("    return       301 https://$server_name$request_uri;\n");
     return sb.toString();
   }
 

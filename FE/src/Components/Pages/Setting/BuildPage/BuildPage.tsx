@@ -44,7 +44,7 @@ export default function BuildPage() {
               onClick={handleAddClick}
               variant="outlined"
               startIcon={<AddIcon />}
-              sx={{ marginRight: 3, color: 'black', borderColor: 'black' }}
+              sx={{ marginRight: 3 }}
             >
               FE/BE Add
             </Button>

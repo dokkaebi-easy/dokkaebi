@@ -104,7 +104,6 @@ export default function GitLabConnect({ gitData }: GitProps) {
                 startIcon={<AddIcon />}
                 size="small"
                 onClick={handleOpen}
-                sx={{ color: 'black', borderColor: 'black' }}
               >
                 Add
               </Button>

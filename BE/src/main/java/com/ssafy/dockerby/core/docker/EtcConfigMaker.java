@@ -2,7 +2,6 @@ package com.ssafy.dockerby.core.docker;
 
 import com.ssafy.dockerby.core.docker.etcMaker.NginxConfigMaker;
 import com.ssafy.dockerby.core.docker.vo.nginx.NginxConfig;
-import com.ssafy.dockerby.dto.project.NginxConfigDto;
 import com.ssafy.dockerby.util.FileManager;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +26,7 @@ public class EtcConfigMaker {
    * @throws IOException {@link FileManager} 에서 던지는 예외
    */
   public static void nginxConfig(String filePath, NginxConfig nginxConfig) throws IOException {
-    if(nginxConfig.isEmpty())
+    if(nginxConfig.checkEmpty())
       return;
 
     String config;
