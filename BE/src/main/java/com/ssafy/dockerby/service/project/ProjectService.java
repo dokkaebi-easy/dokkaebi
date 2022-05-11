@@ -45,4 +45,5 @@ public interface ProjectService {
 
   String makeDuration(LocalDateTime start, LocalDateTime end);
 
+  void deleteProject(Long projectId);
 }
