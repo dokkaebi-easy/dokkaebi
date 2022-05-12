@@ -28,6 +28,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
   const frameworkItems = useDropdownStore((state) => state.framwork);
 
   const [name, setName] = useState(buildData.name);
+  const [error, setError] = useState(false);
   const [fileDir, setFileDir] = useState(buildData.projectDirectory);
   const [buildPath, setBuildPath] = useState(buildData.buildPath);
 
@@ -45,8 +46,16 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
     : useState<string[]>([]);
 
   const handleNameOnChange = (event: any) => {
-    setName(event.target.value);
-    buildData.name = event.target.value;
+    const regex = /^[a-z0-9\\_]*$/;
+    if (regex.test(event.target.value)) {
+      setName(event.target.value);
+      buildData.name = event.target.value;
+      setError(false);
+    } else {
+      setName('');
+      buildData.name = '';
+      setError(true);
+    }
   };
 
   const handleFileDirOnChange = (event: any) => {
@@ -130,12 +139,14 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
           <Typography>Name</Typography>
           <TextField
             fullWidth
+            error={error}
+            helperText={error ? '명칭을 규칙에 맞게 적어주세요' : ''}
             defaultValue={name}
             label="Name"
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
-            placeholder="Name"
+            placeholder="ex) lowercase, 숫자, _ 만 사용가능"
             onChange={handleNameOnChange}
           />
         </Grid>

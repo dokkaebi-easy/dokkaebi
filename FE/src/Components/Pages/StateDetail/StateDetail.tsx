@@ -53,6 +53,17 @@ export default function StateDetail() {
 
   return (
     <Box mt={5}>
+      <Box sx={{ width: '90%', padding: 3, marginX: 'auto' }}>
+        <Stack spacing={2} direction="row" justifyContent="flex-end">
+          <Button
+            variant="contained"
+            onClick={handleBackClick}
+            sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+          >
+            Back
+          </Button>
+        </Stack>
+      </Box>
       <Grid mt={5} container direction="column" justifyContent="left">
         <Grid item display="flex">
           {stateData.stateType === 'Done' ? (
@@ -137,15 +148,6 @@ export default function StateDetail() {
           </Box>
         </Box>
       </Grid>
-      <Stack mt={5} spacing={2} direction="row">
-        <Button
-          variant="contained"
-          onClick={handleBackClick}
-          sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
-        >
-          Back
-        </Button>
-      </Stack>
     </Box>
   );
 }

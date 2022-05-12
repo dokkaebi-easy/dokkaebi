@@ -26,7 +26,7 @@ export default class NginxData {
   public https: false;
 
   constructor() {
-    this.domains = [''];
+    this.domains = [];
     this.locations = [];
     this.httpsOption = {
       sslCertificate: '',
