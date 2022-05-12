@@ -139,6 +139,7 @@ export default function SignUp() {
             variant="outlined"
             margin="normal"
             label="ID"
+            placeholder="영문과 숫자만 입력"
             helperText={errors.principal?.message}
             error={!!errors.principal?.message}
             fullWidth
@@ -156,6 +157,7 @@ export default function SignUp() {
             variant="outlined"
             margin="normal"
             label="비밀번호"
+            placeholder="8~16자이며, 영문, 숫자, 특수문자를 포함해서 입력"
             helperText={errors.credential?.message}
             error={!!errors.credential?.message}
             type="password"
@@ -169,6 +171,7 @@ export default function SignUp() {
             variant="outlined"
             margin="normal"
             label="비밀번호 확인"
+            placeholder="비밀번호와 똑같이 입력"
             helperText={errors.passwordConfirm?.message}
             error={!!errors.passwordConfirm?.message}
             type="password"
@@ -182,6 +185,7 @@ export default function SignUp() {
             variant="outlined"
             margin="normal"
             label="이름"
+            placeholder="2자 이상 25자 이하로 입력"
             helperText={errors.name?.message}
             error={!!errors.name?.message}
             fullWidth
