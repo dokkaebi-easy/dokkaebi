@@ -1,12 +1,20 @@
-import { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
+import IconButton from '@mui/material/IconButton';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { ColorModeContext } from 'App';
+import { useTheme } from '@mui/material/styles';
 
 export default function Navbar() {
+  const theme = useTheme();
+  const colorMode = React.useContext(ColorModeContext);
+
   const [pageName, setPageName] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -62,6 +70,17 @@ export default function Navbar() {
         <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
           {pageName}
         </Typography>
+        <IconButton
+          sx={{ ml: 1 }}
+          color="inherit"
+          onClick={colorMode.toggleColorMode}
+        >
+          {theme.palette.mode === 'dark' ? (
+            <Brightness7Icon />
+          ) : (
+            <Brightness4Icon />
+          )}
+        </IconButton>
         {loginInfo ? (
           <Link to="/login" style={{ color: 'black', textDecoration: 'none' }}>
             <Button color="inherit" onClick={logout}>

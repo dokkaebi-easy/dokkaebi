@@ -5,6 +5,7 @@ import com.ssafy.dockerby.entity.BaseEntity;
 import com.ssafy.dockerby.entity.ConfigHistory;
 import com.ssafy.dockerby.entity.git.GitlabConfig;
 import com.ssafy.dockerby.entity.project.enums.StateType;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -23,10 +24,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.springframework.lang.Nullable;
 
 @Entity
 @Getter
 @Builder
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE `dockerby`.`project` SET `deleted` = true where `project_id` = ?")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 public class Project extends BaseEntity {
@@ -42,6 +48,20 @@ public class Project extends BaseEntity {
   @Enumerated(value = EnumType.STRING)
   @Builder.Default
   private StateType stateType = StateType.valueOf("Waiting");
+
+  @Builder.Default
+  private boolean deleted = false;
+
+  @Nullable
+  private LocalDateTime lastSuccessDate;
+
+  @Nullable
+  private LocalDateTime lastFailDate;
+
+  @Nullable
+
+  private String lastDuration;
+
 
 //연관관계 매핑
 
@@ -67,7 +87,13 @@ public class Project extends BaseEntity {
 
   public Project updateState(StateType state){
     this.stateType = state;
+    if("Done".equals(state.toString()))this.lastSuccessDate = LocalDateTime.now();
+    if("Failed".equals(state.toString()))this.lastFailDate = LocalDateTime.now();
     return this;
+  }
+
+  public void updateLastDuration(String duration){
+    this.lastDuration=duration;
   }
 
   public void addBuildState(BuildState buildState){

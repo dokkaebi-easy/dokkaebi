@@ -43,7 +43,7 @@ export default function DomainPaper() {
             onClick={handleDomainAddClick}
             variant="outlined"
             startIcon={<AddIcon />}
-            sx={{ marginRight: 3, color: 'black', borderColor: 'black' }}
+            sx={{ marginRight: 3 }}
           >
             Domain Add
           </Button>

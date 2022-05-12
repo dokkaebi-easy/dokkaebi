@@ -37,6 +37,7 @@ export default function Home() {
           <Button
             sx={{
               background: 'linear-gradient(195deg, #666, #191919)',
+              color: 'white',
             }}
             variant="contained"
             endIcon={<CreateIcon />}

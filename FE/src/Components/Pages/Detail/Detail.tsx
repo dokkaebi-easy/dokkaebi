@@ -16,17 +16,29 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { useRunStore } from 'Components/Store/RunStore/RunStore';
 
+interface ProjectId {
+  projectId: string;
+}
+
 export default function Detail() {
   const run = useRunStore((state) => state.run);
   const setRun = useRunStore((state) => state.setRun);
   const intervals = useRunStore((state) => state.intervals);
   const setIntervals = useRunStore((state) => state.setIntervals);
   const [buildStates, setBuildStates] = useState<BuildState[]>([]);
-  const [progress, setProgress] = useState('진행중... (미완성)');
+  const [progress, setProgress] = useState(['Waiting', 'Waiting', 'Waiting']);
   const [loading, setLoading] = useState(false);
 
   const history = useHistory();
-  const params = useParams();
+  const params = useParams() as ProjectId;
+
+  const handleBuildDelClick = () => {
+    const id = params.projectId;
+
+    axios.delete(`/api/project/${id}`).then(() => {
+      history.push(`/`);
+    });
+  };
 
   const handleBackClick = () => {
     history.push(`/`);
@@ -55,10 +67,12 @@ export default function Detail() {
         const data = res.data as BuildState[];
         data.reverse();
         setBuildStates(data);
+        const stateData = data[0].buildTotalDetailDtos.map(
+          (value) => value.stateType,
+        );
+        setProgress(stateData);
       })
       .catch();
-
-    setProgress('진행중... (미완성)');
 
     if (run === 1) {
       const interval = setInterval(() => {
@@ -68,6 +82,10 @@ export default function Detail() {
             const data = res.data as BuildState[];
             data.reverse();
             setBuildStates([...data]);
+            const stateData = data[0].buildTotalDetailDtos.map(
+              (value) => value.stateType,
+            );
+            setProgress(stateData);
           })
           .catch();
       }, 1000);
@@ -88,6 +106,10 @@ export default function Detail() {
             const data = res.data as BuildState[];
             data.reverse();
             setBuildStates([...data]);
+            const stateData = data[0].buildTotalDetailDtos.map(
+              (value) => value.stateType,
+            );
+            setProgress(stateData);
           })
           .catch();
       }, 1000);
@@ -108,7 +130,11 @@ export default function Detail() {
         <Stack mt={5} spacing={2} direction="row" justifyContent="flex-end">
           <Button
             variant="contained"
-            sx={{ background: 'linear-gradient(195deg, #ee6666, #ff2222)' }}
+            sx={{
+              background: 'linear-gradient(195deg, #ee6666, #ff2222)',
+              color: 'white',
+            }}
+            onClick={handleBuildDelClick}
           >
             Del
           </Button>
@@ -116,15 +142,24 @@ export default function Detail() {
           <Button
             variant="contained"
             onClick={handleBuildClick}
-            sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+            sx={{
+              background: 'linear-gradient(195deg, #777, #191919)',
+              color: 'white',
+            }}
           >
             Build
           </Button>
 
-          <Link to={`/setting/${Object.values(params)[0]}`}>
+          <Link
+            to={`/setting/${Object.values(params)[0]}`}
+            style={{ color: 'black', textDecoration: 'none' }}
+          >
             <Button
               variant="contained"
-              sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+              sx={{
+                background: 'linear-gradient(195deg, #777, #191919)',
+                color: 'white',
+              }}
             >
               Edit
             </Button>
@@ -133,7 +168,10 @@ export default function Detail() {
           <Button
             variant="contained"
             onClick={handleBackClick}
-            sx={{ background: 'linear-gradient(195deg, #777, #191919)' }}
+            sx={{
+              background: 'linear-gradient(195deg, #777, #191919)',
+              color: 'white',
+            }}
           >
             Back
           </Button>
@@ -144,11 +182,11 @@ export default function Detail() {
           variant="h2"
           textAlign="center"
         >
-          Stage View
+          Recent Stage View
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <CircularProgressWithLabel value={progress} />
+            <CircularProgressWithLabel value={progress[0]} />
             <Typography
               sx={{ textWeight: 3 }}
               mt={2}
@@ -159,7 +197,7 @@ export default function Detail() {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            <CircularProgressWithLabel value={progress} />
+            <CircularProgressWithLabel value={progress[1]} />
             <Typography
               sx={{ textWeight: 3 }}
               mt={2}
@@ -170,7 +208,7 @@ export default function Detail() {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            <CircularProgressWithLabel value={progress} />
+            <CircularProgressWithLabel value={progress[2]} />
             <Typography
               sx={{ textWeight: 3 }}
               mt={2}

@@ -50,7 +50,7 @@ export default function ProxypassPaper() {
             onClick={handleProxyPassAddClick}
             variant="outlined"
             startIcon={<AddIcon />}
-            sx={{ marginRight: 3, color: 'black', borderColor: 'black' }}
+            sx={{ marginRight: 3 }}
           >
             Proxypass Add
           </Button>
