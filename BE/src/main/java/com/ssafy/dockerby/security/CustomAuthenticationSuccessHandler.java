@@ -1,5 +1,6 @@
 package com.ssafy.dockerby.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.dockerby.dto.user.UserDetailDto;
 import java.io.IOException;
 
 import java.util.HashMap;
@@ -22,8 +23,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.debug("Authentication Succss");
+
+        UserDetailDto userDetailDto = (UserDetailDto) authentication.getPrincipal();
+
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(3600);//session 최대 유효시간(초) 설정. 1시간
+        session.setAttribute("user",userDetailDto); // 세션에 user 정보 저장
 
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
