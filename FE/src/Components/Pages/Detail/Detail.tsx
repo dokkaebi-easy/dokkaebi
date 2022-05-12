@@ -30,6 +30,7 @@ export default function Detail() {
 
   const handleBuildDelClick = () => {
     console.log(params);
+
     axios.delete(`/api/project/${params}`).then(() => {
       history.push(`/`);
     });
