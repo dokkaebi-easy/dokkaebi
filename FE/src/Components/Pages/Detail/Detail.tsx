@@ -16,6 +16,10 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { useRunStore } from 'Components/Store/RunStore/RunStore';
 
+interface ProjectId {
+  projectId: string;
+}
+
 export default function Detail() {
   const run = useRunStore((state) => state.run);
   const setRun = useRunStore((state) => state.setRun);
@@ -26,12 +30,12 @@ export default function Detail() {
   const [loading, setLoading] = useState(false);
 
   const history = useHistory();
-  const params = useParams();
+  const params = useParams() as ProjectId;
 
   const handleBuildDelClick = () => {
-    console.log(params);
+    const id = params.projectId;
 
-    axios.delete(`/api/project/${params}`).then(() => {
+    axios.delete(`/api/project/${id}`).then(() => {
       history.push(`/`);
     });
   };
