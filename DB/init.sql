@@ -69,12 +69,9 @@ CREATE TABLE `dockerby`.`project`
     `regist_date`        DATETIME     NULL,
     `deleted`            BOOLEAN      NOT NULL DEFAULT FALSE,
     `last_modified_date` DATETIME     NULL,
-<<<<<<< HEAD
-=======
     `last_success_date`  DATETIME     NULL,
     `last_fail_date`     DATETIME     NULL,
     `last_duration`      VARCHAR(255) NULL,
->>>>>>> upstream/dev
     PRIMARY KEY (`project_id`)
 );
 
