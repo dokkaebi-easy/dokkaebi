@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import Box from '@mui/material/Box';
 import SideNavibar from 'Components/UI/Organisms/SideNavibar/SideNavibar';
 import Navbar from 'Components/UI/Organisms/Navbar/Navbar';
+import Cube from 'Components/UI/Atoms/Cube/Cube';
 
 const HomePage = lazy(() => import('Components/Pages/Home/Home'));
 const DetailPage = lazy(() => import('Components/Pages/Detail/Detail'));
@@ -39,7 +40,7 @@ export default function BasicLayout() {
   }, [loginInfo]);
 
   return (
-    <Box>
+    <Box sx={{ zIndex: 1 }}>
       <Box
         style={
           open

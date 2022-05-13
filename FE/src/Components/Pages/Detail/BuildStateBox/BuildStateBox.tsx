@@ -14,7 +14,7 @@ interface BuildStateProps {
 
 export default function BuildStateBox({ buildState }: BuildStateProps) {
   return (
-    <Box my={3}>
+    <Box my={1}>
       <Paper sx={{ backgroundColor: 'rgb(240, 240,240)', padding: 1 }}>
         <Grid container justifyContent="center" alignItems="center">
           <Grid item xs={4}>

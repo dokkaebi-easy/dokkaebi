@@ -15,6 +15,7 @@ import { v4 as uuid } from 'uuid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { useRunStore } from 'Components/Store/RunStore/RunStore';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 interface ProjectId {
   projectId: string;
@@ -138,18 +139,6 @@ export default function Detail() {
           >
             Del
           </Button>
-
-          <Button
-            variant="contained"
-            onClick={handleBuildClick}
-            sx={{
-              background: 'linear-gradient(195deg, #777, #191919)',
-              color: 'white',
-            }}
-          >
-            Build
-          </Button>
-
           <Link
             to={`/setting/${Object.values(params)[0]}`}
             style={{ color: 'black', textDecoration: 'none' }}
@@ -164,7 +153,6 @@ export default function Detail() {
               Edit
             </Button>
           </Link>
-
           <Button
             variant="contained"
             onClick={handleBackClick}
@@ -219,7 +207,21 @@ export default function Detail() {
             </Typography>
           </Grid>
         </Grid>
-        <Box mt={10}>
+        <Box mt={5} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleBuildClick}
+            sx={{
+              background: 'linear-gradient(195deg, #777, #191919)',
+              color: 'white',
+            }}
+            startIcon={<PlayArrowIcon />}
+          >
+            Build
+          </Button>
+        </Box>
+        <Box mt={3}>
           <Box sx={{ padding: 3 }}>
             <Grid container alignItems="flex-end">
               <Grid item xs={4}>

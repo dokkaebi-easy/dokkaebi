@@ -35,10 +35,12 @@ export default function Login() {
           const date = new Date();
           sessionStorage.setItem('login', date.toString());
           history.push('/');
+        } else {
+          alert('로그인에 실패하였습니다.');
         }
       })
       .catch((error) => {
-        alert('로그인에 실패했습니다.');
+        alert(error);
       });
   };
 
@@ -52,14 +54,13 @@ export default function Login() {
           alignItems: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-          <LoginIcon />
-        </Avatar>
-        <Box>
-          <Typography component="h1" variant="h3">
+        <img src="/assets/dockerby.png" width="360" height="360" alt="" />
+
+        {/* <Box>
+          <Typography component="h1" variant="h3" sx={{ color: '#35baf6' }}>
             Dockerby
           </Typography>
-        </Box>
+        </Box> */}
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -87,9 +88,14 @@ export default function Login() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{
+              mt: 3,
+              mb: 2,
+              background: 'linear-gradient(45deg, #35baf6, #4dabf5)',
+            }}
+            startIcon={<LoginIcon />}
           >
-            <Typography>로그인</Typography>
+            로그인
           </Button>
           <Grid container justifyContent="flex-end">
             {/* <Grid item xs>
@@ -99,7 +105,7 @@ export default function Login() {
               </Grid> */}
             <Grid container direction="row-reverse">
               <Link to="/signup" style={{ textDecoration: 'none' }}>
-                <Typography>가입하기</Typography>
+                <Typography sx={{ color: 'black' }}>가입하기</Typography>
               </Link>
             </Grid>
           </Grid>
