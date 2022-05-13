@@ -15,6 +15,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch, { SwitchProps } from '@mui/material/Switch';
 import { styled, useTheme } from '@mui/material/styles';
 import { ColorModeContext } from 'App';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
+import ArticleIcon from '@mui/icons-material/Article';
 
 export default function SideNavibar() {
   const [pageName, setPageName] = useState('');
@@ -69,17 +71,52 @@ export default function SideNavibar() {
         </List>
         <Divider light sx={linestyle} />
         <List>
-          <ListItem>
-            <FormControlLabel
-              control={
-                <MaterialUISwitch
-                  sx={{ m: 1 }}
-                  defaultChecked={theme.palette.mode === 'dark'}
-                  onChange={colorMode.toggleColorMode}
-                />
-              }
-              label={theme.palette.mode === 'dark' ? 'Dark Mode' : 'Light Mode'}
-            />
+          <ListItem disablePadding sx={{ marginLeft: '4px' }}>
+            <Box
+              style={{
+                color: 'white',
+                textDecoration: 'none',
+                width: '90%',
+                margin: '0 auto',
+                marginTop: 3,
+                borderRadius: 5,
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <MaterialUISwitch
+                    sx={{ m: 1 }}
+                    defaultChecked={theme.palette.mode === 'dark'}
+                    onChange={colorMode.toggleColorMode}
+                  />
+                }
+                label={
+                  theme.palette.mode === 'dark' ? 'Dark Mode' : 'Light Mode'
+                }
+              />
+            </Box>
+          </ListItem>
+          <ListItem disablePadding>
+            <a
+              href="https://k6s205.p.ssafy.io"
+              style={{
+                color: 'white',
+                textDecoration: 'none',
+                width: '90%',
+                margin: '0 auto',
+                marginTop: 3,
+                borderRadius: 5,
+              }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  <ArticleIcon sx={{ color: 'white' }} />
+                </ListItemIcon>
+                <ListItemText primary="Document" />
+              </ListItemButton>
+            </a>
           </ListItem>
           <ListItem disablePadding>
             <Link
@@ -102,23 +139,24 @@ export default function SideNavibar() {
             </Link>
           </ListItem>
           {pageName === 'detail' ? (
-            <ListItem
-              disablePadding
-              style={{
-                color: 'white',
-                textDecoration: 'none',
-                width: '90%',
-                margin: '0 auto',
-                marginTop: 3,
-                borderRadius: 5,
-              }}
-            >
-              <ListItemButton>
-                <ListItemIcon>
-                  <SettingsIcon sx={{ color: 'white' }} />
-                </ListItemIcon>
-                <ListItemText primary="Edit" />
-              </ListItemButton>
+            <ListItem disablePadding>
+              <Box
+                style={{
+                  color: 'white',
+                  textDecoration: 'none',
+                  width: '90%',
+                  margin: '0 auto',
+                  marginTop: 3,
+                  borderRadius: 5,
+                }}
+              >
+                <ListItemButton>
+                  <ListItemIcon>
+                    <SettingsIcon sx={{ color: 'white' }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Edit" />
+                </ListItemButton>
+              </Box>
             </ListItem>
           ) : null}
           {/* <ListItem disablePadding>
