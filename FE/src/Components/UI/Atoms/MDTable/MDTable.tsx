@@ -44,29 +44,21 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const WatiStyle = {
+  background: 'linear-gradient(195deg, #42424a, #191919)',
+};
+
+const LodingStyle = {
+  background: 'linear-gradient(195deg, #aaa, #191919)',
+};
+
 export default function MDTable() {
   const setRun = useRunStore((state) => state.setRun);
   const [projects, setProject] = useState<Project[]>([]);
   const [loading, setLoading] = React.useState(false);
+  const [style, setStyle] = React.useState(WatiStyle);
 
-  const handleClick = (projectId: number) => {
-    setLoading(true);
-    setRun(1);
-
-    const params = { projectId };
-    axios
-      .post('/api/project/build', null, { params })
-      .then(() => {
-        setLoading(false);
-        setRun(0);
-      })
-      .catch(() => {
-        setLoading(false);
-        setRun(2);
-      });
-  };
-
-  useEffect(() => {
+  const reSet = () => {
     axios
       .get('/api/project/all')
       .then((res) => {
@@ -76,6 +68,36 @@ export default function MDTable() {
       .catch((error) => {
         console.log(error);
       });
+  };
+  const handleClick = (projectId: number) => {
+    setLoading(true);
+    setRun(1);
+    setStyle(LodingStyle);
+    const params = { projectId };
+    axios
+      .post('/api/project/build', null, { params })
+      .then(() => {
+        setLoading(false);
+        setRun(0);
+        reSet();
+        setStyle(WatiStyle);
+      })
+      .catch(() => {
+        setLoading(false);
+        setRun(2);
+        reSet();
+        setStyle(WatiStyle);
+      });
+  };
+
+  const handleDelClick = (projectId: number) => {
+    axios.delete(`/api/project/${projectId}`).then(() => {
+      reSet();
+    });
+  };
+
+  useEffect(() => {
+    reSet();
 
     return () => {
       setProject([]);
@@ -105,7 +127,7 @@ export default function MDTable() {
                   <LoadingButton
                     size="small"
                     sx={{
-                      background: 'linear-gradient(195deg, #42424a, #191919)',
+                      ...style,
                       color: 'white',
                     }}
                     onClick={() => handleClick(row.projectId)}
@@ -145,7 +167,7 @@ export default function MDTable() {
                       {row.state === 'Failed' ? (
                         <Brightness5Icon sx={{ color: 'red' }} />
                       ) : (
-                        <Brightness5Icon sx={{ color: 'red' }} />
+                        <Brightness5Icon sx={{ color: 'green' }} />
                       )}
                     </IconButton>
                   </Link>
@@ -168,25 +190,38 @@ export default function MDTable() {
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  <Button
-                    size="small"
-                    sx={{
-                      background: 'linear-gradient(195deg, #42424a, #191919)',
-                    }}
-                    variant="contained"
+                  <Link
+                    to={`/setting/${row.projectId}`}
+                    style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    <EditIcon fontSize="small" sx={{ color: 'white' }} />
-                  </Button>
+                    <Button
+                      size="small"
+                      sx={{
+                        background: 'linear-gradient(195deg, #42424a, #191919)',
+                      }}
+                      variant="contained"
+                    >
+                      <EditIcon fontSize="small" sx={{ color: 'white' }} />
+                    </Button>
+                  </Link>
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <Button
                     size="small"
                     sx={{
-                      background: 'linear-gradient(195deg, #42424a, #191919)',
+                      background: 'linear-gradient(195deg, #ee6666, #ff2222)',
                     }}
                     variant="contained"
+                    onClick={() => {
+                      handleDelClick(row.projectId);
+                    }}
                   >
-                    <DeleteIcon fontSize="small" sx={{ color: 'white' }} />
+                    <DeleteIcon
+                      fontSize="small"
+                      sx={{
+                        color: 'white',
+                      }}
+                    />
                   </Button>
                 </StyledTableCell>
               </StyledTableRow>
