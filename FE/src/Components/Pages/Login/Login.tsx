@@ -35,10 +35,12 @@ export default function Login() {
           const date = new Date();
           sessionStorage.setItem('login', date.toString());
           history.push('/');
+        } else {
+          alert('로그인에 실패하였습니다.');
         }
       })
       .catch((error) => {
-        alert('로그인에 실패했습니다.');
+        alert(error);
       });
   };
 
