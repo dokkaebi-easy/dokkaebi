@@ -9,6 +9,8 @@ import BuildData from 'Components/MDClass/BuildData/BuildData';
 import GitData from 'Components/MDClass/GitData/GitData';
 import NginxData from 'Components/MDClass/NginxData/NginxData';
 import DBData from 'Components/MDClass/DBData/DBData';
+import Cube from 'Components/UI/Atoms/Cube/Cube';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const cleanProjectId = useSettingStore((state) => state.setProjectId);
@@ -18,6 +20,10 @@ export default function Home() {
   const cleanGitConfig = useSettingStore((state) => state.setGitConfig);
   const cleanNginxConfig = useSettingStore((state) => state.setNginxConfig);
 
+  const [hours, setHours] = useState(new Date().getHours());
+  const [minutes, setMinutes] = useState(new Date().getMinutes());
+  const [secondes, setSecondes] = useState(new Date().getSeconds());
+
   const handleCreateClick = () => {
     cleanProjectId(0);
     cleanProjecttName('');
@@ -26,6 +32,20 @@ export default function Home() {
     cleanGitConfig(new GitData());
     cleanNginxConfig(new NginxData());
   };
+
+  useEffect(() => {
+    const clock = setInterval(() => {
+      const timer = new Date();
+      setHours(timer.getHours());
+      setMinutes(timer.getMinutes());
+      setSecondes(timer.getSeconds());
+    }, 1000);
+
+    return () => {
+      clearInterval(clock);
+    };
+  }, []);
+
   return (
     <Box sx={{ marginTop: 5 }}>
       <MDTable />
@@ -46,6 +66,11 @@ export default function Home() {
             Create
           </Button>
         </Link>
+      </Stack>
+      <Stack mt={10} direction="row" justifyContent="space-evenly">
+        <Cube time={hours} color="20, 20, 20" />
+        <Cube time={minutes} color="100, 100, 100" />
+        <Cube time={secondes} color="40, 40, 40" />
       </Stack>
     </Box>
   );
