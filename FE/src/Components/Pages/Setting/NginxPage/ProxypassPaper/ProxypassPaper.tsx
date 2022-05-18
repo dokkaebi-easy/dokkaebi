@@ -52,7 +52,7 @@ export default function ProxypassPaper() {
             startIcon={<AddIcon />}
             sx={{ marginRight: 3 }}
           >
-            Proxypass Add
+            Proxypass 추가
           </Button>
         </Box>
         {locations.map((value, index) => {

@@ -68,9 +68,9 @@ export default function Home() {
         </Link>
       </Stack>
       <Stack mt={10} direction="row" justifyContent="space-evenly">
-        <Cube time={hours} color="20, 20, 20" />
-        <Cube time={minutes} color="100, 100, 100" />
-        <Cube time={secondes} color="40, 40, 40" />
+        <Cube time={hours} clock="h" color="20, 20, 20" />
+        <Cube time={minutes} clock="m" color="100, 100, 100" />
+        <Cube time={secondes} clock="s" color="40, 40, 40" />
       </Stack>
     </Box>
   );
