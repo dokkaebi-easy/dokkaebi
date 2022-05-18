@@ -247,7 +247,7 @@ public class ProjectServiceImpl implements ProjectService {
                     if (nginxConfig.isHttps()) {
                         buildConfig.addProperty(new DockerbyProperty("publish", "443", "443"));
                         String sslPath = nginxConfig.getNginxHttpsOption().getSslPath();
-                        buildConfig.addProperty(new DockerbyProperty("volume",sslPath,sslPath));
+                        buildConfig.addProperty(new DockerbyProperty("volume", sslPath, sslPath));
                     }
                     break;
                 }
@@ -769,20 +769,60 @@ public class ProjectServiceImpl implements ProjectService {
     public String makeDuration(LocalDateTime start, LocalDateTime end) {
         long time = Duration.between(start, end).getSeconds();
         String duration = "";
-      if (time % 60 == 0) {
-        duration = String.valueOf(time / 60) + " 분";
-      } else if (time < 60) {
-        duration = String.valueOf(time % 60) + " 초";
-      } else {
-        duration = String.valueOf(time / 60) + " 분 " + String.valueOf(time % 60) + " 초";
-      }
+        if (time % 60 == 0) {
+            duration = String.valueOf(time / 60) + " 분";
+        } else if (time < 60) {
+            duration = String.valueOf(time % 60) + " 초";
+        } else {
+            duration = String.valueOf(time / 60) + " 분 " + String.valueOf(time % 60) + " 초";
+        }
 
         return duration;
     }
 
-  @Override
-  public void deleteProject(Long projectId) {
-    projectRepository.deleteById(projectId);
-  }
+    @Override
+    public void deleteProject(Long projectId) throws NotFoundException, IOException {
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(
+                () -> new NotFoundException(
+                    "ProjectServiceImpl.configByProjectName : " + projectId));
+        String projectPath = pathParser.projectPath(project.getProjectName()).toString();
+        FileUtils.deleteDirectory(new File(projectPath));
+        projectRepository.deleteById(projectId);
+    }
 
+    @Override
+    public void stopContainer(Long projectId) throws NotFoundException, IOException {
+
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(
+                () -> new NotFoundException(
+                    "ProjectServiceImpl.configByProjectName : " + projectId));
+
+        String configPath = pathParser.configPath(project.getProjectName()).toString();
+        String logPath = pathParser.logPath(project.getProjectName()).toString();
+
+        DockerAdapter dockerAdapter = new DockerAdapter(null, project.getProjectName());
+
+        List<BuildConfig> buildConfigs = new ArrayList<>();
+        List<DbConfig> dbConfigs = new ArrayList<>();
+
+        File configDirectory = new File(configPath);
+        for (String fileName : configDirectory.list()) {
+            if ("build".equals(fileName)) {
+                buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
+                    BuildConfig.class);
+                if (!buildConfigs.isEmpty()) {
+                    CommandInterpreter.run(logPath, "Remove", 0,
+                        dockerAdapter.getRemoveCommands(buildConfigs));
+                }
+            } else if ("db".equals(fileName)) {
+                dbConfigs = FileManager.loadJsonFileToList(configPath, "db", DbConfig.class);
+                if (!dbConfigs.isEmpty()) {
+                    CommandInterpreter.run(logPath, "Remove", 0,
+                        dockerAdapter.getRemoveCommands(dbConfigs));
+                }
+            }
+        }
+    }
 }
