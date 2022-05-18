@@ -45,7 +45,7 @@ export default function DomainPaper() {
             startIcon={<AddIcon />}
             sx={{ marginRight: 3 }}
           >
-            Domain Add
+            도메인 추가
           </Button>
         </Box>
         {domains.map((value, index) => {

@@ -33,14 +33,14 @@ export default function DomainBox({
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} sx={{ margin: 'auto auto' }}>
-        <Typography>Domain URL</Typography>
+        <Typography>도메인 URL</Typography>
         <TextField
           fullWidth
-          label="Domain Name"
+          label="Domain URL"
           variant="outlined"
           size="small"
           sx={{ my: 1 }}
-          placeholder="ProjectName"
+          placeholder="http://www.example.com"
           defaultValue={domain}
           onChange={handleDomainChange}
         />
@@ -56,7 +56,7 @@ export default function DomainBox({
             borderColor: 'red',
           }}
         >
-          Delete
+          삭제
         </Button>
       </Grid>
     </Grid>
