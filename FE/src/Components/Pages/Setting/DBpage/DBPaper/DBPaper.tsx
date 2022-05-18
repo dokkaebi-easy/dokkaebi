@@ -133,7 +133,7 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
     <Box>
       <Grid container spacing={1}>
         <Grid item xs={6}>
-          <Typography>Name</Typography>
+          <Typography>명칭</Typography>
           <TextField
             fullWidth
             defaultValue={name}
@@ -146,7 +146,7 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
           />
         </Grid>
         <Grid item xs={3}>
-          <Typography>DB</Typography>
+          <Typography>데이터베이스</Typography>
           <SelectItem
             defaultValue={db}
             label="Framework/ Library"
@@ -156,7 +156,7 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
           />
         </Grid>
         <Grid item xs={3}>
-          <Typography>Version</Typography>
+          <Typography>버전</Typography>
           <SelectItem
             defaultValue={version}
             label="Versions"
@@ -166,7 +166,7 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
         </Grid>
         <Grid item xs={12}>
           <Box />
-          <Typography>Port</Typography>
+          <Typography>포트</Typography>
           <TextField
             label="Port"
             fullWidth
@@ -179,7 +179,7 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography>Dump File Dir</Typography>
+          <Typography>덤프 파일 경로</Typography>
           <TextField
             label="Dump File Dir"
             fullWidth
@@ -221,7 +221,7 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
               borderColor: 'red',
             }}
           >
-            Delete
+            삭제
           </Button>
         </Grid>
       </Grid>

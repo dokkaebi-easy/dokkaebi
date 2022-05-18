@@ -46,7 +46,7 @@ export default function BuildPage() {
               startIcon={<AddIcon />}
               sx={{ marginRight: 3 }}
             >
-              FE/BE Add
+              FE/BE 추가
             </Button>
           </Box>
           <Box sx={{ my: 3 }}>
