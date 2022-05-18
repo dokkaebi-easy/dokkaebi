@@ -73,7 +73,7 @@ export default function GitLabConnect({ gitData }: GitProps) {
         <Paper sx={{ padding: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
-              <Typography>Host URL</Typography>
+              <Typography>기본 도메인 URL</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
@@ -105,7 +105,7 @@ export default function GitLabConnect({ gitData }: GitProps) {
                 size="small"
                 onClick={handleOpen}
               >
-                Add
+                추가
               </Button>
               <ConnetctModal
                 open={open}

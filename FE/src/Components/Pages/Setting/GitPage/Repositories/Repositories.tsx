@@ -53,7 +53,7 @@ export default function GitLabRepositories({ gitData }: GitProps) {
         <Paper sx={{ padding: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Project ID</Typography>
+              <Typography>프로젝트 ID</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
@@ -67,11 +67,11 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                 onChange={handleProjectIDChange}
               />
               <FormHelperText id="component-helper-text">
-                (※ only number)
+                (※ 숫자만 기입 가능합니다.)
               </FormHelperText>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Repository URL</Typography>
+              <Typography>저장소 URL</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
@@ -86,12 +86,12 @@ export default function GitLabRepositories({ gitData }: GitProps) {
               />
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>Branch Name</Typography>
+              <Typography>브랜치 명칭</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                label="ex) master"
+                label="branch"
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}

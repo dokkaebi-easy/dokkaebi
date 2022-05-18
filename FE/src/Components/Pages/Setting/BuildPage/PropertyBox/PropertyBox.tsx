@@ -43,7 +43,7 @@ export default function PropertyBox({
   return (
     <Grid container spacing={1}>
       <Grid item xs={2}>
-        <Typography>Property</Typography>
+        <Typography>속성</Typography>
         <SelectItem
           defaultValue={property}
           label="Property"
@@ -52,14 +52,12 @@ export default function PropertyBox({
         />
       </Grid>
       <Grid item xs={10}>
-        <Typography>Data</Typography>
+        <Typography>입력값</Typography>
         <TextField
           fullWidth
-          label="Data"
           variant="outlined"
           size="small"
           sx={{ my: 1 }}
-          placeholder="Data"
           defaultValue={Data}
           onChange={handleFirstDataChange}
         />
@@ -75,7 +73,7 @@ export default function PropertyBox({
             borderColor: 'red',
           }}
         >
-          Delete
+          삭제
         </Button>
       </Grid>
     </Grid>

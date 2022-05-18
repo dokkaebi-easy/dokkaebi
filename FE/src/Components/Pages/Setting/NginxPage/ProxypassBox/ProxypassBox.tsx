@@ -42,10 +42,11 @@ export default function ProxypassBox({
         <Typography>Proxy pass URL</Typography>
         <TextField
           fullWidth
-          label="ex) http://localhost:8080"
+          label="Proxy pass URL"
           variant="outlined"
           size="small"
-          placeholder="Proxy pass URL"
+          sx={{ my: 1 }}
+          placeholder="ex) http://localhost:8080"
           defaultValue={url}
           onChange={handleUrlChange}
         />
@@ -53,10 +54,11 @@ export default function ProxypassBox({
         <Typography mt={2}>Proxy pass Path</Typography>
         <TextField
           fullWidth
-          label="ex) /api"
+          label="Proxy pass Path"
           variant="outlined"
           size="small"
-          placeholder="Proxy pass Path"
+          sx={{ my: 1 }}
+          placeholder="ex) /api"
           defaultValue={path}
           onChange={handlePathChange}
         />
@@ -70,9 +72,10 @@ export default function ProxypassBox({
           sx={{
             color: 'red',
             borderColor: 'red',
+            my: 1,
           }}
         >
-          Delete
+          삭제
         </Button>
       </Grid>
     </Grid>

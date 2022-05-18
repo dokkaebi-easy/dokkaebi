@@ -72,11 +72,12 @@ export default function ConnectCheck({ gitData }: GitProps) {
         <Paper sx={{ padding: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
-              <Typography>Web Hook URL</Typography>
+              <Typography>웹훅 URL</Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
+                label="Web Hook URL"
                 variant="outlined"
                 size="small"
                 defaultValue={domain}

@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
+import FormHelperText from '@mui/material/FormHelperText';
 import Stack from '@mui/material/Stack';
 import { useSettingStore } from 'Components/Store/SettingStore/SettingStore';
 
@@ -65,16 +66,28 @@ export default function HttpsPaper() {
             background: 'linear-gradient(195deg, #666, #191919)',
           }}
         >
-          Https
+          HTTPS
         </Paper>
       </Box>
       <Box>
         <Paper sx={{ padding: 3 }}>
           <Grid container spacing={1} mt={1}>
             <Grid item xs={12} sx={{ margin: 'auto auto' }}>
+              <FormHelperText
+                id="component-helper-text"
+                style={{
+                  color: 'red',
+                  fontWeight: 'bold',
+                }}
+              >
+                ※ 사용자 가이드 참고
+              </FormHelperText>
               <Stack direction="row" alignItems="center" spacing={2}>
                 <Typography>HTTPS</Typography>
                 <Checkbox checked={https} onChange={handleCheckBoxChange} />
+                <FormHelperText id="component-helper-text">
+                  (※ 체크해야 HTTPS 기능이 활성화됩니다.)
+                </FormHelperText>
               </Stack>
             </Grid>
             <Grid item xs={12}>
@@ -85,6 +98,7 @@ export default function HttpsPaper() {
                 label="SSL Certificate"
                 variant="outlined"
                 size="small"
+                sx={{ my: 1 }}
                 placeholder="SSL Certificate"
                 defaultValue={sslCertificate}
                 onChange={handleSslCertificateChange}
@@ -98,19 +112,21 @@ export default function HttpsPaper() {
                 label="SSL Certificate Key"
                 variant="outlined"
                 size="small"
+                sx={{ my: 1 }}
                 placeholder="SSL Certificate Key"
                 defaultValue={sslCertificateKey}
                 onChange={handleSslCertificateKeyChange}
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography>SSL Path</Typography>
+              <Typography>SSL 경로</Typography>
               <TextField
                 fullWidth
                 disabled={!https}
                 label="SSL Path"
                 variant="outlined"
                 size="small"
+                sx={{ my: 1 }}
                 placeholder="SSL Path"
                 defaultValue={sslPath}
                 onChange={handleSslPathChange}

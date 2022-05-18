@@ -63,7 +63,7 @@ export default function PropertyPaper({ buildValue }: PropertyProps) {
                 startIcon={<AddIcon />}
                 onClick={handleOnClick}
               >
-                Property Add
+                속성 추가
               </Button>
             </Box>
             <Box mb={3}>
@@ -72,7 +72,7 @@ export default function PropertyPaper({ buildValue }: PropertyProps) {
                 onClick={handleHiddenClick}
                 startIcon={hidden ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
               >
-                Property Hidden
+                속성 보기(옵션)
               </Button>
             </Box>
           </Stack>
