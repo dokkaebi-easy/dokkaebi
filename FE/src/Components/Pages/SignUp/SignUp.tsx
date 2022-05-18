@@ -15,6 +15,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 
 interface IFormInput {
   principal: string;
@@ -162,6 +163,7 @@ export default function SignUp() {
             error={!!errors.credential?.message}
             type="password"
             fullWidth
+            autoComplete="on"
             InputLabelProps={{ required: false }}
             required
           />
@@ -172,6 +174,7 @@ export default function SignUp() {
             margin="normal"
             label="비밀번호 확인"
             placeholder="비밀번호와 똑같이 입력"
+            autoComplete="on"
             helperText={errors.passwordConfirm?.message}
             error={!!errors.passwordConfirm?.message}
             type="password"
@@ -214,6 +217,24 @@ export default function SignUp() {
             InputLabelProps={{ required: false }}
             required
           />
+          <Tooltip
+            describeChild
+            title={
+              <>
+                <Typography>※사용자 가이드 확인</Typography>
+                <a
+                  style={{ color: 'white' }}
+                  href="https://k6s205.p.ssafy.io/login"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  https://k6s205.p.ssafy.io/login
+                </a>
+              </>
+            }
+          >
+            <Button color="primary">인증키 발급 방법</Button>
+          </Tooltip>
           <Button
             type="submit"
             fullWidth
