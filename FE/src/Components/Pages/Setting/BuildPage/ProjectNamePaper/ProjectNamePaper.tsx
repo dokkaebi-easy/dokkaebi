@@ -32,7 +32,7 @@ export default function ProjectNamePaper() {
       </Box>
       <Paper sx={{ padding: 3, pt: 4 }}>
         <Box>
-          <Typography>Project Name</Typography>
+          <Typography>프로젝트 명칭</Typography>
           <TextField
             onChange={handleChange}
             fullWidth

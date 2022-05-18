@@ -8,6 +8,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import FormHelperText from '@mui/material/FormHelperText';
 import { Build } from 'Components/MDClass/BuildData/BuildData';
+import Stack from '@mui/material/Stack';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import axios from 'axios';
 import { useDropdownStore } from 'Components/Store/DropDownStore/DropDownStore';
 import BuildProperty from '../PropertyPaper/PropertyPaper';
@@ -25,12 +28,16 @@ interface buildProps {
 }
 
 export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
+  const [hidden, setHidden] = useState(true);
   const frameworkItems = useDropdownStore((state) => state.framwork);
 
   const [name, setName] = useState(buildData.name);
   const [error, setError] = useState(false);
   const [fileDir, setFileDir] = useState(buildData.projectDirectory);
   const [buildPath, setBuildPath] = useState(buildData.buildPath);
+  const handleHiddenClick = () => {
+    setHidden((cur) => !cur);
+  };
 
   const [framework, setFramework] = useState('');
   const [versionName, setVersionName] = useState('');
@@ -136,7 +143,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
     <Box>
       <Grid container spacing={1}>
         <Grid item xs={6}>
-          <Typography>Name</Typography>
+          <Typography>명칭</Typography>
           <TextField
             fullWidth
             error={error}
@@ -151,7 +158,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
           />
         </Grid>
         <Grid item xs={2}>
-          <Typography>Framework</Typography>
+          <Typography>프레임워크</Typography>
           <SelectItem
             defaultValue={framework}
             label="Framework/ Library"
@@ -161,7 +168,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
           />
         </Grid>
         <Grid item xs={2}>
-          <Typography>{versionName} Version</Typography>
+          <Typography>{versionName} 버전</Typography>
           <SelectItem
             defaultValue={version}
             label="Versions"
@@ -172,8 +179,8 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         <Grid item xs={2}>
           <Typography>
             {framework === 'Vue' || framework === 'React'
-              ? 'Nginx Use'
-              : 'Type'}
+              ? 'Nginx 사용여부'
+              : '타입'}
           </Typography>
           <SelectItem
             defaultValue={type}
@@ -191,30 +198,45 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         </Grid>
         <Grid item xs={12}>
           <Box />
-          <Typography>Project File Dir</Typography>
+          <Typography>프로젝트 파일 경로</Typography>
           <TextField
-            label="ex) /FE , /BE"
+            label="Project File Path"
             fullWidth
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
-            placeholder="Dir"
+            placeholder="ex) / , /back_end , /front_end"
             defaultValue={fileDir}
             onChange={handleFileDirOnChange}
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography>Build File Path</Typography>
-          <TextField
-            label="ex) /dist, /build"
-            fullWidth
-            variant="outlined"
-            size="small"
-            sx={{ my: 1 }}
-            placeholder="Dir"
-            defaultValue={buildPath}
-            onChange={handlebuildPathOnChange}
-          />
+          <Stack direction="row" spacing={1}>
+            <Box mb={3}>
+              <Button
+                variant="outlined"
+                onClick={handleHiddenClick}
+                startIcon={hidden ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+              >
+                빌드 산출물 경로 보기(옵션)
+              </Button>
+            </Box>
+          </Stack>
+          {hidden ? null : (
+            <>
+              <Typography>산출물 경로</Typography>
+              <TextField
+                label="Bulid File Path"
+                fullWidth
+                variant="outlined"
+                size="small"
+                sx={{ my: 1 }}
+                placeholder="ex) /dist, /build"
+                defaultValue={buildPath}
+                onChange={handlebuildPathOnChange}
+              />
+            </>
+          )}
         </Grid>
         <Grid item xs={2}>
           <Button
@@ -226,7 +248,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
               borderColor: 'red',
             }}
           >
-            Delete
+            삭제
           </Button>
         </Grid>
       </Grid>
