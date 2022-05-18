@@ -6,19 +6,18 @@ import com.ssafy.dockerby.core.gitlab.dto.GitlabWebHookDto;
 import com.ssafy.dockerby.dto.project.BuildDetailResponseDto;
 import com.ssafy.dockerby.dto.project.BuildTotalResponseDto;
 import com.ssafy.dockerby.dto.project.ConfigHistoryListResponseDto;
+import com.ssafy.dockerby.dto.project.ProjectConfigDto;
+import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
 import com.ssafy.dockerby.dto.project.framework.DbTypeResponseDto;
 import com.ssafy.dockerby.dto.project.framework.DbVersionResponseDto;
 import com.ssafy.dockerby.dto.project.framework.FrameworkTypeResponseDto;
 import com.ssafy.dockerby.dto.project.framework.FrameworkVersionResponseDto;
-import com.ssafy.dockerby.dto.project.ProjectConfigDto;
-import com.ssafy.dockerby.dto.project.ProjectListResponseDto;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.service.framework.SettingConfigService;
 import com.ssafy.dockerby.service.project.ProjectServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,15 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = {"Project"})
 @RestController
@@ -43,9 +50,12 @@ public class ProjectController {
 
   @ApiOperation(value = "프로젝트 삭제")
   @DeleteMapping("/{projectId}")
-  public ResponseEntity deleteProject(@PathVariable Long projectId) {
+  public ResponseEntity deleteProject(@PathVariable Long projectId)
+      throws NotFoundException, IOException {
 
+    projectService.stopContainer(projectId);
     projectService.deleteProject(projectId);
+
 
 
     Map<String, Object> map = new HashMap<>();
