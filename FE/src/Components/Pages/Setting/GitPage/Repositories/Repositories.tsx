@@ -80,7 +80,7 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="Repository URL"
+                placeholder="https://lab.ssafy.com/**/**.git"
                 defaultValue={repositoryURL}
                 onChange={handleRepositoryURLChange}
               />
@@ -91,7 +91,7 @@ export default function GitLabRepositories({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                label="branch"
+                label="Branch"
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}

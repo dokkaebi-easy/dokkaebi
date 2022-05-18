@@ -99,7 +99,7 @@ export default function HttpsPaper() {
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="SSL Certificate"
+                placeholder="ex) /etc/letsencrypt/live/**/fullchain.pem"
                 defaultValue={sslCertificate}
                 onChange={handleSslCertificateChange}
               />
@@ -113,7 +113,7 @@ export default function HttpsPaper() {
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="SSL Certificate Key"
+                placeholder="ex) /etc/letsencrypt/live/**/privKey.pem"
                 defaultValue={sslCertificateKey}
                 onChange={handleSslCertificateKeyChange}
               />
@@ -127,7 +127,7 @@ export default function HttpsPaper() {
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="SSL Path"
+                placeholder="ex) /etc/letsencrypt"
                 defaultValue={sslPath}
                 onChange={handleSslPathChange}
               />

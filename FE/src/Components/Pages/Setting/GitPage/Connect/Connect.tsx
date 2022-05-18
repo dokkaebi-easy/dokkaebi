@@ -78,7 +78,7 @@ export default function GitLabConnect({ gitData }: GitProps) {
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                label="ex) https://lab.ssafy.com/"
+                label="Domain URL"
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
