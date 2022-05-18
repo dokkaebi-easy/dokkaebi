@@ -96,12 +96,12 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
           <Typography id="modal-modal-description" sx={{ my: 2 }}>
             GitLab API Token
           </Typography>
-          <Typography>Name</Typography>
+          <Typography>토큰 Name</Typography>
           <TextField
             fullWidth
             error={errorId}
             helperText={errorId ? '아이디를 적어주세요' : ''}
-            label="Name"
+            label="토큰 Name"
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
@@ -127,7 +127,7 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
               onClick={handleSaveClick}
               sx={{ color: 'black', borderColor: 'black' }}
             >
-              Save
+              저장
             </Button>
             <Button
               variant="outlined"
@@ -135,7 +135,7 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
               onClick={handleCloseClick}
               sx={{ color: 'black', borderColor: 'black' }}
             >
-              Cancel
+              취소
             </Button>
           </Stack>
         </Paper>
