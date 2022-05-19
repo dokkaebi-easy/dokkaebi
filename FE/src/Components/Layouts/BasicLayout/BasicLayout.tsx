@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import SideNavibar from 'Components/UI/Organisms/SideNavibar/SideNavibar';
 import Navbar from 'Components/UI/Organisms/Navbar/Navbar';
 import Cube from 'Components/UI/Atoms/Cube/Cube';
-import LodingBar from 'Components/Pages/LodingBar/LodingBar';
+import LoadingBar from 'Components/Pages/LoadingBar/LoadingBar';
 
 const HomePage = lazy(() => import('Components/Pages/Home/Home'));
 const DetailPage = lazy(() => import('Components/Pages/Detail/Detail'));
@@ -67,7 +67,7 @@ export default function BasicLayout() {
         }
       >
         <Navbar />
-        <Suspense fallback={<LodingBar />}>
+        <Suspense fallback={<LoadingBar />}>
           <Switch>
             <Route
               path="/state/:buildStateId"

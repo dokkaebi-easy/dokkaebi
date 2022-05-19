@@ -45,5 +45,7 @@ public interface ProjectService {
 
   String makeDuration(LocalDateTime start, LocalDateTime end);
 
-  void deleteProject(Long projectId);
+  void deleteProject(Long projectId) throws NotFoundException, IOException;
+
+  void stopContainer(Long projectId) throws NotFoundException, IOException;
 }

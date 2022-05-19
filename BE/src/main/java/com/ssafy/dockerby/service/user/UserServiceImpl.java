@@ -12,16 +12,12 @@ import com.ssafy.dockerby.util.FileManager;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import javax.sql.DataSource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -93,6 +89,17 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         log.info("duplicateNameCheck True");
+        return true;
+    }
+
+    @Override
+    public Boolean validateAuthKeyCheck(String key){
+        log.info("validateAuthKeyCheck Start : received authKey = {}",key);
+        if(!key.equals(authKey)){
+            log.info("validateAuthKeyCheck False");
+            return false;
+        }
+        log.info("validateAuthKeyCheck True");
         return true;
     }
 

@@ -80,4 +80,18 @@ public class UserController {
         return new ResponseEntity(map, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "이름 중복체크", notes = "사용 가능한 이름은 true, 중복된 이름은 false를 반환")
+    @PostMapping("/validate/authKey")
+    public ResponseEntity validateAuthKey(@RequestParam String authKey) throws UserDefindedException {
+        log.info("API Request received : received authKey = {}",authKey);
+
+        Map<String, Object> map = new HashMap<>();
+        String state = userService.validateAuthKeyCheck(authKey) ? "Success" : "Fail";
+
+        map.put("state", state);
+
+        log.info("API Response return : Response = {}",state);
+        return new ResponseEntity(map, HttpStatus.OK);
+    }
+
 }

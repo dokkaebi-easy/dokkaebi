@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { grey } from '@mui/material/colors';
-import LodingBar from 'Components/Pages/LodingBar/LodingBar';
+import LoadingBar from 'Components/Pages/LoadingBar/LoadingBar';
 
 const LoginPage = lazy(() => import('Components/Pages/Login/Login'));
 const SignUpPage = lazy(() => import('Components/Pages/SignUp/SignUp'));
@@ -73,7 +73,7 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Suspense fallback={<LodingBar />}>
+        <Suspense fallback={<LoadingBar />}>
           <Switch>
             <Route path="/signup" component={SignUpPage} exact />
             <Route path="/login" component={LoginPage} exact />
