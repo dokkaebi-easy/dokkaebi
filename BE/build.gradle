@@ -1,0 +1,59 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.ssafy'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.projectlombok:lombok:1.18.22'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
+	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
+
+
+	// GitLab 서버 버전을 지원하기 위해서 gitlab4j lib를 추가함 --- 소라
+	// https://mvnrepository.com/artifact/org.gitlab4j/gitlab4j-api
+	implementation group: 'org.gitlab4j', name: 'gitlab4j-api', version: '5.0.1'
+	// https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	runtimeOnly 'mysql:mysql-connector-java'
+
+
+	// Java에서 외부 명령어 실행 라이브러리
+	implementation 'org.apache.commons:commons-exec:1.3'
+
+	// @Nullable unknown enum constant When.MAYBE
+	// https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+	implementation 'org.springframework.session:spring-session-jdbc'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
