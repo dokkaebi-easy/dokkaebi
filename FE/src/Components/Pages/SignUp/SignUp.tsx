@@ -9,13 +9,11 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
-import styled from '@emotion/styled';
 import { unset } from 'lodash';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 
 interface IFormInput {
   principal: string;
@@ -70,7 +68,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const [inputId, setInputId] = useState<string>('');
+  const [iderror, setIdError] = useState(false);
   const [inputName, setInputName] = useState<string>('');
+  const [nameerror, setNameError] = useState(false);
+  const [inputauth, setInputAuth] = useState('');
+  const [autherror, setAuthError] = useState(false);
 
   const {
     register,
@@ -85,10 +87,24 @@ export default function SignUp() {
 
   const onSubmit = (data: IFormInput) => {
     unset(data, 'passwordConfirm');
-    axios.post(`/api/user/signup`, data).then((res) => {
-      const data = res.data as ResponsId;
-      if (data.state === 'Success') history.push('/login');
-    });
+    axios
+      .post(`/api/user/signup`, data)
+      .then((res) => {
+        const data = res.data as ResponsId;
+        if (data.state === 'Success') history.push('/login');
+      })
+      .catch((error) => {
+        const params = { authKey: inputauth };
+        axios
+          .post('/api/user/validate/authKey', null, { params })
+          .then((res) => {
+            if (res.data.state === 'Fail') {
+              setAuthError(true);
+            } else {
+              setAuthError(false);
+            }
+          });
+      });
   };
 
   const handleChangeId = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,6 +125,10 @@ export default function SignUp() {
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputName(event.currentTarget.value);
+  };
+
+  const handleAuthKeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputAuth(event.currentTarget.value);
   };
 
   const checkName = (name: string | undefined) => {
@@ -211,8 +231,13 @@ export default function SignUp() {
             variant="outlined"
             margin="normal"
             label="인증키"
-            helperText={errors.authKey?.message}
-            error={!!errors.authKey?.message}
+            helperText={
+              errors.authKey?.message || autherror
+                ? '인증키가 잘못 되었습니다.'
+                : ''
+            }
+            error={!!errors.authKey?.message || autherror}
+            onChange={handleAuthKeyChange}
             fullWidth
             InputLabelProps={{ required: false }}
             required
