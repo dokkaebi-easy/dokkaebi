@@ -242,12 +242,16 @@ public class ProjectServiceImpl implements ProjectService {
             String defaultConfPath = "";
             for (BuildConfig buildConfig : buildConfigs) {
                 if (buildConfig.useNginx()) {
+                    String defaultPort = "80";
                     defaultConfPath = buildConfig.getProjectDirectory();
-                    buildConfig.addProperty(new DockerbyProperty("publish", "80", "80"));
                     if (nginxConfig.isHttps()) {
-                        buildConfig.addProperty(new DockerbyProperty("publish", "443", "443"));
+                        defaultPort = "443";
                         String sslPath = nginxConfig.getNginxHttpsOption().getSslPath();
                         buildConfig.addProperty(new DockerbyProperty("volume", sslPath, sslPath));
+                    }
+                    for (DockerbyProperty property : buildConfig.getProperties()) {
+                        if("publish".equals(property.getType()))
+                            property.updateContainer(defaultPort);
                     }
                     break;
                 }
