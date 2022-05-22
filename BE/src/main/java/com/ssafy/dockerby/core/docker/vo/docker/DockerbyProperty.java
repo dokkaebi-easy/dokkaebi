@@ -39,4 +39,7 @@ public class DockerbyProperty {
     return container;
   }
 
+  public void updateContainer(String container) {
+    this.container = container;
+  }
 }
