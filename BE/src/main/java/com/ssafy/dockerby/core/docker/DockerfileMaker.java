@@ -56,11 +56,9 @@ public class DockerfileMaker {
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
     if ("Gradle".equals(config.getType())) {
-      sb.append("RUN ").append("dos2unix ./gradlew").append('\n');
       sb.append("RUN ").append("chmod +x ./gradlew").append('\n');
       sb.append("RUN ").append("./gradlew clean build").append('\n');
     } else if ("Maven".equals(config.getType())) {
-      sb.append("RUN ").append("dos2unix ./mvnw").append('\n');
       sb.append("RUN ").append("chmod +x ./mvnw").append('\n');
       sb.append("RUN ").append("./mvnw clean package").append('\n');
     }

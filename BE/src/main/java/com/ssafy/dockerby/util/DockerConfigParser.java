@@ -67,6 +67,16 @@ public class DockerConfigParser {
     List<ConfigProperty> newProperties = new ArrayList<>();
     for (DockerbyProperty property : properties) {
       if(!"volume".equals(property.getType()))
+        newProperties.add(ConfigProperty.of(property.getType(), property.getHost()));
+    }
+    return newProperties;
+  }
+
+  public List<ConfigProperty> configDbProperties(List<DockerbyProperty> properties) {
+    log.info("configProperties Start");
+    List<ConfigProperty> newProperties = new ArrayList<>();
+    for (DockerbyProperty property : properties) {
+      if(!"volume".equals(property.getType()) && ! property.getType().equals("publish"))
         newProperties.add(ConfigProperty.of(property.getHost(), property.getContainer()));
     }
     return newProperties;

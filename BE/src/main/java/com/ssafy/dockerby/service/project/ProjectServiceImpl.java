@@ -94,6 +94,9 @@ public class ProjectServiceImpl implements ProjectService {
                     "ProjectServiceImpl.configByProjectName : " + projectId));
 
         String configPath = pathParser.configPath(project.getProjectName()).toString();
+        String repositoryPath = pathParser.repositoryPath(project.getProjectName(),
+            project.getGitConfig().getGitProjectId()).toString();
+        String dbVolumePath = pathParser.volumePath().append(repositoryPath).toString();
 
         List<BuildConfig> buildConfigs = new ArrayList<>();
         NginxConfigDto nginxConfig = new NginxConfigDto(new ArrayList<>(), new ArrayList<>(), false,
@@ -144,10 +147,10 @@ public class ProjectServiceImpl implements ProjectService {
             dbConfigDtos.add(
                 DBConfigDto.builder()
                     .name(config.getName())
-                    .dumpLocation(config.getDumpLocation())
+                    .dumpLocation(config.getDumpLocation().replace(dbVolumePath, ""))
                     .frameworkId(framework.getId())
                     .version(version.getInputVersion())
-                    .properties(dockerConfigParser.configProperties(config.getProperties()))
+                    .properties(dockerConfigParser.configDbProperties(config.getProperties()))
                     .port(config.returnPort())
                     .build());
         }
@@ -183,7 +186,7 @@ public class ProjectServiceImpl implements ProjectService {
         String configPath = pathParser.configPath(projectConfigDto.getProjectName()).toString();
         String repositoryPath = pathParser.repositoryPath(projectConfigDto.getProjectName(),
             projectConfigDto.getGitConfig().getGitProjectId()).toString();
-
+        String dbVolumePath = pathParser.volumePath().append(repositoryPath).toString();
         // config, git clone 지우고 다시 저장
 
         FileUtils.deleteDirectory(new File(configPath));
@@ -250,8 +253,9 @@ public class ProjectServiceImpl implements ProjectService {
                         buildConfig.addProperty(new DockerbyProperty("volume", sslPath, sslPath));
                     }
                     for (DockerbyProperty property : buildConfig.getProperties()) {
-                        if("publish".equals(property.getType()))
+                        if ("publish".equals(property.getType())) {
                             property.updateContainer(defaultPort);
+                        }
                     }
                     break;
                 }
@@ -305,17 +309,19 @@ public class ProjectServiceImpl implements ProjectService {
 
             if (!dbConfigDto.getPort().isBlank()) {
                 list.add(
-                    new DockerbyProperty("publish", dbConfigDto.getPort(), dbPropertyConfigDto.getPort()));
+                    new DockerbyProperty("publish", dbConfigDto.getPort(),
+                        dbPropertyConfigDto.getPort()));
             }
 
             list.add(new DockerbyProperty("volume",
-                pathParser.volumePath().append("/").append(framework.getOption()).toString(),
+                pathParser.volumePath().append("/").append(dbConfigDto.getName()).toString(),
                 dbPropertyConfigDto.getVolume()));
 
             dbConfigs.add(
                 dockerConfigParser.DbConverter(dbConfigDto.getName(),
                     framework.getSettingConfigName(),
-                    version.getDockerVersion(), list, repositoryPath + dbConfigDto.getDumpLocation(),
+                    version.getDockerVersion(), list,
+                    dbVolumePath + dbConfigDto.getDumpLocation(),
                     dbPropertyConfigDto.getInit()));
         }
         if (!dbConfigs.isEmpty()) {
