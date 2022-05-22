@@ -792,7 +792,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void stopContainer(Long projectId) throws NotFoundException, IOException {
+    public void deleteContainer(Long projectId) throws NotFoundException, IOException {
 
         Project project = projectRepository.findById(projectId)
             .orElseThrow(
@@ -821,6 +821,40 @@ public class ProjectServiceImpl implements ProjectService {
                 if (!dbConfigs.isEmpty()) {
                     CommandInterpreter.run(logPath, "Remove", 0,
                         dockerAdapter.getRemoveCommands(dbConfigs));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void stopContainer(Long projectId) throws IOException, NotFoundException {
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(
+                () -> new NotFoundException(
+                    "ProjectServiceImpl.configByProjectName : " + projectId));
+
+        String configPath = pathParser.configPath(project.getProjectName()).toString();
+        String logPath = pathParser.logPath(project.getProjectName()).toString();
+
+        DockerAdapter dockerAdapter = new DockerAdapter(null, project.getProjectName());
+
+        List<BuildConfig> buildConfigs = new ArrayList<>();
+        List<DbConfig> dbConfigs = new ArrayList<>();
+
+        File configDirectory = new File(configPath);
+        for (String fileName : configDirectory.list()) {
+            if ("build".equals(fileName)) {
+                buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
+                    BuildConfig.class);
+                if (!buildConfigs.isEmpty()) {
+                    CommandInterpreter.run(logPath, "Stop", 0,
+                        dockerAdapter.getStopCommands(buildConfigs));
+                }
+            } else if ("db".equals(fileName)) {
+                dbConfigs = FileManager.loadJsonFileToList(configPath, "db", DbConfig.class);
+                if (!dbConfigs.isEmpty()) {
+                    CommandInterpreter.run(logPath, "Stop", 0,
+                        dockerAdapter.getStopCommands(dbConfigs));
                 }
             }
         }

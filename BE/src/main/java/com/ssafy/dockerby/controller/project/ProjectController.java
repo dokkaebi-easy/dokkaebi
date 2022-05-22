@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,10 +54,22 @@ public class ProjectController {
   public ResponseEntity deleteProject(@PathVariable Long projectId)
       throws NotFoundException, IOException {
 
-    projectService.stopContainer(projectId);
+    projectService.deleteContainer(projectId);
     projectService.deleteProject(projectId);
 
 
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("status", "Success");
+    return ResponseEntity.ok(map);
+  }
+
+  @ApiOperation(value = "프로젝트 중지", notes = "실행 중인 프로젝트를 중지한다.")
+  @PutMapping("/stop/{projectId}")
+  public ResponseEntity stopProject(@PathVariable Long projectId)
+      throws NotFoundException, IOException {
+
+    projectService.stopContainer(projectId);
 
     Map<String, Object> map = new HashMap<>();
     map.put("status", "Success");
