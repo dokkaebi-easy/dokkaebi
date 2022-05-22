@@ -46,7 +46,7 @@ export default function DBpage() {
               startIcon={<AddIcon />}
               sx={{ marginRight: 3 }}
             >
-              DB Add
+              DB 추가
             </Button>
           </Box>
           <Box sx={{ my: 3 }}>

@@ -13,12 +13,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface UserService extends UserDetailsService {
 
-    @Override
+  @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
     Boolean duplicatePrincipalCheck(String principal) throws UserDefindedException;
 
     Boolean duplicateNameCheck(String name) throws UserDefindedException;
+
+    Boolean validateAuthKeyCheck(String key);
 
     UserResponseDto signup(SignupDto signupDto) throws IOException, UserDefindedException;
     UserDetailDto signin(SigninDto signinDto) ;
