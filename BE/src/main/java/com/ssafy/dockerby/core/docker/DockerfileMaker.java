@@ -56,9 +56,11 @@ public class DockerfileMaker {
     sb.append("FROM ").append(config.getVersion()).append(' ').append("as builder").append('\n');
     sb.append("COPY . . \n");
     if ("Gradle".equals(config.getType())) {
+      sb.append("RUN ").append("dos2unix ./gradlew").append('\n');
       sb.append("RUN ").append("chmod +x ./gradlew").append('\n');
       sb.append("RUN ").append("./gradlew clean build").append('\n');
     } else if ("Maven".equals(config.getType())) {
+      sb.append("RUN ").append("dos2unix ./mvnw").append('\n');
       sb.append("RUN ").append("chmod +x ./mvnw").append('\n');
       sb.append("RUN ").append("./mvnw clean package").append('\n');
     }
@@ -90,7 +92,7 @@ public class DockerfileMaker {
     sb.append("COPY --from=builder ");
     sb.append((config.getBuildPath().isBlank()) ? "/build" : config.getBuildPath())
         .append(" /usr/share/nginx/html\n");
-    // TODO EXPOSE 제거 확인
+
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
@@ -111,7 +113,7 @@ public class DockerfileMaker {
     sb.append("COPY --from=builder ");
     sb.append((config.getBuildPath().isBlank()) ? "/dist" : config.getBuildPath())
       .append(" /usr/share/nginx/html\n");
-    sb.append("EXPOSE ").append("3000").append('\n');
+
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());

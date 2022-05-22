@@ -294,14 +294,15 @@ public class ProjectServiceImpl implements ProjectService {
                 list.add(new DockerbyProperty("environment", property.getProperty(),
                     property.getData()));
             }
-            if (!dbConfigDto.getPort().isBlank()) {
-                list.add(
-                    new DockerbyProperty("publish", dbConfigDto.getPort(), dbConfigDto.getPort()));
-            }
 
             String dbConfigPath = pathParser.dockerbyConfigPath().toString();
             DbPropertyConfigDto dbPropertyConfigDto = FileManager.loadJsonFile(dbConfigPath,
                 framework.getOption(), DbPropertyConfigDto.class);
+
+            if (!dbConfigDto.getPort().isBlank()) {
+                list.add(
+                    new DockerbyProperty("publish", dbConfigDto.getPort(), dbPropertyConfigDto.getPort()));
+            }
 
             list.add(new DockerbyProperty("volume",
                 pathParser.volumePath().append("/").append(framework.getOption()).toString(),
@@ -310,8 +311,8 @@ public class ProjectServiceImpl implements ProjectService {
             dbConfigs.add(
                 dockerConfigParser.DbConverter(dbConfigDto.getName(),
                     framework.getSettingConfigName(),
-                    version.getDockerVersion(), list, dbConfigDto.getDumpLocation(),
-                    project.getProjectName()));
+                    version.getDockerVersion(), list, repositoryPath + dbConfigDto.getDumpLocation(),
+                    dbPropertyConfigDto.getInit()));
         }
         if (!dbConfigs.isEmpty()) {
             FileManager.saveJsonFile(configPath, "db", dbConfigs);
