@@ -3,6 +3,8 @@ package com.ssafy.dockerby.dto.project;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.entity.project.enums.StateType;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import lombok.*;
 import org.springframework.data.convert.Jsr310Converters;
 import org.springframework.lang.Nullable;
@@ -24,7 +26,7 @@ public class ProjectListResponseDto {
     private String projectName;
 
     @NotNull
-    private StateType state;
+    private String state;
 
     @Nullable
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -37,17 +39,31 @@ public class ProjectListResponseDto {
     @Nullable
     private String lastDuration;
 
-    public static ProjectListResponseDto from(Project project){
+    @NotNull
+    private String recentBuildDate;
+
+    @Nullable
+    private Map<String,String> port;
+
+    public static ProjectListResponseDto of(Project project,Map<String,String> port){
+        String buildDate = "";
+
         if (project == null) {
             return null;
+        }
+        if(project.getRecentBuildDate() != null){
+            buildDate = project.getRecentBuildDate().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         }
         return  ProjectListResponseDto.builder()
             .projectId(project.getId())
             .projectName(project.getProjectName())
-            .state(project.getStateType())
+            .state(project.getStateType().getName())
             .lastSuccessDate(project.getLastSuccessDate())
             .lastFailDate(project.getLastFailDate())
             .lastDuration(project.getLastDuration())
+            .recentBuildDate(buildDate)
+            .port(port)
             .build();
     }
 }

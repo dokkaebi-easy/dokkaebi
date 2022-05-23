@@ -20,13 +20,12 @@ public class DockerConfigParser {
   private final PathParser pathParser;
 
   public DbConfig DbConverter(String name, String framework, String dockerVersion,
-      List<DockerbyProperty> properties, String dumpLocation, String projectName) {
+      List<DockerbyProperty> properties, String dumpLocation, String entryPath) {
     log.info("DbConverter Start : framework = {} , dockerVersion = {}", framework, dockerVersion);
 
     DbConfig dbConfig = new DbConfig(name, framework, dockerVersion, properties, dumpLocation);
     if(!dumpLocation.isBlank()) {
-      String volumePath = pathParser.volumePath(projectName, dumpLocation).toString();
-      dbConfig.addProperty(new DockerbyProperty("volume", volumePath, dumpLocation));
+      dbConfig.addProperty(new DockerbyProperty("volume", dumpLocation, entryPath));
     }
     log.info("DbConverter Done");
     return dbConfig;
@@ -67,7 +66,17 @@ public class DockerConfigParser {
     log.info("configProperties Start");
     List<ConfigProperty> newProperties = new ArrayList<>();
     for (DockerbyProperty property : properties) {
-      if(!"volume".equals(property.getType()) && !"publish".equals(property.getType()))
+      if(!"volume".equals(property.getType()))
+        newProperties.add(ConfigProperty.of(property.getType(), property.getHost()));
+    }
+    return newProperties;
+  }
+
+  public List<ConfigProperty> configDbProperties(List<DockerbyProperty> properties) {
+    log.info("configProperties Start");
+    List<ConfigProperty> newProperties = new ArrayList<>();
+    for (DockerbyProperty property : properties) {
+      if(!"volume".equals(property.getType()) && ! property.getType().equals("publish"))
         newProperties.add(ConfigProperty.of(property.getHost(), property.getContainer()));
     }
     return newProperties;

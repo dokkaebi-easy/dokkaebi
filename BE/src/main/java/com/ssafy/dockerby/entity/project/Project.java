@@ -37,70 +37,79 @@ import org.springframework.lang.Nullable;
 @RequiredArgsConstructor
 public class Project extends BaseEntity {
 
-  @Id
-  @Column(name = "project_id")
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @Column(name = "project_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(length = 60 , unique = true)
-  private String projectName;
+    @Column(length = 60, unique = true)
+    private String projectName;
 
-  @Enumerated(value = EnumType.STRING)
-  @Builder.Default
-  private StateType stateType = StateType.valueOf("Waiting");
+    @Enumerated(value = EnumType.STRING)
+    @Builder.Default
+    private StateType stateType = StateType.valueOf("Waiting");
 
-  @Builder.Default
-  private boolean deleted = false;
+    @Builder.Default
+    private boolean deleted = false;
 
-  @Nullable
-  private LocalDateTime lastSuccessDate;
+    @Nullable
+    private LocalDateTime lastSuccessDate;
 
-  @Nullable
-  private LocalDateTime lastFailDate;
+    @Nullable
+    private LocalDateTime lastFailDate;
 
-  @Nullable
+    @Nullable
+    private LocalDateTime recentBuildDate;
 
-  private String lastDuration;
+    @Nullable
+    private String lastDuration;
+
+    //연관관계 매핑
+    @OneToOne(mappedBy = "project", fetch = FetchType.LAZY)
+    private GitlabConfig gitConfig;
+
+    // History 매핑
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<ConfigHistory> histories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<BuildState> buildStates = new ArrayList<>();
 
 
-//연관관계 매핑
-
-  @OneToOne(mappedBy = "project", fetch = FetchType.LAZY)
-  private GitlabConfig gitConfig;
-
-  // History 매핑
-  @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-  @Builder.Default
-  private List<ConfigHistory> histories = new ArrayList<>();
-
-  @OneToMany(mappedBy = "project" , cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
-  @Builder.Default
-  private List<BuildState> buildStates = new ArrayList<>();
+    //비지니스 로직
+    public static Project from(ProjectConfigDto projectConfigDto) {
+        return Project.builder()
+            .projectName(projectConfigDto.getProjectName())
+            .build();
+    }
 
 
-//비지니스 로직
-  public static Project from(ProjectConfigDto projectConfigDto) {
-    return Project.builder()
-      .projectName(projectConfigDto.getProjectName())
-      .build();
-  }
+    public Project updateState(StateType state) {
+        this.stateType = state;
+        if ("Processing".equals(state.toString())) {
+            this.lastSuccessDate = LocalDateTime.now();
+        }
+        if ("Failed".equals(state.toString())) {
+            this.lastFailDate = LocalDateTime.now();
+        }
+        return this;
+    }
 
-  public Project updateState(StateType state){
-    this.stateType = state;
-    if("Done".equals(state.toString()))this.lastSuccessDate = LocalDateTime.now();
-    if("Failed".equals(state.toString()))this.lastFailDate = LocalDateTime.now();
-    return this;
-  }
+    public void updateLastDuration(String duration) {
+        this.lastDuration = duration;
+    }
 
-  public void updateLastDuration(String duration){
-    this.lastDuration=duration;
-  }
+    public void addBuildState(BuildState buildState) {
+        this.buildStates.add(buildState);
+    }
 
-  public void addBuildState(BuildState buildState){
-    this.buildStates.add(buildState);
-  }
+    public void updateRecentBuildDate() {
+        this.recentBuildDate = LocalDateTime.now();
+    }
 
-  public void setConfig(GitlabConfig config) {
-    this.gitConfig = config;
-  }
+    public void setConfig(GitlabConfig config) {
+        this.gitConfig = config;
+    }
 }

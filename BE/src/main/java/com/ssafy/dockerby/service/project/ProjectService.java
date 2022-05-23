@@ -7,7 +7,6 @@ import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.entity.project.enums.StateType;
 import javassist.NotFoundException;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +40,14 @@ public interface ProjectService {
   BuildDetailResponseDto buildDetail(Long buildStateId)
       throws NotFoundException;
 
-  List<ProjectListResponseDto> projectList() throws NotFoundException, UserDefindedException;
+  List<ProjectListResponseDto> projectList()
+      throws NotFoundException, UserDefindedException, IOException;
 
   String makeDuration(LocalDateTime start, LocalDateTime end);
 
   void deleteProject(Long projectId) throws NotFoundException, IOException;
 
-  void stopContainer(Long projectId) throws NotFoundException, IOException;
+  void deleteContainer(Long projectId) throws NotFoundException, IOException;
+
+  void stopContainer(Long projectId) throws IOException, NotFoundException;
 }

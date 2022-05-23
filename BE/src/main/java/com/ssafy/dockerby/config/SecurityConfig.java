@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/user/**", "/swagger-ui.html/**", "/configuration/**",
                 "/swagger-resources/**", "/v2/api-docs", "/webjars/**",
                 "/webjars/springfox-swagger-ui/*.{js,css}").permitAll() // 모두 허용
+            .antMatchers("/api/project/hook/**").permitAll()
             .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .anyRequest().authenticated()
 ;
