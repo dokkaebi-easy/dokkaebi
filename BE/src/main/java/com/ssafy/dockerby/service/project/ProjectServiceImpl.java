@@ -769,20 +769,23 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectListResponseDto> resultList = new ArrayList<>();
 
         for (Project project : projectList) {
-            Map<String,String> port = new HashMap<String,String>();
+            List<Map<String,String>> ports = new ArrayList<>();
             String configPath = pathParser.configPath(project.getProjectName()).toString();
             List<BuildConfig> buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
                         BuildConfig.class);
             for(BuildConfig buildConfig : buildConfigs) {
                 List<DockerbyProperty> properties = buildConfig.getProperties();
                 for (DockerbyProperty property : properties) {
+                    Map<String,String> port = new HashMap<String,String>();
                     if (property.getType().equals("publish")) {
-                        port.put(buildConfig.getName(),property.getHost());
-                        break;
+                        port.put("name",buildConfig.getName());
+                        port.put("host",property.getHost());
                     }
+                    ports.add(port);
+
                 }
             }
-            ProjectListResponseDto projectListDto = ProjectListResponseDto.of(project,port);
+            ProjectListResponseDto projectListDto = ProjectListResponseDto.of(project,ports);
             resultList.add(projectListDto);
         }
 
