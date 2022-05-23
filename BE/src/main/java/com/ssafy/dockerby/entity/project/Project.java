@@ -47,7 +47,7 @@ public class Project extends BaseEntity {
 
   @Enumerated(value = EnumType.STRING)
   @Builder.Default
-  private StateType stateType = StateType.valueOf("대기");
+  private StateType stateType = StateType.valueOf("Waiting");
 
   @Builder.Default
   private boolean deleted = false;
