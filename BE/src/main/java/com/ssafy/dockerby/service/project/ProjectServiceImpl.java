@@ -358,7 +358,7 @@ public class ProjectServiceImpl implements ProjectService {
             .project(project)
             .buildNumber(buildNumber)
             .buildType(BuildType.valueOf("Pull"))
-            .stateType(StateType.valueOf("빌드중"))
+            .stateType(StateType.valueOf("Processing"))
             .build();
 
         if (webHookDto != null) {
@@ -413,7 +413,7 @@ public class ProjectServiceImpl implements ProjectService {
             .orElseThrow(
                 () -> new NotFoundException("ProjectSerivceImpl.projectIsFailed : " + projectId));
         //프로젝트가 실패상태이면 ture 반환
-        if ("실패".equals(project.getStateType().toString())) {
+        if ("Failed".equals(project.getStateType().toString())) {
             log.info("projectIsFailed : return true");
             return true;
         } else {
@@ -429,7 +429,8 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new NotFoundException("ProjectSerivceImpl.build : " + projectId));
-
+        //최근 빌드시간 업데이트
+        project.updateRecentBuildDate();
         //프로젝트 상태 진행중으로 변경
         project.updateState(StateType.Processing);
 
@@ -470,8 +471,8 @@ public class ProjectServiceImpl implements ProjectService {
                     commands);
             }
             // pull 완료 build 진행중 update
-            buildStates.get(2).updateStateType("실행중");
-            buildStates.get(1).updateStateType("빌드중");
+            buildStates.get(2).updateStateType("Done");
+            buildStates.get(1).updateStateType("Processing");
 
             em.flush();
             log.info("pullStart : Pull Success : {}", buildStates.get(0).toString());
@@ -517,8 +518,8 @@ public class ProjectServiceImpl implements ProjectService {
             CommandInterpreter.run(logPath, "Build", (buildNumber), buildCommands);
 
             // state Done 넣기
-            buildStates.get(1).updateStateType("실행중");
-            buildStates.get(0).updateStateType("빌드중");
+            buildStates.get(1).updateStateType("Done");
+            buildStates.get(0).updateStateType("Processing");
 
             em.flush();
             log.info("buildStart : Build Success : {}", buildStates.get(1).toString());
@@ -589,7 +590,7 @@ public class ProjectServiceImpl implements ProjectService {
             }
             CommandInterpreter.run(logPath, "Run", buildNumber, commands);
             // state Done 넣기
-            buildStates.get(0).updateStateType("실행중");
+            buildStates.get(0).updateStateType("Done");
 
             em.flush();
             log.info("runStart : Run Success = {} ", buildStates.get(2).toString());
@@ -613,7 +614,7 @@ public class ProjectServiceImpl implements ProjectService {
                 () -> new NotFoundException(
                     "ProjectServiceImpl.updateProjectDone / Project not found / id: " + projectId));
 
-        project.updateState(StateType.valueOf("실행중"));
+        project.updateState(StateType.valueOf("Done"));
 
         project.updateLastDuration(duration);
 
@@ -772,14 +773,27 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectListResponseDto> projectList() {
+    public List<ProjectListResponseDto> projectList() throws IOException {
         log.info("ProjectList Start");
         List<Project> projectList = projectRepository.findAll();
 
         List<ProjectListResponseDto> resultList = new ArrayList<>();
 
         for (Project project : projectList) {
-            ProjectListResponseDto projectListDto = ProjectListResponseDto.from(project);
+            Map<String,String> port = new HashMap<String,String>();
+            String configPath = pathParser.configPath(project.getProjectName()).toString();
+            List<BuildConfig> buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
+                        BuildConfig.class);
+            for(BuildConfig buildConfig : buildConfigs) {
+                List<DockerbyProperty> properties = buildConfig.getProperties();
+                for (DockerbyProperty property : properties) {
+                    if (property.getType().equals("publish")) {
+                        port.put(buildConfig.getName(),property.getHost());
+                        break;
+                    }
+                }
+            }
+            ProjectListResponseDto projectListDto = ProjectListResponseDto.of(project,port);
             resultList.add(projectListDto);
         }
 
