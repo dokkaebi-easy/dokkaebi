@@ -14,13 +14,11 @@ import { Link } from 'react-router-dom';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useRunStore } from 'Components/Store/RunStore/RunStore';
-import Brightness2Icon from '@mui/icons-material/Brightness2';
-import Brightness5Icon from '@mui/icons-material/Brightness5';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Typography from '@mui/material/Typography';
+import StopIcon from '@mui/icons-material/Stop';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -69,7 +67,8 @@ export default function MDTable() {
         console.log(error);
       });
   };
-  const handleClick = (projectId: number) => {
+
+  const handleRunClick = (projectId: number) => {
     setLoading(true);
     setRun(1);
     setStyle(LodingStyle);
@@ -88,6 +87,12 @@ export default function MDTable() {
         reSet();
         setStyle(WatiStyle);
       });
+  };
+
+  const handleStopClick = (projectId: number) => {
+    axios.put(`/api/project/stop/${projectId}`).then((res) => {
+      console.log(res);
+    });
   };
 
   const handleDelClick = (projectId: number) => {
@@ -110,11 +115,12 @@ export default function MDTable() {
         <TableHead>
           <TableRow>
             <StyledTableCell align="center">빌드 실행</StyledTableCell>
+            <StyledTableCell align="center">빌드 정지</StyledTableCell>
             <StyledTableCell align="center">Project ID</StyledTableCell>
             <StyledTableCell align="center">Name</StyledTableCell>
-            <StyledTableCell align="center">S</StyledTableCell>
-            <StyledTableCell align="center">최근성공</StyledTableCell>
-            <StyledTableCell align="center">최근 실패</StyledTableCell>
+            <StyledTableCell align="center">상태</StyledTableCell>
+            <StyledTableCell align="center">포트</StyledTableCell>
+            <StyledTableCell align="center">최근 실행</StyledTableCell>
             <StyledTableCell align="center">Edit</StyledTableCell>
             <StyledTableCell align="center">Del</StyledTableCell>
           </TableRow>
@@ -130,12 +136,45 @@ export default function MDTable() {
                       ...style,
                       color: 'white',
                     }}
-                    onClick={() => handleClick(row.projectId)}
+                    onClick={() => handleRunClick(row.projectId)}
                     loading={loading}
                     variant={loading ? 'outlined' : 'contained'}
                     disabled={loading}
-                    startIcon={<PlayArrowIcon />}
-                  />
+                  >
+                    {loading ? (
+                      <HourglassTopIcon
+                        fontSize="small"
+                        sx={{
+                          color: 'white',
+                        }}
+                      />
+                    ) : (
+                      <PlayArrowIcon
+                        fontSize="small"
+                        sx={{
+                          color: 'white',
+                        }}
+                      />
+                    )}
+                  </LoadingButton>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <Button
+                    size="small"
+                    sx={{
+                      ...style,
+                      color: 'white',
+                      background: 'linear-gradient(195deg, #ee6666, #ff2222)',
+                    }}
+                    onClick={() => handleStopClick(row.projectId)}
+                  >
+                    <StopIcon
+                      fontSize="small"
+                      sx={{
+                        color: 'white',
+                      }}
+                    />
+                  </Button>
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <Link
@@ -158,18 +197,7 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    <IconButton
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                      sx={{ color: 'black' }}
-                    >
-                      {row.state === 'Failed' ? (
-                        <Brightness5Icon sx={{ color: 'red' }} />
-                      ) : (
-                        <Brightness5Icon sx={{ color: 'green' }} />
-                      )}
-                    </IconButton>
+                    {row.state}
                   </Link>
                 </StyledTableCell>
 
@@ -178,7 +206,13 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    {row.lastSuccessDate}
+                    {row.ports.map((value) => {
+                      return (
+                        <div key={uuid()}>
+                          {value.name} : {value.host}
+                        </div>
+                      );
+                    })}
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="center">
@@ -186,7 +220,7 @@ export default function MDTable() {
                     to={`/detail/${row.projectId}`}
                     style={{ color: 'black', textDecoration: 'none' }}
                   >
-                    {row.lastFailDate}
+                    {row.recentBuildDate}
                   </Link>
                 </StyledTableCell>
                 <StyledTableCell align="center">

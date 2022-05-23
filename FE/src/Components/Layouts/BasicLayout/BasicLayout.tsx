@@ -4,8 +4,8 @@ import { useHistory } from 'react-router';
 import Box from '@mui/material/Box';
 import SideNavibar from 'Components/UI/Organisms/SideNavibar/SideNavibar';
 import Navbar from 'Components/UI/Organisms/Navbar/Navbar';
-import Cube from 'Components/UI/Atoms/Cube/Cube';
 import LoadingBar from 'Components/Pages/LoadingBar/LoadingBar';
+import Create from 'Components/Pages/Create/Create';
 
 const HomePage = lazy(() => import('Components/Pages/Home/Home'));
 const DetailPage = lazy(() => import('Components/Pages/Detail/Detail'));
@@ -75,6 +75,7 @@ export default function BasicLayout() {
               exact
             />
             <Route path="/detail/:projectId" component={DetailPage} exact />
+            <Route path="/create" component={Create} exact />
             <Route path="/setting/:projectId" component={SettingPage} exact />
             <Route path="/" component={HomePage} exact />
           </Switch>
