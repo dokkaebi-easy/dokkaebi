@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.entity.project.enums.StateType;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import lombok.*;
 import org.springframework.data.convert.Jsr310Converters;
@@ -43,9 +44,9 @@ public class ProjectListResponseDto {
     private String recentBuildDate;
 
     @Nullable
-    private Map<String,String> port;
+    private List<Map<String,String>> ports;
 
-    public static ProjectListResponseDto of(Project project,Map<String,String> port){
+    public static ProjectListResponseDto of(Project project,List<Map<String,String>> ports){
         String buildDate = "";
 
         if (project == null) {
@@ -63,7 +64,7 @@ public class ProjectListResponseDto {
             .lastFailDate(project.getLastFailDate())
             .lastDuration(project.getLastDuration())
             .recentBuildDate(buildDate)
-            .port(port)
+            .ports(ports)
             .build();
     }
 }
