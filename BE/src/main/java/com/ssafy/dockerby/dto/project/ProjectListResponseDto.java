@@ -24,7 +24,7 @@ public class ProjectListResponseDto {
     private String projectName;
 
     @NotNull
-    private StateType state;
+    private String state;
 
     @Nullable
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -44,7 +44,7 @@ public class ProjectListResponseDto {
         return  ProjectListResponseDto.builder()
             .projectId(project.getId())
             .projectName(project.getProjectName())
-            .state(project.getStateType())
+            .state(project.getStateType().getName())
             .lastSuccessDate(project.getLastSuccessDate())
             .lastFailDate(project.getLastFailDate())
             .lastDuration(project.getLastDuration())

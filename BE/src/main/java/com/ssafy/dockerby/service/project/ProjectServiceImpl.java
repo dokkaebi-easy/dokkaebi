@@ -363,7 +363,7 @@ public class ProjectServiceImpl implements ProjectService {
             .project(project)
             .buildNumber(buildNumber)
             .buildType(BuildType.valueOf("Build"))
-            .stateType(StateType.valueOf("대기"))
+            .stateType(StateType.valueOf("Waiting"))
             .build();
 
         if (webHookDto != null) {
@@ -379,7 +379,7 @@ public class ProjectServiceImpl implements ProjectService {
             .project(project)
             .buildNumber(buildNumber)
             .buildType(BuildType.valueOf("Run"))
-            .stateType(StateType.valueOf("대기"))
+            .stateType(StateType.valueOf("Waiting"))
             .build();
 
         if (webHookDto != null) {
@@ -420,7 +420,7 @@ public class ProjectServiceImpl implements ProjectService {
             .orElseThrow(() -> new NotFoundException("ProjectSerivceImpl.build : " + projectId));
 
         //프로젝트 상태 진행중으로 변경
-        project.updateState(StateType.빌드중);
+        project.updateState(StateType.Processing);
 
         log.info("build : updateState project.getStateType = {} ", project.getStateType());
 
@@ -466,8 +466,8 @@ public class ProjectServiceImpl implements ProjectService {
             log.info("pullStart : Pull Success : {}", buildStates.get(0).toString());
         } catch (Exception e) { // state failed 넣기
             //pullState failed 입력
-            buildStates.get(2).updateStateType("실패");
-            project.updateState(StateType.실패);
+            buildStates.get(2).updateStateType("Failed");
+            project.updateState(StateType.Failed);
 
             em.flush();
             log.error("pullStart : Pull failed {}", e);
@@ -513,8 +513,8 @@ public class ProjectServiceImpl implements ProjectService {
             log.info("buildStart : Build Success : {}", buildStates.get(1).toString());
         } catch (Exception e) { // state failed 넣기
             //buildState failed 입력
-            buildStates.get(1).updateStateType("실패");
-            project.updateState(StateType.실패);
+            buildStates.get(1).updateStateType("Failed");
+            project.updateState(StateType.Failed);
 
             em.flush();
             log.error("buildStart : Build Failed {} ", e);
@@ -584,8 +584,8 @@ public class ProjectServiceImpl implements ProjectService {
             log.info("runStart : Run Success = {} ", buildStates.get(2).toString());
         } catch (Exception e) { // state failed 넣기
             //dockerRunState failed 입력
-            buildStates.get(0).updateStateType("실패");
-            project.updateState(StateType.실패);
+            buildStates.get(0).updateStateType("Failed");
+            project.updateState(StateType.Failed);
 
             em.flush();
             log.error("runStart : Run Failed {}", e);
