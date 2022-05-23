@@ -1,5 +1,5 @@
 package com.ssafy.dockerby.entity.project.enums;
 
 public enum StateType {
-  Processing, Done , Failed , Waiting
+  빌드중, 실행중 , 실패 , 대기
 }
