@@ -46,13 +46,13 @@ public class ProjectListResponseDto {
     private Map<String,String> port;
 
     public static ProjectListResponseDto of(Project project,Map<String,String> port){
-        String BuildDate = "";
+        String buildDate = "";
 
         if (project == null) {
             return null;
         }
         if(project.getRecentBuildDate() != null){
-            BuildDate = project.getRecentBuildDate().format(
+            buildDate = project.getRecentBuildDate().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         }
         return  ProjectListResponseDto.builder()
@@ -62,7 +62,7 @@ public class ProjectListResponseDto {
             .lastSuccessDate(project.getLastSuccessDate())
             .lastFailDate(project.getLastFailDate())
             .lastDuration(project.getLastDuration())
-            .recentBuildDate(BuildDate)
+            .recentBuildDate(buildDate)
             .port(port)
             .build();
     }

@@ -71,7 +71,7 @@ CREATE TABLE `dockerby`.`project`
     `last_modified_date` DATETIME     NULL,
     `last_success_date`  DATETIME     NULL,
     `last_fail_date`     DATETIME     NULL,
-	`recent_build_date`    DATETIME     NULL,
+	`recent_build_date`  DATETIME     NULL,
     `last_duration`      VARCHAR(255) NULL,
     PRIMARY KEY (`project_id`)
 );
