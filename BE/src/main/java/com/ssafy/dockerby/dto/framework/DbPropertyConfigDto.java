@@ -12,5 +12,6 @@ public class DbPropertyConfigDto {
   private List<String> properties;
   private String init;
   private String volume;
+  private String port;
 
 }

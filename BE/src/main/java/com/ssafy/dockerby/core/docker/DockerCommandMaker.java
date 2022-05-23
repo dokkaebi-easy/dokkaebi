@@ -101,4 +101,12 @@ public class DockerCommandMaker {
         log.info("removeContainer Done");
         return sb.toString();
     }
+
+    public String stopContainer(DockerbyConfig config) {
+        log.info("stopContainer Start");
+        StringBuilder sb = new StringBuilder();
+        sb.append("docker stop ").append(projectName).append('-').append(config.getName());
+        log.info("stopContainer Done");
+        return sb.toString();
+    }
 }

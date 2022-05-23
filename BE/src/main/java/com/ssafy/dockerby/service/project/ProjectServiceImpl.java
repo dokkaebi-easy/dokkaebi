@@ -94,6 +94,9 @@ public class ProjectServiceImpl implements ProjectService {
                     "ProjectServiceImpl.configByProjectName : " + projectId));
 
         String configPath = pathParser.configPath(project.getProjectName()).toString();
+        String repositoryPath = pathParser.repositoryPath(project.getProjectName(),
+            project.getGitConfig().getGitProjectId()).toString();
+        String dbVolumePath = pathParser.volumePath().append(repositoryPath).toString();
 
         List<BuildConfig> buildConfigs = new ArrayList<>();
         NginxConfigDto nginxConfig = new NginxConfigDto(new ArrayList<>(), new ArrayList<>(), false,
@@ -144,10 +147,10 @@ public class ProjectServiceImpl implements ProjectService {
             dbConfigDtos.add(
                 DBConfigDto.builder()
                     .name(config.getName())
-                    .dumpLocation(config.getDumpLocation())
+                    .dumpLocation(config.getDumpLocation().replace(dbVolumePath, ""))
                     .frameworkId(framework.getId())
                     .version(version.getInputVersion())
-                    .properties(dockerConfigParser.configProperties(config.getProperties()))
+                    .properties(dockerConfigParser.configDbProperties(config.getProperties()))
                     .port(config.returnPort())
                     .build());
         }
@@ -183,7 +186,7 @@ public class ProjectServiceImpl implements ProjectService {
         String configPath = pathParser.configPath(projectConfigDto.getProjectName()).toString();
         String repositoryPath = pathParser.repositoryPath(projectConfigDto.getProjectName(),
             projectConfigDto.getGitConfig().getGitProjectId()).toString();
-
+        String dbVolumePath = pathParser.volumePath().append(repositoryPath).toString();
         // config, git clone 지우고 다시 저장
 
         FileUtils.deleteDirectory(new File(configPath));
@@ -242,12 +245,17 @@ public class ProjectServiceImpl implements ProjectService {
             String defaultConfPath = "";
             for (BuildConfig buildConfig : buildConfigs) {
                 if (buildConfig.useNginx()) {
+                    String defaultPort = "80";
                     defaultConfPath = buildConfig.getProjectDirectory();
-                    buildConfig.addProperty(new DockerbyProperty("publish", "80", "80"));
                     if (nginxConfig.isHttps()) {
-                        buildConfig.addProperty(new DockerbyProperty("publish", "443", "443"));
+                        defaultPort = "443";
                         String sslPath = nginxConfig.getNginxHttpsOption().getSslPath();
                         buildConfig.addProperty(new DockerbyProperty("volume", sslPath, sslPath));
+                    }
+                    for (DockerbyProperty property : buildConfig.getProperties()) {
+                        if ("publish".equals(property.getType())) {
+                            property.updateContainer(defaultPort);
+                        }
                     }
                     break;
                 }
@@ -294,24 +302,27 @@ public class ProjectServiceImpl implements ProjectService {
                 list.add(new DockerbyProperty("environment", property.getProperty(),
                     property.getData()));
             }
-            if (!dbConfigDto.getPort().isBlank()) {
-                list.add(
-                    new DockerbyProperty("publish", dbConfigDto.getPort(), dbConfigDto.getPort()));
-            }
 
             String dbConfigPath = pathParser.dockerbyConfigPath().toString();
             DbPropertyConfigDto dbPropertyConfigDto = FileManager.loadJsonFile(dbConfigPath,
                 framework.getOption(), DbPropertyConfigDto.class);
 
+            if (!dbConfigDto.getPort().isBlank()) {
+                list.add(
+                    new DockerbyProperty("publish", dbConfigDto.getPort(),
+                        dbPropertyConfigDto.getPort()));
+            }
+
             list.add(new DockerbyProperty("volume",
-                pathParser.volumePath().append("/").append(framework.getOption()).toString(),
+                pathParser.volumePath().append("/").append(dbConfigDto.getName()).toString(),
                 dbPropertyConfigDto.getVolume()));
 
             dbConfigs.add(
                 dockerConfigParser.DbConverter(dbConfigDto.getName(),
                     framework.getSettingConfigName(),
-                    version.getDockerVersion(), list, dbConfigDto.getDumpLocation(),
-                    project.getProjectName()));
+                    version.getDockerVersion(), list,
+                    dbVolumePath + dbConfigDto.getDumpLocation(),
+                    dbPropertyConfigDto.getInit()));
         }
         if (!dbConfigs.isEmpty()) {
             FileManager.saveJsonFile(configPath, "db", dbConfigs);
@@ -336,7 +347,7 @@ public class ProjectServiceImpl implements ProjectService {
             .project(project)
             .buildNumber(buildNumber)
             .buildType(BuildType.valueOf("Pull"))
-            .stateType(StateType.valueOf("Processing"))
+            .stateType(StateType.valueOf("빌드중"))
             .build();
 
         if (webHookDto != null) {
@@ -352,7 +363,7 @@ public class ProjectServiceImpl implements ProjectService {
             .project(project)
             .buildNumber(buildNumber)
             .buildType(BuildType.valueOf("Build"))
-            .stateType(StateType.valueOf("Waiting"))
+            .stateType(StateType.valueOf("대기"))
             .build();
 
         if (webHookDto != null) {
@@ -368,7 +379,7 @@ public class ProjectServiceImpl implements ProjectService {
             .project(project)
             .buildNumber(buildNumber)
             .buildType(BuildType.valueOf("Run"))
-            .stateType(StateType.valueOf("Waiting"))
+            .stateType(StateType.valueOf("대기"))
             .build();
 
         if (webHookDto != null) {
@@ -391,7 +402,7 @@ public class ProjectServiceImpl implements ProjectService {
             .orElseThrow(
                 () -> new NotFoundException("ProjectSerivceImpl.projectIsFailed : " + projectId));
         //프로젝트가 실패상태이면 ture 반환
-        if ("Failed".equals(project.getStateType().toString())) {
+        if ("실패".equals(project.getStateType().toString())) {
             log.info("projectIsFailed : return true");
             return true;
         } else {
@@ -409,7 +420,7 @@ public class ProjectServiceImpl implements ProjectService {
             .orElseThrow(() -> new NotFoundException("ProjectSerivceImpl.build : " + projectId));
 
         //프로젝트 상태 진행중으로 변경
-        project.updateState(StateType.Processing);
+        project.updateState(StateType.빌드중);
 
         log.info("build : updateState project.getStateType = {} ", project.getStateType());
 
@@ -448,15 +459,15 @@ public class ProjectServiceImpl implements ProjectService {
                     commands);
             }
             // pull 완료 build 진행중 update
-            buildStates.get(2).updateStateType("Done");
-            buildStates.get(1).updateStateType("Processing");
+            buildStates.get(2).updateStateType("실행중");
+            buildStates.get(1).updateStateType("빌드중");
 
             em.flush();
             log.info("pullStart : Pull Success : {}", buildStates.get(0).toString());
         } catch (Exception e) { // state failed 넣기
             //pullState failed 입력
-            buildStates.get(2).updateStateType("Failed");
-            project.updateState(StateType.Failed);
+            buildStates.get(2).updateStateType("실패");
+            project.updateState(StateType.실패);
 
             em.flush();
             log.error("pullStart : Pull failed {}", e);
@@ -495,15 +506,15 @@ public class ProjectServiceImpl implements ProjectService {
             CommandInterpreter.run(logPath, "Build", (buildNumber), buildCommands);
 
             // state Done 넣기
-            buildStates.get(1).updateStateType("Done");
-            buildStates.get(0).updateStateType("Processing");
+            buildStates.get(1).updateStateType("실행중");
+            buildStates.get(0).updateStateType("빌드중");
 
             em.flush();
             log.info("buildStart : Build Success : {}", buildStates.get(1).toString());
         } catch (Exception e) { // state failed 넣기
             //buildState failed 입력
-            buildStates.get(1).updateStateType("Failed");
-            project.updateState(StateType.Failed);
+            buildStates.get(1).updateStateType("실패");
+            project.updateState(StateType.실패);
 
             em.flush();
             log.error("buildStart : Build Failed {} ", e);
@@ -567,14 +578,14 @@ public class ProjectServiceImpl implements ProjectService {
             }
             CommandInterpreter.run(logPath, "Run", buildNumber, commands);
             // state Done 넣기
-            buildStates.get(0).updateStateType("Done");
+            buildStates.get(0).updateStateType("실행중");
 
             em.flush();
             log.info("runStart : Run Success = {} ", buildStates.get(2).toString());
         } catch (Exception e) { // state failed 넣기
             //dockerRunState failed 입력
-            buildStates.get(0).updateStateType("Failed");
-            project.updateState(StateType.Failed);
+            buildStates.get(0).updateStateType("실패");
+            project.updateState(StateType.실패);
 
             em.flush();
             log.error("runStart : Run Failed {}", e);
@@ -591,7 +602,7 @@ public class ProjectServiceImpl implements ProjectService {
                 () -> new NotFoundException(
                     "ProjectServiceImpl.updateProjectDone / Project not found / id: " + projectId));
 
-        project.updateState(StateType.valueOf("Done"));
+        project.updateState(StateType.valueOf("실행중"));
 
         project.updateLastDuration(duration);
 
@@ -792,7 +803,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void stopContainer(Long projectId) throws NotFoundException, IOException {
+    public void deleteContainer(Long projectId) throws NotFoundException, IOException {
 
         Project project = projectRepository.findById(projectId)
             .orElseThrow(
@@ -821,6 +832,40 @@ public class ProjectServiceImpl implements ProjectService {
                 if (!dbConfigs.isEmpty()) {
                     CommandInterpreter.run(logPath, "Remove", 0,
                         dockerAdapter.getRemoveCommands(dbConfigs));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void stopContainer(Long projectId) throws IOException, NotFoundException {
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(
+                () -> new NotFoundException(
+                    "ProjectServiceImpl.configByProjectName : " + projectId));
+
+        String configPath = pathParser.configPath(project.getProjectName()).toString();
+        String logPath = pathParser.logPath(project.getProjectName()).toString();
+
+        DockerAdapter dockerAdapter = new DockerAdapter(null, project.getProjectName());
+
+        List<BuildConfig> buildConfigs = new ArrayList<>();
+        List<DbConfig> dbConfigs = new ArrayList<>();
+
+        File configDirectory = new File(configPath);
+        for (String fileName : configDirectory.list()) {
+            if ("build".equals(fileName)) {
+                buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
+                    BuildConfig.class);
+                if (!buildConfigs.isEmpty()) {
+                    CommandInterpreter.run(logPath, "Stop", 0,
+                        dockerAdapter.getStopCommands(buildConfigs));
+                }
+            } else if ("db".equals(fileName)) {
+                dbConfigs = FileManager.loadJsonFileToList(configPath, "db", DbConfig.class);
+                if (!dbConfigs.isEmpty()) {
+                    CommandInterpreter.run(logPath, "Stop", 0,
+                        dockerAdapter.getStopCommands(dbConfigs));
                 }
             }
         }

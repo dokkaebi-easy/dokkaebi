@@ -47,7 +47,7 @@ public class Project extends BaseEntity {
 
   @Enumerated(value = EnumType.STRING)
   @Builder.Default
-  private StateType stateType = StateType.valueOf("Waiting");
+  private StateType stateType = StateType.valueOf("대기");
 
   @Builder.Default
   private boolean deleted = false;
@@ -87,8 +87,8 @@ public class Project extends BaseEntity {
 
   public Project updateState(StateType state){
     this.stateType = state;
-    if("Done".equals(state.toString()))this.lastSuccessDate = LocalDateTime.now();
-    if("Failed".equals(state.toString()))this.lastFailDate = LocalDateTime.now();
+    if("실행중".equals(state.toString()))this.lastSuccessDate = LocalDateTime.now();
+    if("실패".equals(state.toString()))this.lastFailDate = LocalDateTime.now();
     return this;
   }
 

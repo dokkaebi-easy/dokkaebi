@@ -90,7 +90,7 @@ public class DockerfileMaker {
     sb.append("COPY --from=builder ");
     sb.append((config.getBuildPath().isBlank()) ? "/build" : config.getBuildPath())
         .append(" /usr/share/nginx/html\n");
-    // TODO EXPOSE 제거 확인
+
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
@@ -111,7 +111,7 @@ public class DockerfileMaker {
     sb.append("COPY --from=builder ");
     sb.append((config.getBuildPath().isBlank()) ? "/dist" : config.getBuildPath())
       .append(" /usr/share/nginx/html\n");
-    sb.append("EXPOSE ").append("3000").append('\n');
+
     sb.append("CMD [\"nginx\", \"-g\", \"daemon off;\"]");
 
     saveDockerFile(getDestPath(config.getProjectDirectory()),sb.toString());
