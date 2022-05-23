@@ -87,10 +87,10 @@ public class Project extends BaseEntity {
 
     public Project updateState(StateType state) {
         this.stateType = state;
-        if ("실행중".equals(state.toString())) {
+        if ("Done".equals(state.toString())) {
             this.lastSuccessDate = LocalDateTime.now();
         }
-        if ("실패".equals(state.toString())) {
+        if ("Failed".equals(state.toString())) {
             this.lastFailDate = LocalDateTime.now();
         }
         return this;
@@ -102,6 +102,8 @@ public class Project extends BaseEntity {
 
     public void updateRecentBuildDate() {
         this.recentBuildDate = LocalDateTime.now();
+        System.out.println("@@@@@@@@@@@@");
+        System.out.println(this.recentBuildDate);
     }
 
     public void addBuildState(BuildState buildState) {

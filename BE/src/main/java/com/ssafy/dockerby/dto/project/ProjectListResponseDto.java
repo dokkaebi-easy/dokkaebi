@@ -3,6 +3,7 @@ package com.ssafy.dockerby.dto.project;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafy.dockerby.entity.project.Project;
 import com.ssafy.dockerby.entity.project.enums.StateType;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import lombok.*;
 import org.springframework.data.convert.Jsr310Converters;
@@ -38,16 +39,21 @@ public class ProjectListResponseDto {
     @Nullable
     private String lastDuration;
 
-    @Nullable
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime recentBuildDate;
+    @NotNull
+    private String recentBuildDate;
 
     @Nullable
     private Map<String,String> port;
 
     public static ProjectListResponseDto of(Project project,Map<String,String> port){
+        String BuildDate = "";
+
         if (project == null) {
             return null;
+        }
+        if(project.getRecentBuildDate() != null){
+            BuildDate = project.getRecentBuildDate().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         }
         return  ProjectListResponseDto.builder()
             .projectId(project.getId())
@@ -56,7 +62,7 @@ public class ProjectListResponseDto {
             .lastSuccessDate(project.getLastSuccessDate())
             .lastFailDate(project.getLastFailDate())
             .lastDuration(project.getLastDuration())
-            .recentBuildDate(project.getRecentBuildDate())
+            .recentBuildDate(BuildDate)
             .port(port)
             .build();
     }
