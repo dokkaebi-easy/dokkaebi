@@ -201,7 +201,7 @@ public class ProjectController {
 
   @ApiOperation(value = "프로젝트 목록", notes = "프로젝트 목록을 가져온다.")
   @GetMapping("/all")
-  public ResponseEntity<List<ProjectListResponseDto>> projects(){
+  public ResponseEntity<List<ProjectListResponseDto>> projects() throws IOException {
     log.info("API Request received");
 
     List<ProjectListResponseDto> projectList = projectService.projectList();

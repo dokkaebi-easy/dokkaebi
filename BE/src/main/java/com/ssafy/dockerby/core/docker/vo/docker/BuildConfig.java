@@ -36,7 +36,9 @@ public class BuildConfig extends DockerbyConfig {
   public String getType() {
     return type;
   }
-
+  public List<DockerbyProperty> getProperties() {
+    return super.getProperties();
+  }
   public boolean useNginx() {
     return (getFramework().equals("Vue") || getFramework().equals("React") && getType().equals("Yes"));
   }
