@@ -201,13 +201,24 @@ public class ProjectServiceImpl implements ProjectService {
             Version version = framework.getLanguage()
                 .findVersionByInput(buildConfigDto.getVersion())
                 .orElseThrow(() -> new IllegalArgumentException(buildConfigDto.getVersion()));
-            buildConfigs.add(
-                dockerConfigParser.buildConverter(buildConfigDto.getName(),
-                    framework.getSettingConfigName(),
-                    version.getDockerVersion(),
-                    dockerConfigParser.dockerbyProperties(buildConfigDto.getProperties()),
-                    buildConfigDto.getProjectDirectory(), buildConfigDto.getBuildPath(),
-                    buildConfigDto.getType()));
+
+            if (buildConfigDto.getFrameworkId()==5){
+                buildConfigs.add(
+                        dockerConfigParser.buildConverter(buildConfigDto.getName(),
+                                framework.getSettingConfigName(),
+                                version.getDockerVersion(),
+                                dockerConfigParser.dockerbyProperties(buildConfigDto.getProperties(), "8000"),
+                                buildConfigDto.getProjectDirectory(), buildConfigDto.getBuildPath(),
+                                buildConfigDto.getType()));
+            }else {
+                buildConfigs.add(
+                        dockerConfigParser.buildConverter(buildConfigDto.getName(),
+                                framework.getSettingConfigName(),
+                                version.getDockerVersion(),
+                                dockerConfigParser.dockerbyProperties(buildConfigDto.getProperties()),
+                                buildConfigDto.getProjectDirectory(), buildConfigDto.getBuildPath(),
+                                buildConfigDto.getType()));
+            }
         }
 
         // Git cofig upsert
