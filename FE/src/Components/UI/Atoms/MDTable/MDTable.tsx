@@ -90,8 +90,8 @@ export default function MDTable() {
   };
 
   const handleStopClick = (projectId: number) => {
-    axios.put(`/api/project/stop/${projectId}`).then((res) => {
-      console.log(res);
+    axios.put(`/api/project/stop/${projectId}`).then(() => {
+      reSet();
     });
   };
 
@@ -100,6 +100,10 @@ export default function MDTable() {
       reSet();
     });
   };
+
+  useEffect(() => {
+    reSet();
+  }, [loading]);
 
   useEffect(() => {
     reSet();
