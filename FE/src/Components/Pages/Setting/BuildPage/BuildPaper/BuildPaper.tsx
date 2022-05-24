@@ -108,6 +108,9 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         setType('');
         setVersions([...data.frameworkVersion]);
         setTypes([...data.buildTool]);
+        if (frameworkItems[index].id === 2 || frameworkItems[index].id === 3) {
+          setType('Yes');
+        }
       })
       .catch();
   };
