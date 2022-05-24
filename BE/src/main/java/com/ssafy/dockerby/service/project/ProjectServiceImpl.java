@@ -771,18 +771,40 @@ public class ProjectServiceImpl implements ProjectService {
         for (Project project : projectList) {
             List<Map<String,String>> ports = new ArrayList<>();
             String configPath = pathParser.configPath(project.getProjectName()).toString();
-            List<BuildConfig> buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
-                        BuildConfig.class);
-            for(BuildConfig buildConfig : buildConfigs) {
-                List<DockerbyProperty> properties = buildConfig.getProperties();
-                for (DockerbyProperty property : properties) {
-                    Map<String,String> port = new HashMap<String,String>();
-                    if (property.getType().equals("publish")) {
-                        port.put("name",buildConfig.getName());
-                        port.put("host",property.getHost());
-                    }
-                    ports.add(port);
 
+            //build port 추가
+            File buildFile = new File(configPath + "/build");
+            if (buildFile.exists()) {            //파일 존재 확인
+                List<BuildConfig> buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
+                    BuildConfig.class);
+                for (BuildConfig buildConfig : buildConfigs) {
+                    List<DockerbyProperty> properties = buildConfig.getProperties();
+                    for (DockerbyProperty property : properties) {
+                        Map<String, String> port = new HashMap<>();
+                        if (property.getType().equals("publish")) {
+                            port.put("name", buildConfig.getName());
+                            port.put("host", property.getHost());
+                            ports.add(port);
+                        }
+                    }
+                }
+            }
+
+            //db port 추가
+            File dbFile = new File(configPath + "/db");
+            if (dbFile.exists()) {            //파일 존재 확인
+                List<DbConfig> dbConfigs = FileManager.loadJsonFileToList(configPath, "db",
+                    DbConfig.class);
+                for (DbConfig dbConfig : dbConfigs) {
+                    List<DockerbyProperty> properties = dbConfig.getProperties();
+                    for (DockerbyProperty property : properties) {
+                        Map<String, String> port = new HashMap<>();
+                        if (property.getType().equals("publish")) {
+                            port.put("name", dbConfig.getName());
+                            port.put("host", property.getHost());
+                            ports.add(port);
+                        }
+                    }
                 }
             }
             ProjectListResponseDto projectListDto = ProjectListResponseDto.of(project,ports);
