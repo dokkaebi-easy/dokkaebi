@@ -328,8 +328,8 @@ public class ProjectServiceImpl implements ProjectService {
                 pathParser.volumePath().append("/").append(dbConfigDto.getName()).toString(),
                 dbPropertyConfigDto.getVolume()));
 
-            if(!dbPropertyConfigDto.getConfig().isEmpty()) {
-                List<String> config = dbPropertyConfigDto.getConfig();
+            if(!dbPropertyConfigDto.getConfigs().isEmpty()) {
+                List<String> config = dbPropertyConfigDto.getConfigs();
                 list.add(new DockerbyProperty("volume", config.get(0),config.get(1)));
             }
             dbConfigs.add(
