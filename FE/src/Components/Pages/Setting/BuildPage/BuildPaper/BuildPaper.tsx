@@ -13,7 +13,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import axios from 'axios';
 import { useDropdownStore } from 'Components/Store/DropDownStore/DropDownStore';
-import BuildProperty from '../PropertyPaper/PropertyPaper';
+import PropertyPaper from '../PropertyPaper/PropertyPaper';
 
 interface VersionTypeAxois {
   name: string;
@@ -110,6 +110,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         setTypes([...data.buildTool]);
         if (frameworkItems[index].id === 2 || frameworkItems[index].id === 3) {
           setType('Yes');
+          buildData.type = 'Yes';
         }
       })
       .catch();
@@ -256,7 +257,7 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
           </Button>
         </Grid>
       </Grid>
-      <BuildProperty buildValue={buildData} />
+      <PropertyPaper buildValue={buildData} />
     </Box>
   );
 }
