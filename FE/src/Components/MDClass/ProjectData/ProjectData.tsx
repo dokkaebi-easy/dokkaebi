@@ -1,6 +1,6 @@
 interface Port {
   name: string;
-  host: string;
+  host: string[];
 }
 
 export interface Project {

@@ -209,7 +209,10 @@ export default function MDTable() {
                     {row.ports.map((value) => {
                       return (
                         <div key={uuid()}>
-                          {value.name} : {value.host}
+                          {value.name} :{' '}
+                          {value.host.map((val2) => {
+                            return `${val2} `;
+                          })}
                         </div>
                       );
                     })}
