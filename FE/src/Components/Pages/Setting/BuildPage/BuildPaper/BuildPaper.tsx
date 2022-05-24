@@ -178,9 +178,9 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         </Grid>
         <Grid item xs={2}>
           <Typography>
-            {/* {framework === 'Vue' || framework === 'React'
-              ? 'Nginx 사용여부'
-              : '타입'} */}
+            {framework === 'Vue' || framework === 'React'
+              ? 'Nginx 사용'
+              : '타입'}
             타입
           </Typography>
           <SelectItem
