@@ -325,7 +325,7 @@ public class ProjectServiceImpl implements ProjectService {
             }
 
             list.add(new DockerbyProperty("volume",
-                pathParser.volumePath().append("/").append(dbConfigDto.getName()).toString(),
+                pathParser.volumePath().append("/").append(project.getProjectName()).append("/").append(dbConfigDto.getName()).toString(),
                 dbPropertyConfigDto.getVolume()));
 
             if(!dbPropertyConfigDto.getConfigs().isEmpty()) {
@@ -852,7 +852,13 @@ public class ProjectServiceImpl implements ProjectService {
                 () -> new NotFoundException(
                     "ProjectServiceImpl.configByProjectName : " + projectId));
         String projectPath = pathParser.projectPath(project.getProjectName()).toString();
-        FileUtils.deleteDirectory(new File(projectPath));
+        String volumePath = pathParser.volumePath().append("/").append(project.getProjectName()).toString();
+        if(new File(projectPath).exists()) {
+            FileUtils.deleteDirectory(new File(projectPath));
+        }
+        if(new File(volumePath).exists()) {
+            FileUtils.deleteDirectory(new File(volumePath));
+        }
         projectRepository.deleteById(projectId);
     }
 
