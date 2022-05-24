@@ -121,9 +121,8 @@ export default function Setting() {
       setDBItems(res.data);
     });
 
-    if (projectId === '0') {
-      return;
-    }
+    if (projectId === '0') return;
+
     axios.get(`/api/project/config/${projectId}`).then((res) => {
       const data = res.data as ProjectConfigInfo;
 
@@ -132,7 +131,7 @@ export default function Setting() {
       if (data.buildConfigs) setBuildConfigs([...data.buildConfigs]);
       else setBuildConfigs([new BuildData()]);
       if (data.dbConfigs) setDBConfigs([...data.dbConfigs]);
-      else setDBConfigs([new DBData()]);
+      else setDBConfigs([]);
       if (data.gitConfig) setGitConfig(data.gitConfig);
       else setGitConfig(new GitData());
       if (data.nginxConfig) setNginxConfig(data.nginxConfig);

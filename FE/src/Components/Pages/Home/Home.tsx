@@ -28,7 +28,7 @@ export default function Home() {
     cleanProjectId(0);
     cleanProjecttName('');
     cleanBuildConfigs([new BuildData()]);
-    cleanDBConfigs([new DBData()]);
+    cleanDBConfigs([]);
     cleanGitConfig(new GitData());
     cleanNginxConfig(new NginxData());
   };
