@@ -44,7 +44,7 @@ public class DockerCommandMaker {
         }
         sb.append(" --network ").append(this.networkBridge);
 
-        sb.append(' ').append(config.getVersion());
+        sb.append(' ').append(projectName).append('-').append(config.getVersion());
 
         log.info("run Done");
         return sb.toString();
@@ -66,7 +66,7 @@ public class DockerCommandMaker {
         sb.append(" --network ").append(this.networkBridge);
 
         // TODO : Image tag를 latest로 하는 것은 권장되지 않습니다.
-        sb.append(' ').append(config.getName()).append(":latest");
+        sb.append(' ').append(projectName).append('-').append(config.getName()).append(":latest");
 
         log.info("run Done");
         return sb.toString();
