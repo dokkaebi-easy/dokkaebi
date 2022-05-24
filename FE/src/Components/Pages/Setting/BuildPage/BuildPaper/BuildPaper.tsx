@@ -108,6 +108,9 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         setType('');
         setVersions([...data.frameworkVersion]);
         setTypes([...data.buildTool]);
+        if (frameworkItems[index].id === 2 || frameworkItems[index].id === 3) {
+          setType('Yes');
+        }
       })
       .catch();
   };
@@ -179,8 +182,9 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
         <Grid item xs={2}>
           <Typography>
             {framework === 'Vue' || framework === 'React'
-              ? 'Nginx 사용여부'
+              ? 'Nginx 사용'
               : '타입'}
+            타입
           </Typography>
           <SelectItem
             defaultValue={type}
@@ -188,13 +192,13 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
             Items={types}
             Change={handlePropsTypeChange}
           />
-          {framework === 'Vue' || framework === 'React' ? (
+          {/* {framework === 'Vue' || framework === 'React' ? (
             <FormHelperText id="component-helper-text">
               (※ Yes는 하나만)
             </FormHelperText>
           ) : (
             <Box />
-          )}
+          )} */}
         </Grid>
         <Grid item xs={12}>
           <Box />

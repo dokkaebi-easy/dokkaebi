@@ -8,7 +8,7 @@ import {
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { unset } from 'lodash';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -140,6 +140,17 @@ export default function SignUp() {
       } else alert('사용 가능한 이름 입니다.');
     });
   };
+
+  useEffect(() => {
+    return () => {
+      setInputId('');
+      setIdError(false);
+      setInputName('');
+      setNameError(false);
+      setInputAuth('');
+      setAuthError(false);
+    };
+  }, []);
 
   return (
     <Container maxWidth="xs">

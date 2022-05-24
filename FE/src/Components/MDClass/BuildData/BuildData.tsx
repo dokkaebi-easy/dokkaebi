@@ -35,6 +35,11 @@ export default class BuildData {
     this.type = '';
     this.projectDirectory = '';
     this.buildPath = '';
-    this.properties = [];
+    this.properties = [
+      {
+        property: '',
+        data: '',
+      },
+    ];
   }
 }
