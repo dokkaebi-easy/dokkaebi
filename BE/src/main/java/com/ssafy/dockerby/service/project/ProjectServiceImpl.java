@@ -923,5 +923,6 @@ public class ProjectServiceImpl implements ProjectService {
                 }
             }
         }
+        project.updateState(StateType.Waiting);
     }
 }
