@@ -418,7 +418,8 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new NotFoundException("ProjectSerivceImpl.build : " + projectId));
-
+        //최근 빌드시간 업데이트
+        project.updateRecentBuildDate();
         //프로젝트 상태 진행중으로 변경
         project.updateState(StateType.Processing);
 
@@ -761,14 +762,30 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectListResponseDto> projectList() {
+    public List<ProjectListResponseDto> projectList() throws IOException {
         log.info("ProjectList Start");
         List<Project> projectList = projectRepository.findAll();
 
         List<ProjectListResponseDto> resultList = new ArrayList<>();
 
         for (Project project : projectList) {
-            ProjectListResponseDto projectListDto = ProjectListResponseDto.from(project);
+            List<Map<String,String>> ports = new ArrayList<>();
+            String configPath = pathParser.configPath(project.getProjectName()).toString();
+            List<BuildConfig> buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
+                        BuildConfig.class);
+            for(BuildConfig buildConfig : buildConfigs) {
+                List<DockerbyProperty> properties = buildConfig.getProperties();
+                for (DockerbyProperty property : properties) {
+                    Map<String,String> port = new HashMap<String,String>();
+                    if (property.getType().equals("publish")) {
+                        port.put("name",buildConfig.getName());
+                        port.put("host",property.getHost());
+                    }
+                    ports.add(port);
+
+                }
+            }
+            ProjectListResponseDto projectListDto = ProjectListResponseDto.of(project,ports);
             resultList.add(projectListDto);
         }
 

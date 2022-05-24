@@ -40,7 +40,8 @@ public interface ProjectService {
   BuildDetailResponseDto buildDetail(Long buildStateId)
       throws NotFoundException;
 
-  List<ProjectListResponseDto> projectList() throws NotFoundException, UserDefindedException;
+  List<ProjectListResponseDto> projectList()
+      throws NotFoundException, UserDefindedException, IOException;
 
   String makeDuration(LocalDateTime start, LocalDateTime end);
 
