@@ -185,7 +185,6 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
             {framework === 'Vue' || framework === 'React'
               ? 'Nginx 사용'
               : '타입'}
-            타입
           </Typography>
           <SelectItem
             defaultValue={type}
