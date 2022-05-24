@@ -120,7 +120,7 @@ export default function SideNavibar() {
           </ListItem>
           <ListItem disablePadding>
             <Link
-              to="/setting/0"
+              to="/create"
               style={{
                 color: 'white',
                 textDecoration: 'none',
