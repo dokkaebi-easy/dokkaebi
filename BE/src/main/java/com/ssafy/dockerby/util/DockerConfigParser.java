@@ -54,6 +54,23 @@ public class DockerConfigParser {
     return newProperties;
   }
 
+  /**
+   * django publish 같은 경우 container가 8000으로 고정
+   * @param properties
+   * @param port
+   * @return
+   */
+  public List<DockerbyProperty> dockerbyPropertiesWithDjango(List<ConfigProperty> properties, String port) {
+    log.info("dockerbyProperties Start");
+    List<DockerbyProperty> newProperties = new ArrayList<>();
+    for (ConfigProperty property : properties) {
+      newProperties.add(new DockerbyProperty(property.getProperty(), property.getData(),
+              port));
+    }
+
+    return newProperties;
+  }
+
   //사용안됨
   public List<DockerbyProperty> dockerbyProperty(ConfigProperty property) {
     List<DockerbyProperty> newProperties = new ArrayList<>();
