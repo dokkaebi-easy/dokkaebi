@@ -23,7 +23,7 @@ public class DockerCommandMaker {
         StringBuilder sb = new StringBuilder();
         // TODO : Image tag를 latest로 하는 것은 권장되지 않습니다.
         sb.append("docker build -t ")
-            .append(config.getName()).append(":latest")
+            .append(projectName).append('-').append(config.getName()).append(":latest")
             .append(' ').append(projectPath).append(config.getProjectDirectory());
         log.info("build Done");
         return sb.toString();
