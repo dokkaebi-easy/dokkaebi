@@ -60,7 +60,7 @@ public class DockerConfigParser {
    * @param port
    * @return
    */
-  public List<DockerbyProperty> dockerbyProperties(List<ConfigProperty> properties, String port) {
+  public List<DockerbyProperty> dockerbyPropertiesWithDjango(List<ConfigProperty> properties, String port) {
     log.info("dockerbyProperties Start");
     List<DockerbyProperty> newProperties = new ArrayList<>();
     for (ConfigProperty property : properties) {

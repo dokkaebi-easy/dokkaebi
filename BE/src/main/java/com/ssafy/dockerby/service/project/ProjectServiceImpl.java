@@ -207,7 +207,7 @@ public class ProjectServiceImpl implements ProjectService {
                         dockerConfigParser.buildConverter(buildConfigDto.getName(),
                                 framework.getSettingConfigName(),
                                 version.getDockerVersion(),
-                                dockerConfigParser.dockerbyProperties(buildConfigDto.getProperties(), "8000"),
+                                dockerConfigParser.dockerbyPropertiesWithDjango(buildConfigDto.getProperties(), "8000"),
                                 buildConfigDto.getProjectDirectory(), buildConfigDto.getBuildPath(),
                                 buildConfigDto.getType()));
             }else {
