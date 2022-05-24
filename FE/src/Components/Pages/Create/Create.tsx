@@ -7,6 +7,9 @@ import styled, { keyframes } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export default function Create() {
+  const handleOpenSource = () => {
+    alert('준비중...');
+  };
   return (
     <Box minHeight="85vh" sx={{ display: 'flex' }}>
       <Grid
@@ -34,7 +37,10 @@ export default function Create() {
                     01
                   </Typography>
                   <Typography variant="h4" color="primary">
-                    Build Create
+                    일반
+                  </Typography>
+                  <Typography mt={1} variant="h4" color="primary">
+                    프로젝트
                   </Typography>
                 </CardContentstyled>
               </CardBoxstyled>
@@ -43,7 +49,7 @@ export default function Create() {
         </Grid>
         <Grid item>
           <Cardstyled>
-            <CardBoxstyled>
+            <CardBoxstyled onClick={handleOpenSource}>
               <CardContentstyled>
                 <Typography
                   variant="h1"
@@ -58,10 +64,10 @@ export default function Create() {
                   02
                 </Typography>
                 <Typography variant="h4" color="primary">
-                  Open Source Create
+                  오픈소스
                 </Typography>
-                <Typography mt={1} variant="h6" color="primary">
-                  준비중...
+                <Typography mt={1} variant="h4" color="primary">
+                  프로젝트
                 </Typography>
               </CardContentstyled>
             </CardBoxstyled>
