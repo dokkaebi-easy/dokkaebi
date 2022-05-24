@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS `dockerby`;
-CREATE DATABASE `dockerby`;
+CREATE DATABASE `dockerby` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE `dockerby`.`language`
 (
@@ -22,7 +22,7 @@ CREATE TABLE `dockerby`.`setting_config`
             REFERENCES `dockerby`.`language` (`language_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `dockerby`.`version`
 (
@@ -230,13 +230,13 @@ VALUES (7, 'mariadb');
 
 INSERT INTO `dockerby`.`setting_config`(`setting_config_id`, `setting_config_name`, `group_code`,
                                         `option`, `language_id`)
-VALUES (1, 'SpringBoot', 'Framework', null, 1);
+VALUES (1, "스프링부트", 'Framework', null, 1);
 INSERT INTO `dockerby`.`setting_config`(`setting_config_id`, `setting_config_name`, `group_code`,
                                         `option`, `language_id`)
-VALUES (2, 'Vue', 'Framework', null, 3);
+VALUES (2, '뷰', 'Framework', null, 3);
 INSERT INTO `dockerby`.`setting_config`(`setting_config_id`, `setting_config_name`, `group_code`,
                                         `option`, `language_id`)
-VALUES (3, 'React', 'Framework', null, 3);
+VALUES (3, '리액트', 'Framework', null, 3);
 INSERT INTO `dockerby`.`setting_config`(`setting_config_id`, `setting_config_name`, `group_code`,
                                         `option`, `language_id`)
 VALUES (4, 'Next', 'Framework', null, 3);

@@ -17,12 +17,9 @@ COPY --from=react /app.jar /home/conf/app.jar
 RUN apt update &&  apt install -y mariadb-server-10.5 \
     && apt install -y uuid-runtime && apt update \
      && apt install -y git && apt update \
-     && apt install -y nginx \
-     && apt install dos2unix
+     && apt install -y nginx
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
-
-RUN dos2unix ./install.sh && dos2unix ./remove.sh
 
 COPY ./install.sh /home/conf/install.sh
 COPY ./remove.sh /home/conf/remove.sh
