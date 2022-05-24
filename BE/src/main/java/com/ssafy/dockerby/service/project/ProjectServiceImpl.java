@@ -246,7 +246,7 @@ public class ProjectServiceImpl implements ProjectService {
             dockerAdapter.saveDockerfiles(buildConfigs);
             CommandInterpreter.run(projectPath, "Clone", 0, dockerAdapter.createNetwork());
         } catch (Exception e) {
-            log.error("docker file not making {} DockerAdapter({})", project.getProjectName());
+            log.error("docker file not making {} buildConfigs({})", project.getProjectName(),buildConfigs);
         }
 
         // NGINX config

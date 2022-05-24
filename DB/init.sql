@@ -230,7 +230,7 @@ VALUES (7, 'mariadb');
 
 INSERT INTO `dockerby`.`setting_config`(`setting_config_id`, `setting_config_name`, `group_code`,
                                         `option`, `language_id`)
-VALUES (1, "Spring Boot", 'Framework', null, 1);
+VALUES (1, "SpringBoot", 'Framework', null, 1);
 INSERT INTO `dockerby`.`setting_config`(`setting_config_id`, `setting_config_name`, `group_code`,
                                         `option`, `language_id`)
 VALUES (2, 'Vue', 'Framework', null, 3);

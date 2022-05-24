@@ -4,6 +4,8 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 
 public class BuildConfig extends DockerbyConfig {
@@ -41,5 +43,10 @@ public class BuildConfig extends DockerbyConfig {
   }
   public boolean useNginx() {
     return (getFramework().equals("Vue") || getFramework().equals("React") && getType().equals("Yes"));
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
   }
 }

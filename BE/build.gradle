@@ -52,6 +52,10 @@ dependencies {
 
 	implementation 'org.springframework.session:spring-session-jdbc'
 
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+
 }
 
 tasks.named('test') {
