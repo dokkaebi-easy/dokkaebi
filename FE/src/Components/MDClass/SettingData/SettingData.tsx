@@ -19,8 +19,8 @@ export default class SettingData {
   constructor() {
     this.projectId = 0;
     this.projectName = '';
-    this.buildConfigs = [new BuildData()];
-    this.dbConfig = [new DBData()];
+    this.buildConfigs = [];
+    this.dbConfig = [];
     this.gitConfig = new GitData();
     this.nginxConfig = new NginxData();
   }
