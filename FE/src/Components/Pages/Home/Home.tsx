@@ -27,7 +27,7 @@ export default function Home() {
   const handleCreateClick = () => {
     cleanProjectId(0);
     cleanProjecttName('');
-    cleanBuildConfigs([new BuildData()]);
+    cleanBuildConfigs([]);
     cleanDBConfigs([]);
     cleanGitConfig(new GitData());
     cleanNginxConfig(new NginxData());

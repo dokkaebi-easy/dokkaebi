@@ -36,7 +36,7 @@ export const useSettingStore = create<SettingData>((set) => ({
     set(() => ({
       projectName: name,
     })),
-  buildConfigs: [new BuildData()],
+  buildConfigs: [],
   setBuildConfigs: (buildDatas) =>
     set(() => ({
       buildConfigs: buildDatas,
