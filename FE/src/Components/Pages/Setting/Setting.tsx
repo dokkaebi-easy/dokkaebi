@@ -129,7 +129,7 @@ export default function Setting() {
       if (data.projectId) setProjectId(data.projectId);
       if (data.projectName) setProjectName(data.projectName);
       if (data.buildConfigs) setBuildConfigs([...data.buildConfigs]);
-      else setBuildConfigs([new BuildData()]);
+      else setBuildConfigs([]);
       if (data.dbConfigs) setDBConfigs([...data.dbConfigs]);
       else setDBConfigs([]);
       if (data.gitConfig) setGitConfig(data.gitConfig);
