@@ -91,7 +91,7 @@ export default function SignUp() {
       .post(`/api/user/signup`, data)
       .then((res) => {
         const data = res.data as ResponsId;
-        if (data.state === 'Success') history.push('/login');
+        if (data.state === 'Success') history.push('/access/login');
       })
       .catch((error) => {
         const params = { authKey: inputauth };

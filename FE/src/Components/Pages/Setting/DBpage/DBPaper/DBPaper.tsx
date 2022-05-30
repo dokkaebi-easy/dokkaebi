@@ -132,21 +132,33 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
   return (
     <Box>
       <Grid container spacing={1}>
-        <Grid item xs={6}>
-          <Typography>명칭</Typography>
+        <Grid item xs={2} sx={{ marginY: 'auto' }}>
+          <Typography fontFamily="Noto Sans KR" fontSize={22}>
+            명칭
+          </Typography>
+        </Grid>
+        <Grid item xs={10}>
           <TextField
             fullWidth
             defaultValue={name}
             label="Name"
+            InputLabelProps={{
+              sx: { color: 'rgb(200,200,200)' },
+            }}
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
             placeholder="Name"
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             onChange={handleNameOnChange}
           />
         </Grid>
-        <Grid item xs={3}>
-          <Typography>데이터베이스</Typography>
+        <Grid item xs={2} sx={{ marginY: 'auto' }}>
+          <Typography fontFamily="Noto Sans KR" fontSize={22}>
+            데이터베이스
+          </Typography>
+        </Grid>
+        <Grid item xs={10}>
           <SelectItem
             defaultValue={db}
             label="Framework/ Library"
@@ -155,8 +167,12 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
             Click={handlePropsDBClick}
           />
         </Grid>
-        <Grid item xs={3}>
-          <Typography>버전</Typography>
+        <Grid item xs={2} sx={{ marginY: 'auto' }}>
+          <Typography fontFamily="Noto Sans KR" fontSize={22}>
+            버전
+          </Typography>
+        </Grid>
+        <Grid item xs={10}>
           <SelectItem
             defaultValue={version}
             label="Versions"
@@ -164,51 +180,82 @@ export default function DBPaper({ index, dbData, DelClick }: buildProps) {
             Change={handlePropsVersionChange}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Box />
-          <Typography>포트</Typography>
+        <Grid item xs={2} sx={{ marginY: 'auto' }}>
+          <Typography fontFamily="Noto Sans KR" fontSize={22}>
+            포트
+          </Typography>
+        </Grid>
+        <Grid item xs={10}>
           <TextField
             label="Port"
+            InputLabelProps={{
+              sx: { color: 'rgb(200,200,200)' },
+            }}
             fullWidth
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
             placeholder="Port"
             defaultValue={port}
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             onChange={handlePortOnChange}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Typography>덤프 파일 경로</Typography>
+        <Grid item xs={2} sx={{ marginY: 'auto' }}>
+          <Typography fontFamily="Noto Sans KR" fontSize={22}>
+            덤프 파일 경로
+          </Typography>
+        </Grid>
+        <Grid item xs={10}>
           <TextField
             label="Dump File Dir"
+            InputLabelProps={{
+              sx: { color: 'rgb(200,200,200)' },
+            }}
             fullWidth
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
             placeholder="Dump File Dir"
             defaultValue={dumpLocation}
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             onChange={handleDumpLocationOnChange}
           />
         </Grid>
         {properties.map((value, idx) => {
           return (
-            <Grid item xs={12} key={uuid()}>
-              <Typography>{value}</Typography>
-              <TextField
-                label={value}
-                fullWidth
-                variant="outlined"
-                size="small"
-                sx={{ my: 1 }}
-                placeholder={value}
-                defaultValue={propertiesData[idx] ? propertiesData[idx] : ''}
-                onChange={(event: any) => {
-                  propertiesData[idx] = event.target.value;
-                  dbData.properties[idx].data = event.target.value;
-                }}
-              />
-            </Grid>
+            <>
+              <Grid item xs={2} key={uuid()} sx={{ marginY: 'auto' }}>
+                <Box>
+                  <Typography
+                    fontFamily="Noto Sans KR"
+                    fontSize={15}
+                    sx={{ wordBreak: 'break-all' }}
+                  >
+                    {value}
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={10}>
+                <TextField
+                  label={value}
+                  InputLabelProps={{
+                    sx: { color: 'rgb(200,200,200)' },
+                  }}
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  sx={{ my: 1 }}
+                  placeholder={value}
+                  InputProps={{ sx: { fontWeight: 'bold' } }}
+                  defaultValue={propertiesData[idx] ? propertiesData[idx] : ''}
+                  onChange={(event: any) => {
+                    propertiesData[idx] = event.target.value;
+                    dbData.properties[idx].data = event.target.value;
+                  }}
+                />
+              </Grid>
+            </>
           );
         })}
         <Grid item xs={2}>
