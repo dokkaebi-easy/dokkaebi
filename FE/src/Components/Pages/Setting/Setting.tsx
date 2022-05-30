@@ -141,7 +141,7 @@ export default function Setting() {
 
   return (
     <Box mt={3} sx={{ width: '100%' }}>
-      <Paper sx={{ borderRadius: 3 }}>
+      <Paper sx={{ borderRadius: 3 }} elevation={0}>
         <Stepper
           nonLinear
           activeStep={activeStep}

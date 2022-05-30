@@ -104,7 +104,7 @@ export default function Login() {
                 </Link>
               </Grid> */}
             <Grid container direction="row-reverse">
-              <Link to="/signup" style={{ textDecoration: 'none' }}>
+              <Link to="/access/signup" style={{ textDecoration: 'none' }}>
                 <Typography sx={{ color: 'black' }}>가입하기</Typography>
               </Link>
             </Grid>

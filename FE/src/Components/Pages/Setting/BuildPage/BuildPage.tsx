@@ -33,12 +33,17 @@ export default function BuildPage() {
             color: ' white',
             background: 'linear-gradient(195deg, #666, #191919)',
           }}
+          elevation={0}
         >
           <Typography variant="h5">FE/BE Setting</Typography>
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3, pt: 4 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <Box mt={3} sx={{ display: 'flex' }}>
             <Button
               onClick={handleAddClick}

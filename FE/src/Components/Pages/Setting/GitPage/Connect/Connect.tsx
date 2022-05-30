@@ -70,25 +70,37 @@ export default function GitLabConnect({ gitData }: GitProps) {
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <Grid container spacing={2}>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
-              <Typography>기본 도메인 URL</Typography>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                기본 도메인 URL
+              </Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
                 label="Domain URL"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
                 placeholder="ex) https://lab.ssafy.com/"
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 defaultValue={hostURL}
                 onChange={handleHostURLChange}
               />
             </Grid>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
-              <Typography>Access Token</Typography>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                Access Token
+              </Typography>
             </Grid>
             <Grid item xs={5}>
               <SelectItem

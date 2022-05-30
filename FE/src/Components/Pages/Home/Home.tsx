@@ -11,8 +11,13 @@ import NginxData from 'Components/MDClass/NginxData/NginxData';
 import DBData from 'Components/MDClass/DBData/DBData';
 import Cube from 'Components/UI/Atoms/Cube/Cube';
 import { useEffect, useState } from 'react';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import { styled, useTheme } from '@mui/material/styles';
 
 export default function Home() {
+  const theme = useTheme();
+
   const cleanProjectId = useSettingStore((state) => state.setProjectId);
   const cleanProjecttName = useSettingStore((state) => state.setProjectName);
   const cleanBuildConfigs = useSettingStore((state) => state.setBuildConfigs);
@@ -48,14 +53,10 @@ export default function Home() {
 
   return (
     <Box sx={{ marginTop: 5 }}>
-      <MDTable />
       <Stack mt={2} direction="row" justifyContent="flex-end" spacing={2}>
         <Link to="/create" style={{ color: 'white', textDecoration: 'none' }}>
           <Button
-            sx={{
-              background: 'linear-gradient(195deg, #666, #191919)',
-              color: 'white',
-            }}
+            color="primary"
             variant="contained"
             endIcon={<CreateIcon />}
             onClick={handleCreateClick}
@@ -64,11 +65,33 @@ export default function Home() {
           </Button>
         </Link>
       </Stack>
-      <Stack mt={10} direction="row" justifyContent="space-evenly">
+      <Box>
+        <Box position="relative" sx={{ top: 20, left: 10 }}>
+          <Paper
+            sx={{
+              padding: 1,
+              textAlign: 'center',
+              width: 200,
+              background:
+                theme.palette.mode === 'dark'
+                  ? 'linear-gradient(45deg, #fff, #aaa)'
+                  : 'linear-gradient(195deg, #666, #191919)',
+              color: theme.palette.mode === 'dark' ? 'black' : 'white',
+            }}
+          >
+            <Typography variant="h5">All Project</Typography>
+          </Paper>
+        </Box>
+        <Paper sx={{ padding: 3, pt: 4 }} elevation={0}>
+          <MDTable />
+        </Paper>
+      </Box>
+
+      {/* <Stack mt={10} direction="row" justifyContent="space-evenly">
         <Cube time={hours} clock="h" color="20, 20, 20" />
         <Cube time={minutes} clock="m" color="100, 100, 100" />
         <Cube time={secondes} clock="s" color="40, 40, 40" />
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }

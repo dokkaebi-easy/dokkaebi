@@ -41,9 +41,13 @@ export default function PropertyBox({
   };
 
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={2}>
-        <Typography>속성</Typography>
+    <Grid container>
+      <Grid item xs={2} sx={{ marginY: 'auto' }}>
+        <Typography fontFamily="Noto Sans KR" fontSize={22}>
+          속성
+        </Typography>
+      </Grid>
+      <Grid item xs={10}>
         <SelectItem
           defaultValue={property}
           label="Property"
@@ -51,14 +55,19 @@ export default function PropertyBox({
           Change={handlePropsPropertyChange}
         />
       </Grid>
+      <Grid item xs={2} sx={{ marginY: 'auto' }}>
+        <Typography fontFamily="Noto Sans KR" fontSize={22}>
+          입력값
+        </Typography>
+      </Grid>
       <Grid item xs={10}>
-        <Typography>입력값</Typography>
         <TextField
           fullWidth
           variant="outlined"
           size="small"
           sx={{ my: 1 }}
           defaultValue={Data}
+          InputProps={{ sx: { fontWeight: 'bold' } }}
           onChange={handleFirstDataChange}
         />
       </Grid>
