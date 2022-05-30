@@ -37,15 +37,10 @@ export default function Create() {
                   >
                     01
                   </Typography>
-                  <Typography variant="h3" color="primary" fontFamily="Jua">
+                  <Typography fontSize={40} color="primary" fontFamily="Jua">
                     일반
                   </Typography>
-                  <Typography
-                    mt={1}
-                    variant="h3"
-                    color="primary"
-                    fontFamily="Jua"
-                  >
+                  <Typography fontSize={40} color="primary" fontFamily="Jua">
                     프로젝트
                   </Typography>
                 </CardContentstyled>
@@ -70,15 +65,10 @@ export default function Create() {
                 >
                   02
                 </Typography>
-                <Typography variant="h3" color="primary" fontFamily="Jua">
+                <Typography fontSize={40} color="primary" fontFamily="Jua">
                   오픈소스
                 </Typography>
-                <Typography
-                  mt={1}
-                  variant="h3"
-                  color="primary"
-                  fontFamily="Jua"
-                >
+                <Typography fontSize={40} color="primary" fontFamily="Jua">
                   프로젝트
                 </Typography>
               </CardContentstyled>

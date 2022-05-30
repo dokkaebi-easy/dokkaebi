@@ -64,7 +64,7 @@ export default function Navbar() {
         <Link to="/">
           <img src="/assets/dockerby_1.png" width="80" height="80" alt="" />
         </Link>
-        <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
           {pageName}
         </Typography>
 

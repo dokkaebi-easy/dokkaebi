@@ -89,7 +89,7 @@ export default function SideNavibar() {
                 control={
                   <MaterialUISwitch
                     sx={{ m: 1 }}
-                    defaultChecked={theme.palette.mode === 'dark'}
+                    // checked={theme.palette.mode === 'dark'}
                     onChange={colorMode.toggleColorMode}
                   />
                 }
