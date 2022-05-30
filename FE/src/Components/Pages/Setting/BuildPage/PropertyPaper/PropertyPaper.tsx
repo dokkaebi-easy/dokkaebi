@@ -50,12 +50,17 @@ export default function PropertyPaper({ buildValue }: PropertyProps) {
             color: ' white',
             background: 'linear-gradient(195deg, #666, #191919)',
           }}
+          elevation={0}
         >
           Property
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <Stack direction="row" spacing={2}>
             <Box mb={3}>
               <Button

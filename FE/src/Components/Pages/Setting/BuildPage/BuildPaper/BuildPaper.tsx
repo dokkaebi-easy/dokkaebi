@@ -146,23 +146,33 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
   return (
     <Box>
       <Grid container spacing={1}>
-        <Grid item xs={6}>
-          <Typography>명칭</Typography>
+        <Grid item xs={2} sx={{ marginY: 'auto' }}>
+          <Typography fontFamily="Noto Sans KR" fontSize={20}>
+            FE/BE 명칭
+          </Typography>
+        </Grid>
+        <Grid item xs={10}>
           <TextField
             fullWidth
             error={error}
             helperText={error ? '명칭을 규칙에 맞게 적어주세요' : ''}
             defaultValue={name}
             label="Name"
+            InputLabelProps={{ sx: { color: 'rgb(200,200,200)' } }}
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
             placeholder="ex) lowercase, 숫자, _ 만 사용가능"
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             onChange={handleNameOnChange}
           />
         </Grid>
+        <Grid item xs={2} sx={{ marginY: 'auto' }}>
+          <Typography fontFamily="Noto Sans KR" fontSize={20}>
+            프레임워크
+          </Typography>
+        </Grid>
         <Grid item xs={2}>
-          <Typography>프레임워크</Typography>
           <SelectItem
             defaultValue={framework}
             label="Framework/ Library"
@@ -171,8 +181,16 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
             Click={handlePropsFrameworkClick}
           />
         </Grid>
+        <Grid item xs={2} sx={{ marginY: 'auto', paddingRight: 2 }}>
+          <Typography
+            fontFamily="Noto Sans KR"
+            fontSize={20}
+            sx={{ textAlign: 'right ' }}
+          >
+            {versionName} 버전
+          </Typography>
+        </Grid>
         <Grid item xs={2}>
-          <Typography>{versionName} 버전</Typography>
           <SelectItem
             defaultValue={version}
             label="Versions"
@@ -180,12 +198,18 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
             Change={handlePropsVersionChange}
           />
         </Grid>
-        <Grid item xs={2}>
-          <Typography>
+        <Grid item xs={2} sx={{ marginY: 'auto', paddingRight: 2 }}>
+          <Typography
+            fontFamily="Noto Sans KR"
+            fontSize={20}
+            sx={{ textAlign: 'right ' }}
+          >
             {framework === 'Vue' || framework === 'React'
               ? 'Nginx 사용'
-              : '타입'}
+              : '빌드 타입'}
           </Typography>
+        </Grid>
+        <Grid item xs={2}>
           <SelectItem
             defaultValue={type}
             label="Types"
@@ -200,23 +224,29 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
             <Box />
           )} */}
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={2} sx={{ marginY: 'auto' }}>
           <Box />
-          <Typography>프로젝트 파일 경로</Typography>
+          <Typography fontFamily="Noto Sans KR" fontSize={20}>
+            프로젝트 파일 경로
+          </Typography>
+        </Grid>
+        <Grid item xs={10}>
           <TextField
             label="Project File Path"
+            InputLabelProps={{ sx: { color: 'rgb(200,200,200)' } }}
             fullWidth
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
             placeholder="ex) / , /back_end , /front_end"
             defaultValue={fileDir}
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             onChange={handleFileDirOnChange}
           />
         </Grid>
         <Grid item xs={12}>
           <Stack direction="row" spacing={1}>
-            <Box mb={3}>
+            <Box>
               <Button
                 variant="outlined"
                 onClick={handleHiddenClick}
@@ -226,22 +256,33 @@ export default function BuildPaper({ index, buildData, DelClick }: buildProps) {
               </Button>
             </Box>
           </Stack>
-          {hidden ? null : (
-            <>
-              <Typography>산출물 경로</Typography>
+        </Grid>
+
+        {hidden ? null : (
+          <>
+            <Grid item xs={2} sx={{ marginY: 'auto' }}>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                산출물 경로
+              </Typography>
+            </Grid>
+            <Grid item xs={10}>
               <TextField
                 label="Bulid File Path"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 fullWidth
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
                 placeholder="ex) /dist, /build"
                 defaultValue={buildPath}
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 onChange={handlebuildPathOnChange}
               />
-            </>
-          )}
-        </Grid>
+            </Grid>
+          </>
+        )}
         <Grid item xs={2}>
           <Button
             variant="outlined"

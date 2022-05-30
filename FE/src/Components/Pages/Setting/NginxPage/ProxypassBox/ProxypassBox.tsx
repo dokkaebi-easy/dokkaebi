@@ -37,33 +37,50 @@ export default function ProxypassBox({
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={11}>
-        <Typography>Proxy pass URL</Typography>
+    <Grid container spacing={1}>
+      <Grid item xs={2} sx={{ marginY: 'auto' }}>
+        <Typography fontFamily="Noto Sans KR" fontSize={20}>
+          Proxy pass URL
+        </Typography>
+      </Grid>
+      <Grid item xs={9}>
         <TextField
           fullWidth
           label="Proxy pass URL"
+          InputLabelProps={{
+            sx: { color: 'rgb(200,200,200)' },
+          }}
           variant="outlined"
           size="small"
           sx={{ my: 1 }}
+          InputProps={{ sx: { fontWeight: 'bold' } }}
           placeholder="ex) http://localhost:8080"
           defaultValue={url}
           onChange={handleUrlChange}
         />
-
-        <Typography mt={2}>Proxy pass Path</Typography>
+      </Grid>
+      <Grid item xs={2} sx={{ marginY: 'auto' }}>
+        <Typography fontFamily="Noto Sans KR" fontSize={20}>
+          Proxy pass Path
+        </Typography>
+      </Grid>
+      <Grid item xs={9}>
         <TextField
           fullWidth
           label="Proxy pass Path"
+          InputLabelProps={{
+            sx: { color: 'rgb(200,200,200)' },
+          }}
           variant="outlined"
           size="small"
           sx={{ my: 1 }}
+          InputProps={{ sx: { fontWeight: 'bold' } }}
           placeholder="ex) /api"
           defaultValue={path}
           onChange={handlePathChange}
         />
       </Grid>
-      <Grid item sx={{ marginBottom: 0, marginTop: 'auto' }}>
+      <Grid item xs={1} sx={{ marginY: 'auto' }}>
         <Button
           variant="outlined"
           startIcon={<DeleteIcon />}
