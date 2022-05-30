@@ -32,14 +32,20 @@ export default function Create() {
                       right: '10px',
                       opacity: 0.2,
                     }}
+                    fontFamily="Jua"
                     color="primary"
                   >
                     01
                   </Typography>
-                  <Typography variant="h4" color="primary">
+                  <Typography variant="h3" color="primary" fontFamily="Jua">
                     일반
                   </Typography>
-                  <Typography mt={1} variant="h4" color="primary">
+                  <Typography
+                    mt={1}
+                    variant="h3"
+                    color="primary"
+                    fontFamily="Jua"
+                  >
                     프로젝트
                   </Typography>
                 </CardContentstyled>
@@ -59,14 +65,20 @@ export default function Create() {
                     right: '10px',
                     opacity: 0.2,
                   }}
+                  fontFamily="Jua"
                   color="primary"
                 >
                   02
                 </Typography>
-                <Typography variant="h4" color="primary">
+                <Typography variant="h3" color="primary" fontFamily="Jua">
                   오픈소스
                 </Typography>
-                <Typography mt={1} variant="h4" color="primary">
+                <Typography
+                  mt={1}
+                  variant="h3"
+                  color="primary"
+                  fontFamily="Jua"
+                >
                   프로젝트
                 </Typography>
               </CardContentstyled>
