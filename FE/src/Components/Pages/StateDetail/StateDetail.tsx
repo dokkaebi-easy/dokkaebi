@@ -142,6 +142,7 @@ export default function StateDetail() {
               whiteSpace: 'pre-wrap',
               backgroundColor: '#ddd',
               borderRadius: 3,
+              color: 'black',
             }}
           >
             {stateData.consoleLog}

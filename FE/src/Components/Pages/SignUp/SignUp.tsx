@@ -91,7 +91,7 @@ export default function SignUp() {
       .post(`/api/user/signup`, data)
       .then((res) => {
         const data = res.data as ResponsId;
-        if (data.state === 'Success') history.push('/login');
+        if (data.state === 'Success') history.push('/access/login');
       })
       .catch((error) => {
         const params = { authKey: inputauth };
@@ -260,11 +260,11 @@ export default function SignUp() {
                 <Typography>※사용자 가이드 확인</Typography>
                 <a
                   style={{ color: 'white' }}
-                  href="https://k6s205.p.ssafy.io/login"
+                  href="/"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  https://k6s205.p.ssafy.io/login
+                  login
                 </a>
               </>
             }

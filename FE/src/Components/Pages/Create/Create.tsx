@@ -7,6 +7,9 @@ import styled, { keyframes } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export default function Create() {
+  const handleOpenSource = () => {
+    alert('준비중...');
+  };
   return (
     <Box minHeight="85vh" sx={{ display: 'flex' }}>
       <Grid
@@ -29,12 +32,16 @@ export default function Create() {
                       right: '10px',
                       opacity: 0.2,
                     }}
+                    fontFamily="Jua"
                     color="primary"
                   >
                     01
                   </Typography>
-                  <Typography variant="h4" color="primary">
-                    Build Create
+                  <Typography fontSize={40} color="primary" fontFamily="Jua">
+                    일반
+                  </Typography>
+                  <Typography fontSize={40} color="primary" fontFamily="Jua">
+                    프로젝트
                   </Typography>
                 </CardContentstyled>
               </CardBoxstyled>
@@ -43,7 +50,7 @@ export default function Create() {
         </Grid>
         <Grid item>
           <Cardstyled>
-            <CardBoxstyled>
+            <CardBoxstyled onClick={handleOpenSource}>
               <CardContentstyled>
                 <Typography
                   variant="h1"
@@ -53,15 +60,16 @@ export default function Create() {
                     right: '10px',
                     opacity: 0.2,
                   }}
+                  fontFamily="Jua"
                   color="primary"
                 >
                   02
                 </Typography>
-                <Typography variant="h4" color="primary">
-                  Open Source Create
+                <Typography fontSize={40} color="primary" fontFamily="Jua">
+                  오픈소스
                 </Typography>
-                <Typography mt={1} variant="h6" color="primary">
-                  준비중...
+                <Typography fontSize={40} color="primary" fontFamily="Jua">
+                  프로젝트
                 </Typography>
               </CardContentstyled>
             </CardBoxstyled>

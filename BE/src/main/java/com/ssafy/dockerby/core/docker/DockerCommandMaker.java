@@ -44,7 +44,7 @@ public class DockerCommandMaker {
         }
         sb.append(" --network ").append(this.networkBridge);
 
-        sb.append(' ').append(projectName).append('-').append(config.getVersion());
+        sb.append(' ').append(config.getVersion());
 
         log.info("run Done");
         return sb.toString();

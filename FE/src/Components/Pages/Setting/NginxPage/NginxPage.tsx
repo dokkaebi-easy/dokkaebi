@@ -24,7 +24,11 @@ export default function NginxPage() {
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <DomainPaper />
           <ProxypassPaper />
           <HttpsPaper />

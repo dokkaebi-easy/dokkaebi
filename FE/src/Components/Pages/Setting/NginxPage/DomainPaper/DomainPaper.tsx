@@ -37,7 +37,11 @@ export default function DomainPaper() {
           Domain
         </Paper>
       </Box>
-      <Paper sx={{ padding: 3 }}>
+      <Paper
+        sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+        elevation={0}
+        variant="outlined"
+      >
         <Box mb={3} sx={{ display: 'flex' }}>
           <Button
             onClick={handleDomainAddClick}

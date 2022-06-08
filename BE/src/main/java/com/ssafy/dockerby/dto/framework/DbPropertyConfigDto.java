@@ -13,6 +13,6 @@ public class DbPropertyConfigDto {
   private String init;
   private String volume;
   private String port;
-  private List<String> config;
+  private List<String> configs;
 
 }

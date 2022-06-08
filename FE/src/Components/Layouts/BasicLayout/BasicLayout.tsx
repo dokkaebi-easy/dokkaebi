@@ -33,7 +33,7 @@ export default function BasicLayout() {
 
   useEffect(() => {
     if (!loginInfo) {
-      history.push('/login');
+      history.push('/access/login');
     }
     return () => {
       setOpen(true);

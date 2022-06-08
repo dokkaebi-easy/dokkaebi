@@ -38,7 +38,11 @@ export default function DBpage() {
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3, pt: 4 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <Box mt={3} sx={{ display: 'flex' }}>
             <Button
               onClick={handleAddClick}

@@ -69,26 +69,31 @@ export default function ConnectCheck({ gitData }: GitProps) {
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <Grid container spacing={2}>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
-              <Typography>웹훅 URL</Typography>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                웹훅 URL
+              </Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
                 label="Web Hook URL"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 variant="outlined"
                 size="small"
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 defaultValue={domain}
                 onChange={handleDomainChange}
                 sx={{ my: 1 }}
               />
-              <FormHelperText id="component-helper-text">
-                (※ 도메인 주소를 적어주세요. ex) http://
-                <span style={{ color: 'red' }}>k6s205.p.ssafy.io:8482</span>
-                /api/project/hook/Dockerby)
-              </FormHelperText>
             </Grid>
             <Grid item xs={2} sx={{ my: 'auto' }} />
 
@@ -100,7 +105,9 @@ export default function ConnectCheck({ gitData }: GitProps) {
               </Typography>
             </Grid>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
-              <Typography>Secret Token</Typography>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                Secret Token
+              </Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
@@ -108,6 +115,7 @@ export default function ConnectCheck({ gitData }: GitProps) {
                 disabled
                 variant="outlined"
                 size="small"
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 value={secretToken}
                 sx={{ my: 1 }}
               />

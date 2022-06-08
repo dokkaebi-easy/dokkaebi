@@ -325,11 +325,11 @@ public class ProjectServiceImpl implements ProjectService {
             }
 
             list.add(new DockerbyProperty("volume",
-                pathParser.volumePath().append("/").append(dbConfigDto.getName()).toString(),
+                pathParser.volumePath().append("/").append(project.getProjectName()).append("/").append(dbConfigDto.getName()).toString(),
                 dbPropertyConfigDto.getVolume()));
 
-            if(!dbPropertyConfigDto.getConfig().isEmpty()) {
-                List<String> config = dbPropertyConfigDto.getConfig();
+            if(!dbPropertyConfigDto.getConfigs().isEmpty()) {
+                List<String> config = dbPropertyConfigDto.getConfigs();
                 list.add(new DockerbyProperty("volume", config.get(0),config.get(1)));
             }
             dbConfigs.add(
@@ -786,18 +786,40 @@ public class ProjectServiceImpl implements ProjectService {
         for (Project project : projectList) {
             List<Map<String,String>> ports = new ArrayList<>();
             String configPath = pathParser.configPath(project.getProjectName()).toString();
-            List<BuildConfig> buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
-                        BuildConfig.class);
-            for(BuildConfig buildConfig : buildConfigs) {
-                List<DockerbyProperty> properties = buildConfig.getProperties();
-                for (DockerbyProperty property : properties) {
-                    Map<String,String> port = new HashMap<String,String>();
-                    if (property.getType().equals("publish")) {
-                        port.put("name",buildConfig.getName());
-                        port.put("host",property.getHost());
-                    }
-                    ports.add(port);
 
+            //build port 추가
+            File buildFile = new File(configPath + "/build");
+            if (buildFile.exists()) {            //파일 존재 확인
+                List<BuildConfig> buildConfigs = FileManager.loadJsonFileToList(configPath, "build",
+                    BuildConfig.class);
+                for (BuildConfig buildConfig : buildConfigs) {
+                    List<DockerbyProperty> properties = buildConfig.getProperties();
+                    for (DockerbyProperty property : properties) {
+                        Map<String, String> port = new HashMap<>();
+                        if (property.getType().equals("publish")) {
+                            port.put("name", buildConfig.getName());
+                            port.put("host", property.getHost());
+                            ports.add(port);
+                        }
+                    }
+                }
+            }
+
+            //db port 추가
+            File dbFile = new File(configPath + "/db");
+            if (dbFile.exists()) {            //파일 존재 확인
+                List<DbConfig> dbConfigs = FileManager.loadJsonFileToList(configPath, "db",
+                    DbConfig.class);
+                for (DbConfig dbConfig : dbConfigs) {
+                    List<DockerbyProperty> properties = dbConfig.getProperties();
+                    for (DockerbyProperty property : properties) {
+                        Map<String, String> port = new HashMap<>();
+                        if (property.getType().equals("publish")) {
+                            port.put("name", dbConfig.getName());
+                            port.put("host", property.getHost());
+                            ports.add(port);
+                        }
+                    }
                 }
             }
             ProjectListResponseDto projectListDto = ProjectListResponseDto.of(project,ports);
@@ -830,7 +852,13 @@ public class ProjectServiceImpl implements ProjectService {
                 () -> new NotFoundException(
                     "ProjectServiceImpl.configByProjectName : " + projectId));
         String projectPath = pathParser.projectPath(project.getProjectName()).toString();
-        FileUtils.deleteDirectory(new File(projectPath));
+        String volumePath = pathParser.volumePath().append("/").append(project.getProjectName()).toString();
+        if(new File(projectPath).exists()) {
+            FileUtils.deleteDirectory(new File(projectPath));
+        }
+        if(new File(volumePath).exists()) {
+            FileUtils.deleteDirectory(new File(volumePath));
+        }
         projectRepository.deleteById(projectId);
     }
 
@@ -901,5 +929,6 @@ public class ProjectServiceImpl implements ProjectService {
                 }
             }
         }
+        project.updateState(StateType.Waiting);
     }
 }

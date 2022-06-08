@@ -18,16 +18,20 @@ interface GitProps {
 
 export default function GitLabConnect({ gitData }: GitProps) {
   const [hostURL, setHostURL] = useState(gitData.hostUrl);
-  const [accessTokenId, setAccessTokenId] = useState('');
-  const [accessTokenIds, setAccessTokenIds] = useState<string[]>([]);
+  const [accessTokenName, setAccessTokenName] = useState('');
+  const [accessTokenNames, setAccessTokenNames] = useState<ResponseIdName[]>(
+    [],
+  );
+  // const [accessTokenId, setAccessTokenId] = useState('');
+  // const [accessTokenIds, setAccessTokenIds] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleItemClickProps = (index: number) => {
-    setAccessTokenId(accessTokenIds[index]);
-    gitData.accessTokenId = index + 1;
+    setAccessTokenName(accessTokenNames[index].name);
+    gitData.accessTokenId = accessTokenNames[index].id;
   };
 
   const handleHostURLChange = (event: any) => {
@@ -36,21 +40,25 @@ export default function GitLabConnect({ gitData }: GitProps) {
   };
 
   const handleAxiosProps = (data: ResponseIdName[]) => {
-    const arr = data.map((value) => value.name);
-    setAccessTokenIds([...arr]);
-    setAccessTokenId(arr[gitData.accessTokenId - 1]);
+    setAccessTokenNames([...data]);
+    // setAccessTokenName(arr[gitData.accessTokenId - 1]);
   };
 
   useEffect(() => {
     axios.get('/api/git/tokens').then((res) => {
       const data = res.data as ResponseIdName[];
-      const arr = data.map((value) => value.name);
-      setAccessTokenIds([...arr]);
-      setAccessTokenId(arr[gitData.accessTokenId - 1]);
+      setAccessTokenNames([...data]);
+
+      data.map((value) => {
+        if (value.id === gitData.accessTokenId) {
+          setAccessTokenName(value.name);
+        }
+        return value;
+      });
     });
 
     return () => {
-      setAccessTokenIds([]);
+      setAccessTokenNames([]);
     };
   }, []);
 
@@ -70,31 +78,42 @@ export default function GitLabConnect({ gitData }: GitProps) {
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <Grid container spacing={2}>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
-              <Typography>기본 도메인 URL</Typography>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                기본 도메인 URL
+              </Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
                 label="Domain URL"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="ex) https://lab.ssafy.com/"
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 defaultValue={hostURL}
                 onChange={handleHostURLChange}
               />
             </Grid>
             <Grid item xs={2} sx={{ marginY: 'auto' }}>
-              <Typography>Access Token</Typography>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                Access Token
+              </Typography>
             </Grid>
             <Grid item xs={5}>
               <SelectItem
-                defaultValue={accessTokenId}
+                defaultValue={accessTokenName}
                 label="Access Token"
-                Items={accessTokenIds}
+                Items={accessTokenNames.map((value) => value.name)}
                 Click={handleItemClickProps}
               />
             </Grid>

@@ -39,7 +39,10 @@ export default function SideNavibar() {
         height: '95vh',
         width: 250,
         borderRadius: 5,
-        background: 'linear-gradient(195deg, #42424a, #191919)',
+        background:
+          theme.palette.mode === 'dark'
+            ? 'rgba(21,21,21,0.5)'
+            : 'rgba(230,230,230,0.5)',
       }}
       elevation={3}
     >
@@ -49,7 +52,7 @@ export default function SideNavibar() {
             <Link
               to="/"
               style={{
-                color: 'white',
+                color: theme.palette.mode === 'dark' ? 'white' : 'black',
                 textDecoration: 'none',
                 width: '90%',
                 margin: 'auto',
@@ -58,7 +61,7 @@ export default function SideNavibar() {
               <ListItemButton>
                 <ListItemIcon>
                   <img
-                    src="/assets/dockerby.svg"
+                    src="/assets/dockerby_1.png"
                     width="40"
                     height="40"
                     alt=""
@@ -74,7 +77,7 @@ export default function SideNavibar() {
           <ListItem disablePadding sx={{ marginLeft: '4px' }}>
             <Box
               style={{
-                color: 'white',
+                color: theme.palette.mode === 'dark' ? 'white' : 'black',
                 textDecoration: 'none',
                 width: '90%',
                 margin: '0 auto',
@@ -86,7 +89,7 @@ export default function SideNavibar() {
                 control={
                   <MaterialUISwitch
                     sx={{ m: 1 }}
-                    defaultChecked={theme.palette.mode === 'dark'}
+                    // checked={theme.palette.mode === 'dark'}
                     onChange={colorMode.toggleColorMode}
                   />
                 }
@@ -98,9 +101,9 @@ export default function SideNavibar() {
           </ListItem>
           <ListItem disablePadding>
             <a
-              href="https://k6s205.p.ssafy.io"
+              href="/"
               style={{
-                color: 'white',
+                color: theme.palette.mode === 'dark' ? 'white' : 'black',
                 textDecoration: 'none',
                 width: '90%',
                 margin: '0 auto',
@@ -112,7 +115,11 @@ export default function SideNavibar() {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <ArticleIcon sx={{ color: 'white' }} />
+                  <ArticleIcon
+                    sx={{
+                      color: theme.palette.mode === 'dark' ? 'white' : 'black',
+                    }}
+                  />
                 </ListItemIcon>
                 <ListItemText primary="Document" />
               </ListItemButton>
@@ -122,7 +129,7 @@ export default function SideNavibar() {
             <Link
               to="/create"
               style={{
-                color: 'white',
+                color: theme.palette.mode === 'dark' ? 'white' : 'black',
                 textDecoration: 'none',
                 width: '90%',
                 margin: '0 auto',
@@ -132,7 +139,11 @@ export default function SideNavibar() {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <DashboardIcon sx={{ color: 'white' }} />
+                  <DashboardIcon
+                    sx={{
+                      color: theme.palette.mode === 'dark' ? 'white' : 'black',
+                    }}
+                  />
                 </ListItemIcon>
                 <ListItemText primary="Build Create" />
               </ListItemButton>
@@ -142,7 +153,7 @@ export default function SideNavibar() {
             <ListItem disablePadding>
               <Box
                 style={{
-                  color: 'white',
+                  color: theme.palette.mode === 'dark' ? 'white' : 'black',
                   textDecoration: 'none',
                   width: '90%',
                   margin: '0 auto',
@@ -152,7 +163,12 @@ export default function SideNavibar() {
               >
                 <ListItemButton>
                   <ListItemIcon>
-                    <SettingsIcon sx={{ color: 'white' }} />
+                    <SettingsIcon
+                      sx={{
+                        color:
+                          theme.palette.mode === 'dark' ? 'white' : 'black',
+                      }}
+                    />
                   </ListItemIcon>
                   <ListItemText primary="Edit" />
                 </ListItemButton>
