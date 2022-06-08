@@ -1,6 +1,6 @@
 # `Contributor guide`
 
-# Dockerby**에 기여**
+# Dokkaebi**에 기여**
 
 이 문서는 도움을 구하거나 버그를 보고하거나 프로젝트에 기여하려는 분들을 위한 문서입니다.
 
@@ -8,7 +8,7 @@
 
 ## 시작하기전
 
-Dockerby에 관한 모든 작업은 GitHub을 통해 소통 합니다.
+Dokkaebi에 관한 모든 작업은 GitHub을 통해 소통 합니다.
 
 시작하기 전에 커뮤니티 규정인 [행동강령](./ContributorCovenant.md)을 확인 후 지켜주세요
 
@@ -20,7 +20,7 @@ Dockerby에 관한 모든 작업은 GitHub을 통해 소통 합니다.
 
 ### 버전 정보
 
-Dockerby는 원할한 개발을 위해 개발환경의 통일성을 준수합니다.
+Dokkaebi는 원할한 개발을 위해 개발환경의 통일성을 준수합니다.
 
 아래와 같은 개발 환경 준수를 부탁드립니다.
 
@@ -54,7 +54,7 @@ Dockerby는 원할한 개발을 위해 개발환경의 통일성을 준수합니
 
 ## 시작하기 
 
-Dockerby는 코드의 통일성 및 원활한 가독성, 유지보수등의 이유로
+Dokkaebi는 코드의 통일성 및 원활한 가독성, 유지보수등의 이유로
 
 Java, JavaScript , DataBase ,Git 에서 `스타일 가이드`를 제공합니다.
 
@@ -65,9 +65,9 @@ Java, JavaScript , DataBase ,Git 에서 `스타일 가이드`를 제공합니다
 
 ## Issues를 **보고하려면?**
 
-[Git Issue](https://lab.ssafy.com/s06-final/S06P31S205/-/issues/new)자유롭게 문제를 제출 하세요. GitHub bug 템플릿을 준수하고 다음을 포함하는지 확인하세요.
+[Git Issue]자유롭게 문제를 제출 하세요. GitHub bug 템플릿을 준수하고 다음을 포함하는지 확인하세요.
 
 1. 버그 요약
 2. 버그 재현을 위한 단계
-3. 버그가 발생한 Dockerby 버전
-4. 버그가 발생한 Dockerby 구성 또는 서비스 구성
+3. 버그가 발생한 Dokkaebi 버전
+4. 버그가 발생한 Dokkaebi 구성 또는 서비스 구성
