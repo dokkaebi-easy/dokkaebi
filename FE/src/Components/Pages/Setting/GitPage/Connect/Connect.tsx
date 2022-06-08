@@ -99,7 +99,6 @@ export default function GitLabConnect({ gitData }: GitProps) {
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="ex) https://lab.ssafy.com/"
                 InputProps={{ sx: { fontWeight: 'bold' } }}
                 defaultValue={hostURL}
                 onChange={handleHostURLChange}
