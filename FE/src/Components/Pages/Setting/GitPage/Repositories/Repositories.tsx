@@ -93,7 +93,6 @@ export default function GitLabRepositories({ gitData }: GitProps) {
                 size="small"
                 sx={{ my: 1 }}
                 InputProps={{ sx: { fontWeight: 'bold' } }}
-                placeholder="https://lab.ssafy.com/**/**.git"
                 defaultValue={repositoryURL}
                 onChange={handleRepositoryURLChange}
               />

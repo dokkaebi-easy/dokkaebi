@@ -101,7 +101,7 @@ export default function SideNavibar() {
           </ListItem>
           <ListItem disablePadding>
             <a
-              href="https://k6s205.p.ssafy.io"
+              href="/"
               style={{
                 color: theme.palette.mode === 'dark' ? 'white' : 'black',
                 textDecoration: 'none',
