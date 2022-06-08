@@ -94,11 +94,6 @@ export default function ConnectCheck({ gitData }: GitProps) {
                 onChange={handleDomainChange}
                 sx={{ my: 1 }}
               />
-              <FormHelperText id="component-helper-text">
-                (※ 도메인 주소를 적어주세요. ex) http://
-                <span style={{ color: 'red' }}>k6s205.p.ssafy.io:8482</span>
-                /api/project/hook/Dockerby)
-              </FormHelperText>
             </Grid>
             <Grid item xs={2} sx={{ my: 'auto' }} />
 
