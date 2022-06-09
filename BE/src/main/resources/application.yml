@@ -21,9 +21,9 @@ spring:
 uploadPath:
   path: "./fileData/"
 
-dockerby:
+dokkaebi:
   rootPath: "/projects"
   configPath: "config"
   logPath: "log"
-  volumePath: "/var/dockerby"
-  dockerbyConfigPath : "/home/conf"
+  volumePath: "/var/dokkaebi"
+  dokkaebiConfigPath : "/home/conf"

@@ -13,7 +13,7 @@
     </filter>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- rollover daily -->
-      <fileNamePattern>${LOGS_PATH}/dockerby-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>${LOGS_PATH}/dokkaebi-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <!-- 일자별 로그파일 저장 기간 설정 -->
       <maxHistory>30</maxHistory>
       <timeBasedFileNamingAndTriggeringPolicy
