@@ -70,9 +70,13 @@ export default function HttpsPaper() {
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <Grid container spacing={1} mt={1}>
-            <Grid item xs={12} sx={{ margin: 'auto auto' }}>
+            <Grid item xs={12} sx={{ marginY: 'auto' }}>
               <FormHelperText
                 id="component-helper-text"
                 style={{
@@ -83,50 +87,76 @@ export default function HttpsPaper() {
                 ※ 사용자 가이드 참고
               </FormHelperText>
               <Stack direction="row" alignItems="center" spacing={2}>
-                <Typography>HTTPS</Typography>
+                <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                  HTTPS
+                </Typography>
                 <Checkbox checked={https} onChange={handleCheckBoxChange} />
                 <FormHelperText id="component-helper-text">
                   (※ 체크해야 HTTPS 기능이 활성화됩니다.)
                 </FormHelperText>
               </Stack>
             </Grid>
-            <Grid item xs={12}>
-              <Typography>SSL Certificate</Typography>
+            <Grid item xs={2} sx={{ marginY: 'auto' }}>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                SSL Certificate
+              </Typography>
+            </Grid>
+            <Grid item xs={10}>
               <TextField
                 fullWidth
                 disabled={!https}
                 label="SSL Certificate"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 placeholder="ex) /etc/letsencrypt/live/**/fullchain.pem"
                 defaultValue={sslCertificate}
                 onChange={handleSslCertificateChange}
               />
             </Grid>
-            <Grid item xs={12}>
-              <Typography>SSL Certificate Key</Typography>
+            <Grid item xs={2} sx={{ marginY: 'auto' }}>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                SSL Certificate Key
+              </Typography>
+            </Grid>
+            <Grid item xs={10}>
               <TextField
                 fullWidth
                 disabled={!https}
                 label="SSL Certificate Key"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 placeholder="ex) /etc/letsencrypt/live/**/privKey.pem"
                 defaultValue={sslCertificateKey}
                 onChange={handleSslCertificateKeyChange}
               />
             </Grid>
-            <Grid item xs={12}>
-              <Typography>SSL 경로</Typography>
+            <Grid item xs={2} sx={{ marginY: 'auto' }}>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                SSL 경로
+              </Typography>
+            </Grid>
+            <Grid item xs={10}>
               <TextField
                 fullWidth
                 disabled={!https}
                 label="SSL Path"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 placeholder="ex) /etc/letsencrypt"
                 defaultValue={sslPath}
                 onChange={handleSslPathChange}

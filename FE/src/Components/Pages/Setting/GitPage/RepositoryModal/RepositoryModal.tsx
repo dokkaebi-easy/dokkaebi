@@ -99,7 +99,11 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
             </Typography>
           </Paper>
         </Box>
-        <Paper sx={{ padding: 3 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <Typography id="modal-modal-description" sx={{ my: 2 }}>
             UserName with Password
           </Typography>
@@ -109,9 +113,13 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
             error={errorId}
             helperText={errorId ? '아이디를 적어주어주세요' : ''}
             label="ID"
+            InputLabelProps={{
+              sx: { color: 'rgb(200,200,200)' },
+            }}
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             placeholder="ID"
             onChange={handleIdChange}
           />
@@ -121,9 +129,13 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
             error={errorPassword}
             helperText={errorPassword ? '비밀번호를 적어주어주세요' : ''}
             label="Password"
+            InputLabelProps={{
+              sx: { color: 'rgb(200,200,200)' },
+            }}
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             placeholder="Password"
             type="password"
             autoComplete="current-password"
@@ -135,9 +147,13 @@ export default function RepositoryModal({ open, Close, Change }: modalSwitch) {
             error={errorUserName}
             helperText={errorUserName ? '이름를 적어주어주세요' : ''}
             label="UserName"
+            InputLabelProps={{
+              sx: { color: 'rgb(200,200,200)' },
+            }}
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             placeholder="UserName"
             onChange={handleUserNameChange}
           />

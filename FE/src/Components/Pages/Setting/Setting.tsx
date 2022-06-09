@@ -121,18 +121,17 @@ export default function Setting() {
       setDBItems(res.data);
     });
 
-    if (projectId === '0') {
-      return;
-    }
+    if (projectId === '0') return;
+
     axios.get(`/api/project/config/${projectId}`).then((res) => {
       const data = res.data as ProjectConfigInfo;
 
       if (data.projectId) setProjectId(data.projectId);
       if (data.projectName) setProjectName(data.projectName);
       if (data.buildConfigs) setBuildConfigs([...data.buildConfigs]);
-      else setBuildConfigs([new BuildData()]);
+      else setBuildConfigs([]);
       if (data.dbConfigs) setDBConfigs([...data.dbConfigs]);
-      else setDBConfigs([new DBData()]);
+      else setDBConfigs([]);
       if (data.gitConfig) setGitConfig(data.gitConfig);
       else setGitConfig(new GitData());
       if (data.nginxConfig) setNginxConfig(data.nginxConfig);
@@ -142,7 +141,7 @@ export default function Setting() {
 
   return (
     <Box mt={3} sx={{ width: '100%' }}>
-      <Paper sx={{ borderRadius: 3 }}>
+      <Paper sx={{ borderRadius: 3 }} elevation={0}>
         <Stepper
           nonLinear
           activeStep={activeStep}

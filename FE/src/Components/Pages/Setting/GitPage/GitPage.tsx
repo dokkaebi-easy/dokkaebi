@@ -26,7 +26,11 @@ export default function GitLabPage() {
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <GitLabConnect gitData={gitConfig} />
           <GitLabRepositories gitData={gitConfig} />
           <ConnectCheck gitData={gitConfig} />

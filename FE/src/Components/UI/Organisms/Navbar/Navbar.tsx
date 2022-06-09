@@ -5,8 +5,11 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
+import { styled, useTheme } from '@mui/material/styles';
 
 export default function Navbar() {
+  const theme = useTheme();
+
   const [pageName, setPageName] = useState('');
   const [open, setOpen] = useState(false);
 
@@ -40,12 +43,14 @@ export default function Navbar() {
 
   return (
     <AppBar
-      position="sticky"
+      position="relative"
       sx={{
-        top: 24,
         borderRadius: 3,
-        backgroundColor: 'rgba(230,230,230,0.5)',
-        color: 'black',
+        background:
+          theme.palette.mode === 'dark'
+            ? 'rgba(21,21,21,0.5)'
+            : 'rgba(240,240,240,0.5)',
+        color: theme.palette.mode === 'dark' ? 'white' : 'black',
       }}
       style={
         open
@@ -57,20 +62,32 @@ export default function Navbar() {
     >
       <Toolbar>
         <Link to="/">
-          <img src="/assets/dockerby.svg" width="80" height="80" alt="" />
+          <img src="/assets/dockerby_1.png" width="80" height="80" alt="" />
         </Link>
-        <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
           {pageName}
         </Typography>
 
         {loginInfo ? (
-          <Link to="/login" style={{ color: 'black', textDecoration: 'none' }}>
+          <Link
+            to="/login"
+            style={{
+              color: theme.palette.mode === 'dark' ? 'white' : 'black',
+              textDecoration: 'none',
+            }}
+          >
             <Button color="inherit" onClick={logout}>
               Logout
             </Button>
           </Link>
         ) : (
-          <Link to="/login" style={{ color: 'black', textDecoration: 'none' }}>
+          <Link
+            to="/login"
+            style={{
+              color: theme.palette.mode === 'dark' ? 'white' : 'black',
+              textDecoration: 'none',
+            }}
+          >
             <Button color="inherit">Login</Button>
           </Link>
         )}

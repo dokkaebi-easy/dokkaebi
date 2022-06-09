@@ -1,3 +1,8 @@
+interface Port {
+  name: string;
+  host: string;
+}
+
 export interface Project {
   projectId: number;
   projectName: string;
@@ -5,6 +10,8 @@ export interface Project {
   lastSuccessDate: string;
   lastFailDate: string;
   lastDuration: string;
+  recentBuildDate: string;
+  ports: Port[];
 }
 
 export default class ProjectDatas {
@@ -20,6 +27,8 @@ export default class ProjectDatas {
 
   public lastDuration: string;
 
+  public recentBuildDate: string;
+
   constructor() {
     this.projectId = 0;
     this.projectName = '';
@@ -27,5 +36,6 @@ export default class ProjectDatas {
     this.lastSuccessDate = '';
     this.lastFailDate = '';
     this.lastDuration = '';
+    this.recentBuildDate = '';
   }
 }
