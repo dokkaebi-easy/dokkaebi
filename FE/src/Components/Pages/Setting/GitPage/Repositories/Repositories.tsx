@@ -50,51 +50,69 @@ export default function GitLabRepositories({ gitData }: GitProps) {
         </Paper>
       </Box>
       <Box>
-        <Paper sx={{ padding: 3 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
           <Grid container spacing={2}>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>프로젝트 ID</Typography>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                프로젝트 ID
+              </Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
                 label="Project ID"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="Project ID"
-                defaultValue={projectID}
+                placeholder="숫자만 기입 가능합니다."
+                InputProps={{ sx: { fontWeight: 'bold' } }}
+                defaultValue={projectID ? `${projectID}` : ''}
                 onChange={handleProjectIDChange}
               />
-              <FormHelperText id="component-helper-text">
-                (※ 숫자만 기입 가능합니다.)
-              </FormHelperText>
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>저장소 URL</Typography>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                저장소 URL
+              </Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
                 label="Repository URL"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
-                placeholder="https://lab.ssafy.com/**/**.git"
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 defaultValue={repositoryURL}
                 onChange={handleRepositoryURLChange}
               />
             </Grid>
             <Grid item xs={2} sx={{ margin: 'auto auto' }}>
-              <Typography>브랜치 명칭</Typography>
+              <Typography fontFamily="Noto Sans KR" fontSize={20}>
+                브랜치 명칭
+              </Typography>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
                 label="Branch"
+                InputLabelProps={{
+                  sx: { color: 'rgb(200,200,200)' },
+                }}
                 variant="outlined"
                 size="small"
                 sx={{ my: 1 }}
+                InputProps={{ sx: { fontWeight: 'bold' } }}
                 placeholder="ex) master"
                 defaultValue={branchName}
                 onChange={handleBranchNameChange}

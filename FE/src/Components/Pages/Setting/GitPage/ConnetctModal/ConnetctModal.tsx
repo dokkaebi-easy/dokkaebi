@@ -92,31 +92,52 @@ export default function ConnetctModal({ open, Close, Change }: modalSwitch) {
             </Typography>
           </Paper>
         </Box>
-        <Paper sx={{ padding: 3 }}>
-          <Typography id="modal-modal-description" sx={{ my: 2 }}>
+        <Paper
+          sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+          elevation={0}
+          variant="outlined"
+        >
+          <Typography
+            id="modal-modal-description"
+            sx={{ my: 2 }}
+            fontFamily="Noto Sans KR"
+            fontSize={20}
+          >
             GitLab API Token
           </Typography>
-          <Typography>토큰 Name</Typography>
+          <Typography fontFamily="Noto Sans KR" fontSize={20}>
+            토큰 Name
+          </Typography>
           <TextField
             fullWidth
             error={errorId}
             helperText={errorId ? '아이디를 적어주세요' : ''}
             label="토큰 Name"
+            InputLabelProps={{
+              sx: { color: 'rgb(200,200,200)' },
+            }}
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             placeholder="Name"
             onChange={handleIdChange}
           />
-          <Typography>API Token</Typography>
+          <Typography fontFamily="Noto Sans KR" fontSize={20}>
+            API Token
+          </Typography>
           <TextField
             fullWidth
             error={errorToken}
             helperText={errorToken ? '토큰을 적어주세요' : ''}
             label="API Token"
+            InputLabelProps={{
+              sx: { color: 'rgb(200,200,200)' },
+            }}
             variant="outlined"
             size="small"
             sx={{ my: 1 }}
+            InputProps={{ sx: { fontWeight: 'bold' } }}
             placeholder="API Token"
             onChange={handleApiTokenChange}
           />

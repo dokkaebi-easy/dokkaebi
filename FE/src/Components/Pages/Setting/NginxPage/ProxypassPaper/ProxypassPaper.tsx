@@ -44,7 +44,11 @@ export default function ProxypassPaper() {
           Proxy pass
         </Paper>
       </Box>
-      <Paper sx={{ padding: 3 }}>
+      <Paper
+        sx={{ padding: 3, pt: 4, borderWidth: 3 }}
+        elevation={0}
+        variant="outlined"
+      >
         <Box mb={3} sx={{ display: 'flex' }}>
           <Button
             onClick={handleProxyPassAddClick}
@@ -57,14 +61,13 @@ export default function ProxypassPaper() {
         </Box>
         {locations.map((value, index) => {
           return (
-            <Box mb={2} key={uuid()}>
-              <Proxypass
-                value={value}
-                index={index}
-                DelClick={handleLocationDelClickProps}
-                locationData={nginxConfig.locations[index]}
-              />
-            </Box>
+            <Proxypass
+              key={uuid()}
+              value={value}
+              index={index}
+              DelClick={handleLocationDelClickProps}
+              locationData={nginxConfig.locations[index]}
+            />
           );
         })}
       </Paper>

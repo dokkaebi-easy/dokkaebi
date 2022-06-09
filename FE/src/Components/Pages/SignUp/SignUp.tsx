@@ -8,7 +8,7 @@ import {
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { unset } from 'lodash';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -91,7 +91,7 @@ export default function SignUp() {
       .post(`/api/user/signup`, data)
       .then((res) => {
         const data = res.data as ResponsId;
-        if (data.state === 'Success') history.push('/login');
+        if (data.state === 'Success') history.push('/access/login');
       })
       .catch((error) => {
         const params = { authKey: inputauth };
@@ -140,6 +140,17 @@ export default function SignUp() {
       } else alert('사용 가능한 이름 입니다.');
     });
   };
+
+  useEffect(() => {
+    return () => {
+      setInputId('');
+      setIdError(false);
+      setInputName('');
+      setNameError(false);
+      setInputAuth('');
+      setAuthError(false);
+    };
+  }, []);
 
   return (
     <Container maxWidth="xs">
@@ -249,11 +260,11 @@ export default function SignUp() {
                 <Typography>※사용자 가이드 확인</Typography>
                 <a
                   style={{ color: 'white' }}
-                  href="https://k6s205.p.ssafy.io/login"
+                  href="/"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  https://k6s205.p.ssafy.io/login
+                  login
                 </a>
               </>
             }
