@@ -54,11 +54,16 @@ export default function Login() {
           alignItems: 'center',
         }}
       >
-        <img src="/assets/dockerby.png" width="360" height="360" alt="" />
+        <img
+          src="/assets/dokkaebi_logo_name.png"
+          width="360"
+          height="360"
+          alt=""
+        />
 
         {/* <Box>
           <Typography component="h1" variant="h3" sx={{ color: '#35baf6' }}>
-            Dockerby
+            Dokkaebi
           </Typography>
         </Box> */}
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
