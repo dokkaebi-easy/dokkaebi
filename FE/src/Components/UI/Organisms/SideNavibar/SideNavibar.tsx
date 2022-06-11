@@ -61,13 +61,13 @@ export default function SideNavibar() {
               <ListItemButton>
                 <ListItemIcon>
                   <img
-                    src="/assets/dockerby_1.png"
+                    src="/assets/dokkaebi_logo.png"
                     width="40"
                     height="40"
                     alt=""
                   />
                 </ListItemIcon>
-                <ListItemText primary="Dockerby" />
+                <ListItemText primary="Dokkaebi" />
               </ListItemButton>
             </Link>
           </ListItem>
